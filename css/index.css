@@ -2,7 +2,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"> */
     @font-face {
       font-family: 'NintendoNTLG';
-      src: url('https://hellot.nekoweb.org/assets/nintendo_NTLG-DB_002.ttf') format('truetype'); /* ttf file name too long so i pasted it 🤣🤣🤣 me is funny */
+      src: url('https://helloiti.github.io/assets/nintendo_NTLG-DB_002.ttf') format('truetype'); /* ttf file name too long so i pasted it 🤣🤣🤣 me is funny */
       /* normal weight... i think? */
       font-weight: normal;
       font-style: normal;
@@ -12,13 +12,14 @@
       margin: 0;
       padding: 10px;
        /* bg */
-      background-image: url('https://hellot.nekoweb.org/assets/background.png');
+      background-image: url('https://helloiti.github.io/assets/background.png');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
       background-attachment: fixed;
       color: white;
-      cursor: url('https://hellot.nekoweb.org/assets/Wii.png') 0 0, auto;
+      /* cursor */
+      cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, auto;
       overflow-y: scroll;
 display: flex;
 flex-direction: column;
@@ -37,7 +38,8 @@ align-items: center;
       background-size: 400% 400%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      cursor: url('https://hellot.nekoweb.org/assets/Wii.png') 0 0, pointer;
+      /* cursor, again */
+      cursor: url('https://hellot.github.io/assets/Wii.png') 0 0, pointer;
     }
     a:hover { text-decoration: underline; }
     a img {
