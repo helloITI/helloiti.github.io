@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>※⁜ minigames ⁜※</title>
+  <link rel="icon" type="image/png" href="https://hellot.nekoweb.org/assets/mini.png">
+  <script src="https://mt-tools.nekoweb.org/userlink.js"></script>
+
+  <!-- this code makes the link have a embed! you can copy this code to get your own embeds. -->
+  <meta property="og:title" content="※⁜ minigames ⁜※" />
+  <meta property="og:description" content="※⁜ CoolMathGames ⁜※" />
+  <meta property="og:url" content="https://hellot.nekoweb.org/minigames" />
+  <meta property="og:image" content="https://hellot.nekoweb.org/assets/mini.png" />
+  <meta property="og:type" content="website" />
+
+<style>
+@font-face {
+  font-family: 'NintendoNTLG';
+  src: url('https://hellot.nekoweb.org/assets/nintendo_NTLG-DB_002.ttf') format('truetype');
+}
+
+body {
+  font-family: 'NintendoNTLG', sans-serif;
+  margin: 0;
+  padding: 20px;
+  background-image: url('https://hellot.nekoweb.org/assets/galaxy.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  color: white;
+  text-align: center;
+  cursor: url('https://hellot.nekoweb.org/assets/Wii.png') 0 0, auto;
+}
+
+/* put the iframes where you want */
+.game-area {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 80px; /* space between iframes */
+  margin-top: 30px;
+}
+
+.game-left {
+  justify-self: flex-start;
+}
+
+.game-center {
+  justify-self: center;
+}
+
+iframe {
+  border-radius: 15px;
+}
+</style>
+
+<script>
+  const audio = new Audio("https://hellot.nekoweb.org/assets/cozy.mp3");
+  audio.loop = true;
+  audio.volume = 0.1;
+
+  audio.play().catch(err => console.log(err));
+</script>
+
+<body>
+  <h1>※⁜ welcome to the minigames section! ⁜※</h1>
+  <p>here, you can play some minigames in this website, for: if you're bored in class, home, etc.</p>
+
+  <div class="game-area">
+    <iframe class="game-left" src="https://hellot.nekoweb.org/test_scratch.html"
+      allowtransparency="true" width="475" height="400" frameborder="0" scrolling="no" allowfullscreen></iframe>
+
+    <iframe class="game-center" src="https://hellot.nekoweb.org/plataformer_scratch.html"
+      allowtransparency="true" width="472" height="396" frameborder="0" scrolling="no" allowfullscreen></iframe>
+  </div>
+
+</body>
+</html>

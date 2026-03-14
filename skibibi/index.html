@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="https://hellot.nekoweb.org/.nekoweb-api/static/site.js" type="text/javascript" defer></script>
+<meta charset="UTF-8">
+<title>Stinkbaby.stink</title>
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background-color: #fce428;
+  overflow: hidden;
+}
+
+#clickToStart {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 2.2em;
+  cursor: pointer;
+  z-index: 10;
+}
+canvas {
+  width: 100vw;
+  height: 100vh;
+}
+</style>
+</head>
+
+<body>
+
+<div id="clickToStart">Click to Start</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.110.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.110.0/examples/js/loaders/GLTFLoader.js"></script>
+
+<script>
+let scene, camera, renderer, model;
+let frameObjects = [];
+let currentFrameIndex = 0;
+let modelLoaded = false;
+let startClicked = false;
+
+scene = new THREE.Scene();
+
+camera = new THREE.PerspectiveCamera(
+  75,
+  window.innerWidth / window.innerHeight,
+  0.1,
+  10
+);
+camera.position.z = 2.5;
+
+renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setClearColor(0x000000, 0);
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+document.body.appendChild(renderer.domElement);
+
+scene.add(new THREE.AmbientLight(0x404040, 4));
+const light = new THREE.DirectionalLight(0xffffff, 1);
+light.position.set(5,10,1);
+light.castShadow = true;
+scene.add(light);
+
+const loader = new THREE.GLTFLoader();
+loader.load("https://hellot.nekoweb.org/skibibi/anim_baby.glb", gltf => {
+
+  model = gltf.scene;
+  model.position.set(0, -1.1, 0);
+  model.scale.set(0.7, 0.7, 0.7); 
+
+  model.children.forEach(child => {
+    if (child.type === "Group" || child.type === "Object3D") {
+      frameObjects.push(child);
+      child.visible = false;
+    }
+  });
+
+  frameObjects.sort((a,b) => parseInt(a.name) - parseInt(b.name));
+
+  if (frameObjects.length === 0) {
+    model.children.forEach(child => {
+      if (child.isMesh) {
+        frameObjects.push(child);
+        child.visible = false;
+      }
+    });
+  }
+
+  if (frameObjects.length > 0) frameObjects[0].visible = true;
+
+  model.traverse(child => {
+    if (child.isMesh) {
+      const m = child.material;
+      child.material = new THREE.MeshStandardMaterial({
+        map: m.map,
+        alphaMap: m.alphaMap,
+        transparent: true,
+        alphaTest: 0.5,
+        side: THREE.DoubleSide,
+        metalness: 0.1,
+        roughness: 1
+      });
+    }
+  });
+
+  modelLoaded = true;
+});
+
+function animate() {
+  requestAnimationFrame(animate);
+
+  if (model && startClicked) {
+    model.rotation.y += 0.02;
+  }
+
+  renderer.render(scene, camera);
+}
+animate();
+
+setInterval(() => {
+  if (frameObjects.length > 1 && startClicked) {
+    frameObjects.forEach(f => f.visible = false);
+    currentFrameIndex = (currentFrameIndex + 1) % frameObjects.length;
+    frameObjects[currentFrameIndex].visible = true;
+  }
+}, 50);
+
+const audio = new Audio("https://tomopkaeru.nekoweb.org/secret%2Fok/11.%20Mansion%20Test.mp3");
+audio.loop = true;
+
+document.getElementById("clickToStart").addEventListener("click", () => {
+  startClicked = true;
+
+  if (modelLoaded) scene.add(model);
+
+  audio.play().catch(()=>{});
+  document.getElementById("clickToStart").style.display = "none";
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>※⁜ helloT ⁜※</title>
+  <link rel="icon" type="image/png" href="https://hellot.nekoweb.org/assets/icon.png">
+  <style>
+    body { overflow: hidden; }
+    @font-face {
+      font-family: 'NintendoNTLG';
+      src: url('https://hellot.nekoweb.org/assets/nintendo_NTLG-DB_002.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+    body {
+      font-family: 'NintendoNTLG', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-image: url('https://hellot.nekoweb.org/assets/background.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: white;
+      cursor: url('https://hellot.nekoweb.org/assets/Wii.png') 0 0, auto;
+    }
+    a {
+      background-size: 400% 400%;
+      cursor: url('https://hellot.nekoweb.org/assets/Wii.png') 0 0, pointer;
+    }
+    .title {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 2rem;
+      font-family: 'NintendoNTLG', sans-serif;
+      position: relative;
+      z-index: 10;
+    }
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+  </style>
+</head>
+<body>
+  <h1 class="title">※⁜ helloT ⁜※</h1>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fflate@0.7.4/umd/index.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/loaders/FBXLoader.js"></script>
+<script src="ht.js"></script>
+  <audio id="bg" loop preload="auto">
+    <source src="https://file.garden/aRzXHaa7jkbrRXjj/13._Exhibition.mp3" type="audio/mpeg">
+  </audio>
+  <script>
+    document.addEventListener("click", function playMusic() {
+      const audio = document.getElementById("bg");
+      audio.play().catch(err => console.log("Audio error:", err));
+      document.removeEventListener("click", playMusic);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:title" content="※⁜ mii storage ⁜※">
+  <meta property="og:description" content="※⁜ mii storage is a website that lets you upload .charinfo or .ffsd mii's and saves them on the page! ⁜※">
+  <meta property="og:url" content="https://hellot.nekoweb.org/mii/">
+  <meta property="og:image" content="https://hellot.nekoweb.org/assets/miiST.png">
+  <meta property="og:type" content="website">
+  <link rel="icon" type="image/png" href="https://hellot.nekoweb.org/assets/miiST.png">
+  <title>※⁜ mii storage ⁜※</title>
+  <style>
+    @font-face {
+      font-family: 'NintendoNTLG';
+      src: url('https://hellot.nekoweb.org/assets/nintendo_NTLG-DB_002.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+    body {
+      font-family: 'NintendoNTLG', sans-serif;
+      background: url('https://hellot.nekoweb.org/assets/background1.png') center/cover no-repeat fixed; /* lt */
+      color: #000;
+      padding: 20px;
+      margin: 0;
+      min-height: 100vh;
+      position: relative;
+      transition: background .4s ease;
+      overflow-y: scroll;
+      text-align: center; /* ct */
+    }
+    body.dk {
+      background: url('https://hellot.nekoweb.org/assets/background.png') center/cover no-repeat fixed; /* dt */
+      color: #eee;
+    }
+    body::-webkit-scrollbar {
+      display: none; /* hs */
+    }
+    button, input {
+      padding: 8px;
+      margin: 4px;
+      font-family: inherit;
+    }
+    body.dk .pp {
+      background: #111;
+      color: #eee;
+      box-shadow: 0 4px 20px rgba(0,0,0,.6);
+    }
+    #dl {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+      background: #333;
+      color: #fff;
+      border: 1px solid #555;
+      cursor: pointer;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      box-shadow: 0 2px 6px rgba(0,0,0,.2);
+      transition: all .3s ease;
+    }
+    #dl:hover {
+      background: #555;
+      transform: translateY(-1px);
+    }
+    body.dk #dl {
+      background: #ccc;
+      color: #000;
+      border: 1px solid #aaa;
+    }
+    .il {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+      justify-content: center;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+  <h2>※⁜ welcome! this is a tutorial on how to make a .charinfo mii special/have gold pants! ⁜※</h2>
+  <h3>⁜ first, you need: ⁜</h3>
+  <h4>
+    <b>•</b> a modded Nintendo Switch (or a Nintendo Switch emulator, recommend using Ryujinx!)<br><br>
+    <b>•</b> a hex editor<br><br>
+    <b>•</b> have the <a href="https://github.com/Genwald/MiiPort/releases/download/0.1.1/MiiPort.nro" download>MiiPort</a> homebrew app installed for your modded Nintendo Switch or Nintendo Switch emulator.<br><br>
+    <b>•</b> you must have a .charinfo mii, here's a charinfo mii that you can use: <a href="https://hellot.nekoweb.org/mii/example.charinfo">Mii</a>
+  </h4>
+  <!-- -->
+  <h2>※⁜ now that you have all of this stuff, let's get into making a special .charinfo mii!⁜※</h2>
+  <h3>⁜ first, go to your hex editor, open your charinfo mii that you just downloaded inside of your hex editor. ⁜</h3>
+  <h4>※ you may see this screen: ※</h4>
+  <!-- -->
+  <img src="https://hellot.nekoweb.org/mii/assets/screen.png" style="width:500px;" alt="1">
+  <!-- -->
+  <h4>and wonder... where's the gold pants state for the charinfo mii?<br><br>
+  <b>well, we will figure that out right now!</b><br><br></h4>
+  <h3>you need to find text called "<code>0B</code>" in the hex editor, and when you found it, go to the third instance of "<code>0B</code>", and when you found it, you may see this number: "<code>00</code>"<br><br></h3>
+  <h4>we need to edit that number to "<code>01</code>", but why?<br>
+  well, charinfo mii's have these normal/special pants (aka gold pants)<br><br>
+  <code>00</code> means... <b>normal pants!</b><br>
+  <code>01</code> means... <b>special pants!</b><br><br>
+  ※ now that you have edited the number "<code>00</code>" to "<code>01</code>", you need to <b>save</b> the hex edited charinfo, and when you saved it, put your edited charinfo mii in your modded Nintendo Switch's SD card or from your modded Nintendo Switch emulator's <b>virtual</b> SD card to this path: ※<br><br>
+  <b>sdmc:/MiiPort/miis</b><br><br></h4>
+  <h2>⁜ now, open the MiiPort homebrew app from your modded Nintendo Switch or from your Nintendo Switch emulator, and select the example.charinfo mii. ⁜</h2>
+  <h4>a message pop up on the top right will say something, if it says something about "The Mii has successfully imported!", <br>
+  it means the charinfo mii you just edited successfully got added in your mii maker!<br>
+  if not, you may have done something wrong...<br></h4>
+  <h2>※⁜ go to the mii maker from your Nintendo Switch's <b>settings</b>, and click the "Special" mii you just imported, and... ⁜※</h2>
+  <!-- -->
+  <ul class="il">
+    <li>
+      <img src="https://hellot.nekoweb.org/mii/assets/gold.jpg" style="width:310px;" alt="2">
+    </li>
+    <li>
+      <img src="https://hellot.nekoweb.org/mii/assets/test.jpg" style="width:310px;" alt="3">
+    </li>
+  </ul>
+  <!-- -->
+  <h3>※⁜ congrats! you just added a special mii to your Nintendo Switch! 😱 ⁜※</h3>
+  <button id="dl">※⁜ dark mode ⁜※</button>
+  <audio id="bg" loop preload="auto">
+    <source src="https://file.garden/aRzXHaa7jkbrRXjj/0.mp3" type="audio/mpeg">
+  </audio>
+  <script>
+    const PL = () => {
+      const au = document.getElementById('bg');
+      au.volume = 1.0;
+      au.play().catch(() => {});
+      document.removeEventListener('click', PL);
+    };
+    document.addEventListener('click', PL);
+    const dl = document.getElementById('dl');
+    const bd = document.body;
+    const st = localStorage.getItem('tm');
+    if (st === 'dk') {
+      bd.classList.add('dk');
+      dl.textContent = '※⁜ light mode ⁜※';
+    } else {
+      dl.textContent = '※⁜ dark mode ⁜※';
+    }
+    dl.addEventListener('click', () => {
+      bd.classList.toggle('dk');
+      const dk = bd.classList.contains('dk');
+      dl.textContent = dk ? '※⁜ light mode ⁜※' : '※⁜ dark mode ⁜※';
+      localStorage.setItem('tm', dk ? 'dk' : 'lt');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+@font-face {
+  font-family: 'NintendoNTLG';
+  src: url('https://hellot.nekoweb.org/assets/nintendo_NTLG-DB_002.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+body {
+  margin: 0;
+  font-family: 'NintendoNTLG', sans-serif;
+  background: url('https://hellot.nekoweb.org/assets/background.png') center/cover no-repeat fixed;
+  padding: 20px;
+  color: white;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: url('https://hellot.nekoweb.org/assets/pencil.png') 0 0, auto;
+}
+h1 { margin: 10px; }
+canvas {
+  border: 1px solid #444;
+  background: white;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+a, button {
+  cursor: url('https://hellot.nekoweb.org/assets/pencil.png') 0 0, pointer;
+}
+.ct {
+  margin: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+button,
+input[type="color"],
+input[type="range"] { cursor: pointer; }
+input[type="text"] { width: 400px; }
+.cl {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: white !important;
+  font-size: 12px;
+  text-decoration: none;
+  -webkit-text-fill-color: white !important;
+}
+.cl:hover { text-decoration: underline; }
+#po {
+  display: none;
+  position: fixed;
+  top:0; left:0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.7);
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+#pb {
+  background: #222;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 300px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(255,255,255,0.3);
+}
+#pb p { margin:0 0 15px; font-size: 18px; }
+#cp {
+  padding:5px 10px;
+  background:#555;
+  border:none;
+  color:white;
+  cursor:pointer;
+  border-radius:5px;
+}
+#cp:hover { background:#777; }

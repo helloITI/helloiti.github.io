@@ -1,0 +1,351 @@
+<!doctype html> 
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>※⁜ redr ⁜※</title>
+  <link rel="icon" type="image/png" href="https://hellot.nekoweb.org/assets/apple.png">
+  <style>
+    @font-face {
+      font-family: 'NintendoNTLG';
+      src: url('https://hellot.nekoweb.org/assets/nintendo_NTLG-DB_002.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      cursor: url("https://hellot.nekoweb.org/assets/Wii.png"), auto;
+    }
+
+    body:active {
+      cursor: url("https://hellot.nekoweb.org/assets/Wii.png"), auto;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 16px;
+      background: url("https://hellot.nekoweb.org/assets/background1.png") no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'NintendoNTLG', sans-serif;
+    }
+
+    header {
+      background: rgba(255,255,255,0.9);
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    h1 {
+      font-size: 18px;
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.95);
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    input[type=range] { width: 100%; }
+    select, input[type=file] { width: 100%; }
+
+    .preview { display: flex; gap: 12px; flex-wrap: wrap; }
+
+    canvas {
+      max-width: 100%;
+      border-radius: 8px;
+      background: #222;
+      display: block;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 0;
+      cursor: pointer;
+      background: #1976d2;
+      color: #fff;
+    }
+
+    .btn.secondary { background: #666; }
+
+    footer {
+      font-size: 13px;
+      color: #333;
+      background: rgba(255,255,255,0.9);
+      border-radius: 12px;
+      padding: 8px;
+    }
+
+    @media (max-width: 560px) {
+      .controls { grid-template-columns: 1fr; }
+    }
+    
+        .corner-link {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      color: black !important;
+      font-size: 12px;
+      text-decoration: none;
+      background: none !important;
+      -webkit-text-fill-color: black !important;
+    }
+    .corner-link:hover {
+      text-decoration: underline;
+    }
+       .corner-link:hover {
+      text-decoration: underline;
+    }
+    html {
+  scroll-behavior: smooth;
+  
+
+body {
+  overflow-y: scroll;
+}
+
+
+body::-webkit-scrollbar {
+  display: none;
+}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>
+    ※⁜ welcome to redr! this is a website that lets you remove anything from an image, except for parts that have the color red. redr could be really useful for other stuff! ⁜※
+    </h1>
+  </header>
+  
+    <a href="https://hellot.nekoweb.org/" class="corner-link">Go Back?</a>
+
+  <div class="card">
+    <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+      <input type="file" id="file" accept="image/*" />
+      <button id="download" class="btn">※⁜ download image ⁜※</button>
+      <button id="reset" class="btn secondary">※⁜ reset ⁜※</button>
+    </div>
+
+    <div style="margin-top:12px" class="controls">
+      <div>
+        <label for="mode">※⁜ detection mode ⁜※</label>
+        <select id="mode">
+          <option value="hue">※⁜ hue range ⁜※ (recommend using this option!)</option>
+          <option value="channel">※⁜ red-channel ⁜※ (fast version!)</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="soft">※⁜ softness px ⁜※(feather)</label>
+        <input type="range" id="soft" min="0" max="100" value="12" />
+      </div>
+
+      <div>
+        <label for="hueRange">※⁜ hue degrees ⁜※ (degrees)</label>
+        <input type="range" id="hueRange" min="0" max="100" value="18" />
+      </div>
+
+      <div>
+        <label for="satMin">※⁜ min saturation ⁜※ (%)</label>
+        <input type="range" id="satMin" min="0" max="100" value="30" />
+      </div>
+
+      <div>
+        <label for="valMin">※⁜ min value/brightness ⁜※ (%)</label>
+        <input type="range" id="valMin" min="0" max="100" value="20" />
+      </div>
+
+      <div>
+        <label for="redBoost">※⁜ channel threshold multiplier ⁜※</label>
+        <input type="range" id="redBoost" min="1" max="5" step="0.05" value="1.5" />
+      </div>
+    </div>
+  </div>
+
+  <div class="card preview">
+    <div style="flex:1; min-width:260px">
+      <label>※⁜ original image ⁜※</label>
+      <canvas id="orig" width="650" height="420"></canvas>
+    </div>
+
+    <div style="flex:1; min-width:260px">
+      <label>※⁜ modified version ⁜※</label>
+      <canvas id="out" width="650" height="420"></canvas>
+    </div>
+  </div>
+
+  <footer>
+  adjust the controls to make the red areas more precise. use "※⁜ hue range ⁜※" + "※⁜ min saturation/value ⁜※" for best results.
+  </footer>
+
+  <script>
+    const fileEl = document.getElementById('file');
+    const origCanvas = document.getElementById('orig');
+    const outCanvas = document.getElementById('out');
+    const ctxOrig = origCanvas.getContext('2d', { willReadFrequently: true });
+    const ctxOut = outCanvas.getContext('2d');
+
+    const modeEl = document.getElementById('mode');
+    const hueRangeEl = document.getElementById('hueRange');
+    const satMinEl = document.getElementById('satMin');
+    const valMinEl = document.getElementById('valMin');
+    const softEl = document.getElementById('soft');
+    const redBoostEl = document.getElementById('redBoost');
+    const downloadBtn = document.getElementById('download');
+    const resetBtn = document.getElementById('reset');
+    const music = document.getElementById('bg-music');
+
+    let img = new Image();
+
+    function resetControls() {
+      hueRangeEl.value = 18;
+      satMinEl.value = 30;
+      valMinEl.value = 20;
+      softEl.value = 12;
+      redBoostEl.value = 1.5;
+      modeEl.value = 'hue';
+    }
+
+    function fitCanvasToImage(c, image) {
+      c.width = image.naturalWidth || image.width;
+      c.height = image.naturalHeight || image.height;
+    }
+
+    function drawOriginal(image) {
+      fitCanvasToImage(origCanvas, image);
+      ctxOrig.drawImage(image, 0, 0);
+    }
+
+    function process() {
+      if (!img || !img.complete) return;
+      fitCanvasToImage(origCanvas, img);
+      fitCanvasToImage(outCanvas, img);
+      ctxOrig.drawImage(img, 0, 0);
+
+      const w = origCanvas.width, h = origCanvas.height;
+      const data = ctxOrig.getImageData(0, 0, w, h);
+      const out = ctxOut.createImageData(w, h);
+
+      const mode = modeEl.value;
+      const hueRange = Number(hueRangeEl.value);
+      const satMin = Number(satMinEl.value) / 100;
+      const valMin = Number(valMinEl.value) / 100;
+      const soft = Number(softEl.value);
+      const redBoost = Number(redBoostEl.value);
+
+      for (let i = 0; i < data.data.length; i += 4) {
+        const r = data.data[i] / 255;
+        const g = data.data[i + 1] / 255;
+        const b = data.data[i + 2] / 255;
+        let keep = 0;
+
+        if (mode === 'channel') {
+          if (r > (g + b) * 0.5 && r > g * redBoost && r > b * redBoost && r > 0.05) keep = 1;
+        } else {
+          const max = Math.max(r, g, b), min = Math.min(r, g, b);
+          const v = max;
+          let s = 0;
+          if (max !== 0) s = (max - min) / max;
+          let h = 0;
+          if (max === min) h = 0;
+          else {
+            if (max === r) h = ((g - b) / (max - min)) % 6;
+            else if (max === g) h = ((b - r) / (max - min)) + 2;
+            else h = ((r - g) / (max - min)) + 4;
+            h = h * 60;
+            if (h < 0) h += 360;
+          }
+          const distToRed = Math.min(Math.abs(h - 0), Math.abs(h - 360));
+          const withinHue = (distToRed <= hueRange);
+          if (withinHue && s >= satMin && v >= valMin) keep = 1;
+        }
+
+        out.data[i]     = data.data[i];
+        out.data[i + 1] = data.data[i + 1];
+        out.data[i + 2] = data.data[i + 2];
+        out.data[i + 3] = keep ? 255 : 0;
+      }
+
+      ctxOut.putImageData(out, 0, 0);
+    }
+
+    fileEl.addEventListener('change', e => {
+      const f = e.target.files && e.target.files[0];
+      if (!f) return;
+      const url = URL.createObjectURL(f);
+      img = new Image();
+      img.onload = () => {
+        drawOriginal(img);
+        process();
+        URL.revokeObjectURL(url);
+      };
+      img.src = url;
+    });
+
+    [modeEl, hueRangeEl, satMinEl, valMinEl, softEl, redBoostEl].forEach(el =>
+      el.addEventListener('input', process)
+    );
+
+    downloadBtn.addEventListener('click', () => {
+      outCanvas.toBlob(function(blob) {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'finished_img.png';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(a.href);
+      });
+    });
+
+    resetBtn.addEventListener('click', () => { resetControls(); process(); });
+
+    function enableSound() {
+      music.currentTime = 0;
+      music.play().catch(()=>{});
+      window.removeEventListener('click', enableSound);
+    }
+    window.addEventListener('click', enableSound);
+
+    resetControls();
+  </script>
+  
+  <audio id="bgm" loop>
+  <source src="https://hellot.nekoweb.org/assets/egg_song.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+
+<script>
+  document.addEventListener("click", function playMusic() {
+    const audio = document.getElementById("bgm");
+    audio.play().catch(err => console.log(err));
+    
+    // remove listener after first click so it doesn't restart audio
+    document.removeEventListener("click", playMusic);
+  });
+</script>
+
+</body>
+</html>

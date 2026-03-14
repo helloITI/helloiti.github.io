@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>※⁜ paint gallery ⁜※</title>
+  <link rel="icon" type="image/png" href="https://hellot.nekoweb.org/assets/paint.png">
+  <link rel="stylesheet" href="gal.css">
+</head>
+<body>
+  <h1>※⁜ welcome to paint gallery! ⁜※</h1>
+  
+  <div class="input-container">
+    <input type="text" id="drawingLinkInput" placeholder="※⁜ paste your link here... ⁜※">
+    <button id="addDrawingBtn">※⁜ add drawing! ⁜※</button>
+  </div>
+
+  <canvas id="canvas" width="800" height="600" style="display:none;"></canvas>
+
+  <h2>※⁜ my favorited drawings! ⁜※ 
+    <button id="toggleFavorites">※⁜ hide ⁜※</button>
+  </h2>
+  <div id="favoritesGallery"></div>
+
+  <h2>※⁜ shared drawings! ⁜※</h2>
+  <div id="gallery"></div>
+
+  <div id="popupOverlay">
+    <div id="popupBox">
+      <p id="popupMessage"></p>
+      <div class="popup-controls">
+        <button id="editBtn">※⁜ edit ⁜※</button>
+        <button id="remixBtn">※⁜ remix ⁜※</button>
+        <button id="closePopup">※⁜ close ⁜※</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="gal.js"></script>
+
+  <audio id="bgm" loop>
+    <source src="https://file.garden/aRzXHaa7jkbrRXjj/bgm_ps.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    document.addEventListener("click", function playMusic() {
+      document.getElementById("bgm").play().catch(()=>{});
+      document.removeEventListener("click", playMusic);
+    });
+  </script>
+</body>
+</html>

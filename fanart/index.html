@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>※⁜ helloT seal fanart ⁜※</title>
+  <link rel="icon" type="image/png" href="https://hellot.nekoweb.org/assets/deez.png">
+  
+  <style>
+    @font-face {
+      font-family: 'NintendoNTLG';
+      src: url('https://hellot.nekoweb.org/assets/nintendo_NTLG-DB_002.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    body {
+      font-family: 'NintendoNTLG', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-image: url('https://hellot.nekoweb.org/assets/galaxy.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+
+      cursor: url('https://hellot.nekoweb.org/assets/Wii.png') 16 16, auto;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 30px;
+    }
+
+
+    .image-box {
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 20px;
+      padding: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      width: 1300px;
+      min-height: 400px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+
+    .img-container {
+      position: relative;
+      display: inline-block;
+    }
+
+    .img-container img {
+      max-width: 210px;
+      max-height: 200px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+      transition: transform 0.2s;
+    }
+
+    .img-container img:hover {
+      transform: scale(1.05);
+    }
+
+    .hover-text {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.7);
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .img-container:hover .hover-text {
+      opacity: 1;
+    }
+    
+        .corner-link {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      color: black !important;
+      font-size: 12px;
+      text-decoration: none;
+      background: none !important;
+      -webkit-text-fill-color: white !important;
+    }
+    .corner-link:hover {
+      text-decoration: underline;
+    }
+
+body {
+  overflow-y: scroll;
+}
+
+
+body::-webkit-scrollbar {
+  display: none;
+}
+  </style>
+</head>
+<body>
+  <h1> helloT seal fanart </h1>
+  
+      <a href="https://hellot.nekoweb.org/" class="corner-link">Go Back?</a>
+
+
+<div class="image-box">
+  <div class="img-container">
+    <img src="https://hellot.nekoweb.org/assets/seal1.png" alt="Seal Fanart 1">
+    <div class="hover-text">※⁜ made by: @hellot.pnid ⁜※</div>
+  </div>
+
+  <div class="img-container">
+    <img src="https://hellot.nekoweb.org/assets/seal2.png" alt="Seal Fanart 2">
+    <div class="hover-text">※⁜ made by: @leggytheglitch ⁜※</div>
+  </div>
+
+  <div class="img-container">
+    <img src="https://hellot.nekoweb.org/assets/asdsadsdasdasdsa.png" alt="Seal Fanart 3" title="">
+    <div class="hover-text">※⁜ made by: @rabbid_bwah ⁜※</div>
+  </div>
+
+  <div class="img-container">
+    <img src="https://hellot.nekoweb.org/assets/seal4.png" alt="Seal Fanart 4">
+    <div class="hover-text">※⁜ made by: @tylerblu2103 ⁜※</div>
+  </div>
+
+  <div class="img-container">
+    <img src="https://hellot.nekoweb.org/assets/seal5.png" alt="Seal Fanart 5">
+    <div class="hover-text">※⁜ made by: @arafergirl ⁜※</div>
+  </div>
+</div>
+
+
+<audio id="bgm" loop>
+  <source src="https://hellot.nekoweb.org/assets/seal_song.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+
+<script>
+  document.addEventListener("click", function playMusic() {
+    const audio = document.getElementById("bgm");
+    audio.play().catch(err => console.log(err));
+    
+    document.removeEventListener("click", playMusic);
+  });
+</script>
+  
+  <meta property="og:title" content="※⁜ helloT seal fanart ⁜※" />
+  <meta property="og:description" content="※⁜ mmm... helloT seal fanart... ⁜※" />
+  <meta property="og:url" content="https://hellot.nekoweb.org/fanart" />
+  <meta property="og:image" content="https://hellot.nekoweb.org/assets/deez.png" />
+  <meta property="og:type" content="website" />
+  
+</body>
+</html>

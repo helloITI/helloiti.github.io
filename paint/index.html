@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- hiiiiiiiiiiiiIIIIIIIIIIIIIIIIIII -->
+<title>※⁜ paint ⁜※</title>
+<link rel="icon" type="image/png" href="https://hellot.nekoweb.org/assets/paint.png">
+<link rel="stylesheet" href="index.css">
+</head>
+<body>
+<h1>※⁜ welcome to paint! ⁜※</h1>
+<div id="po">
+  <div id="pb">
+    <p id="pm"></p>
+    <button id="cp">Close</button>
+  </div>
+</div>
+<a href="https://hellot.nekoweb.org/" class="cl">Go back?</a>
+<div class="ct">
+  <label>※⁜ color ⁜※ <input type="color" id="col" value="#000000" /></label>
+  <label>※⁜ brush size ⁜※ <input type="range" id="sz" min="1" max="100" value="5" /></label>
+  <button id="er">※⁜ eraser ⁜※</button>
+  <button id="fl">※⁜ fill ⁜※</button>
+  <button id="un">※⁜ undo ⁜※</button>
+  <button id="re">※⁜ redo ⁜※</button>
+  <button id="clr">※⁜ erase canvas ⁜※</button>
+  <button id="dl">※⁜ download as .png ⁜※</button>
+  <button id="pub">※⁜ generate link ⁜※</button>
+</div>
+<canvas id="cv" width="800" height="600"></canvas>
+<div class="ct">
+  <input type="text" id="shl" readonly placeholder="https://hellot.nekoweb.org/paint/#id=Insert_ID_Here" />
+  <button id="cpy">※⁜ copy link ⁜※</button>
+</div>
+<!-- javascript stuff ://// -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="index.js"></script>
+<audio id="bgm" loop preload="auto">
+  <source src="https://file.garden/aRzXHaa7jkbrRXjj/bgm_ps.mp3" type="audio/mpeg">
+</audio>
+</body>
+</html>

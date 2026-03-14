@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>※⁜ paint account ⁜※</title>
+<link rel="icon" type="image/png" href="https://hellot.nekoweb.org/assets/paint.png">
+
+<style>
+body {
+  margin: 0;
+  padding: 20px;
+  font-family: "NintendoNTLG", sans-serif;
+  background-image: url('https://hellot.nekoweb.org/assets/background.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  text-align: center;
+  color: white;
+}
+
+@font-face {
+  font-family: 'NintendoNTLG';
+  src: url('https://hellot.nekoweb.org/assets/nintendo_NTLG-DB_002.ttf') format('truetype');
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 16px;
+  max-width: 300px;
+  margin: 0 auto 20px auto;
+
+  background: none;
+}
+input, button {
+  padding: 8px;
+  font-family: "NintendoNTLG", sans-serif;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+button {
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<h2>※⁜ register your paint account! ⁜※</h2>
+<div class="card">
+  <input id="suUsername" placeholder="username">
+  <input id="suPassword" type="password" placeholder="password 🤣">
+  <label><input type="checkbox" id="suShowPass"> Show Password</label>
+  <label><input type="checkbox" id="suRememberMe"> ※⁜ remember me! ⁜※</label>
+  <button id="btnSignUp">Create Account</button>
+  <div id="signupMsg"></div>
+</div>
+
+<h2>※⁜ or... login into your paint account! ⁜※</h2>
+<div class="card">
+  <input id="liUsername" placeholder="username">
+  <input id="liPassword" type="password" placeholder="password 🤣">
+  <label><input type="checkbox" id="liShowPass"> ※⁜ show password ⁜※</label>
+  <label><input type="checkbox" id="rememberMe"> ※⁜ remember me! ⁜※</label>
+  <button id="btnLogin">※⁜ login! ⁜※</button>
+  <div id="loginMsg"></div>
+</div>
+
+<div class="card" id="accountCard" style="display:none;">
+  <p id="accountInfo"></p>
+  <button id="btnLogout">※⁜ logout ⁜※</button>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-analytics.js";
+import { 
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut
+} from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDGSMqVYXnhuOZdyKXgeQ7KxFhOncHb-ho",
+  authDomain: "mii-storage.firebaseapp.com",
+  databaseURL: "https://mii-storage-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "mii-storage",
+  storageBucket: "mii-storage.firebasestorage.app",
+  messagingSenderId: "974344318870",
+  appId: "1:974344318870:web:ee049bbd76bfae0c67f7b7",
+  measurementId: "G-WBH3XW22LE"
+};
+
+
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const auth = getAuth(app);  
+
+
+const suUsername = document.getElementById("suUsername");
+const suPassword = document.getElementById("suPassword");
+const suShowPass = document.getElementById("suShowPass");
+const suRememberMe = document.getElementById("suRememberMe");
+const signupMsg = document.getElementById("signupMsg");
+
+const liUsername = document.getElementById("liUsername");
+const liPassword = document.getElementById("liPassword");
+const liShowPass = document.getElementById("liShowPass");
+const rememberMe = document.getElementById("rememberMe");
+const loginMsg = document.getElementById("loginMsg");
+
+const btnSignUp = document.getElementById("btnSignUp");
+const btnLogin = document.getElementById("btnLogin");
+const btnLogout = document.getElementById("btnLogout");
+
+const accountCard = document.getElementById("accountCard");
+const accountInfo = document.getElementById("accountInfo");
+
+
+function usernameToEmail(username) {
+  return username.trim().toLowerCase() + "@app.local";
+}
+
+
+if (localStorage.getItem("paint_username")) liUsername.value = localStorage.getItem("paint_username");
+if (localStorage.getItem("paint_password")) liPassword.value = localStorage.getItem("paint_password");
+
+
+suShowPass.onchange = () => suPassword.type = suShowPass.checked ? "text" : "password";
+liShowPass.onchange = () => liPassword.type = liShowPass.checked ? "text" : "password";
+
+
+function validateFields(username, password) {
+  if (!username || !password) return "Please fill out both fields!";
+  if (password.length < 6) return "Password must be at least 6 characters!";
+  return "";
+}
+
+
+btnSignUp.onclick = async () => {
+  const username = suUsername.value.trim().toLowerCase();
+  const password = suPassword.value;
+
+  const errMsg = validateFields(username, password);
+  if (errMsg) {
+    signupMsg.textContent = "※⁜ " + errMsg + " ⁜※";
+    return;
+  }
+
+  try {
+    const emailAlias = usernameToEmail(username);
+    await createUserWithEmailAndPassword(auth, emailAlias, password);
+    signupMsg.textContent = "※⁜ successfully created your paint account! ⁜※";
+
+    if (suRememberMe.checked) {
+      localStorage.setItem("paint_username", username);
+      localStorage.setItem("paint_password", password);
+      liUsername.value = username;
+      liPassword.value = password;
+      rememberMe.checked = true;
+    }
+  } catch (err) {
+    signupMsg.textContent = "※⁜ an error has occurred... ⁜※ " + err.message;
+  }
+};
+
+
+btnLogin.onclick = async () => {
+  const username = liUsername.value.trim().toLowerCase();
+  const password = liPassword.value;
+
+  const errMsg = validateFields(username, password);
+  if (errMsg) {
+    loginMsg.textContent = "※⁜ " + errMsg + " ⁜※";
+    return;
+  }
+
+  try {
+    const emailAlias = usernameToEmail(username);
+    await signInWithEmailAndPassword(auth, emailAlias, password);
+    loginMsg.textContent = "※⁜ successfully logged in your paint account! ⁜※";
+
+    if (rememberMe.checked) {
+      localStorage.setItem("paint_username", username);
+      localStorage.setItem("paint_password", password);
+    }
+  } catch (err) {
+    loginMsg.textContent = "※⁜ an error has occurred... ⁜※ " + err.message;
+  }
+};
+
+
+btnLogout.onclick = async () => {
+  await signOut(auth);
+};
+
+
+auth.onAuthStateChanged(user => {
+  if (user) {
+    accountInfo.textContent = "※⁜ welcome, " + user.email.split("@")[0] + "! ⁜※";
+    accountCard.style.display = "block";
+  } else {
+    accountCard.style.display = "none";
+  }
+});
+
+
+document.addEventListener("click", function playMusic() {
+  const audio = document.getElementById("bgm");
+  audio.play().catch(err => console.log(err));
+  document.removeEventListener("click", playMusic);
+});
+</script>
+
+<audio id="bgm" loop>
+  <source src="https://hellot.nekoweb.org/assets/psvita.mp3" type="audio/mpeg">
+</audio>
+
+</body>
+</html>

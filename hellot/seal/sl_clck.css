@@ -1,0 +1,70 @@
+@font-face {
+  font-family: 'NintendoNTLG';
+  src: url('https://hellot.nekoweb.org/assets/nintendo_NTLG-DB_002.ttf') format('truetype');
+}
+body {
+  margin: 0;
+  padding: 20px;
+  font-family: 'NintendoNTLG', sans-serif;
+  background: url('https://hellot.nekoweb.org/assets/background.png') center/cover no-repeat fixed;
+  color: white;
+  text-align: center;
+  overflow: hidden;
+        cursor: url('https://hellot.nekoweb.org/assets/Wii.png') 0 0, pointer;
+}
+.title, .subtitle { position: relative; z-index: 20; }
+.title { margin-bottom: 5px; }
+.subtitle { margin-top: 0; margin-bottom: 15px; font-weight: normal; }
+    a {
+      cursor: url('https://hellot.nekoweb.org/assets/Wii.png') 0 0, pointer;
+    }
+        button {
+      cursor: url('https://hellot.nekoweb.org/assets/Wii.png') 0 0, pointer;
+    }
+#YapYoo{
+  position: fixed;
+  bottom: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(90%, 300px);
+  height: 65px;
+  border-radius: 16px;
+  font-size: 1.4rem;
+  font-family: inherit;
+  z-index: 20;
+  cursor: pointer;
+  background: white;
+  color: black;
+  border: none;
+  transition: transform 0.08s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+#YapYoo:active { transform: translateX(-50%) scale(0.95); }
+#fuck{
+  position: fixed; bottom: 95px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: clamp(1.2rem, 4vw, 1.8rem);
+  z-index: 20;
+}
+#okcool {
+  position: fixed;
+  bottom: 135px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: clamp(0.9rem, 3.5vw, 1.1rem);
+  max-width: 95%;
+  z-index: 20;
+  opacity: 0.95;
+}
+canvas { position: fixed; inset: 0; z-index: 0; }
+    #language-selector {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 16px;
+      padding: 4px;
+      z-index: 1;
+      cursor: url('https://hellot.nekoweb.org/assets/Wii.png') 0 0, pointer;
+    }

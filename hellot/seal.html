@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>※⁜ helloT seal ⁜※</title>
+<link rel="icon" type="image/png" href="https://hellot.nekoweb.org/assets/deez.png">
+<style>
+  @font-face {
+    font-family: 'NintendoNTLG';
+    src: url('https://hellot.nekoweb.org/assets/nintendo_NTLG-DB_002.ttf') format('truetype');
+  }
+  body {
+    margin: 0;
+    padding: 20px;
+    font-family: 'NintendoNTLG', sans-serif;
+    background: url('https://hellot.nekoweb.org/assets/background.png') center/cover no-repeat fixed;
+    overflow: hidden;
+    color: white;
+    cursor: url('https://hellot.nekoweb.org/assets/Wii.png') 0 0, auto;
+  }
+  h1 {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 2rem;
+  }
+  canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+  }
+</style>
+</head>
+<body>
+<h1>※⁜ 🦭 helloT seal 🦭 ⁜※</h1>
+<canvas id="canvas"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/loaders/GLTFLoader.js"></script>
+<script src="sl.js"></script>
+  <script>
+    document.addEventListener("click", function playMusic() {
+      const audio = document.getElementById("bg");
+      audio.play().catch(err => console.log("Audio error:", err));
+      document.removeEventListener("click", playMusic);
+    });
+  </script>
+    <audio id="bg" loop preload="auto">
+    <source src="https://file.garden/aRzXHaa7jkbrRXjj/13._Exhibition.mp3" type="audio/mpeg">
+  </audio>
+</body>
+</html>

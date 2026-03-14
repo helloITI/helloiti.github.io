@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>※⁜ paint account ⁜※</title>
+<link rel="icon" type="image/png" href="https://hellot.nekoweb.org/assets/paint.png">
+<link rel="stylesheet" href="acc.css">
+</head>
+<body>
+<h2>※⁜ log in your paint account! ⁜※</h2>
+<div class="card" id="loginCard">
+  <input id="liUsername" placeholder="username">
+  <input id="liPassword" type="password" placeholder="password 🤣">
+  <label><input type="checkbox" id="liShowPass"> ※⁜ show password ⁜※</label>
+  <button id="btnLogin">※⁜ login! ⁜※</button>
+  <div id="loginMsg"></div>
+</div>
+<p>※⁜ don't have an account yet? click <span class="link" id="showSignup">here</span> to make one! ⁜※</p>
+<div class="card" id="signupCard" style="display:none;">
+  <input id="suUsername" placeholder="username">
+  <input id="suPassword" type="password" placeholder="password 🤣">
+  <input id="suConfirmPassword" type="password" placeholder="confirm password 🤣">
+  <label><input type="checkbox" id="suShowPass"> ※⁜ show passwords ⁜※</label>
+  <button id="btnSignUp">※⁜ register! ⁜※</button>
+  <div id="signupMsg"></div>
+</div>
+<p id="showLogin" style="display:none;">※⁜ already have an account? click <span class="link" id="showLoginLink">here</span> to log in! ⁜※</p>
+<div class="card" id="accountCard" style="display:none;">
+  <p id="accountInfo"></p>
+  <button id="btnLogout">※⁜ logout ⁜※</button>
+</div>
+<script type="module" src="acc.js"></script>
+<audio id="bgm" loop>
+  <source src="https://hellot.nekoweb.org/assets/psvita.mp3" type="audio/mpeg">
+</audio>
+</body>
+</html>

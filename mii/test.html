@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<title>※⁜ mii storage ⁜※</title>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="https://hellot.nekoweb.org/assets/miiST.png">
+<meta property="og:title" content="※⁜ mii storage ⁜※" />
+<meta property="og:description" content="※⁜ mii storage is a mii tool that lets you upload .charinfo or .ffsd mii's and saves them in your browser! ⁜※" />
+<meta property="og:url" content="https://hellot.nekoweb.org/mii/" />
+<meta property="og:image" content="https://hellot.nekoweb.org/assets/miiST.png" />
+<meta property="og:type" content="website" />
+<link rel="stylesheet" href="https://hellot.nekoweb.org/css/miist.css">
+</head>
+<body>
+<center>
+<h1>※⁜ welcome to mii storage! ⁜※</h1>
+<h2>⁜ here, you can save your .charinfo or .ffsd mii's just in a website! isn't that cool? ⁜</h2>
+</center>
+<a href="https://hellot.nekoweb.org/" id="mw"
+   style="position: absolute; top: 10px; right: 10px; font-size: 12px; text-decoration: none;">
+   Go Back?
+</a>
+<center><input type="file" id="fl" accept=".charinfo,.ffsd"></center>
+<center>
+<h3>※⁜ or... import via raw mii hex data! ⁜※</h3>
+<textarea id="hx" placeholder="※⁜ paste your charinfo/ffsd's hex data here... ⁜※"
+          style="width:45%; height:80px; margin:5px; font-family:monospace;"></textarea><br>
+<button id="ih" style="max-width:100% !important; height:auto !important; border-radius:8px !important;">※⁜ import ⁜※</button>
+</center>
+<center><h2>※⁜ saved mii's! ⁜※</h2></center>
+<div id="ls"></div>
+<div id="mp">
+    <div class="pp">
+        <img id="pi" style="max-width:100%; height:auto; border-radius:8px;">
+        <br>
+        <button onclick="document.getElementById('mp').style.display='none'"> ※⁜ close ⁜※ </button>
+    </div>
+</div>
+<div id="mp1">
+    <div class="pp" id="pt"></div>
+</div>
+<div id="mp2">
+    <div class="pp" id="cr"></div>
+</div>
+<button id="gi" onclick="sg()">※⁜ credits ⁜※</button>
+<button id="dl">※⁜ dark mode ⁜※</button>
+<audio id="bg" loop>
+    <source src="https://file.garden/aRzXHaa7jkbrRXjj/dwnmng.mp3" type="audio/mpeg">
+</audio>
+<script src="https://hellot.nekoweb.org/js/mist.js"></script>
+</body>
+</html>
