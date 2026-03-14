@@ -1,0 +1,131 @@
+/* hs */
+@font-face {
+    font-family: 'NintendoNTLG';
+    src: url('https://hellot.nekoweb.org/assets/nintendo_NTLG-DB_002.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+body {
+    font-family: 'NintendoNTLG', 'Noto Sans', 'Segoe UI', Arial, sans-serif;
+    background: url('https://hellot.nekoweb.org/assets/background1.png') center/cover no-repeat fixed; /* lt */
+    color: #000;
+    padding: 20px;
+    margin: 0;
+    min-height: 100vh;
+    position: relative;
+    transition: background .4s ease;
+    overflow-y: scroll;
+    cursor: url('https://hellot.nekoweb.org/assets/Wii.png') 0 0, auto;
+}
+a, button, .cd img { cursor: url('https://hellot.nekoweb.org/assets/Wii.png') 0 0, pointer !important; }
+body.dk {
+    background: url('https://hellot.nekoweb.org/assets/background.png') center/cover no-repeat fixed; /* dt */
+    color: #eee;
+}
+body::-webkit-scrollbar { display: none; } /* hs */
+button, input, textarea {
+    padding: 8px;
+    margin: 4px;
+    font-family: inherit;
+    transition: all .1s ease;
+}
+button:active { transform: translateY(1px); filter: brightness(0.85); }
+.cd {
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 10px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 10px 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,.1);
+    transition: all .3s ease;
+}
+body.dk .cd {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    box-shadow: 0 1px 3px rgba(0,0,0,.5);
+}
+.cd img { width: 80px; cursor: pointer; }
+table { border-collapse: collapse; margin-top: 4px; width: 100%; }
+td, th { border: 1px solid #ddd; padding: 2px 6px; font-size: 12px; }
+body.dk td, body.dk th { border: 1px solid #333; }
+th { background: #e0e0e0; }
+body.dk th { background: #222; }
+#mp, #mp1, #mp2 {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.75);
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+#mp1, #mp2 { pointer-events: none; }
+.pp {
+    pointer-events: auto;
+    background: #fff;
+    padding: 15px;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 90%;
+    box-shadow: 0 4px 20px rgba(0,0,0,.2);
+}
+body.dk .pp { background: #111; color: #eee; box-shadow: 0 4px 20px rgba(0,0,0,.6); }
+.pp button {
+    margin-top: 10px;
+    padding: 6px 14px;
+    background: #222;
+    color: #fff;
+    border: 1px solid #444;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.pp button:hover { background: #444; }
+#dl {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    background: #333;
+    color: #fff;
+    border: 1px solid #555;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    box-shadow: 0 2px 6px rgba(0,0,0,.2);
+    transition: all .3s ease;
+}
+#dl:hover {
+    background: #555;
+    transform: translateY(-1px);
+}
+body.dk #dl {
+    background: #ccc;
+    color: #000;
+    border: 1px solid #aaa;
+}
+body.dk #dl:hover { background: #eee; }
+#gi {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+    background: #222;
+    color: #fff;
+    border: 1px solid #555;
+    padding: 4px 9px;
+    border-radius: 6px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+}
+body.dk #gi {
+    background: #ccc;
+    color: #000;
+    border: 1px solid #aaa;
+}
+#mw { color: black; }
+body.dk #mw { color: white; }

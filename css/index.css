@@ -1,0 +1,205 @@
+  /* this is yucky code that makes mobile look bad: <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> */
+    @font-face {
+      font-family: 'NintendoNTLG';
+      src: url('https://hellot.nekoweb.org/assets/nintendo_NTLG-DB_002.ttf') format('truetype'); /* ttf file name too long so i pasted it 🤣🤣🤣 me is funny */
+      /* normal weight... i think? */
+      font-weight: normal;
+      font-style: normal;
+    }
+    body {
+      font-family: 'NintendoNTLG', sans-serif;
+      margin: 0;
+      padding: 10px;
+       /* bg */
+      background-image: url('https://hellot.nekoweb.org/assets/background.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: white;
+      cursor: url('https://hellot.nekoweb.org/assets/Wii.png') 0 0, auto;
+      overflow-y: scroll;
+display: flex;
+flex-direction: column;
+align-items: center;
+    }
+    h1, h2, h3 {
+      margin: 10px 0;
+      padding: 0;
+    }
+    h1 > div {
+      margin: 0;
+    }
+    body::-webkit-scrollbar { display: none; }
+    a {
+      text-decoration: none;
+      background-size: 400% 400%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      cursor: url('https://hellot.nekoweb.org/assets/Wii.png') 0 0, pointer;
+    }
+    a:hover { text-decoration: underline; }
+    a img {
+      background: none;
+      animation: none;
+    }
+    .hm {
+      width: 100px;
+      height: auto;
+      image-rendering: pixelated !important;
+    }
+    .st {
+      display: block;
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+    .cl {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      color: black !important;
+      font-size: 12px;
+      text-decoration: none;
+      background: none !important;
+      -webkit-text-fill-color: black !important;
+      z-index: 9999;
+    }
+    .cl:hover { text-decoration: underline; }
+    html { scroll-behavior: smooth; }
+    .lb {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: rgba(0,0,0,0.5);
+      padding: 10px 20px;
+      border-radius: 12px;
+      width: fit-content;
+      margin: 8px auto;
+      text-decoration: none;
+      transition: 0.2s;
+      color: white;
+      -webkit-text-fill-color: white;
+    }
+    .lb img {
+      width: 32px;
+      height: 32px;
+      image-rendering: pixelated !important;
+    }
+    .lb:hover {
+      background: rgba(255,255,255,0.2);
+      transform: scale(1.02);
+    }
+    .br {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+      margin: 10px 0;
+      padding: 0;
+      list-style: none;
+      width: 100%;
+max-width: 550px;
+    }
+    .br a img {
+      width: 100px;
+      height: auto;
+      image-rendering: pixelated;
+    }
+    pre, code { /* dih */
+      color: white;
+      background: none;
+      padding: 10px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: monospace;
+      margin: 10px 0;
+    }
+.ls {
+  position: fixed;
+  left: 10px;
+  bottom: 10px !important;
+  top: auto !important;
+  display: flex;
+  flex-direction: row;
+  gap: 4.5px;
+  z-index: 150;
+}
+    .lsm { /* +*º */
+      width: 67px;
+      height: auto;
+      image-rendering: smooth !important;
+    }
+    .hs {
+      width: 150px;
+      height: auto;
+      image-rendering: pixelated !important;
+    }
+    .sr {
+      position: fixed;
+      right: 10px;
+      bottom: 10px !important;
+      top: auto !important;
+      width: 150px;
+      z-index: 200;
+    }
+    .bp { /* 67 */
+      position: fixed;
+      bottom: 10px;
+      left: 160px;
+      display: flex;
+      align-items: flex-end;
+    }
+        .sp { /* woahhh */
+      position: fixed;
+      bottom: 10px;
+      right: 100px;
+      display: flex;
+      align-items: flex-end;
+    }
+      .dt {
+      position: absolute;
+      top: 35px;
+      right: 10px;
+      background: none !important;
+    }
+    .s1 {
+  position: absolute;
+}
+.sd {
+  position: absolute;
+  top: 150px;
+ right: 500px;
+  transform: translateX(-50%);
+  width: 215px;
+  height: auto;
+  z-index: 1000;
+  image-rendering: pixelated !important;
+}
+    .p1 {
+  position: absolute;
+}
+.pt {
+  position: absolute;
+  top: 360px;
+ right: 677px;
+  transform: translateX(-50%);
+  width: 150px;
+  height: auto;
+  z-index: 1000;
+  image-rendering: pixelated !important;
+}
+.ph {
+  position: absolute;
+  top: 570px;
+ right: 1500px;
+  transform: translateX(-50%);
+  width: 150px;
+  height: auto;
+  z-index: 1000;
+  image-rendering: smooth !important;
+}
+pre {
+  text-align: center;
+}
