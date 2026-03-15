@@ -5,8 +5,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>※</title>
-  <link rel="icon" type="image/png" href="https://hellot.nekoweb.org/assets/mii_icon.png">
-  <link rel="stylesheet" href="https://hellot.nekoweb.org/css/ins.css">
+  <link rel="icon" type="image/png" href="https://helloiti.github.io/assets/mii_icon.png">
+  <link rel="stylesheet" href="https://helloiti.github.io/css/ins.css">
 </head>
 <body>
 
@@ -208,13 +208,13 @@
     </table>
   </div>
    
-  <audio id="bgm" loop>
-    <source src="https://hellot.nekoweb.org/assets/music.mp3" type="audio/mpeg">
+  <audio id="bg" loop>
+    <source src="https://helloiti.github.io/assets/music.mp3" type="audio/mpeg">
   </audio>
 
   <script>
     document.addEventListener("click", function playMusic() {
-      const audio = document.getElementById("bgm");
+      const audio = document.getElementById("bg");
       audio.play().catch(err => console.log(err));
       document.removeEventListener("click", playMusic);
     });
