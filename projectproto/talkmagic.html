@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <input type="file" id="audioFile" accept="audio/*"><br><br>
+    <button id="playBtn">Play</button>
+    <button id="pauseBtn">Pause</button><br><br>
+
+    <script>
+        let audioContext;
+        let audioBuffer;
+        let sourceNode;
+        let pitchNode;
+        let filterNode;
+        let scriptNode;
+
+        const fileInput = document.getElementById('audioFile');
+        const playBtn = document.getElementById('playBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+
+        const pitchValue = 1.5;
+        const lofiValue = 0.2;
+
+        fileInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    audioContext.decodeAudioData(e.target.result).then(buffer => {
+                        audioBuffer = buffer;
+                    });
+                };
+                reader.readAsArrayBuffer(file);
+            }
+        });
+
+        function createBitcrusher(bits) {
+            const node = audioContext.createScriptProcessor(4096, 1, 1);
+            let phaser = 0;
+            let last = 0;
+            const step = Math.pow(0.5, bits);
+            node.onaudioprocess = function(e) {
+                const input = e.inputBuffer.getChannelData(0);
+                const output = e.outputBuffer.getChannelData(0);
+                for (let i = 0; i < input.length; i++) {
+                    phaser += 1;
+                    if (phaser >= 1/step) {
+                        phaser -= 1/step;
+                        last = input[i];
+                    }
+                    output[i] = last;
+                }
+            };
+            return node;
+        }
+
+        function playAudio() {
+            if (!audioBuffer) return;
+
+            sourceNode = audioContext.createBufferSource();
+            sourceNode.buffer = audioBuffer;
+            sourceNode.playbackRate.value = parseFloat(pitchValue);
+
+            // Retro Low-pass filter
+            filterNode = audioContext.createBiquadFilter();
+            filterNode.type = 'lowpass';
+            filterNode.frequency.value = 4000; // retro cutoff
+
+            // Bitcrusher
+            scriptNode = createBitcrusher( Math.floor(lofiValue * 16) );
+
+            sourceNode.connect(filterNode);
+            filterNode.connect(scriptNode);
+            scriptNode.connect(audioContext.destination);
+
+            sourceNode.start();
+        }
+
+        function pauseAudio() {
+            if (sourceNode) {
+                sourceNode.stop();
+            }
+        }
+
+        playBtn.addEventListener('click', playAudio);
+        pauseBtn.addEventListener('click', pauseAudio);
+
+        pitchSlider.addEventListener('input', function() {
+            pitchValue.textContent = this.value;
+            if (sourceNode) sourceNode.playbackRate.value = parseFloat(this.value);
+        });
+
+        lofiSlider.addEventListener('input', function() {
+            lofiValue.textContent = this.value;
+        });
+    </script>
+</body>
+</html>

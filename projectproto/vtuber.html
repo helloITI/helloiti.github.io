@@ -1,0 +1,1608 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Spookily real</title>
+  <script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
+  <script src="https://unpkg.com/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three/examples/js/exporters/GLTFExporter.js"></script>
+  <style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #0000FF;
+    overflow: hidden;
+  }
+</style>
+
+</head>
+    
+<body>
+    
+<canvas id="miiCanvas" width="500" height="500"></canvas>
+
+<div id="sliders">
+  <label>Tilt <input type="range" id="rotateY" min="0" max="6.28" step="0.01" value="0"></label>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+
+
+<video id="input_video" autoplay playsinline style="display:none;"></video>
+<canvas id="faceComposeCanvas" width="640" height="480"></canvas>
+<script>
+const slidersA = document.getElementById('sliders');
+
+let isCursorInside = true;
+
+// Hide when cursor leaves the page
+document.addEventListener('mouseleave', () => {
+  isCursorInside = false;
+  slidersA.style.display = 'none';
+});
+
+// Show when cursor re-enters the page
+document.addEventListener('mouseenter', () => {
+  isCursorInside = true;
+  slidersA.style.display = 'block';
+});
+</script>
+
+
+<script>
+  //mii data
+  let faceline = 1;
+  let hairstyle = 1;
+  let facialstyle = 0;
+  let gender = 0;
+  let hairFlipped = false;
+  let shirtcolor = 1;
+  let hatColor = new THREE.Color(0xff0000);
+  let eyestyle = "1.png";
+  let eyebrowstyle = "2.png";
+  let mouthstyle = "1.png";
+  let nosestyle = "1.png";
+  let detailstyle = "0.png";
+  let eyeColorHex = '4C4032';
+  let haircolor = 0x323123;
+  let browColorHex = '323123';
+  let glasses_S = 1;
+  let glassesColorHex = '323123';
+  let skintone = 1;
+  let lipcolor = 'F3A771';
+  let molestyle = "0.png";
+  let musstyle = "0.png";
+  //adjustments
+  let LIB_Eye_PosX = 0;
+  let LIB_Eye_PosY = 0;
+  let LIB_Eye_Scale = 0;
+  let LIB_Eye_Rot = 0;
+  let LIB_Brow_PosX = 0;
+  let LIB_Brow_PosY = 0;
+  let LIB_Brow_Scale = 0;
+  let LIB_Brow_Rot = 0;
+  let LIB_Mouth_PosY = 0;
+  let LIB_Mouth_Scale = 0;
+  let LIB_Nose_PosY = 0;
+  let LIB_Nose_Scale = 0;
+  let LIB_Glass_PosY = 0;
+  let LIB_Glass_Scale = 0;
+  let LIB_Mole_PosX = 0;
+  let LIB_Mole_PosY = 0;
+  let LIB_Mole_Scale = 0;
+  let LIB_Stache_PosX = 0;
+  let LIB_Stache_PosY = 0;
+  let LIB_Stache_Scale = 0;
+  
+  let height = 1;
+  let weight = 1;
+  //local
+  let overlayScene, overlayCamera, overlayMesh;
+  let faceMesh = null;
+  let hairMesh = null;
+  let bodyMesh = null;
+  let beardMesh = null;
+  let wrapMesh = null;
+  let headGroup = null;
+  let zip = null;
+  let mixer = null;
+  let GlassesTex = null;
+  const clock = new THREE.Clock();
+  let animations = [];
+  let currentAnimationIndex = 0;
+  let currentAction = null;
+const baseCameraY = 0;
+const baseCameraZ = 10;
+const hatColors = [
+  "#735A52",
+  "#BDA594",
+  "#CAC1C1",
+  "#F7EFFF",
+  "#B9B9B9",
+  "#74747D",
+  "#B1DAA1",
+  "#FFB397",
+  "#FF90FF",
+  "#BB9ADD",
+  "#FFFC75",
+  "#A7E0E8",
+  "#F79933",
+  "#8099FF",
+];
+//expressionval
+let EX_eyestyle = "1.png";
+let EX_eyebrowstyle = "2.png";
+let EX_mouthstyle = "1.png";
+let EX_LIB_Eye_PosX = 0;
+let EX_LIB_Eye_PosY = 0;
+let EX_LIB_Eye_Rot = 0;
+let EX_LIB_Brow_PosX = 0;
+let EX_LIB_Brow_PosY = 0;
+let EX_LIB_Brow_Rot = 0;
+let EX_LIB_Mouth_PosY = 0;
+
+
+let idleGLB = null;
+
+  const canvas = document.getElementById('miiCanvas');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(value, max));
+}
+  
+const scene = new THREE.Scene();
+scene.background = null;
+
+const aspect = 500 / 500;
+const frustumSize = 3;
+
+const camera = new THREE.PerspectiveCamera(15, 500 / 500, 0.1, 300);
+
+
+
+camera.position.set(0, 0,5);
+
+  const light = new THREE.AmbientLight(0xffffff, 0.5);
+  scene.add(new THREE.AmbientLight(0xffffff, 0.5), light);
+
+const BeardZOffsetMap = {
+  1: 0,
+  2: 0.1,
+  3: 0.01,
+  4: -0.01,
+  5: -0.03,
+  6: 0,
+  7: -0.03,
+  8: -0.03,
+};
+const BeardYOffsetMap = {
+  1: 0,
+  2: -0.03,
+  3: -0.06,
+  4: 0,
+  5: 0.01,
+  6: 0,
+  7: 0.01,
+  8: 0.01,
+};
+
+let headBone = null;
+const loader = new THREE.GLTFLoader();
+
+//Mii section
+
+  async function loadGLBFromZip(path) {
+    const file = zip.file(path);
+    if (file) {
+    const buffer = await file.async('arraybuffer');
+    return new Promise((resolve, reject) => {
+      loader.parse(buffer, '', gltf => resolve(gltf.scene), reject);
+    });
+    }
+  }
+
+  async function loadBodyAndAnimations(url) {
+    return new Promise((resolve, reject) => {
+      loader.load(url, (gltf) => resolve(gltf), undefined, reject);
+    });
+  }
+
+const legsTexture = new THREE.TextureLoader().load("https://mt-tools.nekoweb.org/projectproto/texture/pants.png", (texture) => {
+  texture.magFilter = THREE.NearestFilter;
+  texture.minFilter = THREE.NearestFilter;
+  texture.generateMipmaps = false;
+  texture.needsUpdate = true;
+});
+
+  legsTexture.flipY = false;
+
+const legsMaterial = new THREE.MeshStandardMaterial({
+  map: legsTexture,
+  roughness: 0.8,
+  metalness: 0,
+  skinning: true,
+  morphTargets: true,
+  transparent: true,
+});
+async function loadAnimationsFromGLB(url) {
+  const loader = new THREE.GLTFLoader();
+  return new Promise((resolve, reject) => {
+    loader.load(url, gltf => {
+      resolve(gltf.animations || []);
+    }, undefined, reject);
+  });
+}
+
+  async function buildMiiHead(faceIndex, hairIndex, gender,haircolora) {
+     
+     npc = null;
+     
+    const facePath = `proto_facelib/mdl/face${faceIndex}.glb`;
+    const wrapPath = `proto_facelib/mdl/wrap${faceIndex}.glb`;
+    const hairPath = `proto_facelib/mdl/hair${hairIndex}.glb`;
+    const facehairPath = `proto_facelib/mdl/beard${facialstyle}.glb`;
+    const glassPath = `proto_facelib/mdl/glasses.glb`;
+    
+    const genderURL = gender === 1
+      ? "model/body/female.glb"
+      : "model/body/male.glb";
+    if (bodyMesh) {
+      scene.remove(bodyMesh);
+      mixer = null;
+    }
+    if (headGroup) {
+      headGroup.parent?.remove(headGroup);
+    }
+
+    const [face, hair, lasi, facehair, wrap] = await Promise.all([
+      loadGLBFromZip(facePath),
+      loadGLBFromZip(hairPath),
+      loadGLBFromZip(glassPath),
+      loadGLBFromZip(facehairPath),
+      loadGLBFromZip(wrapPath)
+    ]);
+
+    faceMesh = face;
+    hairMesh = hair;
+    glassMesh = lasi;
+    beardMesh = facehair;
+    wrapMesh = wrap;
+
+const gltf = await loadBodyAndAnimations(genderURL);
+bodyMesh = gltf.scene;
+mixer = new THREE.AnimationMixer(bodyMesh);
+const externalAnimations = await loadAnimationsFromGLB("model/anim/stance.glb");
+animations = externalAnimations.length > 0 ? externalAnimations : gltf.animations || [];
+
+currentAnimationIndex = 0;
+if (animations.length > 0) {
+  currentAction = mixer.clipAction(animations[currentAnimationIndex]);
+  currentAction.play();
+} else {
+  currentAction = null;
+}
+    if (animations.length > 0) {
+      currentAction = mixer.clipAction(animations[currentAnimationIndex]);
+      currentAction.play();
+    } else {
+      currentAction = null;
+    }
+
+
+    bodyMesh.scale.set(-0.1, 0.1, 0.1);
+
+ChangeHairColor(haircolora);
+
+let skinColor = null;
+const skincolMap = {
+  1: "#ECE0C6",
+  2: "#F8E5BC",
+  3: "#BCA87D",
+  4: "#625539",
+  5: "#FFD3A3"
+};
+
+skinColor = skincolMap[skintone];
+    const headSkinMaterial = new THREE.MeshStandardMaterial({
+      roughness: 0.6,
+      side: THREE.DoubleSide
+    });
+    const handSkinMaterial = new THREE.MeshStandardMaterial({
+      color: skinColor,
+      roughness: 0.6,
+      skinning: true,
+      morphTargets: true,
+      side: THREE.DoubleSide
+    });
+    faceMesh.traverse(child => {
+      if (child.isMesh) {
+        child.material = headSkinMaterial;
+      }
+    });
+    hairMesh.traverse(child => {
+      if (child.isMesh) {
+        child.material = HairMaterial;
+      }
+    });
+    if (beardMesh) {
+    beardMesh.traverse(child => {
+      if (child.isMesh) {
+        child.material = HairMaterial;
+      }
+    });
+    }
+    bodyMesh.traverse(child => {
+      if (child.isMesh && (child.name.toLowerCase().includes("hands_m") || child.name.toLowerCase().includes("hands_f"))) {
+        child.material = handSkinMaterial;
+      }
+    });
+    bodyMesh.traverse(child => {
+      if (child.isMesh && (
+          child.name.toLowerCase().includes("legs_m") ||
+          child.name.toLowerCase().includes("legs_f"))
+      ) {
+        child.material = legsMaterial;
+      }
+    });
+changeBodyTexture(shirtcolor);
+
+    headGroup = new THREE.Group();
+    headGroup.add(faceMesh);
+    headGroup.add(wrapMesh);
+    headGroup.add(hairMesh);
+    headGroup.add(glassMesh);
+    headGroup.add(beardMesh);
+    const BZOffset = BeardZOffsetMap[faceline] ?? 0;
+    const BYOffset = BeardYOffsetMap[faceline] ?? 0;
+    if (beardMesh) {
+     beardMesh.position.z += BZOffset;
+     beardMesh.position.y += BYOffset;
+    }
+hairMesh.scale.x = hairFlipped ? -1 : 1;
+headBone = bodyMesh.getObjectByName("head") || bodyMesh.getObjectByName("Head");
+bodyBone = bodyMesh.getObjectByName("chest_h2");
+
+scene.add(headGroup);
+headGroup.scale.set(0.7, 0.7, 0.7);
+renderHeadTex();
+scene.add(bodyMesh);
+updateBodyScale(height,weight);
+
+renderFace();
+  }
+
+function updateBodyScale(he,we) {
+  const height = parseFloat(he);
+  const weight = parseFloat(we);
+
+  if (bodyMesh) {
+    const baseScale = 0.1;
+    const scaleX = -baseScale * weight * height;
+    const scaleY = baseScale * height;
+    const scaleZ = baseScale * weight * height;
+    bodyMesh.scale.set(scaleX, scaleY, scaleZ);
+
+    let cameraY = height + 0.5;
+
+    const minY = 1;
+    const maxY = 5;
+    camera.position.y = Math.max(minY, Math.min(maxY, cameraY));
+  }
+}
+
+const textureLoader = new THREE.TextureLoader();
+
+function ChangeFaceColor(number) {
+skintone = number;
+buildMiiHead(faceline, hairstyle, gender);
+renderHeadTex();
+}
+
+function changeBodyTexture(index) {
+  shirtcolor = index;
+
+  if (index < 1 || index > 14) {
+    console.warn("Texture index must be between 1 and 14");
+    return;
+  }
+  hatColor.set(hatColors[index - 1]);
+  if (!bodyMesh) {
+    console.warn("Body mesh not loaded yet");
+    return;
+  }
+replaceHair(hairstyle);
+const textureURL = `texture/${index}.png`;
+
+const textureLoader = new THREE.TextureLoader();
+textureLoader.load(
+  textureURL,
+  texture => {
+    texture.magFilter = THREE.NearestFilter;
+    texture.minFilter = THREE.NearestFilter;
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.y = -1;
+
+    texture.generateMipmaps = false;
+    texture.needsUpdate = true;
+
+    bodyMesh.traverse(child => {
+      if (
+        child.isMesh &&
+        (child.name.toLowerCase().includes("body_m") ||
+         child.name.toLowerCase().includes("body_f"))
+      ) {
+        if (Array.isArray(child.material)) {
+          child.material.forEach(mat => {
+            mat.map = texture;
+            mat.needsUpdate = true;
+          });
+        } else {
+          child.material.map = texture;
+          child.material.needsUpdate = true;
+        }
+      }
+    });
+  },
+  undefined,
+  err => {
+    console.error("Failed to load texture:", err);
+  }
+);
+
+}
+let bodyLoaded = false;
+async function replaceHair(hairIndex) {
+  const hairPath = `proto_facelib/mdl/hair${hairIndex}.glb`;
+  const hair = await loadGLBFromZip(hairPath);
+  if (hairMesh) headGroup.remove(hairMesh);
+  hairMesh = hair;
+  hairMesh.scale.x = hairFlipped ? -1 : 1;
+  headGroup.add(hairMesh);
+hairMesh.traverse(child => {
+  if (child.isMesh) {
+    if (child.name.includes('_cap')) {
+      child.material.color.copy(hatColor);
+    } else {
+      child.material = HairMaterial;
+    }
+  }
+});
+}
+
+function ColorGlasses(colorhex){
+glassesColorHex = colorhex;
+SetGlasses(glasses_S);
+}
+
+async function SetGlasses(glasses) {
+  const glassesKey = `proto_facelib/txt/glasses/${glasses + '.png'}`;
+  const imageSrc = zipImages.glasses[glassesKey];
+
+  const image = new Image();
+  image.crossOrigin = "anonymous";
+  image.src = imageSrc;
+
+  image.onload = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = image.width;
+    canvas.height = image.height;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(image, 0, 0);
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data;
+    const glacol = hexToRgb(glassesColorHex);
+    for (let i = 0; i < data.length; i += 4) {
+      const r = data[i];
+      const g = data[i + 1];
+      const b = data[i + 2];
+      if (colorMatchWithTolerance(r, g, b, 255, 0, 0)) {
+        data[i] = glacol.r;
+        data[i + 1] = glacol.g;
+        data[i + 2] = glacol.b;
+      }
+    }
+    ctx.putImageData(imageData, 0, 0);
+    const texture = new THREE.Texture(canvas);
+    texture.flipY = false;
+    texture.minFilter = THREE.NearestFilter;
+    texture.magFilter = THREE.NearestFilter;
+    texture.needsUpdate = true;
+
+    const newMaterial = new THREE.MeshBasicMaterial({
+      map: texture,
+      transparent: true,
+    });
+    glassMesh.position.y = 0.6+(-LIB_Glass_PosY/50);
+    glassMesh.position.z = -0.5
+    const baseScale = 1.0 + (LIB_Glass_Scale / 30);
+    glassMesh.scale.set(baseScale, baseScale, baseScale); 
+
+    glassMesh.traverse((child) => {
+      if (child.isMesh) {
+        child.material = newMaterial;
+        child.material.needsUpdate = true;
+      }
+    });
+  };
+}
+async function replaceFace(faceIndex) {
+  const facePath = `proto_facelib/mdl/face${faceIndex}.glb`;
+  const wrapPath = `proto_facelib/mdl/wrap${faceIndex}.glb`;
+  const face = await loadGLBFromZip(facePath);
+  face.traverse(child => {
+    if (child.isMesh) {
+      child.material = new THREE.MeshStandardMaterial({ roughness: 0.6 });
+    }
+  });
+  if (faceMesh) headGroup.remove(faceMesh);
+  if (wrapMesh) headGroup.remove(wrapMesh);
+  faceMesh = face;
+  headGroup.add(faceMesh);
+  headGroup.add(wrapMesh);
+  faceMesh.scale.set(0.95,1,1);
+  renderFace();
+  renderHeadTex();
+      const BZOffset = BeardZOffsetMap[faceline] ?? 0;
+    const BYOffset = BeardYOffsetMap[faceline] ?? 0;
+    if (beardMesh) {
+    beardMesh.position.set(0, 0, 0);
+     beardMesh.position.z += BZOffset;
+     beardMesh.position.y += BYOffset;
+    }
+}
+
+//face = eyes, mouth.. that shi
+const faceComposeCanvas = document.createElement("canvas");
+faceComposeCanvas.width = 240;
+faceComposeCanvas.height = 240;
+const faceComposeCtx = faceComposeCanvas.getContext("2d");
+
+
+let faceTexture = new THREE.CanvasTexture(faceComposeCanvas);
+faceTexture.flipY = false;
+
+//head = skin shade + details
+const headComposeCanvas = document.createElement('canvas');
+headComposeCanvas.width = 240;
+headComposeCanvas.height = 240;
+const headComposeCtx = headComposeCanvas.getContext('2d');
+
+let headTexture = new THREE.CanvasTexture(headComposeCanvas);
+headTexture.flipY = false;
+
+function recolorStache(imageData, hairColorRGB) {
+  const data = imageData.data;
+  for (let i = 0; i < data.length; i += 4) {
+    const r = data[i];
+    const g = data[i + 1];
+    const b = data[i + 2];
+    const a = data[i + 3];
+    if (r > 200 && g < 80 && b < 80 && a > 0) {
+      data[i] = hairColorRGB.r;
+      data[i + 1] = hairColorRGB.g;
+      data[i + 2] = hairColorRGB.b;
+    }
+  }
+}
+
+
+const faceMeshA = new FaceMesh({
+  locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`
+});
+
+faceMeshA.setOptions({
+  maxNumFaces: 1,
+  refineLandmarks: true,
+  minDetectionConfidence: 0.5,
+  minTrackingConfidence: 0.5
+});
+
+// ----------------------------
+// Face image elements
+// ----------------------------
+const eyebrowImg = new Image();
+const eyeImg = new Image();
+const mouthImg = new Image();
+const noseImg = new Image();
+const detImg = new Image();
+const sknImg = new Image();
+const molImg = new Image();
+const musImg = new Image();
+
+function renderFace(landmarks) {
+  if (!landmarks) return;
+
+  // Clear the canvas each frame
+  faceComposeCtx.setTransform(1, 0, 0, 1, 0, 0);
+  faceComposeCtx.clearRect(0, 0, faceComposeCanvas.width, faceComposeCanvas.height);
+
+  // ----------------------------
+  // Draw features directly on landmarks
+  // ----------------------------
+  const leftEye = landmarks[33];
+  const rightEye = landmarks[263];
+  const noseTip = landmarks[1];
+  const mouthCenter = landmarks[13];
+  const leftBrow = landmarks[105];
+  const rightBrow = landmarks[334];
+
+  // Eyes
+  faceComposeCtx.drawImage(
+    eyeImg,
+    leftEye.x * faceComposeCanvas.width - eyeImg.width / 2,
+    leftEye.y * faceComposeCanvas.height - eyeImg.height / 2
+  );
+
+  faceComposeCtx.save();
+  faceComposeCtx.scale(-1, 1);
+  faceComposeCtx.drawImage(
+    eyeImg,
+    -(rightEye.x * faceComposeCanvas.width) - eyeImg.width / 2,
+    rightEye.y * faceComposeCanvas.height - eyeImg.height / 2
+  );
+  faceComposeCtx.restore();
+
+  // Nose
+  faceComposeCtx.drawImage(
+    noseImg,
+    noseTip.x * faceComposeCanvas.width - noseImg.width / 2,
+    noseTip.y * faceComposeCanvas.height - noseImg.height / 2
+  );
+
+  // Mouth
+  faceComposeCtx.drawImage(
+    mouthImg,
+    mouthCenter.x * faceComposeCanvas.width - mouthImg.width / 2,
+    mouthCenter.y * faceComposeCanvas.height - mouthImg.height / 2
+  );
+
+  // Brows
+  faceComposeCtx.drawImage(
+    eyebrowImg,
+    leftBrow.x * faceComposeCanvas.width - eyebrowImg.width / 2,
+    leftBrow.y * faceComposeCanvas.height - eyebrowImg.height / 2
+  );
+
+  faceComposeCtx.save();
+  faceComposeCtx.scale(-1, 1);
+  faceComposeCtx.drawImage(
+    eyebrowImg,
+    -(rightBrow.x * faceComposeCanvas.width) - eyebrowImg.width / 2,
+    rightBrow.y * faceComposeCanvas.height - eyebrowImg.height / 2
+  );
+  faceComposeCtx.restore();
+
+  // Stache (placed just under mouth)
+  faceComposeCtx.drawImage(
+    musImg,
+    mouthCenter.x * faceComposeCanvas.width - musImg.width / 2,
+    mouthCenter.y * faceComposeCanvas.height + 20
+  );
+
+  // Mole
+  faceComposeCtx.drawImage(
+    molImg,
+    mouthCenter.x * faceComposeCanvas.width + 30,
+    mouthCenter.y * faceComposeCanvas.height + 10,
+    molImg.width / 2.5,
+    molImg.height / 2.5
+  );
+
+  // ----------------------------
+  // Refresh texture for Three.js
+  // ----------------------------
+  if (faceTexture) {
+    faceTexture.needsUpdate = true;
+  }
+}
+
+// ----------------------------
+// Connect camera to FaceMesh
+// ----------------------------
+const videoElement = document.querySelector('video');
+const cameraE = new Camera(videoElement, {
+  onFrame: async () => await faceMeshA.send({ image: videoElement }),
+  width: 640,
+  height: 480
+});
+cameraE.start();
+
+
+// --- Eye blink setup ---
+let lastBlink = false;
+
+// Eye landmarks for MediaPipe FaceMesh
+const leftEyeIndices  = [33, 160, 158, 133, 153, 144];
+const rightEyeIndices = [362, 385, 387, 263, 373, 380];
+
+
+
+// Function to compute Eye Aspect Ratio (EAR)
+function getEyeAspectRatio(eyeLandmarks) {
+  const p1 = eyeLandmarks[1]; // top
+  const p5 = eyeLandmarks[5]; // bottom
+  const p2 = eyeLandmarks[2]; // inner vertical
+  const p4 = eyeLandmarks[4]; // outer vertical
+
+  const horizontalDist = Math.hypot(
+    eyeLandmarks[0].x - eyeLandmarks[3].x,
+    eyeLandmarks[0].y - eyeLandmarks[3].y
+  );
+
+  const verticalDist = Math.hypot(p1.x - p5.x, p1.y - p5.y) + Math.hypot(p2.x - p4.x, p2.y - p4.y);
+
+  return verticalDist / (2.0 * horizontalDist);
+}
+
+// --- Update face on each frame ---
+faceMeshA.onResults(results => {
+  if (!results.multiFaceLandmarks || results.multiFaceLandmarks.length === 0) return;
+
+  const lm = results.multiFaceLandmarks[0];
+
+  // --- Head rotation ---
+  const leftEyePoint = lm[33];
+  const rightEyePoint = lm[263];
+  const nose = lm[1];
+
+  const eyeDX = rightEyePoint.x - leftEyePoint.x;
+  const eyeDY = rightEyePoint.y - leftEyePoint.y;
+// Compute head rotation
+const yaw = -1 * (nose.x - (leftEyePoint.x + rightEyePoint.x) / 2) * 2; // invert X
+const pitch = (nose.y - (leftEyePoint.y + rightEyePoint.y) / 2) * 2;
+const roll = Math.atan2(eyeDY, eyeDX);
+
+// Update global variables
+LIB_HeadYaw = yaw * 50;
+LIB_HeadPitch = pitch * 50;
+LIB_HeadRoll = roll * 30;
+
+// Apply to head bone
+if (headBone) {
+  const smoothing = 0.2;
+  headBone.rotation.x += (pitch - headBone.rotation.x) * smoothing;
+  headBone.rotation.y += (yaw - headBone.rotation.y) * smoothing;
+  headBone.rotation.z += (roll - headBone.rotation.z) * smoothing;
+}
+
+if (zipImages && zipImages.eye && eyeImg.complete) {
+  const leftEyePoints = leftEyeIndices.map(i => lm[i]);
+  const rightEyePoints = rightEyeIndices.map(i => lm[i]);
+
+  const leftEAR = getEyeAspectRatio(leftEyePoints);
+  const rightEAR = getEyeAspectRatio(rightEyePoints);
+
+  const blinkThreshold = 0.14;   // closed
+  const wideOpenThreshold = 0.5; // fully open
+
+  let eyeSrc = zipImages.eye["proto_facelib/txt/eye/" + eyestyle]; // default
+
+  if (leftEAR < blinkThreshold && rightEAR < blinkThreshold) {
+    eyeSrc = zipImages.eye["proto_facelib/txt/eye/34.png"]; // blink
+  } else if (leftEAR > wideOpenThreshold && rightEAR > wideOpenThreshold) {
+    eyeSrc = zipImages.eye["proto_facelib/txt/eye/50.png"]; // wide-eyed
+  }
+
+  if (eyeSrc) {
+    eyeImg.src = eyeSrc;
+  }
+}
+
+if (zipImages && zipImages.mouth && mouthImg.complete) {
+  const upperLip = lm[13];
+  const lowerLip = lm[14];
+
+  const mouthOpen = Math.abs(lowerLip.y - upperLip.y);
+
+  // Mouth frames: default closed + progressive open frames
+  const frames = [
+    mouthstyle,        // default/closed
+    "talkbank_3.png",
+    "talkbank_2.png",
+    "talkbank_1.png"
+  ];
+
+  // Map openness to frame index
+  const minOpen = 0.01; // below this, use default mouth
+  const maxOpen = 0.12; // full open
+  let frameIndex = 0; // default closed
+
+  if (mouthOpen > minOpen) {
+    frameIndex = Math.floor(((mouthOpen - minOpen) / (maxOpen - minOpen)) * (frames.length - 1)) + 1;
+    frameIndex = Math.min(frames.length - 1, frameIndex);
+  }
+
+  const mouthFrame = frames[frameIndex];
+  const mouthSrc = zipImages.mouth[`proto_facelib/txt/mouth/${mouthFrame}`];
+
+  if (mouthSrc) {
+    mouthImg.src = mouthSrc;
+  }
+}
+
+
+
+
+  // --- Mouth + eyebrow + other expressions ---
+  const upperLip = lm[13];
+  const lowerLip = lm[14];
+  const mouthOpen = Math.abs(lowerLip.y - upperLip.y);
+
+  const leftEyeTop = lm[159];
+  const leftEyeBottom = lm[145];
+  const rightEyeTop = lm[386];
+  const rightEyeBottom = lm[374];
+
+  const leftEyeOpen = Math.abs(leftEyeBottom.y - leftEyeTop.y);
+  const rightEyeOpen = Math.abs(rightEyeBottom.y - rightEyeTop.y);
+
+  const leftBrow = lm[105];
+  const leftEyeCenter = lm[159];
+  const browRaise = Math.abs(leftBrow.y - leftEyeCenter.y);
+
+  // --- Draw face components ---
+  if (eyeImg.complete && mouthImg.complete && noseImg.complete && eyebrowImg.complete) {
+    drawFaceComponents(); // <== Use this if you only need eyes/mouth/nose drawn
+    SetGlasses(glasses_S);
+  }
+});
+
+
+
+function renderHeadTex() {
+headComposeCtx.setTransform(1, 0, 0, 1, 0, 0);
+headComposeCtx.clearRect(0, 0, headComposeCanvas.width, headComposeCanvas.height);
+headComposeCtx.save();
+headComposeCtx.translate(-4, 0);
+
+  const detImg = new Image();
+  const sknImg = new Image();
+  const detailKey = `proto_facelib/txt/detail/${detailstyle}`;
+  const skinKey = `proto_facelib/txt/head/${skintone+'.png'}`;
+
+  detImg.src = zipImages.detail[detailKey];
+  sknImg.src = zipImages.skin[skinKey];
+  
+  let loaded = 0;
+
+  const checkDraw = () => {
+    if (++loaded === 2) {
+      headComposeCtx.drawImage(sknImg, 0, 0, headComposeCanvas.width, headComposeCanvas.height);
+      headComposeCtx.drawImage(detImg, 7, 5, headComposeCanvas.width, headComposeCanvas.height);
+      
+      if (headTexture) {
+              headTexture.minFilter = THREE.NearestFilter;
+    headTexture.magFilter = THREE.NearestFilter;
+        headTexture.needsUpdate = true;
+      }
+      
+      if (faceMesh) {
+        faceMesh.traverse(child => {
+          if (child.isMesh) {
+            child.material.map = headTexture;
+            child.material.needsUpdate = true;
+          }
+        });
+      }
+    }
+  };
+  detImg.onload = checkDraw;
+  sknImg.onload = checkDraw;
+}
+
+
+
+
+async function SetGlasses(glasses) {
+  const glassesKey = `proto_facelib/txt/glasses/${glasses + '.png'}`;
+  const imageSrc = zipImages.glasses[glassesKey];
+
+  const image = new Image();
+  image.crossOrigin = "anonymous";
+  image.src = imageSrc;
+
+  image.onload = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = image.width;
+    canvas.height = image.height;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(image, 0, 0);
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data;
+    const glacol = hexToRgb(glassesColorHex);
+    for (let i = 0; i < data.length; i += 4) {
+      const r = data[i];
+      const g = data[i + 1];
+      const b = data[i + 2];
+      if (colorMatchWithTolerance(r, g, b, 255, 0, 0)) {
+        data[i] = glacol.r;
+        data[i + 1] = glacol.g;
+        data[i + 2] = glacol.b;
+      }
+    }
+    ctx.putImageData(imageData, 0, 0);
+    const texture = new THREE.Texture(canvas);
+    texture.flipY = false;
+    texture.minFilter = THREE.NearestFilter;
+    texture.magFilter = THREE.NearestFilter;
+    texture.needsUpdate = true;
+
+    const newMaterial = new THREE.MeshBasicMaterial({
+      map: texture,
+      transparent: true,
+    });
+    glassMesh.position.y = 0.6+(-LIB_Glass_PosY/50);
+    glassMesh.position.z = -0.5
+    const baseScale = 1.0 + (LIB_Glass_Scale / 30);
+    glassMesh.scale.set(baseScale, baseScale, baseScale); 
+
+    glassMesh.traverse((child) => {
+      if (child.isMesh) {
+        child.material = newMaterial;
+        child.material.needsUpdate = true;
+      }
+    });
+  };
+}
+/** Helper to load an image and return a promise */
+function loadImage(img, src) {
+  return new Promise((resolve) => {
+    img.onload = () => resolve(img);
+    img.src = src;
+  });
+}
+/** Draw all face components safely after images are loaded */
+function drawFaceComponents(preset = {}) {
+
+  // Clear canvas
+  faceComposeCtx.setTransform(1, 0, 0, 1, 0, 0);
+  faceComposeCtx.clearRect(0, 0, faceComposeCanvas.width, faceComposeCanvas.height);
+
+  /** Utility to safely create canvas and get ImageData */
+  function safeCanvas(img, recolorFunc) {
+    if (!img || !img.complete || img.naturalWidth <= 0 || img.naturalHeight <= 0) return null;
+
+    const canvas = document.createElement('canvas');
+    const w = img.naturalWidth;
+    const h = img.naturalHeight;
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, w, h);
+
+    if (recolorFunc) {
+      try {
+        const data = ctx.getImageData(0, 0, w, h);
+        recolorFunc(data);
+        ctx.putImageData(data, 0, 0);
+      } catch (e) {
+        console.warn("getImageData failed for image", img.src, e);
+      }
+    }
+    return canvas;
+  }
+
+  // === EYES ===
+  const eyeCanvas = safeCanvas(eyeImg, eyestyle !== '51.png' ? recolorIris : null);
+  if (eyeCanvas) {
+    // Right eye
+    faceComposeCtx.save();
+    faceComposeCtx.translate(140 + LIB_Eye_PosX + EX_LIB_Eye_PosX + eyeCanvas.width / 2, 
+                             60 + LIB_Eye_PosY + EX_LIB_Eye_PosY + eyeCanvas.height / 2);
+    faceComposeCtx.scale(1 + (LIB_Eye_Scale / 30), 1 + (LIB_Eye_Scale / 30));
+    faceComposeCtx.rotate(LIB_Eye_Rot / 30);
+    faceComposeCtx.drawImage(eyeCanvas, -eyeCanvas.width / 2, -eyeCanvas.height / 2);
+    faceComposeCtx.restore();
+
+    // Left eye (mirrored)
+    faceComposeCtx.save();
+    faceComposeCtx.translate(10 - LIB_Eye_PosX + EX_LIB_Eye_PosX + eyeCanvas.width / 2,
+                             60 + LIB_Eye_PosY + EX_LIB_Eye_PosY + eyeCanvas.height / 2);
+    faceComposeCtx.scale(-1 - (LIB_Eye_Scale / 30), 1 + (LIB_Eye_Scale / 30));
+    faceComposeCtx.rotate((LIB_Eye_Rot + EX_LIB_Eye_Rot) / 30);
+    faceComposeCtx.drawImage(eyeCanvas, -eyeCanvas.width / 2, -eyeCanvas.height / 2);
+    faceComposeCtx.restore();
+  }
+
+  // === MOUTH ===
+  const mouthCanvas = safeCanvas(mouthImg, recolorMouth);
+  if (mouthCanvas) {
+    const mouthScale = 1.5 + (LIB_Mouth_Scale / 30);
+    faceComposeCtx.save();
+    faceComposeCtx.translate(104 + mouthCanvas.width / 2, 170 + LIB_Mouth_PosY + EX_LIB_Mouth_PosY + mouthCanvas.height / 2);
+    faceComposeCtx.scale(mouthScale, mouthScale);
+    faceComposeCtx.drawImage(mouthCanvas, -mouthCanvas.width / 2, -mouthCanvas.height / 2);
+    faceComposeCtx.restore();
+  }
+
+  // === NOSE ===
+  const noseCanvas = safeCanvas(noseImg, null);
+  if (noseCanvas) {
+    const noseScale = 0.8 + (LIB_Nose_Scale / 50);
+    faceComposeCtx.save();
+    faceComposeCtx.translate(45 + noseCanvas.width / 2, 60 + LIB_Nose_PosY + noseCanvas.height / 2);
+    faceComposeCtx.scale(noseScale, noseScale);
+    faceComposeCtx.drawImage(noseCanvas, -noseCanvas.width / 2, -noseCanvas.height / 2);
+    faceComposeCtx.restore();
+  }
+
+  // === MUSTACHE ===
+  const stacheCanvas = safeCanvas(musImg, img => recolorStache(img, hexToRgb(haircolor)));
+  if (stacheCanvas) {
+    faceComposeCtx.drawImage(stacheCanvas, 95, 145 + LIB_Stache_PosY, stacheCanvas.width, stacheCanvas.height);
+  }
+
+  // === EYEBROWS ===
+  const browCanvas = safeCanvas(eyebrowImg, recolorBrow);
+  if (browCanvas) {
+    const browRotation = (LIB_Brow_Rot + EX_LIB_Brow_Rot) / 30;
+
+    // Right brow
+    faceComposeCtx.save();
+    faceComposeCtx.translate(140 + LIB_Brow_PosX + EX_LIB_Brow_PosX + browCanvas.width / 2,
+                             40 + LIB_Brow_PosY + EX_LIB_Brow_PosY + browCanvas.height / 2);
+    faceComposeCtx.scale(1 + (LIB_Brow_Scale / 30), 1 + (LIB_Brow_Scale / 30));
+    faceComposeCtx.rotate(browRotation);
+    faceComposeCtx.drawImage(browCanvas, -browCanvas.width / 2, -browCanvas.height / 2);
+    faceComposeCtx.restore();
+
+    // Left brow (mirrored)
+    faceComposeCtx.save();
+    faceComposeCtx.translate(30 - LIB_Brow_PosX + EX_LIB_Brow_PosX + browCanvas.width / 2,
+                             40 + LIB_Brow_PosY + EX_LIB_Brow_PosY + browCanvas.height / 2);
+    faceComposeCtx.scale(-1 - (LIB_Brow_Scale / 30), 1 + (LIB_Brow_Scale / 30));
+    faceComposeCtx.rotate(browRotation);
+    faceComposeCtx.drawImage(browCanvas, -browCanvas.width / 2, -browCanvas.height / 2);
+    faceComposeCtx.restore();
+  }
+
+  // === MOLE ===
+  const moleCanvas = safeCanvas(molImg, null);
+  if (moleCanvas) {
+    faceComposeCtx.drawImage(moleCanvas, 60 + LIB_Mole_PosX, 175 + LIB_Mole_PosY,
+                             moleCanvas.width / 2.5 + (LIB_Mole_Scale / 30),
+                             moleCanvas.height / 2.5 + (LIB_Mole_Scale / 30));
+  }
+
+  // Update Three.js texture if needed
+  if (faceTexture) {
+    faceTexture.minFilter = THREE.NearestFilter;
+    faceTexture.magFilter = THREE.NearestFilter;
+    faceTexture.needsUpdate = true;
+  }
+  if (wrapMesh) {
+    wrapMesh.traverse(child => {
+      if (child.isMesh) {
+        child.material.map = faceTexture;
+        child.material.needsUpdate = true;
+      }
+    });
+  }
+}
+
+
+/** Main renderFace function */
+async function renderFace() {
+  // Load all images in parallel
+  const eyebrowKey = `proto_facelib/txt/eyebrow/${eyebrowstyle}`;
+  const eyeKey = `proto_facelib/txt/eye/${eyestyle}`;
+  const mouthKey = `proto_facelib/txt/mouth/${mouthstyle}`;
+  const noseKey = `proto_facelib/txt/nose/${nosestyle}`;
+  const detailKey = `proto_facelib/txt/detail/${detailstyle}`;
+  const skinKey = `proto_facelib/txt/head/${skintone}.png`;
+  const moleKey = `proto_facelib/txt/mole/${molestyle}`;
+  const stamusKey = `proto_facelib/txt/mus/${musstyle}`;
+
+  await Promise.all([
+    loadImage(eyebrowImg, zipImages.eyebrow[eyebrowKey]),
+    loadImage(eyeImg, zipImages.eye[eyeKey]),
+    loadImage(mouthImg, zipImages.mouth[mouthKey]),
+    loadImage(noseImg, zipImages.nose[noseKey]),
+    loadImage(detImg, zipImages.detail[detailKey]),
+    loadImage(sknImg, zipImages.skin[skinKey]),
+    loadImage(molImg, zipImages.mole[moleKey]),
+    loadImage(musImg, zipImages.stache[stamusKey])
+  ]);
+
+  // Draw all components
+  drawFaceComponents();
+}
+
+//end of mii section
+let bgtexture;
+
+async function init() {
+  try {
+    const zipResponse = await fetch('https://mt-tools.nekoweb.org/projectproto/model/ONO.face');
+    const zipData = await zipResponse.arrayBuffer();
+    zip = await JSZip.loadAsync(zipData);
+  } catch (e) {
+    console.warn("facelib error");
+  }
+
+  const url = "https://mt-tools.nekoweb.org/projectproto/model/ONO.face";
+  if (!url) return;
+
+  try {
+    await loadZipFromUrl(url);
+  } catch (e) {
+    alert("Facelib Wasnt Setup Correctly. " + e.message);
+    return;
+  }
+
+  await buildMiiHead(faceline, hairstyle, gender);
+  renderHeadTex();
+  changehead(faceline);
+  animate();
+}
+
+const loader2 = new THREE.TextureLoader();
+const hairTexture = loader2.load('https://mt-tools.nekoweb.org/projectproto/texture/hair/hair.png');
+hairTexture.wrapS = hairTexture.wrapT = THREE.RepeatWrapping;
+
+const HairMaterial = new THREE.ShaderMaterial({
+  uniforms: {
+    uTexture: { value: hairTexture },
+    uScale: { value: 1.0 },
+    uColor: { value: new THREE.Color(0x323123) }
+  },
+  side: THREE.DoubleSide,
+  vertexShader: `
+    varying vec3 vPosition;
+
+    void main() {
+      vPosition = position; // object-space
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `,
+  fragmentShader: `
+uniform sampler2D uTexture;
+uniform float uScale;
+uniform vec3 uColor;
+varying vec3 vPosition;
+
+void main() {
+  vec2 uv = vec2(vPosition.y, vPosition.x) * uScale;
+  vec4 texColor = texture2D(uTexture, uv);
+  gl_FragColor = vec4(texColor.rgb * uColor, texColor.a);
+}
+
+  `
+});
+
+
+function getBodyBoundingBox(mesh) {
+  const box = new THREE.Box3().setFromObject(mesh);
+  const size = new THREE.Vector3();
+  const center = new THREE.Vector3();
+  box.getSize(size);
+  box.getCenter(center);
+  return { size, center };
+}
+
+const faceYOffsetMap = {
+  1: 0,
+  2: -0.03,
+  3: 0.05,
+  4: 0,
+  5: -0.03,
+  6: 0,
+  7: 0.03,
+  8: 0.03,
+};
+
+  const sliders = {
+    y: document.getElementById('rotateY')
+  };
+  
+function animate() {
+  requestAnimationFrame(animate);
+const delta = clock.getDelta();
+  
+  if (mixer) mixer.update(delta);
+
+  if (headGroup && bodyMesh && headBone) {
+    const headWorldPos = new THREE.Vector3();
+    const headWorldQuat = new THREE.Quaternion();
+
+    headBone.getWorldPosition(headWorldPos);
+    headBone.getWorldQuaternion(headWorldQuat);
+    headGroup.position.copy(headWorldPos);
+
+    const yOffset = faceYOffsetMap[faceline] ?? 0;
+    headGroup.position.y += yOffset;
+
+    headGroup.quaternion.copy(headWorldQuat);
+
+    const correction = new THREE.Quaternion();
+    correction.setFromEuler(new THREE.Euler(
+      THREE.MathUtils.degToRad(0),
+      THREE.MathUtils.degToRad(180),
+      THREE.MathUtils.degToRad(-90)
+    ));
+    headGroup.quaternion.multiply(correction);
+  }
+
+  renderer.autoClear = true;
+  renderer.render(scene, camera);
+
+  if (overlayScene && overlayCamera) {
+    renderer.autoClear = false;
+    renderer.clearDepth();
+    renderer.render(overlayScene, overlayCamera);
+  }
+  
+    bodyMesh.rotation.y = parseFloat(sliders.y.value);
+}
+
+
+  function changehead(index) {
+    faceline = index;
+    replaceFace(faceline);
+  }    
+  
+  let zipImages = {};
+
+  async function loadZipFromUrl(url) {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error('Network response was not ok');
+    const blob = await response.blob();
+    await processZipFile(blob);
+  }
+  
+let blinkEyeSrc;
+
+  async function processZipFile(fileOrBlob) {
+    const zipFile = await JSZip.loadAsync(fileOrBlob);
+    const entries = Object.keys(zipFile.files);
+    const eyeSelect = document.getElementById('eyeSelect');
+    const eyebrowSelect = document.getElementById('eyebrowSelect');
+    const mouthSelect = document.getElementById('mouthSelect');
+    const noseSelect = document.getElementById('noseSelect');
+    const detSelect = document.getElementById('detSelect');
+    const hairSelect = document.getElementById('hairSelect');
+    const beardSelect = document.getElementById('beardSelect');
+
+    const filterImages = (prefix) =>
+      entries.filter(name => name.startsWith(`proto_facelib/txt/${prefix}/`) && name.endsWith('.png'));
+
+    zipImages.eye = await loadImages(zipFile, filterImages("eye"));
+    zipImages.eyebrow = await loadImages(zipFile, filterImages("eyebrow"));
+    zipImages.mouth = await loadImages(zipFile, filterImages("mouth"));
+    zipImages.nose = await loadImages(zipFile, filterImages("nose"));
+    zipImages.detail = await loadImages(zipFile, filterImages("detail"));
+    zipImages.hair = await loadImages(zipFile, filterImages("hair"));
+    zipImages.glasses = await loadImages(zipFile, filterImages("glasses"));
+    zipImages.skin = await loadImages(zipFile, filterImages("head"));
+    zipImages.beard = await loadImages(zipFile, filterImages("beard"));
+    zipImages.mole = await loadImages(zipFile, filterImages("mole"));
+    zipImages.stache = await loadImages(zipFile, filterImages("mus"));
+    
+    blinkEyeSrc = zipImages.eye["proto_facelib/txt/eye/34.png"];
+  }
+
+  async function loadImages(zipFile, files) {
+    const imageMap = {};
+    for (let fileName of files) {
+      const blob = await zipFile.files[fileName].async("blob");
+      const url = URL.createObjectURL(blob);
+      imageMap[fileName] = url;
+    }
+    return imageMap;
+  }
+
+  function colorMatchWithTolerance(r, g, b, tr, tg, tb, tolerance = 150) {
+    return (
+      Math.abs(r - tr) <= tolerance &&
+      Math.abs(g - tg) <= tolerance &&
+      Math.abs(b - tb) <= tolerance
+    );
+  }
+
+function hexToRgb(hex) {
+  if (typeof hex === 'number') {
+    hex = hex.toString(16).padStart(6, '0');
+  } else if (typeof hex === 'string') {
+    hex = hex.replace('#', '');
+  } else {
+    return { r: 0, g: 0, b: 0 };
+  }
+  if (hex.length !== 6) {
+    return { r: 0, g: 0, b: 0 };
+  }
+  const num = parseInt(hex, 16);
+  return {
+    r: (num >> 16) & 255,
+    g: (num >> 8) & 255,
+    b: num & 255
+  };
+}
+
+
+function recolorIris(imageData) {
+  const data = imageData.data;
+  const white = { r: 255, g: 255, b: 255 };
+  const brown = { r: 0x4C, g: 0x40, b: 0x32 };
+  const eyeColor = hexToRgb(eyeColorHex);
+
+  for (let i = 0; i < data.length; i += 4) {
+    const r = data[i];
+    const g = data[i + 1];
+    const b = data[i + 2];
+
+    if (colorMatchWithTolerance(r, g, b, 0, 255, 0)) {
+      data[i] = white.r;
+      data[i + 1] = white.g;
+      data[i + 2] = white.b;
+
+    } else if (colorMatchWithTolerance(r, g, b, 255, 0, 0)) {
+      data[i] = brown.r;
+      data[i + 1] = brown.g;
+      data[i + 2] = brown.b;
+
+    } else if (colorMatchWithTolerance(r, g, b, 0, 0, 255)) {
+      data[i] = eyeColor.r;
+      data[i + 1] = eyeColor.g;
+      data[i + 2] = eyeColor.b;
+    }
+  }
+}
+
+function recolorBrow(imageData) {
+  const data = imageData.data;
+  const nrowColor = hexToRgb(browColorHex);
+
+  for (let i = 0; i < data.length; i += 4) {
+    const r = data[i];
+    const g = data[i + 1];
+    const b = data[i + 2];
+
+    if (colorMatchWithTolerance(r, g, b, 255, 0, 0)) {
+      data[i] = nrowColor.r;
+      data[i + 1] = nrowColor.g;
+      data[i + 2] = nrowColor.b;
+  }
+}
+}
+
+function recolorMouth(imageData) {
+  const data = imageData.data;
+  const baseColor = hexToRgb(lipcolor);
+  const darkerColor = {
+    r: Math.max(0, Math.floor(baseColor.r * 0.8)),
+    g: Math.max(0, Math.floor(baseColor.g * 0.8)),
+    b: Math.max(0, Math.floor(baseColor.b * 0.8))
+  };
+  for (let i = 0; i < data.length; i += 4) {
+    const r = data[i];
+    const g = data[i + 1];
+    const b = data[i + 2];
+    if (colorMatchWithTolerance(r, g, b, 255, 0, 0)) {
+      data[i] = baseColor.r;
+      data[i + 1] = baseColor.g;
+      data[i + 2] = baseColor.b;
+    }
+    else if (colorMatchWithTolerance(r, g, b, 0, 255, 0)) {
+      data[i] = darkerColor.r;
+      data[i + 1] = darkerColor.g;
+      data[i + 2] = darkerColor.b;
+    }
+  }
+}
+
+  init();
+  
+function ChangeHairColor(colorHex) {
+  if (
+    !colorHex ||
+    !HairMaterial ||
+    !HairMaterial.uniforms ||
+    !HairMaterial.uniforms.uColor
+  ) {
+    console.warn("ChangeHairColor: Invalid color or HairMaterial not ready.");
+    return;
+  }
+
+  const cleanHex = colorHex.toString().replace(/^0x/, '').replace(/^#/, '');
+  HairMaterial.uniforms.uColor.value.set('#' + cleanHex);
+}
+
+
+function importMiiData(file) {
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    try {
+      const data = JSON.parse(e.target.result);
+
+      faceline = data.faceline;
+      hairstyle = data.hairstyle;
+      facialstyle = data.facialstyle;
+      gender = data.gender;
+      hairFlipped = data.hairFlipped;
+      shirtcolor = data.shirtcolor;
+      hatColor = new THREE.Color(data.hatColor);
+      eyestyle = data.eyestyle;
+      eyebrowstyle = data.eyebrowstyle;
+      mouthstyle = data.mouthstyle;
+      nosestyle = data.nosestyle;
+      detailstyle = data.detailstyle;
+      eyeColorHex = data.eyeColorHex;
+      haircolor = data.haircolor;
+      browColorHex = data.browColorHex;
+      glasses_S = data.glasses_S;
+      glassesColorHex = data.glassesColorHex;
+      skintone = data.skintone;
+      lipcolor = data.lipcolor;
+      molestyle = data.molestyle;
+      musstyle = data.musstyle;
+
+      LIB_Eye_PosX = data.LIB_Eye_PosX;
+      LIB_Eye_PosY = data.LIB_Eye_PosY;
+      LIB_Eye_Scale = data.LIB_Eye_Scale;
+      LIB_Eye_Rot = data.LIB_Eye_Rot;
+
+      LIB_Brow_PosX = data.LIB_Brow_PosX;
+      LIB_Brow_PosY = data.LIB_Brow_PosY;
+      LIB_Brow_Scale = data.LIB_Brow_Scale;
+      LIB_Brow_Rot = data.LIB_Brow_Rot;
+
+      LIB_Mouth_PosY = data.LIB_Mouth_PosY;
+      LIB_Mouth_Scale = data.LIB_Mouth_Scale;
+
+      LIB_Nose_PosY = data.LIB_Nose_PosY;
+      LIB_Nose_Scale = data.LIB_Nose_Scale;
+
+      LIB_Glass_PosY = data.LIB_Glass_PosY;
+      LIB_Glass_Scale = data.LIB_Glass_Scale;
+
+      LIB_Mole_PosX = data.LIB_Mole_PosX;
+      LIB_Mole_PosY = data.LIB_Mole_PosY;
+      LIB_Mole_Scale = data.LIB_Mole_Scale;
+
+      LIB_Stache_PosX = data.LIB_Stache_PosX;
+      LIB_Stache_PosY = data.LIB_Stache_PosY;
+      LIB_Stache_Scale = data.LIB_Stache_Scale;
+      
+      if (data.height2){
+      height = data.height2;
+      weight = data.weight2;   
+      } else {
+      height = 1;
+      weight = 1;     
+      }
+      
+      console.log("Mii data loaded successfully!");
+      buildMiiHead(faceline, hairstyle, gender, haircolor);
+      
+    } catch (err) {
+      console.error("Failed to load JSON:", err);
+    }
+  };
+
+  reader.readAsText(file);
+}
+
+
+function importMiiData() {
+  const prefix = "PRPMII_";
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const miiIndex = parseInt(urlParams.get("mii"), 10);
+
+  function apply(data, label) {
+    try {
+      faceline    = data.faceline;
+      hairstyle   = data.hairstyle;
+      facialstyle = data.facialstyle;
+      gender      = data.gender;
+      hairFlipped = data.hairFlipped;
+      shirtcolor  = data.shirtcolor;
+      hatColor    = new THREE.Color(data.hatColor || 0xffffff);
+      eyestyle    = data.eyestyle;
+      eyebrowstyle= data.eyebrowstyle;
+      mouthstyle  = data.mouthstyle;
+      nosestyle   = data.nosestyle;
+      detailstyle = data.detailstyle;
+      eyeColorHex = data.eyeColorHex;
+      haircolor   = data.haircolor;
+      browColorHex= data.browColorHex;
+      glasses_S   = data.glasses_S;
+      glassesColorHex = data.glassesColorHex;
+      skintone    = data.skintone;
+      lipcolor    = data.lipcolor;
+      molestyle   = data.molestyle;
+      musstyle    = data.musstyle;
+
+      LIB_Eye_PosX    = data.LIB_Eye_PosX;
+      LIB_Eye_PosY    = data.LIB_Eye_PosY;
+      LIB_Eye_Scale   = data.LIB_Eye_Scale;
+      LIB_Eye_Rot     = data.LIB_Eye_Rot;
+
+      LIB_Brow_PosX   = data.LIB_Brow_PosX;
+      LIB_Brow_PosY   = data.LIB_Brow_PosY;
+      LIB_Brow_Scale  = data.LIB_Brow_Scale;
+      LIB_Brow_Rot    = data.LIB_Brow_Rot;
+
+      LIB_Mouth_PosY  = data.LIB_Mouth_PosY;
+      LIB_Mouth_Scale = data.LIB_Mouth_Scale;
+
+      LIB_Nose_PosY   = data.LIB_Nose_PosY;
+      LIB_Nose_Scale  = data.LIB_Nose_Scale;
+
+      LIB_Glass_PosY  = data.LIB_Glass_PosY;
+      LIB_Glass_Scale = data.LIB_Glass_Scale;
+
+      LIB_Mole_PosX   = data.LIB_Mole_PosX;
+      LIB_Mole_PosY   = data.LIB_Mole_PosY;
+      LIB_Mole_Scale  = data.LIB_Mole_Scale;
+
+      LIB_Stache_PosX   = data.LIB_Stache_PosX;
+      LIB_Stache_PosY   = data.LIB_Stache_PosY;
+      LIB_Stache_Scale  = data.LIB_Stache_Scale;
+
+      if (data.height2 != null) {
+        height = data.height2;
+        weight = data.weight2;
+      } else {
+        height = 1;
+        weight = 1;
+      }
+
+      firstName = data.firstName;
+      lastName  = data.lastName;
+      birthdate = data.birthdate;
+
+      buildMiiHead(
+        faceline, hairstyle, gender, haircolor, skintone,
+        eyebrowstyle, eyestyle, mouthstyle, nosestyle, detailstyle,
+        molestyle, musstyle, firstName, lastName, birthdate
+      );
+ogmouthtex = mouthstyle;
+      console.log(`Mii loaded (${label})`);
+      return true;
+    } catch (err) {
+      console.error(`Failed to apply Mii (${label}):`, err);
+      return false;
+    }
+  }
+
+  // 2. Collect all Mii keys
+  const keys = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && k.startsWith(prefix)) keys.push(k);
+  }
+
+  if (!keys.length) {
+    console.warn(`No localStorage entries found starting with ${prefix}`);
+    return;
+  }
+
+  keys.sort(); // predictable order
+
+  // 3. Check if requested index exists
+  if (miiIndex < 0 || miiIndex >= keys.length) {
+    console.warn(`Invalid Mii index (${miiIndex}). Available range: 0 to ${keys.length - 1}`);
+    return;
+  }
+
+  // 4. Load only the requested Mii
+  const key = keys[miiIndex];
+  try {
+    const raw = localStorage.getItem(key);
+    const data = JSON.parse(raw);
+    apply(data, key);
+  } catch (err) {
+    console.error("Failed to parse localStorage Mii:", key, err);
+  }
+}
+importMiiData();
+</script>
+<script src="button_v2.js"></script>
+</body>
+</html>

@@ -1,0 +1,498 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Menu - Project Proto</title>
+    <link rel="icon" href="favicon.png" type="image/png">
+
+    <meta property="og:title" content="Menu | Project Proto" />
+  <meta property="og:description" content="Project Proto is an recreation of Otona no Onna no Uranai Techō with it's full potential." />
+  <meta property="og:url" content="https://hellot.nekoweb.org/projectproto/editor.html" />
+  <meta property="og:image" content="graphics/prp_logo.png" />
+  <meta property="og:type" content="website" />
+  
+  <script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
+  <script src="https://unpkg.com/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three/examples/js/exporters/GLTFExporter.js"></script>
+<style>
+@font-face {
+  font-family: 'ArcadeClassic';
+  src: url('graphics/monday.ttf') format('truetype');
+}
+body{
+      background-image: url('graphics/backgrounbd.png');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+}
+.tab-wrapper {
+  background: #d18f86;
+  background-size: cover;
+  width: 510px;
+  height: 380px;
+  image-rendering: pixelated;
+  position: relative;
+  overflow: hidden;
+  
+    display: flex;
+  gap: 10px;
+    align-items: center;
+  justify-content: center;
+}
+.card {
+  background: url('graphics/game/card_base.png') no-repeat left center;
+  background-size: contain;
+  width: 145px;
+  height: 190px;
+  image-rendering: pixelated;
+  position: relative;
+  overflow: hidden;
+  filter: drop-shadow(6px 6px 1px rgba(210,120,120,0.4));
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+  filter: drop-shadow(6px 16px 1px rgba(210,120,120,0.1));
+}
+
+
+.scrolling-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+  display: flex;
+flex-direction: column;
+align-items: center;
+height: 360px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.scrolling-list li {
+color: #A45364;
+  font: 12px 'ArcadeClassic', sans-serif;
+  display: flex;
+  align-items: center;
+  padding: 0px;
+  background: url('graphics/friendcard_sample.png') no-repeat left center;
+  background-size: contain;
+  width: 500px;
+  height: 105px;
+}
+
+.face {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  margin-right: 10px;
+filter: drop-shadow(3px 3px 1px rgba(210,120,120,0.4));
+}
+
+
+.menu {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  margin: 10px;
+  float: right;
+  right: 10px;
+  top: 10px;
+}
+
+
+.text-container {
+color: #A45364;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  line-height: 1.2;
+}
+.scrolling-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrolling-list::-webkit-scrollbar-thumb {
+  background-color: rgba(226,144,156,1);
+  border-radius: 2px;
+}
+
+
+.mii-menu-btn {
+  font-family: 'ArcadeClassic', sans-serif;
+  background-color: rgba(255, 222, 209, 0);
+  color: #A45364;
+  border: 0px;
+  margin: 10px 0;
+  cursor: pointer;
+}
+
+.card-container {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  height: 380px;
+}
+.DS-Display {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  outline: 5px solid rgba(255, 255, 255, 0.1);
+}
+.tab-btn {
+  background: url("graphics/icon/menu/Me_Button.png") no-repeat center center;
+  background-size: cover;
+  border: none;
+  width: 150px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-direction: column;
+  
+}
+
+.tab-btn img {
+  width: 130px;
+  height: 130px;
+}
+.floating-logo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  pointer-events: none;
+image-rendering: pixelated;
+  width: 300px;
+  height: auto;
+
+  animation: float 3s ease-in-out infinite;
+}
+
+
+.tab-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;   
+  gap: 6px;               
+}
+.tab-item p {
+  margin: 0;
+  font-size: 12px;
+  font-family: "ArcadeClassic", sans-serif;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+}
+</style>
+  </head>
+
+<body>
+<div class="DS-Display">
+<div style="position: relative; width: 510px; height: 380px;">
+  <canvas id="miiCanvas" width="510" height="380"
+          style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
+  <canvas id="uiCanvas" width="510" height="380"
+          style="position: absolute; left: 0; top: 0; z-index: 1; pointer-events: none;"></canvas>
+  
+  <img src="graphics/prp_logo.png"
+       class="floating-logo">
+              
+</div>
+
+
+<div class="tab-wrapper">
+
+  <div class="tab-item">
+    <a href="room.html" class="tab-btn">
+      <img src="graphics/icon/menu/hone.png">
+    </a>
+    <p>GO TO ROOM</p>
+  </div>
+  
+  
+  <div class="tab-item">
+    <a href="editor.html" class="tab-btn">
+      <img src="graphics/icon/menu/Avatar.png">
+    </a>
+    <p>MAKE A MII</p>
+  </div>
+
+  <div class="tab-item">
+    <a href="fortunepicker.html" class="tab-btn">
+      <img src="graphics/icon/menu/Uranai.png">
+    </a>
+    <p>TELL A FORTUNE</p>
+  </div>
+  
+</div>
+
+</div>
+<script>
+const canvasmii = document.getElementById("uiCanvas");
+const ctx = canvasmii.getContext("2d");
+
+function drawTime() {
+  ctx.clearRect(0, 0, canvasmii.width, canvasmii.height);
+
+  // Date/time
+  ctx.font = "14px ArcadeClassic";
+  ctx.fillStyle = "#A45364";
+  ctx.textBaseline = "top";
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1;
+  const date = now.getDate();
+  const weekday = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"][now.getDay()];
+  const dateStr = `${year}/   ${month}/${date}   ${weekday}`;
+  const hours = now.getHours().toString().padStart(2, "0");
+  const minutes = now.getMinutes().toString().padStart(2, "0");
+  const seconds = now.getSeconds().toString().padStart(2, "0");
+  const timeStr = `${hours} : ${minutes} : ${seconds}`;
+  ctx.fillText(dateStr, 10, 10);
+  const timeWidth = ctx.measureText(timeStr).width;
+  ctx.fillText(timeStr, canvasmii.width - timeWidth - 10, 10);
+
+  let hasMii = false;
+  for (let i = 0; i < localStorage.length; i++) {
+    if (localStorage.key(i).startsWith("PRPMII_")) {
+      hasMii = true;
+      break;
+    }
+  }
+
+  const bottomMessage = hasMii
+    ? "WELCOME BACK"
+    : "MAKE A MII TO GET STARTED";
+
+  ctx.textBaseline = "bottom";
+  const messageWidth = ctx.measureText(bottomMessage).width;
+  const messageX = (canvasmii.width - messageWidth) / 2;
+  const messageY = canvasmii.height - 10;
+  ctx.fillText(bottomMessage, messageX, messageY);
+}
+
+setInterval(drawTime, 1000);
+drawTime();
+
+</script>
+
+<audio id="bg-music" loop>
+  <source src="sound/song/SEQ_MENU.mp3" type="audio/wav">
+</audio>
+<script>
+  const context = new (window.AudioContext || window.webkitAudioContext)();
+  let bufferSource;
+  let gainNode = context.createGain();
+  gainNode.gain.value = 0.2;
+
+  fetch("sound/song/SEQ_MENU.mp3")
+    .then(response => response.arrayBuffer())
+    .then(arrayBuffer => context.decodeAudioData(arrayBuffer))
+    .then(audioBuffer => {
+      function startLoop() {
+        bufferSource = context.createBufferSource();
+        bufferSource.buffer = audioBuffer;
+        bufferSource.loop = true;
+
+        bufferSource.connect(gainNode);
+        gainNode.connect(context.destination);
+
+        bufferSource.start(0);
+        document.removeEventListener('click', startLoop);
+        document.removeEventListener('keydown', startLoop);
+      }
+
+      document.addEventListener('click', startLoop);
+      document.addEventListener('keydown', startLoop);
+    });
+
+</script>
+<script>
+const clicksfx = new Audio('sound/tap.wav');
+  //local
+  let overlayScene, overlayCamera, overlayMesh;
+  let faceMesh = null;
+  let hairMesh = null;
+  let bodyMesh = null;
+  let beardMesh = null;
+  let headGroup = null;
+  let zip = null;
+  let mixer = null;
+  let GlassesTex = null;
+  const clock = new THREE.Clock();
+  let animations = [];
+  let currentAnimationIndex = 0;
+  let currentAction = null;
+const baseCameraY = 0;
+const baseCameraZ = 10;
+const hatColors = [
+  "#735A52",
+  "#BDA594",
+  "#CAC1C1",
+  "#F7EFFF",
+  "#B9B9B9",
+  "#74747D",
+  "#B1DAA1",
+  "#FFB397",
+  "#FF90FF",
+  "#BB9ADD",
+  "#FFFC75",
+  "#A7E0E8",
+  "#F79933",
+  "#8099FF",
+];
+
+  let EX_eyestyle = "1.png";
+  let EX_eyebrowstyle = "2.png";
+  let EX_mouthstyle = "1.png";
+  let EX_LIB_Eye_PosX = 0;
+  let EX_LIB_Eye_PosY = 0;
+  let EX_LIB_Eye_Rot = 0;
+  let EX_LIB_Brow_PosX = 0;
+  let EX_LIB_Brow_PosY = 0;
+  let EX_LIB_Brow_Rot = 0;
+  let EX_LIB_Mouth_PosY = 0;
+
+
+let idleGLB = null;
+
+const emoteExpressions = {
+  dance: 0,
+  think: 4,
+  sit: -1,
+  scrtach: -1,
+  sneeze: 11,
+  fall: 14,
+  fart: 7
+};
+
+
+function UpdateMiiInfo(firstName, lastName, birthdate) {
+  const nameSpan = document.getElementById('user-name');
+  const birthdateSpan = document.getElementById('user-birthdate');
+
+  const fullName = (lastName + " " + firstName).toUpperCase();
+  nameSpan.textContent = fullName;
+
+  birthdateSpan.textContent = birthdate;
+}
+
+
+  const canvas = document.getElementById('miiCanvas');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(value, max));
+}
+  
+const scene = new THREE.Scene();
+scene.background = null;
+
+const aspect = 510 / 380;
+const camera = new THREE.PerspectiveCamera(19, aspect, 0.1, 1000);
+
+camera.position.set(0, 1.4, 6);
+
+
+
+
+  const light = new THREE.AmbientLight(0xffffff, 0.5);
+  scene.add(new THREE.AmbientLight(0xffffff, 0.5), light);
+
+const BeardZOffsetMap = {
+  1: 0,
+  2: 0.1,
+  3: 0.01,
+  4: -0.01,
+  5: -0.03,
+  6: 0,
+  7: -0.03,
+  8: -0.03,
+};
+const BeardYOffsetMap = {
+  1: 0,
+  2: -0.03,
+  3: -0.06,
+  4: 0,
+  5: 0.01,
+  6: 0,
+  7: 0.01,
+  8: 0.01,
+};
+
+let headBone = null;
+
+  const loader = new THREE.GLTFLoader();
+
+
+let roomMixer;
+let doorOpenAction; 
+
+let bgtexture;
+
+async function init() {
+    
+        const bgtexloader = new THREE.TextureLoader();
+  bgtexloader.load('graphics/bgslide_flower.png', function (loadedTexture) {
+    bgtexture = loadedTexture;
+    bgtexture.minFilter = THREE.NearestFilter;
+    bgtexture.magFilter = THREE.NearestFilter;
+    bgtexture.generateMipmaps = false;
+    bgtexture.wrapS = THREE.RepeatWrapping;
+    bgtexture.wrapT = THREE.RepeatWrapping;
+    bgtexture.repeat.set(1, 1);
+    scene.background = bgtexture;
+  });
+
+  animate();
+}
+
+function getBodyBoundingBox(mesh) {
+  const box = new THREE.Box3().setFromObject(mesh);
+  const size = new THREE.Vector3();
+  const center = new THREE.Vector3();
+  box.getSize(size);
+  box.getCenter(center);
+  return { size, center };
+}
+
+const faceYOffsetMap = {
+  1: 0,
+  2: -0.03,
+  3: 0.05,
+  4: 0,
+  5: -0.03,
+  6: 0,
+  7: 0.03,
+  8: 0.03,
+};
+
+function animate() {
+  requestAnimationFrame(animate);
+const delta = clock.getDelta();
+
+  if (bgtexture) {
+    bgtexture.offset.x += 0.004;
+  }
+
+  renderer.autoClear = true;
+  renderer.render(scene, camera);
+
+  if (overlayScene && overlayCamera) {
+    renderer.autoClear = false;
+    renderer.clearDepth();
+    renderer.render(overlayScene, overlayCamera);
+  }
+}
+
+  init();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>mt-tools</title>
+        <style>
+body {
+  background-color: #000;
+}
+.btn {
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  aspect-ratio: auto; /* let the background dictate shape */
+  image-rendering: pixelated;
+  position: relative;
+}
+
+.btn img.icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  aspect-ratio: auto;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+
+        </style>
+    </head>
+    <body>
+  <div class="button-container">
+    <div class="btn" data-type="button" data-icon="graphics%2Ficon%2Ficon/head0.png"></div>
+    <div class="btn" data-type="button" data-icon="graphics%2Ficon%2Ficon/head1.png"></div>
+    <div class="btn" data-type="button" data-icon="graphics%2Ficon%2Ficon/head2.png"></div>
+    <div class="btn" data-type="button" data-icon="graphics%2Ficon%2Ficon/head3.png"></div>
+    <div class="btn" data-type="button" data-icon="graphics%2Ficon%2Ficon/head4.png"></div>
+    <div class="btn" data-type="button" data-icon="graphics%2Ficon%2Ficon/head5.png"></div>
+    <div class="btn" data-type="button" data-icon="graphics%2Ficon%2Ficon/head6.png"></div>
+    <div class="btn" data-type="button" data-icon="graphics%2Ficon%2Ficon/head7.png"></div>
+    </div>
+  <div class="button-container">
+    <div class="btn" data-type="tab" data-icon="https://mt-tools.nekoweb.org/projectproto%2Fgraphics%2Ficon/etc.png"></div>
+    <div class="btn" data-type="section"></div>
+  </div>
+<script src="button.js"></script>
+    </body>
+</html>

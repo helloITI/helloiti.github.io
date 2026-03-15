@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notebook</title>
+<style>
+@font-face {
+    font-family: 'Monday';
+    src: url('graphics/monday.ttf') format('truetype');
+}
+
+body {
+    font-family: 'Monday', sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+#notebook, #cover {
+    display: flex;
+    gap: 5px;
+    image-rendering: pixelated;
+}
+
+#cover {
+    width: 820px;
+    height: 640px;
+    background-color: #ffd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 48px;
+    cursor: pointer;
+    border: 4px solid #ccc;
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.2);
+    text-transform: uppercase;
+}
+
+.page {
+    width: 400px;
+    height: 600px;
+    padding: 20px;
+    background-image: url('graphics/game/paper.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    overflow-y: auto;
+    resize: none;
+    border: none;
+    font-size: 18px;
+    text-transform: uppercase;
+    font-family: 'Monday', sans-serif;
+    position: relative;
+}
+
+.page-timestamp {
+    position: absolute;
+    bottom: 5px;
+    right: 10px;
+    font-size: 12px;
+    color: #555;
+}
+
+#controls {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+button {
+    padding: 10px 15px;
+    font-family: 'Monday', sans-serif;
+    cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<div id="cover">CLICK TO OPEN NOTEBOOK</div>
+
+<div style="display:none;">
+    <div id="notebook">
+        <div style="position: relative;">
+            <textarea class="page" id="page1" maxlength="550"></textarea>
+            <div class="page-timestamp" id="timestamp1"></div>
+        </div>
+        <div style="position: relative;">
+            <textarea class="page" id="page2" maxlength="550"></textarea>
+            <div class="page-timestamp" id="timestamp2"></div>
+        </div>
+    </div>
+
+    <div id="controls">
+        <button onclick="prevPage()">PREVIOUS</button>
+        <span id="pageIndicator">PAGES 1-2</span>
+        <button onclick="nextPage()">NEXT</button>
+    </div>
+</div>
+
+<script>
+// Maximum pages
+const MAX_PAGES = 6;
+let currentPage = 0;
+
+// Fixed password
+const PASSWORD = "notebookdata";
+
+// Initialize notebook
+let pages = Array(MAX_PAGES).fill('');
+let timestamps = Array(MAX_PAGES).fill('Never');
+
+// Simple XOR-based encryption
+function encrypt(text, password) {
+    return btoa(unescape(encodeURIComponent(text.split('').map((c, i) => String.fromCharCode(c.charCodeAt(0) ^ password.charCodeAt(i % password.length))).join(''))));
+}
+
+function decrypt(text, password) {
+    try {
+        const decoded = decodeURIComponent(escape(atob(text)));
+        return decoded.split('').map((c, i) => String.fromCharCode(c.charCodeAt(0) ^ password.charCodeAt(i % password.length))).join('');
+    } catch {
+        return '';
+    }
+}
+
+function loadNotebook() {
+    const data = localStorage.getItem('MyDiary_PRP');
+    if (data) {
+        const decrypted = decrypt(data, PASSWORD);
+        if (decrypted) {
+            const saved = JSON.parse(decrypted);
+            pages = saved.pages || pages;
+            timestamps = saved.timestamps || timestamps;
+        }
+    }
+    renderPages();
+}
+
+function saveNotebook() {
+    pages[currentPage] = document.getElementById('page1').value;
+    pages[currentPage + 1] = document.getElementById('page2').value;
+
+    // Update timestamps
+    timestamps[currentPage] = new Date().toLocaleString();
+    timestamps[currentPage + 1] = new Date().toLocaleString();
+
+    localStorage.setItem('MyDiary_PRP', encrypt(JSON.stringify({pages, timestamps}), PASSWORD));
+    renderTimestamps();
+}
+
+function renderPages() {
+    document.getElementById('page1').value = pages[currentPage] || '';
+    document.getElementById('page2').value = pages[currentPage + 1] || '';
+    document.getElementById('pageIndicator').textContent = `${currentPage + 1}-${Math.min(currentPage + 2, MAX_PAGES)}`;
+    renderTimestamps();
+}
+
+function renderTimestamps() {
+    document.getElementById('timestamp1').textContent = `Last edited: ${timestamps[currentPage]}`;
+    document.getElementById('timestamp2').textContent = `Last edited: ${timestamps[currentPage + 1]}`;
+}
+
+// Navigation
+function nextPage() {
+    pages[currentPage] = document.getElementById('page1').value;
+    pages[currentPage + 1] = document.getElementById('page2').value;
+    if (currentPage + 2 < MAX_PAGES) {
+        currentPage += 2;
+        renderPages();
+        saveNotebook();
+    }
+}
+
+function prevPage() {
+    pages[currentPage] = document.getElementById('page1').value;
+    pages[currentPage + 1] = document.getElementById('page2').value;
+    if (currentPage - 2 >= 0) {
+        currentPage -= 2;
+        renderPages();
+        saveNotebook();
+    }
+}
+
+// Auto-save on typing
+document.getElementById('page1').addEventListener('input', saveNotebook);
+document.getElementById('page2').addEventListener('input', saveNotebook);
+
+// Front cover logic
+const cover = document.getElementById('cover');
+const notebookContainer = document.getElementById('notebook').parentElement;
+
+cover.addEventListener('click', () => {
+    cover.style.display = 'none';
+    notebookContainer.style.display = 'block';
+    loadNotebook();
+});
+</script>
+
+</body>
+</html>

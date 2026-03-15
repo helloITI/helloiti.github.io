@@ -1,0 +1,139 @@
+<!DOCTYPE html> 
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Download LocalStorage Entries</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+
+<body>
+
+  <table id="lsTable" aria-label="localStorage entries">
+    <thead>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+  (function() {
+    const tableBody = document.querySelector('#lsTable tbody');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const downloadAllBtn = document.getElementById('downloadAllBtn');
+    const downloadEachBtn = document.getElementById('downloadEachBtn');
+
+    function sizeInBytes(str) {
+      return new TextEncoder().encode(String(str)).length;
+    }
+
+    function safeFilename(str) {
+      return str.replace(/[^a-z0-9-_\.]/gi, '_');
+    }
+
+    function timestamp() {
+      const d = new Date();
+      const pad = n => String(n).padStart(2, '0');
+      return `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`;
+    }
+
+    function getAllEntries() {
+      const entries = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        const value = localStorage.getItem(key);
+        entries.push({ key, value });
+      }
+      return entries;
+    }
+
+    function populateTable() {
+      const entries = getAllEntries().filter(({ key }) => key.startsWith('PRPMII_'));
+      tableBody.innerHTML = '';
+
+      if (entries.length === 0) {
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.colSpan = 4;
+        td.textContent = '(No localStorage entries starting with "PRPMII_")';
+        tr.appendChild(td);
+        tableBody.appendChild(tr);
+        return;
+      }
+
+      entries.forEach(({ key, value }) => {
+        const tr = document.createElement('tr');
+
+        const keyTd = document.createElement('td');
+        keyTd.textContent = key;
+        tr.appendChild(keyTd);
+
+        const actionTd = document.createElement('td');
+        const dlBtn = document.createElement('button');
+        dlBtn.textContent = 'Download';
+        dlBtn.addEventListener('click', () => downloadSingleEntry(key, value));
+        actionTd.appendChild(dlBtn);
+        tr.appendChild(actionTd);
+
+        tableBody.appendChild(tr);
+      });
+    }
+
+    function triggerDownload(filename, blob) {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }, 0);
+    }
+
+    function downloadSingleEntry(key, value) {
+let parsedValue;
+try {
+  parsedValue = JSON.parse(value);
+} catch (e) {
+  parsedValue = value;
+}
+const content = value;
+
+      const blob = new Blob([content], { type: 'application/json' });
+      const fname = `ls-${safeFilename(key)}-${timestamp()}.json`;
+      triggerDownload(fname, blob);
+    }
+
+    function downloadAll() {
+      const entries = getAllEntries().filter(({ key }) => key.startsWith('PRPMII_'));
+      const obj = {};
+      entries.forEach(({ key, value }) => { obj[key] = value; });
+      const content = JSON.stringify({ exportedAt: new Date().toISOString(), origin: location.origin, entries: obj }, null, 2);
+      const blob = new Blob([content], { type: 'application/json' });
+      const fname = `mii-${timestamp()}.prpmii`;
+      triggerDownload(fname, blob);
+    }
+
+    function downloadEach() {
+      const entries = getAllEntries().filter(({ key }) => key.startsWith('PRPMII_'));
+      if (entries.length === 0) {
+        alert('No matching localStorage entries.');
+        return;
+      }
+      entries.forEach((entry, idx) => {
+        setTimeout(() => downloadSingleEntry(entry.key, entry.value), idx * 200);
+      });
+    }
+
+    populateTable();
+  })();
+  </script>
+</body>
+</html>

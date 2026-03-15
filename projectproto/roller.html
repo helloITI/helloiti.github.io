@@ -1,0 +1,1516 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Project Proto</title>
+  <script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
+  <script src="https://unpkg.com/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three/examples/js/exporters/GLTFExporter.js"></script>
+<style>
+body{
+      background-image: url('graphics/backgrounbd.png');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+}
+@font-face {
+  font-family: 'ArcadeClassic';
+  src: url('graphics/monday.ttf') format('truetype');
+}
+.tab-wrapper {
+  background: url('graphics/bottomscreen_stage.png') no-repeat left center;
+  background-size: contain;
+  width: 510px;
+  height: 380px;
+  image-rendering: pixelated;
+  position: relative;
+  overflow: hidden;
+}
+.scrolling-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+  display: flex;
+flex-direction: column;
+align-items: center;
+height: 360px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.scrolling-list li {
+color: #A45364;
+  font: 12px 'ArcadeClassic', sans-serif;
+  display: flex;
+  align-items: center;
+  padding: 0px;
+  background: url('graphics/friendcard_sample.png') no-repeat left center;
+  background-size: contain;
+  width: 500px;
+  height: 105px;
+}
+
+.face {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  margin-right: 10px;
+filter: drop-shadow(3px 3px 1px rgba(210,120,120,0.4));
+}
+
+
+.menu {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  margin: 10px;
+  float: right;
+  right: 10px;
+  top: 10px;
+}
+
+
+.text-container {
+color: #A45364;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  line-height: 1.2;
+}
+.scrolling-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrolling-list::-webkit-scrollbar-thumb {
+  background-color: rgba(226,144,156,1);
+  border-radius: 2px;
+}
+.credits-container {
+  width: 510px;
+  height: 380px;
+  overflow: hidden;
+  color: white;
+  font-family: sans-serif;
+  padding: 10px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.credits {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+    font: 12px 'ArcadeClassic', sans-serif;
+  animation: roll 60s linear forwards;
+}
+
+.credits img {
+  width: 200px;
+  margin-bottom: 20px;
+}
+
+@keyframes roll {
+  0% {
+    transform: translateY(20%);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}
+    .fade-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 3s ease-in-out;
+    }
+
+    .fade-overlay.active {
+      opacity: 1;
+    }
+    
+    .DS-Display {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  outline: 5px solid rgba(255, 255, 255, 0.1);
+}
+
+</style>
+
+
+  </head>
+
+<body>
+      <div class="fade-overlay"></div>
+<div class="DS-Display">
+<div style="position: relative; width: 510px; height: 380px;">
+  <canvas id="miiCanvas" width="510" height="380" style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
+</div>
+<div class="tab-wrapper">
+<div class="credits-container">
+  <div class="credits">
+    <img src="graphics/prp_log.png">
+    <p>BASED ON THE UNRELEASED PROTOTYPE 'OTONA NO ONNA NO URANAI TECHOU'</p>
+    <p> </p>
+    <p>DEV TEAM</p>
+    <p>REALSTINKBABY - 3D MODELING, TEXTURING, CODING, ANIMATING</p>
+    <p>ROTTENMEMSYT - SOUND EFFECTS, MUSIC, CONCEPT ART</p>
+    <p>GABRIELS.1301 - TEXTURING, FONT CREATOR, MUSIC</p>
+    <p>RFGUY - UI GRAPHICS</p>
+    <p>TYLERBLU - UI GRAPHICS</p>
+    <p> </p>
+    <p>SPECIAL THANKS TO</p>
+    <p>MIIWIKI.ORG - FOR THE DOCUMENTATION</p>
+    <p>TCRF.NET - TOMODACHI COLLECTION UNUSED CONTENT</p>
+    <p>TINKE - ASSET RIPPING HELP</p>
+    <p>APICULA - ANIMATION RIPPING HELP</p>
+    <p>AND YOU FOR PLAYING!</p>
+    <p> </p>
+    <p>THIS PROJECT IS NOT AFFILIATED WITH NINTENDO</p>
+  </div>
+</div>
+</div>
+</div>
+<script>
+  document.querySelector('.credits').addEventListener('animationend', () => {
+    document.querySelector('.fade-overlay').classList.add('active');
+  });
+</script>
+<audio id="bg-music" loop>
+  <source src="" type="audio/wav">
+</audio>
+<audio id="bg-music" loop></audio>
+<script>
+  const context = new (window.AudioContext || window.webkitAudioContext)();
+  let bufferSource;
+  const gainNode = context.createGain();
+  gainNode.gain.value = 0.2;
+
+  const songs = {
+    1: "sound/song/SEQ_Ending1.wav",
+    2: "sound/song/SEQ_Ending2.wav"
+  };
+
+  function startRandomSong() {
+    const randomChoice = Math.random() < 0.5 ? 1 : 2; // randomly pick 1 or 2
+
+    fetch(songs[randomChoice])
+      .then(response => response.arrayBuffer())
+      .then(arrayBuffer => context.decodeAudioData(arrayBuffer))
+      .then(audioBuffer => {
+        bufferSource = context.createBufferSource();
+        bufferSource.buffer = audioBuffer;
+        bufferSource.loop = true;
+
+        bufferSource.connect(gainNode);
+        gainNode.connect(context.destination);
+
+        bufferSource.start(0);
+        console.log("Playing song", randomChoice);
+      });
+
+    // Remove listeners so it doesn’t restart on further clicks/keys
+    document.removeEventListener('click', startRandomSong);
+    document.removeEventListener('keydown', startRandomSong);
+  }
+
+  // Start on first click or key press
+  document.addEventListener('click', startRandomSong);
+  document.addEventListener('keydown', startRandomSong);
+</script>
+
+<script>
+  //mii data
+  let faceline = 1;
+  let hairstyle = 1;
+  let facialstyle = 0;
+  let gender = 0;
+  let hairFlipped = false;
+  let shirtcolor = 1;
+  let hatColor = new THREE.Color(0xff0000);
+  let eyestyle = "1.png";
+  let eyebrowstyle = "2.png";
+  let mouthstyle = "1.png";
+  let nosestyle = "1.png";
+  let detailstyle = "0.png";
+  let eyeColorHex = '4C4032';
+  let haircolor = 0x323123;
+  let browColorHex = '323123';
+  let glasses_S = 1;
+  let glassesColorHex = '323123';
+  let skintone = 1;
+  let lipcolor = 'F3A771';
+  let molestyle = "0.png";
+  let musstyle = "0.png";
+  //adjustments
+  let LIB_Eye_PosX = 0;
+  let LIB_Eye_PosY = 0;
+  let LIB_Eye_Scale = 0;
+  let LIB_Eye_Rot = 0;
+  let LIB_Brow_PosX = 0;
+  let LIB_Brow_PosY = 0;
+  let LIB_Brow_Scale = 0;
+  let LIB_Brow_Rot = 0;
+  let LIB_Mouth_PosY = 0;
+  let LIB_Mouth_Scale = 0;
+  let LIB_Nose_PosY = 0;
+  let LIB_Nose_Scale = 0;
+  let LIB_Glass_PosY = 0;
+  let LIB_Glass_Scale = 0;
+  let LIB_Mole_PosX = 0;
+  let LIB_Mole_PosY = 0;
+  let LIB_Mole_Scale = 0;
+  let LIB_Stache_PosX = 0;
+  let LIB_Stache_PosY = 0;
+  let LIB_Stache_Scale = 0;
+  
+  let height = 1;
+  let weight = 1;
+  //local
+  let overlayScene, overlayCamera, overlayMesh;
+  let faceMesh = null;
+  let hairMesh = null;
+  let bodyMesh = null;
+  let beardMesh = null;
+  let headGroup = null;
+  let zip = null;
+  let mixer = null;
+  let GlassesTex = null;
+  const clock = new THREE.Clock();
+  let animations = [];
+  let currentAnimationIndex = 0;
+  let currentAction = null;
+const baseCameraY = 0;
+const baseCameraZ = 10;
+const hatColors = [
+  "#735A52",
+  "#BDA594",
+  "#CAC1C1",
+  "#F7EFFF",
+  "#B9B9B9",
+  "#74747D",
+  "#B1DAA1",
+  "#FFB397",
+  "#FF90FF",
+  "#BB9ADD",
+  "#FFFC75",
+  "#A7E0E8",
+  "#F79933",
+  "#8099FF",
+];
+  //expressionval
+  let EX_eyestyle = "1.png";
+  let EX_eyebrowstyle = "2.png";
+  let EX_mouthstyle = "1.png";
+  let EX_LIB_Eye_PosX = 0;
+  let EX_LIB_Eye_PosY = 0;
+  let EX_LIB_Eye_Rot = 0;
+  let EX_LIB_Brow_PosX = 0;
+  let EX_LIB_Brow_PosY = 0;
+  let EX_LIB_Brow_Rot = 0;
+  let EX_LIB_Mouth_PosY = 0;
+
+
+let idleGLB = null;
+
+const emoteExpressions = {
+  dance: 0,
+  think: 4,
+  sit: -1,
+  scrtach: -1,
+  sneeze: 11,
+  fall: 14,
+  fart: 7
+};
+
+function UpdateMiiInfo(firstName, lastName, birthdate) {
+  const nameSpan = document.getElementById('user-name');
+  const birthdateSpan = document.getElementById('user-birthdate');
+
+  const fullName = (lastName + " " + firstName).toUpperCase();
+  nameSpan.textContent = fullName;
+
+  birthdateSpan.textContent = birthdate;
+}
+
+
+  const canvas = document.getElementById('miiCanvas');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(value, max));
+}
+  
+const scene = new THREE.Scene();
+scene.background = null;
+
+const aspect = 510 / 380;
+const camera = new THREE.PerspectiveCamera(35, aspect, 0.1, 1000);
+
+camera.position.set(0, 1.6, 6);
+
+
+  const light = new THREE.AmbientLight(0xffffff, 0.5);
+  scene.add(new THREE.AmbientLight(0xffffff, 0.5), light);
+
+const BeardZOffsetMap = {
+  1: 0,
+  2: 0.1,
+  3: 0.01,
+  4: -0.01,
+  5: -0.03,
+  6: 0,
+  7: -0.03,
+  8: -0.03,
+};
+const BeardYOffsetMap = {
+  1: 0,
+  2: -0.03,
+  3: -0.06,
+  4: 0,
+  5: 0.01,
+  6: 0,
+  7: 0.01,
+  8: 0.01,
+};
+
+let headBone = null;
+
+const loader = new THREE.GLTFLoader();
+
+const audioListener = new THREE.AudioListener();
+camera.add(audioListener);
+
+//Mii section
+
+  async function loadGLBFromZip(path) {
+    const file = zip.file(path);
+    if (file) {
+    const buffer = await file.async('arraybuffer');
+    return new Promise((resolve, reject) => {
+      loader.parse(buffer, '', gltf => resolve(gltf.scene), reject);
+    });
+    }
+  }
+
+  async function loadBodyAndAnimations(url) {
+    return new Promise((resolve, reject) => {
+      loader.load(url, (gltf) => resolve(gltf), undefined, reject);
+    });
+  }
+
+const legsTexture = new THREE.TextureLoader().load("texture/old_gold.png", (texture) => {
+  texture.magFilter = THREE.NearestFilter;
+  texture.minFilter = THREE.NearestFilter;
+  texture.generateMipmaps = false;
+  texture.needsUpdate = true;
+});
+
+  legsTexture.flipY = false;
+
+const legsMaterial = new THREE.MeshStandardMaterial({
+  map: legsTexture,
+  roughness: 0.8,
+  metalness: 0,
+  skinning: true,
+  morphTargets: true,
+  transparent: true,
+});
+async function loadAnimationsFromGLB(url) {
+  const loader = new THREE.GLTFLoader();
+  return new Promise((resolve, reject) => {
+    loader.load(url, gltf => {
+      resolve(gltf.animations || []);
+    }, undefined, reject);
+  });
+}
+
+
+const expressionPresets = {
+  0: { name: "Smile", EX_eyestyle: '49.png', EX_LIB_Brow_PosY: 10, EX_LIB_Eye_PosY: 5},
+  1: { name: "Surprised", EX_eyestyle: '50.png', EX_LIB_Brow_PosY: -5 },
+  2: { name: "Unbelievable", EX_eyestyle: '54.png', EX_mouthstyle: '29.png' },
+  3: { name: "Dizzy", EX_eyestyle: '53.png', EX_mouthstyle: '25.png', EX_LIB_Brow_Rot: 10, EX_LIB_Brow_PosY: 10 },
+  4: { name: "Blink", EX_eyestyle: '34.png', EX_LIB_Brow_PosY: 10, EX_LIB_Eye_PosY: 5},
+  5: { name: "Love", EX_eyestyle: '51.png', EX_mouthstyle: '11.png' },
+  6: { name: "Coin", EX_eyestyle: '55.png', EX_mouthstyle: '27.png' },
+  7: { name: "Disgust", EX_eyestyle: '39.png', EX_mouthstyle: '25.png' },
+  8: { name: "Normal Open Mouth", EX_mouthstyle: '26.png' },
+  9: { name: "Smile Open", EX_eyestyle: '49.png', EX_LIB_Brow_PosY: 10, EX_mouthstyle: '26.png' },
+  10: { name: "Surprised Open", EX_eyestyle: '50.png', EX_LIB_Brow_PosY: -5, EX_mouthstyle: '26.png' },
+  11: { name: "Blink Open", EX_eyestyle: '34.png', EX_LIB_Brow_PosY: 10, EX_mouthstyle: '26.png' },
+  12: { name: "Love Open", EX_eyestyle: '51.png', EX_mouthstyle: '26.png' },
+  13: { name: "Coin Open", EX_eyestyle: '55.png', EX_mouthstyle: '26.png' },
+  14: { name: "Disgust Open", EX_eyestyle: '39.png', EX_mouthstyle: '26.png' },
+};
+
+
+// Reusable images (only created once)
+const eyebrowImg = new Image();
+const eyeImg = new Image();
+const mouthImg = new Image();
+const noseImg = new Image();
+const detImg = new Image();
+const sknImg = new Image();
+const molImg = new Image();
+const musImg = new Image();
+
+/** Helper to load an image and return a promise */
+function loadImage(img, src) {
+  return new Promise((resolve) => {
+    img.onload = () => resolve(img);
+    img.src = src;
+  });
+}
+
+/** Draw all face components after images are loaded */
+function drawFaceComponents(preset = {}) {
+  // Extract expression adjustments
+  const EX_LIB_Brow_PosY = preset.EX_LIB_Brow_PosY || 0;
+  const EX_LIB_Brow_Rot = preset.EX_LIB_Brow_Rot || 0;
+  const EX_LIB_Eye_PosX = preset.EX_LIB_Eye_PosX || 0;
+  const EX_LIB_Eye_PosY = preset.EX_LIB_Eye_PosY || 0;
+  const EX_LIB_Eye_Rot = preset.EX_LIB_Eye_Rot || 0;
+  const EX_LIB_Mouth_PosY = preset.EX_LIB_Mouth_PosY || 0;
+
+  // Clear canvas
+  faceComposeCtx.setTransform(1, 0, 0, 1, 0, 0);
+  faceComposeCtx.clearRect(0, 0, faceComposeCanvas.width, faceComposeCanvas.height);
+
+  // === EYES ===
+  const eyeCanvas = document.createElement('canvas');
+  eyeCanvas.width = eyeImg.width;
+  eyeCanvas.height = eyeImg.height;
+  const eyeCtx = eyeCanvas.getContext('2d');
+  eyeCtx.drawImage(eyeImg, 0, 0);
+
+  const eyeImageData = eyeCtx.getImageData(0, 0, eyeCanvas.width, eyeCanvas.height);
+  if (eyestyle !== '51.png') recolorIris(eyeImageData);
+  eyeCtx.putImageData(eyeImageData, 0, 0);
+
+  // Right eye
+  faceComposeCtx.save();
+  faceComposeCtx.translate(140 + LIB_Eye_PosX + EX_LIB_Eye_PosX + eyeCanvas.width / 2, 
+                           60 + LIB_Eye_PosY + EX_LIB_Eye_PosY + eyeCanvas.height / 2);
+  faceComposeCtx.scale(1 + (LIB_Eye_Scale / 30), 1 + (LIB_Eye_Scale / 30));
+  faceComposeCtx.rotate(LIB_Eye_Rot / 30);
+  faceComposeCtx.drawImage(eyeCanvas, -eyeCanvas.width / 2, -eyeCanvas.height / 2);
+  faceComposeCtx.restore();
+
+  // Left eye (mirrored)
+  faceComposeCtx.save();
+  faceComposeCtx.translate(10 - LIB_Eye_PosX + EX_LIB_Eye_PosX + eyeCanvas.width / 2,
+                           60 + LIB_Eye_PosY + EX_LIB_Eye_PosY + eyeCanvas.height / 2);
+  faceComposeCtx.scale(-1 - (LIB_Eye_Scale / 30), 1 + (LIB_Eye_Scale / 30));
+  faceComposeCtx.rotate((LIB_Eye_Rot + EX_LIB_Eye_Rot) / 30);
+  faceComposeCtx.drawImage(eyeCanvas, -eyeCanvas.width / 2, -eyeCanvas.height / 2);
+  faceComposeCtx.restore();
+
+  // === MOUTH ===
+  const mouthScale = 1.5 + (LIB_Mouth_Scale / 30);
+  const mouthCanvas = document.createElement('canvas');
+  mouthCanvas.width = mouthImg.width;
+  mouthCanvas.height = mouthImg.height;
+  const mouthCtx = mouthCanvas.getContext('2d');
+  mouthCtx.drawImage(mouthImg, 0, 0);
+  const mouthImageData = mouthCtx.getImageData(0, 0, mouthCanvas.width, mouthCanvas.height);
+  recolorMouth(mouthImageData);
+  mouthCtx.putImageData(mouthImageData, 0, 0);
+  mouthCtx.imageSmoothingEnabled = false;
+
+  faceComposeCtx.save();
+  faceComposeCtx.translate(104 + mouthCanvas.width / 2, 170 + LIB_Mouth_PosY + EX_LIB_Mouth_PosY + mouthCanvas.height / 2);
+  faceComposeCtx.scale(mouthScale, mouthScale);
+  faceComposeCtx.drawImage(mouthCanvas, -mouthCanvas.width / 2, -mouthCanvas.height / 2);
+  faceComposeCtx.restore();
+
+  // === NOSE ===
+  const noseScale = 0.8 + (LIB_Nose_Scale / 50);
+  const noseCanvas = document.createElement('canvas');
+  noseCanvas.width = noseImg.width;
+  noseCanvas.height = noseImg.height;
+  const noseCtx = noseCanvas.getContext('2d');
+  noseCtx.imageSmoothingEnabled = false;
+  noseCtx.drawImage(noseImg, 0, 0);
+
+  faceComposeCtx.save();
+  faceComposeCtx.translate(45 + noseCanvas.width / 2, 60 + LIB_Nose_PosY + noseCanvas.height / 2);
+  faceComposeCtx.scale(noseScale, noseScale);
+  faceComposeCtx.drawImage(noseCanvas, -noseCanvas.width / 2, -noseCanvas.height / 2);
+  faceComposeCtx.restore();
+
+  // === MUSTACHE ===
+  const stacheCanvas = document.createElement('canvas');
+  stacheCanvas.width = musImg.width;
+  stacheCanvas.height = musImg.height;
+  const stacheCtx = stacheCanvas.getContext('2d');
+  stacheCtx.drawImage(musImg, 0, 0);
+  const hairColorRGB = hexToRgb(haircolor);
+  const stacheImageData = stacheCtx.getImageData(0, 0, stacheCanvas.width, stacheCanvas.height);
+  recolorStache(stacheImageData, hairColorRGB);
+  stacheCtx.putImageData(stacheImageData, 0, 0);
+  faceComposeCtx.drawImage(stacheCanvas, 95, 145 + LIB_Stache_PosY, stacheCanvas.width, stacheCanvas.height);
+
+  // === EYEBROWS ===
+  const browCanvas = document.createElement('canvas');
+  browCanvas.width = eyebrowImg.width;
+  browCanvas.height = eyebrowImg.height;
+  const browCtx = browCanvas.getContext('2d');
+  browCtx.drawImage(eyebrowImg, 0, 0);
+  const browImageData = browCtx.getImageData(0, 0, browCanvas.width, browCanvas.height);
+  recolorBrow(browImageData);
+  browCtx.putImageData(browImageData, 0, 0);
+
+  const browRotation = (LIB_Brow_Rot + EX_LIB_Brow_Rot) / 30;
+
+  // Right brow
+  faceComposeCtx.save();
+  faceComposeCtx.translate(140 + LIB_Brow_PosX + EX_LIB_Brow_PosX + browCanvas.width / 2, 40 + LIB_Brow_PosY + EX_LIB_Brow_PosY + browCanvas.height / 2);
+  faceComposeCtx.scale(1 + (LIB_Brow_Scale / 30), 1 + (LIB_Brow_Scale / 30));
+  faceComposeCtx.rotate(browRotation);
+  faceComposeCtx.drawImage(browCanvas, -browCanvas.width / 2, -browCanvas.height / 2);
+  faceComposeCtx.restore();
+
+  // Left brow (mirrored)
+  faceComposeCtx.save();
+  faceComposeCtx.translate(30 - LIB_Brow_PosX + EX_LIB_Brow_PosX + browCanvas.width / 2, 40 + LIB_Brow_PosY + EX_LIB_Brow_PosY + browCanvas.height / 2);
+  faceComposeCtx.scale(-1 - (LIB_Brow_Scale / 30), 1 + (LIB_Brow_Scale / 30));
+  faceComposeCtx.rotate(browRotation);
+  faceComposeCtx.drawImage(browCanvas, -browCanvas.width / 2, -browCanvas.height / 2);
+  faceComposeCtx.restore();
+
+  // === MOLE ===
+  faceComposeCtx.drawImage(molImg, 60 + LIB_Mole_PosX, 175 + LIB_Mole_PosY,
+                           molImg.width / 2.5 + (LIB_Mole_Scale / 30),
+                           molImg.height / 2.5 + (LIB_Mole_Scale / 30));
+
+  // Update Three.js texture if needed
+  if (faceTexture) {
+    faceTexture.minFilter = THREE.NearestFilter;
+    faceTexture.magFilter = THREE.NearestFilter;
+    faceTexture.needsUpdate = true;
+  }
+  if (wrapMesh) {
+    wrapMesh.traverse(child => {
+      if (child.isMesh) {
+        child.material.map = faceTexture;
+        child.material.needsUpdate = true;
+      }
+    });
+  }
+}
+
+/** Main renderFace function */
+async function renderFace(expression = -1) {
+  const isDefault = expression === -1;
+  const preset = isDefault ? {} : (expressionPresets[expression] || {});
+  const EX_eyestyle = preset.EX_eyestyle || eyestyle;
+  const EX_mouthstyle = preset.EX_mouthstyle || mouthstyle;
+
+  // Load all images in parallel
+  const eyebrowKey = `proto_facelib/txt/eyebrow/${eyebrowstyle}`;
+  const eyeKey = `proto_facelib/txt/eye/${EX_eyestyle}`;
+  const mouthKey = `proto_facelib/txt/mouth/${EX_mouthstyle}`;
+  const noseKey = `proto_facelib/txt/nose/${nosestyle}`;
+  const detailKey = `proto_facelib/txt/detail/${detailstyle}`;
+  const skinKey = `proto_facelib/txt/head/${skintone}.png`;
+  const moleKey = `proto_facelib/txt/mole/${molestyle}`;
+  const stamusKey = `proto_facelib/txt/mus/${musstyle}`;
+
+  await Promise.all([
+    loadImage(eyebrowImg, zipImages.eyebrow[eyebrowKey]),
+    loadImage(eyeImg, zipImages.eye[eyeKey]),
+    loadImage(mouthImg, zipImages.mouth[mouthKey]),
+    loadImage(noseImg, zipImages.nose[noseKey]),
+    loadImage(detImg, zipImages.detail[detailKey]),
+    loadImage(sknImg, zipImages.skin[skinKey]),
+    loadImage(molImg, zipImages.mole[moleKey]),
+    loadImage(musImg, zipImages.stache[stamusKey])
+  ]);
+
+  // Draw all components
+  drawFaceComponents(preset);
+}
+
+
+async function buildMiiHead(faceIndex, hairIndex, gender, haircolora, skincolo, eyebrowStyle, eyeStyle, mouthStyle, noseStyle, detailStyle, moleStyle, mustacheStyle,firstName,lastName,birthdate) {
+  try {
+
+const MiiID = `${Math.random().toString(36).slice(2)}-${Date.now().toString(36)}`;
+    
+    const facePath = `proto_facelib/mdl/face${faceIndex}.glb`;
+    const wrapPath = `proto_facelib/mdl/wrap${faceIndex}.glb`;
+    const hairPath = `proto_facelib/mdl/hair${hairIndex}.glb`;
+    const facehairPath = `proto_facelib/mdl/beard${facialstyle}.glb`;
+    const glassPath = `proto_facelib/mdl/glasses.glb`;
+    const genderURL = gender === 1 ? "model/body/female.glb" : "model/body/male.glb";
+
+
+    // Load all head parts in parallel
+    const [face, hair, lasi, facehair, wrap] = await Promise.all([
+      loadGLBFromZip(facePath),
+      loadGLBFromZip(hairPath),
+      loadGLBFromZip(glassPath),
+      loadGLBFromZip(facehairPath),
+      loadGLBFromZip(wrapPath)
+    ]);
+
+    // Load body
+    const gltf = await loadBodyAndAnimations(genderURL);
+    if (!gltf || !gltf.scene) {
+      console.error("Body model not loaded properly");
+      return;
+    }
+    bodyMesh = gltf.scene;
+    mixer = new THREE.AnimationMixer(bodyMesh);
+    bodyMesh.scale.set(-0.1, 0.1, 0.1);
+    const loader = new THREE.GLTFLoader();
+miiWalkSequence();
+    // Assign to globals
+    faceMesh = face;
+    hairMesh = hair;
+    glassMesh = lasi;
+    beardMesh = facehair;
+    wrapMesh = wrap;
+
+    // Skin color
+    const skincolMap = {
+      1: "#ECE0C6",
+      2: "#F8E5BC",
+      3: "#BCA87D",
+      4: "#625539",
+      5: "#FFD3A3"
+    };
+    const skinColor = new THREE.Color(skincolMap[skincolo] || "#FFD3A3");
+  const cleanHex = haircolora.toString().replace(/^0x/, '').replace(/^#/, '');
+  
+const loader2 = new THREE.TextureLoader();
+const hairTexture = loader2.load('texture/hair/hair.png');
+hairTexture.wrapS = hairTexture.wrapT = THREE.RepeatWrapping;
+
+const HairMaterial = new THREE.ShaderMaterial({
+  uniforms: {
+    uTexture: { value: hairTexture },
+    uScale: { value: 1.0 },
+    uColor: { value: new THREE.Color('#'+cleanHex) }
+  },
+  side: THREE.DoubleSide,
+  vertexShader: `
+    varying vec3 vPosition;
+
+    void main() {
+      vPosition = position; // object-space
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `,
+  fragmentShader: `
+uniform sampler2D uTexture;
+uniform float uScale;
+uniform vec3 uColor;
+varying vec3 vPosition;
+
+void main() {
+  vec2 uv = vec2(vPosition.y, vPosition.x) * uScale;
+  vec4 texColor = texture2D(uTexture, uv);
+  gl_FragColor = vec4(texColor.rgb * uColor, texColor.a);
+}
+
+  `
+});
+
+const headSkinMaterial = new THREE.MeshStandardMaterial({
+  roughness: 0.6,
+  side: THREE.DoubleSide
+});
+
+const handSkinMaterial = new THREE.MeshStandardMaterial({
+  color: skinColor,
+  roughness: 0.6,
+  skinning: true,
+  morphTargets: true,
+  side: THREE.DoubleSide
+});
+
+// (Optional) Tag them for debugging or reference
+headSkinMaterial.name = `headSkin-${MiiID}`;
+handSkinMaterial.name = `handSkin-${MiiID}`;
+    // Apply materials
+    faceMesh.traverse(child => {
+      if (child.isMesh) child.material = headSkinMaterial;
+    });
+    [hairMesh, beardMesh].forEach(mesh => {
+      if (mesh) {
+        mesh.traverse(child => {
+          if (child.isMesh) child.material = HairMaterial;
+        });
+      }
+    });
+
+    bodyMesh.traverse(child => {
+      if (child.isMesh) {
+        const name = child.name.toLowerCase();
+        if (name.includes("hands")) child.material = handSkinMaterial;
+        if (name.includes("legs")) child.material = legsMaterial;
+      }
+    });
+
+
+    // Build head group
+    headGroup = new THREE.Group();
+    headGroup.name = `headGroup-${MiiID}`
+    headGroup.add(faceMesh, wrapMesh, hairMesh, glassMesh, beardMesh);
+    faceMesh.scale.set(0.95,0.95,0.95); 
+    // Offset beard
+    const BZOffset = BeardZOffsetMap[faceline] ?? 0;
+    const BYOffset = BeardYOffsetMap[faceline] ?? 0;
+    if (beardMesh) {
+      beardMesh.position.z += BZOffset;
+      beardMesh.position.y += BYOffset;
+    }
+
+    // Attach to body
+    headBone = bodyMesh.getObjectByName("head");
+    scene.add(bodyMesh);
+
+headGroup.rotation.set(0, Math.PI, Math.PI/2);
+    headBone.add(headGroup);
+
+    // Apply shirt color texture
+    const shirtTexURL = `texture/${shirtcolor}.png`;
+    hatColor.set(hatColors[shirtcolor - 1]);
+    const textureLoader = new THREE.TextureLoader();
+    textureLoader.load(shirtTexURL, texture => {
+      texture.magFilter = THREE.NearestFilter;
+      texture.minFilter = THREE.NearestFilter;
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.wrapT = THREE.RepeatWrapping;
+      texture.repeat.y = -1;
+      texture.needsUpdate = true;
+
+      bodyMesh.traverse(child => {
+        if (child.isMesh &&
+          (child.name.toLowerCase().includes("body_m") ||
+           child.name.toLowerCase().includes("body_f"))
+        ) {
+          if (Array.isArray(child.material)) {
+            child.material.forEach(mat => {
+              mat.map = texture;
+              mat.needsUpdate = true;
+            });
+          } else {
+            child.material.map = texture;
+            child.material.needsUpdate = true;
+          }
+        }
+      });
+    });
+
+    // Apply glasses image
+    const glassesKey = `proto_facelib/txt/glasses/${glasses_S}.png`;
+    const imageSrc = zipImages.glasses?.[glassesKey];
+    if (imageSrc) {
+      const image = new Image();
+      image.crossOrigin = "anonymous";
+      image.src = imageSrc;
+      image.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = image.width;
+        canvas.height = image.height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(image, 0, 0);
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imageData.data;
+        const glacol = hexToRgb(glassesColorHex);
+        for (let i = 0; i < data.length; i += 4) {
+          if (colorMatchWithTolerance(data[i], data[i + 1], data[i + 2], 255, 0, 0)) {
+            data[i] = glacol.r;
+            data[i + 1] = glacol.g;
+            data[i + 2] = glacol.b;
+          }
+        }
+        ctx.putImageData(imageData, 0, 0);
+        const texture = new THREE.Texture(canvas);
+        texture.flipY = false;
+        texture.magFilter = THREE.NearestFilter;
+        texture.minFilter = THREE.NearestFilter;
+        texture.needsUpdate = true;
+
+        const newMaterial = new THREE.MeshBasicMaterial({
+          map: texture,
+          transparent: true,
+          depthWrite: false,
+        });
+
+        glassMesh.position.set(0, 0.6 + (-LIB_Glass_PosY / 50), -0.5);
+        const baseScale = 1.0 + (LIB_Glass_Scale / 30);
+        glassMesh.scale.set(baseScale, baseScale, baseScale);
+
+        glassMesh.traverse(child => {
+          if (child.isMesh) {
+            child.material = newMaterial;
+            child.material.needsUpdate = true;
+          }
+        });
+      };
+    } else {
+      console.warn("Missing glasses image:", glassesKey);
+    }
+function updateBodyScale(he, we) {
+  const height = parseFloat(he);
+const weight = parseFloat(we);
+
+  if (bodyMesh && headBone) {
+    const baseScale = 0.1;
+    const clampedHeight = Math.max(0.5, Math.min(height, 1.3)); 
+    const scaleX = baseScale * weight * height;
+    const scaleY = baseScale * height;
+    const scaleZ = baseScale * weight * height;
+    bodyMesh.scale.set(scaleX, scaleY, scaleZ);
+    headBone.scale.set(1, 1, 1);
+    headGroup.scale.set(0.08 / scaleX, 0.08 / scaleY, 0.08 / scaleZ);
+  }
+}
+
+
+    // Scale body by height/weight
+    updateBodyScale(height, weight);
+    
+// Create a new offscreen canvas and context for this Mii's head texture
+const headComposeCanvas = document.createElement('canvas');
+headComposeCanvas.width = 256;  // adjust size as needed
+headComposeCanvas.height = 256;
+const headComposeCtx = headComposeCanvas.getContext('2d');
+
+// Create a new texture from this canvas for this Mii
+const headTexture = new THREE.Texture(headComposeCanvas);
+headTexture.minFilter = THREE.NearestFilter;
+headTexture.magFilter = THREE.NearestFilter;
+headTexture.flipY = false;
+
+// Load skin and detail images (make sure zipImages.detail and zipImages.skin are accessible)
+const detailKey = `proto_facelib/txt/detail/${detailstyle}`;
+const skinKey = `proto_facelib/txt/head/${skintone+'.png'}`;
+
+const detImg = new Image();
+const sknImg = new Image();
+
+detImg.crossOrigin = "anonymous";
+sknImg.crossOrigin = "anonymous";
+
+detImg.src = zipImages.detail[detailKey];
+sknImg.src = zipImages.skin[skinKey];
+
+let loaded = 0;
+const checkDraw = () => {
+  loaded++;
+  if (loaded === 2) {
+    // Draw skin base
+    headComposeCtx.clearRect(0, 0, headComposeCanvas.width, headComposeCanvas.height);
+    headComposeCtx.drawImage(sknImg, 0, 0, headComposeCanvas.width, headComposeCanvas.height);
+    // Draw details on top with slight offset if needed
+    headComposeCtx.drawImage(detImg, 7, 5, headComposeCanvas.width, headComposeCanvas.height);
+    
+    headTexture.needsUpdate = true;
+
+    // Assign texture to face mesh material(s)
+    if (faceMesh) {
+      faceMesh.traverse(child => {
+        if (child.isMesh) {
+          child.material.map = headTexture;
+          child.material.needsUpdate = true;
+        }
+      });
+    }
+  }
+};
+
+detImg.onload = checkDraw;
+sknImg.onload = checkDraw;
+
+renderFace();
+
+  } catch (err) {
+    console.error("Failed to build Mii head:", err);
+  }
+}
+
+const textureLoader = new THREE.TextureLoader();
+function ChangeEyeColor(number) {
+  const colorMap = {
+    1: "4C4032",
+    2: "FF7A04",
+    3: "57ECAC",
+    4: "83A6F6",
+    5: "C8F1F9"
+  };
+eyeColorHex = colorMap[number];
+renderFace();
+}
+function ChangeLipColor(number) {
+  const colorMap = {
+    1: "F3A771",
+    2: "B15F33",
+    3: "BE2E28",
+    4: "D45758",
+    5: "C8F1F9"
+  };
+lipcolor = colorMap[number];
+renderFace();
+}
+function ChangeBrowColor(number) {
+  const colorMap = {
+    1: "323123",
+    2: "56453C",
+    3: "B67264",
+    4: "B7754F",
+    5: "84848C",
+    6: "958557",
+    7: "AD7D3D",
+    8: "CCB963"
+  };
+  
+browColorHex = colorMap[number];
+renderFace();
+}
+
+let bodyLoaded = false;
+
+//face = eyes, mouth.. that shi
+const faceComposeCanvas = document.createElement('canvas');
+faceComposeCanvas.width = 240;
+faceComposeCanvas.height = 240;
+const faceComposeCtx = faceComposeCanvas.getContext('2d');
+
+let faceTexture = new THREE.CanvasTexture(faceComposeCanvas);
+faceTexture.flipY = false;
+
+//head = skin shade + details
+const headComposeCanvas = document.createElement('canvas');
+headComposeCanvas.width = 240;
+headComposeCanvas.height = 240;
+const headComposeCtx = headComposeCanvas.getContext('2d');
+
+let headTexture = new THREE.CanvasTexture(headComposeCanvas);
+headTexture.flipY = false;
+
+function recolorStache(imageData, hairColorRGB) {
+  const data = imageData.data;
+  for (let i = 0; i < data.length; i += 4) {
+    const r = data[i];
+    const g = data[i + 1];
+    const b = data[i + 2];
+    const a = data[i + 3];
+    if (r > 200 && g < 80 && b < 80 && a > 0) {
+      data[i] = hairColorRGB.r;
+      data[i + 1] = hairColorRGB.g;
+      data[i + 2] = hairColorRGB.b;
+    }
+  }
+}
+
+//end of mii section
+let bgtexture;
+
+async function init() {
+ 
+  try {
+    const zipResponse = await fetch('model/ONO_acc.face');
+    const zipData = await zipResponse.arrayBuffer();
+    zip = await JSZip.loadAsync(zipData);
+  } catch (e) {
+    console.warn("facelib error");
+  }
+
+  const url = "model/ONO_acc.face";
+  if (!url) return;
+
+  try {
+    await loadZipFromUrl(url);
+  } catch (e) {
+    alert("Facelib Wasnt Setup Correctly. " + e.message);
+    return;
+  }
+  
+      const bgtexloader = new THREE.TextureLoader();
+  bgtexloader.load('graphics/bgslide_flower.png', function (loadedTexture) {
+    bgtexture = loadedTexture;
+    bgtexture.minFilter = THREE.NearestFilter;
+    bgtexture.magFilter = THREE.NearestFilter;
+    bgtexture.generateMipmaps = false;
+    bgtexture.wrapS = THREE.RepeatWrapping;
+    bgtexture.wrapT = THREE.RepeatWrapping;
+    bgtexture.repeat.set(1, 1);
+    scene.background = bgtexture;
+  });
+  
+  animate();
+  importMiiDataFromUrls();
+}
+
+function getBodyBoundingBox(mesh) {
+  const box = new THREE.Box3().setFromObject(mesh);
+  const size = new THREE.Vector3();
+  const center = new THREE.Vector3();
+  box.getSize(size);
+  box.getCenter(center);
+  return { size, center };
+}
+
+const faceYOffsetMap = {
+  1: 0,
+  2: -0.03,
+  3: 0.05,
+  4: 0,
+  5: -0.03,
+  6: 0,
+  7: 0.03,
+  8: 0.03,
+};
+
+function animate() {
+requestAnimationFrame(animate);
+const delta = clock.getDelta();
+  if (mixer) mixer.update(delta);
+  renderer.autoClear = true;
+  renderer.render(scene, camera);
+    if (bgtexture) {
+    bgtexture.offset.x += 0.004;
+  }
+}
+  
+  let zipImages = {};
+
+  async function loadZipFromUrl(url) {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error('Network response was not ok');
+    const blob = await response.blob();
+    await processZipFile(blob);
+  }
+
+
+  async function processZipFile(fileOrBlob) {
+    const zipFile = await JSZip.loadAsync(fileOrBlob);
+    const entries = Object.keys(zipFile.files);
+    const eyeSelect = document.getElementById('eyeSelect');
+    const eyebrowSelect = document.getElementById('eyebrowSelect');
+    const mouthSelect = document.getElementById('mouthSelect');
+    const noseSelect = document.getElementById('noseSelect');
+    const detSelect = document.getElementById('detSelect');
+    const hairSelect = document.getElementById('hairSelect');
+    const beardSelect = document.getElementById('beardSelect');
+
+    const filterImages = (prefix) =>
+      entries.filter(name => name.startsWith(`proto_facelib/txt/${prefix}/`) && name.endsWith('.png'));
+
+    zipImages.eye = await loadImages(zipFile, filterImages("eye"));
+    zipImages.eyebrow = await loadImages(zipFile, filterImages("eyebrow"));
+    zipImages.mouth = await loadImages(zipFile, filterImages("mouth"));
+    zipImages.nose = await loadImages(zipFile, filterImages("nose"));
+    zipImages.detail = await loadImages(zipFile, filterImages("detail"));
+    zipImages.hair = await loadImages(zipFile, filterImages("hair"));
+    zipImages.glasses = await loadImages(zipFile, filterImages("glasses"));
+    zipImages.skin = await loadImages(zipFile, filterImages("head"));
+    zipImages.beard = await loadImages(zipFile, filterImages("beard"));
+    zipImages.mole = await loadImages(zipFile, filterImages("mole"));
+    zipImages.stache = await loadImages(zipFile, filterImages("mus"));
+  }
+
+  async function loadImages(zipFile, files) {
+    const imageMap = {};
+    for (let fileName of files) {
+      const blob = await zipFile.files[fileName].async("blob");
+      const url = URL.createObjectURL(blob);
+      imageMap[fileName] = url;
+    }
+    return imageMap;
+  }
+
+  function colorMatchWithTolerance(r, g, b, tr, tg, tb, tolerance = 150) {
+    return (
+      Math.abs(r - tr) <= tolerance &&
+      Math.abs(g - tg) <= tolerance &&
+      Math.abs(b - tb) <= tolerance
+    );
+  }
+
+function hexToRgb(hex) {
+  if (typeof hex === 'number') {
+    hex = hex.toString(16).padStart(6, '0');
+  } else if (typeof hex === 'string') {
+    hex = hex.replace('#', '');
+  } else {
+    return { r: 0, g: 0, b: 0 };
+  }
+  if (hex.length !== 6) {
+    return { r: 0, g: 0, b: 0 };
+  }
+  const num = parseInt(hex, 16);
+  return {
+    r: (num >> 16) & 255,
+    g: (num >> 8) & 255,
+    b: num & 255
+  };
+}
+
+
+function recolorIris(imageData) {
+  const data = imageData.data;
+  const white = { r: 255, g: 255, b: 255 };
+  const brown = { r: 0x4C, g: 0x40, b: 0x32 };
+  const eyeColor = hexToRgb(eyeColorHex);
+
+  for (let i = 0; i < data.length; i += 4) {
+    const r = data[i];
+    const g = data[i + 1];
+    const b = data[i + 2];
+
+    if (colorMatchWithTolerance(r, g, b, 0, 255, 0)) {
+      data[i] = white.r;
+      data[i + 1] = white.g;
+      data[i + 2] = white.b;
+
+    } else if (colorMatchWithTolerance(r, g, b, 255, 0, 0)) {
+      data[i] = brown.r;
+      data[i + 1] = brown.g;
+      data[i + 2] = brown.b;
+
+    } else if (colorMatchWithTolerance(r, g, b, 0, 0, 255)) {
+      data[i] = eyeColor.r;
+      data[i + 1] = eyeColor.g;
+      data[i + 2] = eyeColor.b;
+    }
+  }
+}
+
+function recolorBrow(imageData) {
+  const data = imageData.data;
+  const nrowColor = hexToRgb(browColorHex);
+
+  for (let i = 0; i < data.length; i += 4) {
+    const r = data[i];
+    const g = data[i + 1];
+    const b = data[i + 2];
+
+    if (colorMatchWithTolerance(r, g, b, 255, 0, 0)) {
+      data[i] = nrowColor.r;
+      data[i + 1] = nrowColor.g;
+      data[i + 2] = nrowColor.b;
+  }
+}
+}
+
+function recolorMouth(imageData) {
+  const data = imageData.data;
+  const baseColor = hexToRgb(lipcolor);
+  const darkerColor = {
+    r: Math.max(0, Math.floor(baseColor.r * 0.8)),
+    g: Math.max(0, Math.floor(baseColor.g * 0.8)),
+    b: Math.max(0, Math.floor(baseColor.b * 0.8))
+  };
+  for (let i = 0; i < data.length; i += 4) {
+    const r = data[i];
+    const g = data[i + 1];
+    const b = data[i + 2];
+    if (colorMatchWithTolerance(r, g, b, 255, 0, 0)) {
+      data[i] = baseColor.r;
+      data[i + 1] = baseColor.g;
+      data[i + 2] = baseColor.b;
+    }
+    else if (colorMatchWithTolerance(r, g, b, 0, 255, 0)) {
+      data[i] = darkerColor.r;
+      data[i + 1] = darkerColor.g;
+      data[i + 2] = darkerColor.b;
+    }
+  }
+}
+
+  init();
+  
+
+async function importMiiDataFromUrls({
+  baseUrl   = "data/miis/",
+  startIndex = 1,
+  maxCount   = 8,
+  delayMs    = 8000
+} = {}) {
+
+  // --- internal: apply data + build (unchanged from your version) ---
+  function apply(data, label) {
+    try {
+      faceline    = data.faceline;
+      hairstyle   = data.hairstyle;
+      facialstyle = data.facialstyle;
+      gender      = data.gender;
+      hairFlipped = data.hairFlipped;
+      shirtcolor  = data.shirtcolor;
+      hatColor    = new THREE.Color(data.hatColor || 0xffffff);
+      eyestyle    = data.eyestyle;
+      eyebrowstyle= data.eyebrowstyle;
+      mouthstyle  = data.mouthstyle;
+      nosestyle   = data.nosestyle;
+      detailstyle = data.detailstyle;
+      eyeColorHex = data.eyeColorHex;
+      haircolor   = data.haircolor;
+      browColorHex= data.browColorHex;
+      glasses_S   = data.glasses_S;
+      glassesColorHex = data.glassesColorHex;
+      skintone    = data.skintone;
+      lipcolor    = data.lipcolor;
+      molestyle   = data.molestyle;
+      musstyle    = data.musstyle;
+
+      LIB_Eye_PosX    = data.LIB_Eye_PosX;
+      LIB_Eye_PosY    = data.LIB_Eye_PosY;
+      LIB_Eye_Scale   = data.LIB_Eye_Scale;
+      LIB_Eye_Rot     = data.LIB_Eye_Rot;
+
+      LIB_Brow_PosX   = data.LIB_Brow_PosX;
+      LIB_Brow_PosY   = data.LIB_Brow_PosY;
+      LIB_Brow_Scale  = data.LIB_Brow_Scale;
+      LIB_Brow_Rot    = data.LIB_Brow_Rot;
+
+      LIB_Mouth_PosY  = data.LIB_Mouth_PosY;
+      LIB_Mouth_Scale = data.LIB_Mouth_Scale;
+
+      LIB_Nose_PosY   = data.LIB_Nose_PosY;
+      LIB_Nose_Scale  = data.LIB_Nose_Scale;
+
+      LIB_Glass_PosY  = data.LIB_Glass_PosY;
+      LIB_Glass_Scale = data.LIB_Glass_Scale;
+
+      LIB_Mole_PosX   = data.LIB_Mole_PosX;
+      LIB_Mole_PosY   = data.LIB_Mole_PosY;
+      LIB_Mole_Scale  = data.LIB_Mole_Scale;
+
+      LIB_Stache_PosX   = data.LIB_Stache_PosX;
+      LIB_Stache_PosY   = data.LIB_Stache_PosY;
+      LIB_Stache_Scale  = data.LIB_Stache_Scale;
+
+      if (data.height2 != null) {
+        height = data.height2;
+        weight = data.weight2;
+      } else {
+        height = 1;
+        weight = 1;
+      }
+
+      firstName = data.firstName;
+      lastName  = data.lastName;
+      birthdate = data.birthdate;
+
+      buildMiiHead(
+        faceline, hairstyle, gender, haircolor, skintone,
+        eyebrowstyle, eyestyle, mouthstyle, nosestyle, detailstyle,
+        molestyle, musstyle, firstName, lastName, birthdate
+      );
+
+      console.log(`Mii loaded (${label})`);
+      return true;
+    } catch (err) {
+      console.error(`Failed to apply Mii (${label}):`, err);
+      return false;
+    }
+  }
+
+  // helper: wait
+  const wait = ms => new Promise(res => setTimeout(res, ms));
+
+  let loadedCount = 0;
+  for (let i = startIndex; i < startIndex + maxCount; i++) {
+    const url = `${baseUrl}${i}.prpmii`;
+
+    let response;
+    try {
+      response = await fetch(url, { cache: "no-store" });
+    } catch (err) {
+      console.error(`Network error fetching ${url}:`, err);
+      break; // stop on network failure
+    }
+
+    if (!response.ok) {
+      console.warn(`Stopping: ${url} returned status ${response.status}.`);
+      break; // assume no more Miis after first miss
+    }
+
+    // Try to parse. Files might be JSON or text-encoded JSON.
+    let data;
+    try {
+      // If server sets correct JSON type, this works; otherwise fall back.
+      if (response.headers.get("content-type")?.includes("application/json")) {
+        data = await response.json();
+      } else {
+        const txt = await response.text();
+        data = JSON.parse(txt);
+      }
+    } catch (err) {
+      console.error(`Failed to parse ${url} as JSON:`, err);
+      // continue to next index (optional: break instead)
+      continue;
+    }
+
+    apply(data, `URL#${i}`);
+
+    loadedCount++;
+    // Delay before next fetch (unless last planned)
+    if (i < startIndex + maxCount - 1) {
+      await wait(delayMs);
+    }
+  }
+
+  console.log(`Finished loading ${loadedCount} Mii(s) from URLs.`);
+}
+const walkAnimURL = "model/body/male.glb";
+const emoteAnimations = [
+  "model/anim/backflip.glb",
+  "model/anim/dance.glb",
+  "model/anim/scratch.glb",
+  "model/anim/sit.glb",
+  "model/anim/sit2.glb",
+  "model/anim/sneeze.glb",
+  "model/anim/think.glb"
+];
+// Function to make the Mii walk sequence from a random direction (sides OR top/bottom)
+async function miiWalkSequence() {
+  if (!bodyMesh || !mixer) return;
+
+  const loader = new THREE.GLTFLoader();
+  let currentAction;
+
+function playAnimation(url, loop = THREE.LoopOnce, clipName = null) {
+  return new Promise((resolve, reject) => {
+    loader.load(
+      url,
+      (gltf) => {
+        let clip;
+
+        if (clipName) {
+          // Find the animation by name
+          clip = THREE.AnimationClip.findByName(gltf.animations, clipName);
+        } else {
+          // Default to first clip
+          clip = gltf.animations[0];
+        }
+
+        if (!clip) {
+          console.warn(`No animation clip found in ${url}`);
+          return resolve();
+        }
+
+        const action = mixer.clipAction(clip);
+
+        if (currentAction) {
+          currentAction.fadeOut(0.2);
+        }
+
+        action.reset();
+        action.setLoop(loop);
+        action.clampWhenFinished = true;
+        action.fadeIn(0.2).play();
+        currentAction = action;
+
+        if (loop === THREE.LoopOnce) {
+          mixer.addEventListener("finished", function onFinish(e) {
+            if (e.action === action) {
+              mixer.removeEventListener("finished", onFinish);
+              resolve();
+            }
+          });
+        } else {
+          resolve(action);
+        }
+      },
+      undefined,
+      (err) => reject(err)
+    );
+  });
+}
+
+
+  function moveTo(position, duration = 2) {
+    return new Promise((resolve) => {
+      const startPos = bodyMesh.position.clone();
+      let elapsed = 0;
+
+      function animateStep(delta) {
+        elapsed += delta;
+        const t = Math.min(elapsed / duration, 1);
+        bodyMesh.position.lerpVectors(startPos, position, t);
+        mixer.update(delta);
+        if (t < 1) requestAnimationFrame(() => animateStep(0.016));
+        else resolve();
+      }
+
+      animateStep(0.016);
+    });
+  }
+
+  // Pick random direction
+  const directions = ["left", "right", "top", "bottom"];
+  const dir = directions[Math.floor(Math.random() * directions.length)];
+
+  let startPos, centerPos, exitPos, rotationY;
+
+  switch (dir) {
+    case "left":
+      startPos = new THREE.Vector3(-5, 0, 0);
+      centerPos = new THREE.Vector3(0, 0, 0);
+      exitPos = new THREE.Vector3(5, 0, 0);
+      rotationY = Math.PI / 2; // facing right
+      break;
+
+    case "right":
+      startPos = new THREE.Vector3(5, 0, 0);
+      centerPos = new THREE.Vector3(0, 0, 0);
+      exitPos = new THREE.Vector3(-5, 0, 0);
+      rotationY = -Math.PI / 2; // facing left
+      break;
+
+    case "top":
+      startPos = new THREE.Vector3(0, 5, 0);   // start high above
+      centerPos = new THREE.Vector3(0, 0, 0); // land on ground
+      exitPos = new THREE.Vector3(0, -5, 0);  // fall below screen
+      rotationY = 0; // doesn’t matter much, facing forward
+      break;
+
+    case "bottom":
+      startPos = new THREE.Vector3(0, -5, 0); // start below floor
+      centerPos = new THREE.Vector3(0, 0, 0); // rise to ground
+      exitPos = new THREE.Vector3(0, 5, 0);   // float up out of view
+      rotationY = 0;
+      break;
+  }
+
+  bodyMesh.position.copy(startPos);
+  bodyMesh.rotation.y = rotationY;
+
+  await playAnimation(walkAnimURL, THREE.LoopRepeat, "Pose.06");
+
+  await moveTo(centerPos, 2);
+  if (currentAction) currentAction.fadeOut(0.2);
+
+ bodyMesh.rotation.y = 0;
+ const randomFace = Math.floor(Math.random() * 7) - 1;
+renderFace(randomFace);
+
+  const randomEmote = emoteAnimations[Math.floor(Math.random() * emoteAnimations.length)];
+  await playAnimation(randomEmote, THREE.LoopOnce);
+
+bodyMesh.rotation.y = rotationY;
+renderFace(0);
+  await playAnimation(walkAnimURL, THREE.LoopRepeat, "Pose.06");
+
+  await moveTo(exitPos, 2);
+  if (currentAction) currentAction.fadeOut(0.2);
+
+}
+
+</script>
+</body>
+</html>
