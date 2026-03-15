@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Face Renderer</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+  <button id="loadFromUrlBtn">Load facelib</button>
+  <div id="controls" style="display:none;">
+    <label>Eyebrow:
+      <select id="eyebrowSelect"></select>
+    </label>
+    <label>Eye:
+      <select id="eyeSelect"></select>
+    </label>
+    <label>Mouth:
+      <select id="mouthSelect"></select>
+    </label>
+    <label>Nose:
+      <select id="noseSelect"></select>
+    </label>
+    <button onclick="renderFace()">Render</button>
+  </div>
+  <canvas id="faceCanvas" width="256" height="256"></canvas>
+
+  <script>
+    const faceComposeCanvas = document.getElementById('faceCanvas');
+    const faceComposeCtx = faceComposeCanvas.getContext('2d');
+    let zipImages = {};
+    let haircolor = '#4C4032';
+    let LIB_Eye_PosX = 0, LIB_Eye_PosY = 0, LIB_Eye_Scale = 0, LIB_Eye_Rot = 0;
+    let LIB_Brow_PosX = 0, LIB_Brow_PosY = 0, LIB_Brow_Scale = 0, LIB_Brow_Rot = 0;
+    let LIB_Mouth_PosY = 0, LIB_Mouth_Scale = 0;
+    let LIB_Stache_PosY = 0;
+    let LIB_Nose_PosY = 0, LIB_Nose_Scale = 0;
+    let LIB_Mole_PosX = 0, LIB_Mole_PosY = 0, LIB_Mole_Scale = 0;
+
+    document.getElementById('loadFromUrlBtn').addEventListener('click', async () => {
+      const url = "model/proto_facelib_9.11";
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Failed to load ZIP');
+        const blob = await response.blob();
+        await processZipFile(blob);
+      } catch (e) {
+        alert("Error: " + e.message);
+      }
+    });
+
+    async function processZipFile(blob) {
+      const zip = await JSZip.loadAsync(blob);
+      const entries = Object.keys(zip.files);
+      const selectKeys = ['eye', 'eyebrow', 'mouth', 'nose'];
+      for (let key of selectKeys) {
+        const files = entries.filter(name => name.startsWith(`proto_facelib/txt/${key}/`) && name.endsWith('.png'));
+        zipImages[key] = await loadImages(zip, files);
+        const select = document.getElementById(`${key}Select`);
+        select.innerHTML = '';
+        files.forEach(f => {
+          const opt = document.createElement('option');
+          opt.value = f;
+          opt.textContent = f.split('/').pop();
+          select.appendChild(opt);
+        });
+      }
+      document.getElementById("controls").style.display = "block";
+    }
+
+    async function loadImages(zip, files) {
+      const map = {};
+      for (let fileName of files) {
+        const blob = await zip.files[fileName].async("blob");
+        map[fileName] = URL.createObjectURL(blob);
+      }
+      return map;
+    }
+
+    function hexToRgb(hex) {
+      const bigint = parseInt(hex.replace('#', ''), 16);
+      return { r: (bigint >> 16) & 255, g: (bigint >> 8) & 255, b: bigint & 255 };
+    }
+
+    function colorMatchWithTolerance(r, g, b, tr, tg, tb, tolerance = 150) {
+      return Math.abs(r - tr) <= tolerance &&
+             Math.abs(g - tg) <= tolerance &&
+             Math.abs(b - tb) <= tolerance;
+    }
+
+    function recolorIris(imageData) {
+      const data = imageData.data;
+      const white = { r: 255, g: 255, b: 255 };
+      const brown = { r: 0x4C, g: 0x40, b: 0x32 };
+      for (let i = 0; i < data.length; i += 4) {
+        const [r, g, b] = [data[i], data[i+1], data[i+2]];
+        if (colorMatchWithTolerance(r, g, b, 0, 255, 0)) {
+          [data[i], data[i+1], data[i+2]] = [white.r, white.g, white.b];
+        } else if (colorMatchWithTolerance(r, g, b, 255, 0, 0) || colorMatchWithTolerance(r, g, b, 0, 0, 255)) {
+          [data[i], data[i+1], data[i+2]] = [brown.r, brown.g, brown.b];
+        }
+      }
+    }
+
+    function renderFace() {
+      faceComposeCtx.clearRect(0, 0, faceComposeCanvas.width, faceComposeCanvas.height);
+      const eyebrowstyle = document.getElementById('eyebrowSelect').value;
+      const eyestyle = document.getElementById('eyeSelect').value;
+      const mouthstyle = document.getElementById('mouthSelect').value;
+      const nosestyle = document.getElementById('noseSelect').value;
+
+      const imagesToLoad = [
+        { src: zipImages.eyebrow[eyebrowstyle], img: new Image() },
+        { src: zipImages.eye[eyestyle], img: new Image() },
+        { src: zipImages.mouth[mouthstyle], img: new Image() },
+        { src: zipImages.nose[nosestyle], img: new Image() }
+      ];
+
+      let loaded = 0;
+      const onImageLoad = () => {
+        loaded++;
+        if (loaded === imagesToLoad.length) {
+          drawFace(imagesToLoad);
+        }
+      };
+
+      for (let item of imagesToLoad) {
+        item.img.onload = onImageLoad;
+        item.img.src = item.src;
+      }
+    }
+
+    function drawFace(images) {
+      const [eyebrowImg, eyeImg, mouthImg, noseImg] = images.map(i => i.img);
+
+      // Eye
+      const eyeCanvas = document.createElement('canvas');
+      eyeCanvas.width = eyeImg.width;
+      eyeCanvas.height = eyeImg.height;
+      const eyeCtx = eyeCanvas.getContext('2d');
+      eyeCtx.drawImage(eyeImg, 0, 0);
+      const eyeData = eyeCtx.getImageData(0, 0, eyeCanvas.width, eyeCanvas.height);
+      recolorIris(eyeData);
+      eyeCtx.putImageData(eyeData, 0, 0);
+      faceComposeCtx.drawImage(eyeCanvas, 100, 60);
+
+      // Mouth
+      faceComposeCtx.drawImage(mouthImg, 104, 170);
+
+      // Nose
+      faceComposeCtx.drawImage(noseImg, 120, 110);
+
+      // Eyebrow
+      faceComposeCtx.drawImage(eyebrowImg, 100, 40);
+    }
+  </script>
+</body>
+</html>
