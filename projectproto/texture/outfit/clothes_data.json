@@ -1,0 +1,32 @@
+{
+  "0": {
+    "name": "Graffiti Tank top",
+    "description": "A sleeveless top with the word Mii written on it. Trendy!",
+    "target": "Unisex",
+    "model": "Male"
+  },
+  "1": {
+    "name": "Striped Long sleeve",
+    "description": "A long sleeve shirt with red stripes. Simple, but cool design.",
+    "target": "Unisex",
+    "model": "Male"
+  },
+  "2": {
+    "name": "Cozy Hoodie",
+    "description": "This hoodie turns into your favorite color, crazy right?",
+    "target": "Unisex",
+    "model": "Gender"
+  },
+  "3": {
+    "name": "Checker-Pattern Pajama",
+    "description": "Lightweight pajamas with a abstract checker print.",
+    "target": "Unisex",
+    "model": "Male"
+  },
+  "4": {
+    "name": "Dress",
+    "description": "This dress has comfy straps and really nice shoes. Changes into your favorite color.",
+    "target": "Women",
+    "model": "Female"
+  }
+}
