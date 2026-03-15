@@ -1,0 +1,71 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>※⁜ page not found. ⁜※</title>
+  <link rel="icon" type="image/png" href="https://hellot.nekoweb.org/assets/unknown.png">
+  <style>
+    @font-face {
+      font-family: 'NintendoFont';
+      src: url('https://hellot.github.io/assets/nintendo_NTLG-DB_002.ttf') format('truetype');
+    }
+  body {
+  background-color: black;
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  cursor: url('https://hellot.nekoweb.org/assets/Wii.png') 0 0, auto;
+  font-family: 'NintendoFont', monospace;
+  text-align: center;
+}
+    h1 {
+      margin-bottom: 20px;
+    }
+a{
+	  cursor: url('https://hellot.nekoweb.org/assets/Wii.png') 0 0, pointer;
+}
+    img {
+      width: 450px;
+      max-width: 90%;
+      height: auto;
+    }
+        .corner-link {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      color: black !important;
+      font-size: 12px;
+      text-decoration: none;
+      background: none !important;
+      -webkit-text-fill-color: white !important;
+    }
+    .corner-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h2>   sorry, the page was not found, but here’s a helloT seal!   </h2>
+  <img src="https://hellot.nekoweb.org/assets/deez.gif" alt= "seal">
+      <a href="https://hellot.nekoweb.org/" style="position: absolute; top: 10px; right: 10px; color: black !important; font-size: 12px; text-decoration: none; background: none !important; -webkit-text-fill-color: white !important;">Go Back?</a>
+<audio id="bgm" loop>
+  <source src="https://hellot.nekoweb.org/assets/bgm_ps.mp3" type="audio/mpeg">
+</audio>
+<script>
+  document.addEventListener("click", function playMusic() {
+    const audio = document.getElementById("bgm");
+    audio.play().catch(err => console.log(err));
+    document.removeEventListener("click", playMusic);
+  });
+</script>
+  <meta property="og:title" content="※⁜ mf what ⁜※" />
+  <meta property="og:description" content="※⁜ you is dum dum? ⁜※"/>
+  <meta property="og:url" content="https://hellot.nekoweb.org/"/>
+  <meta property="og:image" content="https://hellot.nekoweb.org/assets/unknown.png"/>
+  <meta property="og:type" content="website"/>
+</body>
+</html>
