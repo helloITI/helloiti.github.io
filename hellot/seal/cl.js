@@ -26,7 +26,7 @@ const currentScale = new THREE.Vector3(1, 1, 1);
 let danceIntensity = 0;
 const loader = new THREE.GLTFLoader();
 // the three, the js... (why is three.js lowk a bit hard tho)
-loader.load("https://hellot.nekoweb.org/assets/models/seal/seal.gltf", (gltf) => {
+loader.load("https://helloiti.github.io/assets/models/seal/seal.gltf", (gltf) => {
   sealModel = gltf.scene;
   sealModel.traverse(child => {
     if (child.isMesh) {
@@ -129,11 +129,11 @@ animate(); window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight); });
 const songs = [
-  "https://file.garden/aRzXHaa7jkbrRXjj/13._Exhibition.mp3",
-  "https://file.garden/aRzXHaa7jkbrRXjj/07main.mp3",
-  "https://file.garden/aRzXHaa7jkbrRXjj/3ds.mp3",
-  "https://file.garden/aRzXHaa7jkbrRXjj/back_music.mp3",
-  "https://file.garden/aRzXHaa7jkbrRXjj/egg_song.mp3",
+  "https://helloiti.github.io/assets/13._Exhibition.mp3",
+  "https://heloiti.github.io/assets/07main.mp3",
+  "https://helloiti.github.io/assets/3ds.mp3",
+  "https://helloiti.github.io/assets/back_music.mp3",
+  "https:/helloiti.github.io/assets/egg_song.mp3",
   "https://file.garden/aRzXHaa7jkbrRXjj/dwnmng.mp3",
   "https://file.garden/aRzXHaa7jkbrRXjj/psvita.mp3",
   "https://file.garden/aRzXHaa7jkbrRXjj/editor.mp3"
