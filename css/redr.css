@@ -1,0 +1,124 @@
+    @font-face {
+      font-family: 'NintendoNTLG';
+      src: url('https://helloiti.github.io/assets/nintendo_NTLG-DB_002.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      cursor: url("https://hellot.nekoweb.org/assets/Wii.png"), auto;
+    }
+
+    body:active {
+      cursor: url("https://hellot.nekoweb.org/assets/Wii.png"), auto;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 16px;
+      background: url("https://hellot.nekoweb.org/assets/background1.png") no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'NintendoNTLG', sans-serif;
+    }
+
+    header {
+      background: rgba(255,255,255,0.9);
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    h1 {
+      font-size: 18px;
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.95);
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    input[type=range] { width: 100%; }
+    select, input[type=file] { width: 100%; }
+
+    .preview { display: flex; gap: 12px; flex-wrap: wrap; }
+
+    canvas {
+      max-width: 100%;
+      border-radius: 8px;
+      background: #222;
+      display: block;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 0;
+      cursor: pointer;
+      background: #1976d2;
+      color: #fff;
+    }
+
+    .btn.secondary { background: #666; }
+
+    footer {
+      font-size: 13px;
+      color: #333;
+      background: rgba(255,255,255,0.9);
+      border-radius: 12px;
+      padding: 8px;
+    }
+
+    @media (max-width: 560px) {
+      .controls { grid-template-columns: 1fr; }
+    }
+    
+        .corner-link {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      color: black !important;
+      font-size: 12px;
+      text-decoration: none;
+      background: none !important;
+      -webkit-text-fill-color: black !important;
+    }
+    .corner-link:hover {
+      text-decoration: underline;
+    }
+       .corner-link:hover {
+      text-decoration: underline;
+    }
+    html {
+  scroll-behavior: smooth;
+  
+
+body {
+  overflow-y: scroll;
+}
+
+
+body::-webkit-scrollbar {
+  display: none;
+}
