@@ -22,7 +22,7 @@ const currentScale = new THREE.Vector3(1, 1, 1);
 let danceIntensity = 0;
 
 const loader = new THREE.GLTFLoader();
-loader.load("https://hellot.nekoweb.org/assets/models/seal/seal.gltf", (gltf) => {
+loader.load("https://helloiti.github.io/assets/models/seal/seal.gltf", (gltf) => {
   sealModel = gltf.scene;
   sealModel.traverse(child => {
     if (child.isMesh) {
