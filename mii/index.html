@@ -1,485 +1,54 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-	<title>※⁜ mii storage ⁜※</title>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="https://hellot.nekoweb.org/assets/miiST.png">
-    
-    <meta property="og:title" content="※⁜ mii storage ⁜※" />
-    <meta property="og:description" content="※⁜ mii storage is a mii tool that let's you upload .charinfo or .ffsd mii's and saves it in your browser! ⁜※" />
-    <meta property="og:url" content="https://hellot.nekoweb.org/mii/" />
-    <meta property="og:image" content="https://hellot.nekoweb.org/assets/miiST.png" />
-    <meta property="og:type" content="website" />
-    
-    <style>
-        @font-face {
-            font-family: 'NintendoNTLG';
-            src: url('https://hellot.nekoweb.org/assets/nintendo_NTLG-DB_002.ttf') format('truetype');
-            font-weight: normal;
-            font-style: normal;
-        }
-        
-        body {
-            font-family: 'NintendoNTLG', sans-serif;
-            background: url('https://hellot.nekoweb.org/assets/background1.png') center/cover no-repeat fixed;
-            color: #000;
-            padding: 20px;
-            margin: 0;
-            min-height: 100vh;
-            position: relative;
-            transition: background .4s ease;
-            overflow-y: scroll;
-            cursor: url('https://hellot.nekoweb.org/assets/Wii.png') 0 0, auto;
-        }
-
-        a, button, .card img {
-            cursor: url('https://hellot.nekoweb.org/assets/Wii.png') 0 0, pointer !important;
-        }
-        
-        body.dark {
-            background: url('https://hellot.nekoweb.org/assets/background.png') center/cover no-repeat fixed;
-            color: #eee;
-        }
-        
-        body::-webkit-scrollbar {
-            display: none;
-        }
-        
-        button, input {
-            padding: 8px;
-            margin: 4px;
-            font-family: inherit;
-            transition: all .1s ease;
-        }
-
-button:active {
-    transform: translateY(1px);
-    filter: brightness(0.85);
-}
-
-
-        
-        .card {
-            background: #f0f0f0;
-            border: 1px solid #ccc;
-            padding: 10px;
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            margin: 10px 0;
-            box-shadow: 0 1px 3px rgba(0,0,0,.1);
-            transition: all .3s ease;
-        }
-        
-        body.dark .card {
-            background: #1a1a1a;
-            border: 1px solid #333;
-            box-shadow: 0 1px 3px rgba(0,0,0,.5);
-        }
-        
-        .card img {
-            width: 80px;
-            cursor: pointer;
-        }
-
-        table {
-            border-collapse: collapse;
-            margin-top: 4px;
-            width: 100%;
-        }
-        
-        td, th {
-            border: 1px solid #ddd;
-            padding: 2px 6px;
-            font-size: 12px;
-        }
-        
-        body.dark td, body.dark th {
-            border: 1px solid #333;
-        }
-        
-        th {
-            background: #e0e0e0;
-        }
-        
-        body.dark th {
-            background: #222;
-        }
-        
-        #miiPopup, #miiPopup1, #miiPopup2 {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,.75);
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-        }
-        
-        #miiPopup1, #miiPopup2 {
-            pointer-events: none;
-        }
-        
-        .popup-box {
-            pointer-events: auto;
-            background: #fff;
-            padding: 15px;
-            border-radius: 12px;
-            text-align: center;
-            max-width: 90%;
-            box-shadow: 0 4px 20px rgba(0,0,0,.2);
-        }
-        
-        body.dark .popup-box {
-            background: #111;
-            color: #eee;
-            box-shadow: 0 4px 20px rgba(0,0,0,.6);
-        }
-        
-        .popup-box button {
-            margin-top: 10px;
-            padding: 6px 14px;
-            background: #222;
-            color: #fff;
-            border: 1px solid #444;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-        
-        .popup-box button:hover {
-            background: #444;
-        }
-        
-        #themeToggle {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
-            background: #333;
-            color: #fff;
-            border: 1px solid #555;
-            cursor: pointer;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-family: inherit;
-            box-shadow: 0 2px 6px rgba(0,0,0,.2);
-            transition: all .3s ease;
-        }
-        
-        #themeToggle:hover {
-            background: #555;
-            transform: translateY(-1px);
-        }
-        
-        body.dark #themeToggle {
-            background: #ccc;
-            color: #000;
-            border: 1px solid #aaa;
-        }
-        
-        body.dark #themeToggle:hover {
-            background: #eee;
-        }
-        
-        #globalInfoBtn {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            z-index: 1000;
-            background: #222;
-            color: #fff;
-            border: 1px solid #555;
-            padding: 4px 9px;
-            border-radius: 6px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        
-        body.dark #globalInfoBtn {
-            background: #ccc;
-            color: #000;
-            border: 1px solid #aaa;
-        }
-        #MeWhen {
-            color: black;
-        }
-        body.dark #MeWhen {
-            color: white;
-        }
-    </style>
+<title>※⁜ mii storage ⁜※</title>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="https://helloiti.github.io/assets/miiST.png">
+<meta property="og:title" content="※⁜ mii storage ⁜※" />
+<meta property="og:description" content="※⁜ mii storage is a mii tool that lets you upload .charinfo or .ffsd mii's and saves them in your browser! ⁜※" />
+<meta property="og:url" content="https://helloiti.github.io/mii/" />
+<meta property="og:image" content="https://helloiti.github.io/assets/miiST.png" />
+<meta property="og:type" content="website" />
+<link rel="stylesheet" href="https://helloiti.github.io/css/miist.css">
 </head>
-
 <body>
-
-    <center><h2>※⁜ welcome to mii storage! ⁜※</h2>
-    <h4>⁜ here, you can save your .charinfo or .ffsd mii's just in a website! isn't that cool? ⁜</h4></center>
-    
-    <a href="https://hellot.nekoweb.org/" id="MeWhen"
-       style="position: absolute; top: 10px; right: 10px; font-size: 12px; text-decoration: none;">
-       Go Back?
-    </a>
-
-    <center><input type="file" id="file" accept=".charinfo,.ffsd"></center>
-    
-    <center><h2>※⁜ saved mii's! ⁜※</h2></center>
-    <div id="list"></div>
-    
-    <div id="miiPopup">
-        <div class="popup-box">
-            <img id="popupImg" style="max-width:100%; height:auto; border-radius:8px;">
-            <br>
-            <button onclick="document.getElementById('miiPopup').style.display='none'"> ※⁜ close ⁜※ </button>
-        </div>
+<center>
+<h1>※⁜ welcome to mii storage! ⁜※</h1>
+<h2>⁜ here, you can save your .charinfo or .ffsd mii's just in a website! isn't that cool? ⁜</h2>
+</center>
+<a href="https://helloiti.github.io/" id="mw"
+   style="position: absolute; top: 10px; right: 10px; font-size: 12px; text-decoration: none;">
+   Go Back?
+</a>
+<center><input type="file" id="fl" accept=".charinfo,.ffsd"></center>
+<center>
+<h3>※⁜ or... import via raw mii hex data! ⁜※</h3>
+<textarea id="hx" placeholder="※⁜ paste your charinfo/ffsd's hex data here... ⁜※"
+          style="width:45%; height:80px; margin:5px; font-family:monospace;"></textarea><br>
+<button id="ih" style="max-width:100% !important; height:auto !important; border-radius:8px !important;">※⁜ import ⁜※</button>
+</center>
+<center><h2>※⁜ saved mii's! ⁜※</h2></center>
+<div id="ls"></div>
+<div id="mp">
+    <div class="pp">
+        <img id="pi" style="max-width:100%; height:auto; border-radius:8px;">
+        <br>
+        <button onclick="document.getElementById('mp').style.display='none'"> ※⁜ close ⁜※ </button>
     </div>
-    
-    <div id="miiPopup1">
-        <div class="popup-box" id="pantsInfoBox"></div>
-    </div>
-    
-    <div id="miiPopup2">
-        <div class="popup-box" id="globalInfoBox"></div>
-    </div>
-    
-    <button id="globalInfoBtn" onclick="showGlobalInfo()">※⁜ credits ⁜※</button>
-    
-    <button id="themeToggle">※⁜ dark mode ⁜※</button>
-    
-    <audio id="bgm" loop>
-        <source src="https://file.garden/aRzXHaa7jkbrRXjj/0.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
-    
-    <script>
-        const themeToggle = document.getElementById('themeToggle');
-        const body = document.body;
-        
-        if (localStorage.getItem('theme') === 'dark') {
-            body.classList.add('dark');
-            themeToggle.textContent = '※⁜ light mode ⁜※';
-        } else {
-            themeToggle.textContent = '※⁜ dark mode ⁜※';
-        }
-        
-        themeToggle.addEventListener('click', () => {
-            body.classList.toggle('dark');
-            const isDark = body.classList.contains('dark');
-            themeToggle.textContent = isDark ? '※⁜ light mode ⁜※' : '※⁜ dark mode ⁜※';
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        });
-        
-        document.addEventListener("click", function playMusic() {
-            const audio = document.getElementById("bgm");
-            audio.play().catch(() => {});
-            document.removeEventListener("click", playMusic);
-        });
-        
-        function showGlobalInfo() {
-            document.getElementById("miiPopup2").style.display = "flex";
-            document.getElementById("globalInfoBox").innerHTML = `
-                <div style="font-size:14px; text-align:left; padding:8px;">
-                    <b>※⁜ credits! ⁜※</b><br><br>
-                    • <a href="https://discord.com/users/1277753820713324675">helloT</a> for making the entire html 
-                    <h5 style="display:inline; margin:0; padding:0;">🤣</h5><br>
-                    • <a href="https://discord.com/users/1406637354709549057">helloT seal</a> for simply just existing here 
-                    <h5 style="display:inline; margin:0; padding:0;">
-                      <img src="https://hellot.nekoweb.org/assets/deez.png" style="width:18px; vertical-align:middle;">
-                    </h5><br>
-                    • <a href="https://www.youtube.com/@objecty">objecty</a> for the background music!<br>
-                    • <a href="https://mii-unsecure.ariankordi.net">Mii Renderer (REAL)</a> for the Mii Renders<br>
-                    <button onclick="document.getElementById('miiPopup2').style.display='none'" 
-                            style="margin-top:10px; padding:6px 14px; background:#222; color:#fff; border:1px solid #444; border-radius:6px; cursor:pointer;">
-                        ※⁜ close ⁜※
-                    </button>
-                </div>
-            `;
-        }
-        
-        function showPantsInfo() {
-            document.getElementById("miiPopup1").style.display = "flex";
-            document.getElementById("pantsInfoBox").innerHTML = `
-                <div style="font-size:14px; text-align:left; padding:8px;">
-                    ※⁜ you may be wondering why is there a "※⁜ pants ⁜※" value on charinfo mii's... ⁜※<br><br>
-                    ⁜ well, you see, charinfo has a normal pants and special pants (※ aka gold pants ※) state ⁜<br>
-                    ※ which you can get by hex editing any charinfo mii! ※<br>
-                    ⁜ here are some hex codes for the uh... charinfo mii to make it special<br>
-                    (you need to figure out wheres the pants value) ⁜<br><br>
-                    00 = ※⁜ normal pants ⁜※<br>
-                    01 = ※⁜ special pants ⁜※ (⁜ gold pants ⁜)<br><br>
-                    ※ and here is some charinfo examples that you can download: ※<br><br>
-                    <a href="https://hellot.nekoweb.org/mii/Gold_Male.charinfo">⁜ example 1 ⁜</a><br>
-                    <a href="https://hellot.nekoweb.org/mii/Gold_Girl.charinfo">⁜ example 2 ⁜</a><br><br>
-                    ⁜ <b>note:</b> these examples WON'T work on real nintendo switches, they work on this tool (that you are currently using right now)<br>
-                    <a href="https://mii-unsecure.ariankordi.net">Mii Renderer (REAL)</a><br> 
-                    (won't show up the gold pants as long you render the mii's pants to gold)<br>
-                    and <a href="https://mii.nxw.pw">Mii Creator</a><br>
-                    (the gold pants will also not show up, but as long you set the mii's type to "special")⁜<br><br>
-                    ※⁜ also... ever wanted to have a <b>tutorial</b> to make your charinfo mii have gold pants?<br>
-                    go check this <a href="https://hellot.nekoweb.org/mii/tutorial">one!</a> ⁜※<br>
-                    <button onclick="closePopup1()" style="margin-top:5px; padding:5px 12px; background:#222; color:white; border:1px solid #444;">
-                        ※⁜ close ⁜※
-                    </button>
-                </div>
-            `;
-        }
-        
-        function closePopup1() {
-            document.getElementById("miiPopup1").style.display = "none";
-        }
-        
-        const CHARINFO_ATTRS = [
-            { off: 16, len: 22, name: '※⁜ nickname ⁜※', type: 'utf16' },
-            { off: 40, name: '※⁜ gender ⁜※', type: 'u8' },
-            { off: 39, name: '※⁜ favorite color ⁜※', type: 'u8' },
-            { off: 41, name: '※⁜ height ⁜※', type: 'u8' },
-            { off: 42, name: '※⁜ weight ⁜※', type: 'u8' },
-            { off: 43, name: '※⁜ pants ⁜※', type: 'u8' }
-        ];
-        
-        const FAVORITE_COLORS = [
-            "⁜ red ⁜", "⁜ orange ⁜", "⁜ yellow ⁜", "⁜ green ⁜", "⁜ lime green ⁜", "⁜ blue ⁜",
-            "⁜ light blue ⁜", "⁜ pink ⁜", "⁜ purple ⁜", "⁜ brown ⁜", "⁜ white ⁜", "⁜ black ⁜"
-        ];
-        
-        const PANTS_COLORS = {
-            0: "⁜ normal ⁜",
-            1: "⁜ special ⁜"
-        };
-        
-        function hexToBytes(hex) {
-            return new Uint8Array(hex.match(/.{2}/g).map(b => parseInt(b, 16)));
-        }
-        
-        function saveList() {
-            const store = list.map(m => ({ id: m.id, dataHex: m.dataHex, ext: m.ext }));
-            localStorage.setItem("miis", JSON.stringify(store));
-        }
-        
-        function parseFFSDText(buf) {
-            try {
-                const dec = new TextDecoder("utf-16le").decode(buf);
-                let seq = [], cur = '';
-                for (let c of dec) {
-                    if (/[\w\s.,'"-]/.test(c)) cur += c;
-                    else {
-                        if (cur.length >= 2) seq.push(cur.trim());
-                        cur = '';
-                    }
-                }
-                if (cur.length >= 2) seq.push(cur.trim());
-                return {
-                    nickname: seq[0] || "Mii",
-                    creator: seq[1] || "Unknown"
-                };
-            } catch {
-                return { nickname: "Mii", creator: "Unknown" };
-            }
-        }
-        
-        function parseMiiInfo(buf, ext) {
-            const info = {};
-            if (ext === "charinfo") {
-                CHARINFO_ATTRS.forEach(a => {
-                    if (a.type === "utf16") {
-                        info[a.name] = new TextDecoder("utf-16le")
-                            .decode(buf.slice(a.off, a.off + (a.len || 0)))
-                            .replace(/\0/g, '').replace(/�/g, "").trim();
-                    } else {
-                        info[a.name] = buf[a.off];
-                    }
-                });
-                info["※⁜ gender ⁜※"] = info["※⁜ gender ⁜※"] === 0 ? "⁜ male ⁜" :
-                    info["※⁜ gender ⁜※"] === 1 ? "⁜ female ⁜" : "Unknown";
-                info["※⁜ favorite color ⁜※"] = FAVORITE_COLORS[info["※⁜ favorite color ⁜※"]] || "Unknown";
-                info["※⁜ pants ⁜※"] = PANTS_COLORS[info["※⁜ pants ⁜※"]] || "Unknown";
-                info["※⁜ creator's name ⁜※"] = "Unknown";
-                if (!info["※⁜ nickname ⁜※"]) info["※⁜ nickname ⁜※"] = "Mii";
-            } else {
-                const t = parseFFSDText(buf);
-                info["※⁜ nickname ⁜※"] = t.nickname;
-                info["※⁜ creator's name ⁜※"] = t.creator;
-                info["※⁜ pants ⁜※"] = "Unknown";
-                info["※⁜ height ⁜※"] = "Unknown";
-                info["※⁜ weight ⁜※"] = "Unknown";
-                const personal = buf[0x18] + (buf[0x19] << 8);
-                const colIndex = (personal >> 10) & 0xF;
-                info["※⁜ favorite color ⁜※"] = (colIndex >= 0 && colIndex < FAVORITE_COLORS.length) ?
-                    FAVORITE_COLORS[colIndex] : "Unknown";
-                const genderIndex = personal & 1;
-                info["※⁜ gender ⁜※"] = genderIndex === 0 ? "⁜ male ⁜" : "⁜ female ⁜";
-            }
-            return info;
-        }
-        
-        function render() {
-            const wrap = document.getElementById("list");
-            wrap.innerHTML = "";
-            list.forEach(m => {
-                const info = parseMiiInfo(m.data, m.ext);
-                const div = document.createElement("div");
-                div.className = "card";
-                const pantsParam = (m.ext === "charinfo" && info["※⁜ pants ⁜※"] === "⁜ special ⁜") ? "gold" : "gray";
-                const charFace = `https://mii-unsecure.ariankordi.net/miis/image.png?data=${m.dataHex}&shaderType=switch&type=face&width=270&pantsColor=${pantsParam}&bodyType=switch`;
-                const charFull = `https://mii-unsecure.ariankordi.net/miis/image.png?data=${m.dataHex}&shaderType=switch&type=all_body_sugar&width=270&pantsColor=${pantsParam}&bodyType=switch`;
-                const ffsdFace = `https://mii-unsecure.ariankordi.net/miis/image.png?data=${m.dataHex}&type=face&width=270&pantsColor=gray&bodyType=wiiu`;
-                const ffsdFull = `https://mii-unsecure.ariankordi.net/miis/image.png?data=${m.dataHex}&type=all_body_sugar&width=270&pantsColor=gray&bodyType=wiiu`;
-                const faceURL = (m.ext === "charinfo") ? charFace : ffsdFace;
-                const fullBodyURL = (m.ext === "charinfo") ? charFull : ffsdFull;
-                
-                const img = document.createElement("img");
-                img.src = faceURL;
-                img.onclick = () => {
-                    document.getElementById("popupImg").src = fullBodyURL;
-                    document.getElementById("miiPopup").style.display = "flex";
-                };
-                
-                const meta = document.createElement("div");
-                const goldBadge = (m.ext === "charinfo" && info["※⁜ pants ⁜※"] === "⁜ special ⁜") ? " ⭐" : "";
-                let t = "<table><tr><th>Attribute</th><th>Value</th></tr>";
-                for (const k in info) {
-                    if (m.ext === "charinfo" && k === "※⁜ creator's name ⁜※") continue;
-                    if (m.ext === "ffsd" && ["※⁜ pants ⁜※", "※⁜ height ⁜※", "※⁜ weight ⁜※"].includes(k)) continue;
-                    t += `<tr><td>${k}</td><td>${info[k]}</td></tr>`;
-                }
-                t += "</table>";
-                const pantsInfo = m.ext === "charinfo" ? 
-                    `<button style="background:#222; color:#fff; border:1px solid #555; cursor:pointer; padding:2px 6px; border-radius:6px; font-size:12px;" onclick="showPantsInfo()">?</button>` : "";
-                meta.innerHTML = `<div style="font-weight:600">${info["※⁜ nickname ⁜※"]}${goldBadge} ${pantsInfo}</div>` + t;
-                
-                const del = document.createElement("button");
-                del.textContent = "※⁜ remove ⁜※";
-                del.style.cssText = "background:#c33; color:#fff; border:1px solid #a00; cursor:pointer; padding:4px 8px; border-radius:6px; font-size:12px;";
-                del.onclick = () => {
-                    list = list.filter(x => x.id !== m.id);
-                    saveList();
-                    render();
-                };
-                
-                div.append(img, meta, del);
-                wrap.append(div);
-            });
-        }
-        
-        let list = (JSON.parse(localStorage.getItem("miis") || "[]"))
-            .map(m => ({ ...m, data: hexToBytes(m.dataHex) }));
-        
-        document.getElementById("file").onchange = async e => {
-            const f = e.target.files[0];
-            if (!f) return;
-            const ext = f.name.split(".").pop().toLowerCase();
-            if (ext !== "charinfo" && ext !== "ffsd") return alert("※⁜ please use .charinfo or .ffsd mii files only! ⁜※");
-            const buf = new Uint8Array(await f.arrayBuffer());
-            const hex = Array.from(buf).map(x => x.toString(16).padStart(2, "0")).join("");
-            list.push({ id: Date.now(), data: buf, dataHex: hex, ext });
-            saveList();
-            render();
-        };
-        
-        render();
-    </script>
-    
+</div>
+<div id="mp1">
+    <div class="pp" id="pt"></div>
+</div>
+<div id="mp2">
+    <div class="pp" id="cr"></div>
+</div>
+<button id="gi" onclick="sg()">※⁜ credits ⁜※</button>
+<button id="dl">※⁜ dark mode ⁜※</button>
+<audio id="bg" loop>
+    <source src="https://file.garden/aRzXHaa7jkbrRXjj/dwnmng.mp3" type="audio/mpeg">
+</audio>
+<script src="https://helloiti.github.io/js/mist.js"></script>
 </body>
 </html>
