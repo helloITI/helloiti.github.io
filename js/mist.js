@@ -31,7 +31,6 @@ function sg() {
             <h5 style="display:inline; margin:0; padding:0;">
               <img src="https://hellot.nekoweb.org/assets/deez.png" style="width:20px; vertical-align:middle;">
             </h5><br>
-            • <a href="https://www.youtube.com/@objecty">objecty</a> for the background music!<br>
             • <a href="https://mii-unsecure.ariankordi.net">Mii Renderer (REAL)</a> for the Mii Renders<br>
             <button onclick="document.getElementById('mp2').style.display='none'"
                     style="margin-top:10px; padding:6px 14px; background:#222; color:#fff; border:1px solid #444; border-radius:6px; cursor:pointer;">
@@ -54,13 +53,13 @@ function sp() {
             <code>00</code> = ※⁜ normal pants ⁜※<br>
             <code>01</code> = ※⁜ special pants ⁜※ (⁜ gold pants ⁜)<br><br>
             ※⁜ and here is some charinfo examples that you can download: ⁜※<br><br>
-            <a href="https://hellot.nekoweb.org/mii/Gold_Male.charinfo">⁜ example 1 ⁜</a><br>
-            <a href="https://hellot.nekoweb.org/mii/Gold_Girl.charinfo">⁜ example 2 ⁜</a><br><br>
+            <a href="https://helloiti.github.io/mii/Gold_Male.charinfo">⁜ example 1 ⁜</a><br>
+            <a href="https://helloiti.github.io/mii/Gold_Girl.charinfo">⁜ example 2 ⁜</a><br><br>
             ⁜ <b>note:</b> these examples WON'T work on real nintendo switches, they work on this tool (that you are currently using right now), <a href="https://mii-unsecure.ariankordi.net">Mii Renderer (REAL)</a><br>
             (won't show up the gold pants as long you render the mii's pants to gold) and <a href="https://mii.nxw.pw">Mii Creator</a><br>
             (the gold pants will also not show up, but as long you set the mii's type to "special") ⁜<br><br>
             ※⁜ also... ever wanted to have a <b>tutorial</b> to make your charinfo mii have gold pants? ⁜※<br>
-            ⁜ go check this <a href="https://hellot.nekoweb.org/mii/tutorial">one</a>! ⁜<br>
+            ⁜ go check this <a href="https://helloiti.github.io/mii/tutorial">one</a>! ⁜<br>
             <button onclick="cp()" style="margin-top:5px; padding:5px 12px; background:#222; color:white; border:1px solid #444;">
                 ※⁜ close ⁜※
             </button>
