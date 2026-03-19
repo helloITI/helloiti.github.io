@@ -1,4 +1,4 @@
-
+// unused thing, steal this code if you want to, i would NOT care.
 (function () {
   const nekoEl = document.createElement("div");
 
