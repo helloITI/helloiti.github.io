@@ -11,26 +11,72 @@
   </script>
 
   <style>
-    :root {
-      --bg: hsl(0, 0%, 90%);
-    }
+body {
+  margin: 0;
+}
 
-    html, body {
-      height: 100%;
-      margin: 0;
-      background-color: var(--bg);
-    }
+@media not print {
+  .fullZoomOut {
+    cursor: zoom-out;
+  }
 
-    img.fullscreen {
-      width: 100%;
-      height: 100%;
-      object-fit: contain; 
-      display: block;
-      user-select: none;
-      background-color: var(--bg);
-    }
+  .fullZoomIn {
+    cursor: zoom-in;
+  }
+
+  .shrinkToFit {
+    cursor: zoom-in;
+  }
+
+  .overflowingVertical,
+  .overflowingHorizontalOnly {
+    cursor: zoom-out;
+  }
+}
+
+.isInObjectOrEmbed {
+  width: 100%;
+  height: 100vh;
+}
+
+img {
+  display: block;
+}
   </style>
-  
+	
+<style>
+@media not print {
+  :root {
+    color: #eee;
+    background: url("chrome://global/skin/media/imagedoc-darknoise.png") fixed;
+  }
+
+  img.transparent {
+    color: #222;
+    background: hsl(0, 0%, 90%) url("chrome://global/skin/media/imagedoc-lightnoise.png");
+  }
+
+  img {
+    text-align: center;
+    position: absolute;
+    inset: 0;
+    margin: auto;
+  }
+
+  img.overflowingVertical {
+    margin-top: 0;
+  }
+
+  .completeRotation {
+    transition: transform 0.3s ease 0s;
+  }
+}
+
+img {
+  image-orientation: from-image;
+}
+</style>
+	
 </head>
 
 <body>
@@ -39,7 +85,7 @@
 	
   <img
     class="fullscreen"
-    src="https://hellot.nekoweb.org/about/a.png"
+    src="a.png"
     alt="file explorer" 
     title="file explorer">
     
