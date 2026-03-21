@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>PRPMII → Charinfo Converter (88 bytes)</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    textarea { width: 100%; height: 180px; margin-bottom: 10px; }
+    pre { background: #f4f4f4; padding: 10px; overflow-x: auto; }
+    #preview img { margin-top: 10px; border: 1px solid #ccc; }
+  </style>
+</head>
+<body>
+  <h2>PRPMII → Charinfo Converter (88 bytes)</h2>
+  <p>Paste your PRPMII JSON below and click <b>Convert</b>.</p>
+  <textarea id="prpmiiIn">{
+  "faceline": 6,
+  "hairstyle": 3,
+  "facialstyle": 0,
+  "gender": 0,
+  "hairFlipped": false,
+  "shirtcolor": 1,
+  "hatColor": "#735a52",
+  "eyestyle": "44.png",
+  "eyebrowstyle": "17.png",
+  "mouthstyle": "18.png",
+  "nosestyle": "7.png",
+  "detailstyle": "0.png",
+  "eyeColorHex": "4C4032",
+  "haircolor": "323123",
+  "browColorHex": "323123",
+  "glasses_S": 6,
+  "glassesColorHex": "323123",
+  "skintone": 1,
+  "lipcolor": "F3A771",
+  "molestyle": "0.png",
+  "musstyle": "0.png",
+  "LIB_Eye_PosX": 8,
+  "LIB_Eye_PosY": -12,
+  "LIB_Eye_Scale": -4,
+  "LIB_Eye_Rot": 12,
+  "LIB_Brow_PosX": 0,
+  "LIB_Brow_PosY": -28,
+  "LIB_Brow_Scale": 5,
+  "LIB_Brow_Rot": -8,
+  "LIB_Mouth_PosY": -20,
+  "LIB_Mouth_Scale": 16,
+  "LIB_Nose_PosY": -8,
+  "LIB_Nose_Scale": 10,
+  "LIB_Glass_PosY": -4,
+  "LIB_Glass_Scale": 0,
+  "LIB_Mole_PosX": 0,
+  "LIB_Mole_PosY": 0,
+  "LIB_Mole_Scale": 0,
+  "LIB_Stache_PosX": 0,
+  "LIB_Stache_PosY": 0,
+  "LIB_Stache_Scale": 0,
+  "height2": 1,
+  "weight2": 1.05,
+  "firstName": "Iwata",
+  "lastName": "Satoru"
+}</textarea><br>
+  <button id="convertBtn">Convert</button>
+  <h3>Charinfo Hex Output</h3>
+  <pre id="charinfoOut"></pre>
+  <div id="preview"></div>
+
+<script>
+function bytesToHex(bytes){
+  return Array.from(bytes).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+// Switch Mii color palettes
+const palettes = {
+  hair: ["000000","5C3A21","805C40","A67955","D4AF86","FFFFFF"],
+  eyes: ["000000","4C4032","0050A0","007F46","7F00A0","A00028"],
+  mouth: ["E08060","F3A771","C06040","000000"],
+  glasses: ["000000","505050","808080","C0C0C0","FFFFFF"]
+};
+const favoriteColorMap = {
+  1: 9,
+  2: 10,
+  3: 10,
+  4: 3,
+  5: 7,
+  6: 2,
+  7: 1,
+  8: 9,
+  9: 10,
+  10: 11,
+  11: 7,
+  12: 8,
+  13: 6,
+  14: 5
+};
+
+function hexToRgb(hex){
+  hex = hex.replace("#","").toUpperCase();
+  if(hex.length===3) hex = hex.split("").map(c=>c+c).join("");
+  const bigint = parseInt(hex,16);
+  return [(bigint>>16)&255,(bigint>>8)&255,bigint&255];
+}
+
+function colorDistance(c1,c2){
+  return Math.sqrt((c1[0]-c2[0])**2+(c1[1]-c2[1])**2+(c1[2]-c2[2])**2);
+}
+
+function nearestColorIndex(hex,palette){
+  const rgb = hexToRgb(hex);
+  let best=0, bestDist=1e9;
+  palette.forEach((col,i)=>{
+    const dist=colorDistance(rgb,hexToRgb(col));
+    if(dist<bestDist){bestDist=dist;best=i;}
+  });
+  return best;
+}
+
+function prpmiiToCharinfo(prpmii){
+  const bytes = new Uint8Array(88);
+
+  // Header defaults (first 16 bytes)
+  bytes[0]=0x80; bytes[1]=0xff; bytes[2]=0x70; bytes[3]=0x99;
+  bytes[4]=0xf2; bytes[5]=0xde; bytes[6]=0xc9; bytes[7]=0x88;
+  bytes[8]=0x8e; bytes[9]=0x92; bytes[10]=0x00; bytes[11]=0x00;
+  bytes[12]=0x00; bytes[13]=0x00; bytes[14]=0x00; bytes[15]=0x00;
+
+  // Nickname at offset 16 (UTF16LE, max 19 chars = 38 bytes)
+  const nickname=prpmii.firstName.slice(0,19);
+  for(let i=0;i<nickname.length;i++){
+    const code = nickname.charCodeAt(i);
+    bytes[16+i*2] = code & 0xFF;
+    bytes[16+i*2+1] = code >> 8;
+  }
+
+  // Attribute mappings (offsets 39–86)
+  bytes[39] = favoriteColorMap[prpmii.shirtcolor] || 0;
+  bytes[40] = prpmii.gender||0;
+  bytes[41] = Math.floor((prpmii.height2||1)*40)&0xFF;
+  bytes[42] = Math.floor((prpmii.weight2||1)*40)&0xFF;
+  bytes[45] = prpmii.faceline-1||0;
+  bytes[46] = prpmii.skintone-1||0;
+  bytes[49] = prpmii.hairstyle||0;
+  bytes[50] = nearestColorIndex(prpmii.haircolor||"000000",palettes.hair);
+  bytes[51] = prpmii.hairFlipped?1:0;
+
+  // Eyes
+  bytes[52] = parseInt(prpmii.eyestyle)||0;
+  bytes[53] = nearestColorIndex(prpmii.eyeColorHex||"000000",palettes.eyes);
+  bytes[54] = Math.max(0, Math.min(8, (prpmii.LIB_Eye_Scale||0)+8));
+  bytes[56] = (prpmii.LIB_Eye_Rot||0)&0xFF;
+  bytes[58] = (prpmii.LIB_Eye_PosY||0)&0xFF;
+
+  // Brows
+  bytes[59] = parseInt(prpmii.eyebrowstyle)||0;
+  bytes[60] = nearestColorIndex(prpmii.browColorHex||"000000",palettes.hair);
+  bytes[61] = Math.max(0, Math.min(8, prpmii.LIB_Brow_Scale||4));
+  bytes[63] = (prpmii.LIB_Brow_Rot||0)&0xFF;
+  bytes[65] = (prpmii.LIB_Brow_PosY||0)&0xFF;
+
+  // Nose
+  bytes[66] = parseInt(prpmii.nosestyle)||0;
+  bytes[67] = Math.max(0, Math.min(8, prpmii.LIB_Nose_Scale||4));
+  bytes[68] = (prpmii.LIB_Nose_PosY||0)&0xFF;
+
+  // Mouth
+  bytes[69] = parseInt(prpmii.mouthstyle)||0;
+  bytes[70] = nearestColorIndex(prpmii.lipcolor||"000000",palettes.mouth);
+  bytes[71] = Math.max(0, Math.min(8, prpmii.LIB_Mouth_Scale||4));
+  bytes[73] = (prpmii.LIB_Mouth_PosY||0)&0xFF;
+
+  // Glasses
+  bytes[79] = prpmii.glasses_S||0;
+  bytes[80] = nearestColorIndex(prpmii.glassesColorHex||"000000",palettes.glasses);
+  bytes[81] = Math.max(0, Math.min(8, prpmii.LIB_Glass_Scale||4));
+  bytes[82] = (prpmii.LIB_Glass_PosY||0)&0xFF;
+
+  // Mole
+  bytes[83] = parseInt(prpmii.molestyle)||0;
+  bytes[84] = Math.max(0, Math.min(8, prpmii.LIB_Mole_Scale||4));
+  bytes[85] = (prpmii.LIB_Mole_PosX||0)&0xFF;
+  bytes[86] = (prpmii.LIB_Mole_PosY||0)&0xFF;
+
+  return bytesToHex(bytes);
+}
+
+document.getElementById("convertBtn").onclick = ()=>{
+  try{
+    const prpmii = JSON.parse(document.getElementById("prpmiiIn").value);
+    const hex = prpmiiToCharinfo(prpmii);
+    document.getElementById("charinfoOut").textContent = hex;
+    const imgUrl = `https://mii-unsecure.ariankordi.net/miis/image.png?data=${hex}&shaderType=switch&type=all_body_sugar&width=200&verifyCRC16=0&verifyCharInfo=0`;
+    document.getElementById("preview").innerHTML = `<img src="${imgUrl}">`;
+  } catch(e){
+    alert("Invalid JSON: "+e);
+  }
+};
+</script>
+</body>
+</html>
