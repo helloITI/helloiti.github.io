@@ -19,33 +19,27 @@
       font-weight: normal;
       font-style: normal;
     }
-        body {
-      font-family: 'NintendoNTLG', sans-serif;
-      margin: 0;
-      padding: 10px;
-       /* bg */
-      background-image: url('https://helloiti.github.io/assets/background1.png');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      color: white;
-      /* cursor */
-      cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, auto;
-      overflow-y: scroll;
-display: flex;
-flex-direction: column;
-align-items: center;
-    }
-      body::-webkit-scrollbar { display: none; }
+body {
+  font-family: 'NintendoNTLG', sans-serif;
+  margin: 0;
+  padding: 0;
+  /* bg */
+  color: white;
+  overflow: hidden; /* disables scrolling around the page completely */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+body::-webkit-scrollbar { display: none; }
     a {
       text-decoration: none;
       background-size: 400% 400%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      /* cursor, again */
-      cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, pointer;
     }
+	  html {
+  overflow: hidden;
+}
   </style>
   <!-- Ruffle -->
   <script>
@@ -72,7 +66,6 @@ align-items: center;
         getQueryObj()
       );
     });
-    /* ok */
   </script>
 </head>
 <body>
