@@ -3,7 +3,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 	<title>My Avatar Editor for Developers</title>
-	<link rel="canonical" href="http://www.myavatareditor.com/developers.html" />
+	<link rel="canonical" href="https://helloiti.github.io/mae/developers.html" />
 	<link rel="icon" type="image/ico&quot;&quot;" href="favicon.ico"/>
 	<link href="styles/main.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -88,7 +88,7 @@
 		</ul>
 		<p>The myavatareditor.swf (a.k.a. the editor SWF) dynamically loads the myavatarcharacter.swf (a.k.a. the avatar SWF)  into itself at runtime to show the avatar preview. Technically, the editor SWF can run without the avatar SWF, but no avatar would be visible and the export functions would be disabled.</p>
 		<p><img src="images/developers/editor_loads_character.jpg" alt="Editor Loads Character" width="493" height="246" class="screenshot"/></p>
-		<p>The avatar SWF can function on its own without the editor SWF as seen on <a href="show.html">http://www.myavatareditor.com/show/</a>. When viewed in this manner, there are no (default) user-facing controls to modify avatar characters; they can only be viewed as a static graphic.</p>
+		<p>The avatar SWF can function on its own without the editor SWF as seen on <a href="show.html">http://helloiti.github.io/mae/show.html</a>. When viewed in this manner, there are no (default) user-facing controls to modify avatar characters; they can only be viewed as a static graphic.</p>
 		<p> Developers wishing to take advantage of My Avatar Editor can  use (more or less) one of four approaches, all of which have different requirements for tooling, technologies, and skill set:</p>
 		<ul>
 			<li><strong><a href="#basicusage">Basic</a></strong>: Use My Avatar Editor in its current state with the same functionality seen on MyAvatarEditor.com</li>
@@ -196,7 +196,7 @@ swf.setAvatarXML(xml);</pre>
 		<ul>
 			<li>Basic knowledge of ActionScript 3.0</li>
 			<li>A tool or compiler for creating an ActionScript 3.0, Flash Player 10 SWF</li>
-			<li><a href="http://get.adobe.com/flashplayer">Flash Player 10</a> or later</li>
+			<li><a href="https://archive.org/details/adobeflash-10_1">Flash Player 10</a> or later</li>
 		</ul>
 		<p>More information about tools capable of creating SWFs can be found in the appendix <a href="#creatingswffiles">Creating SWF Files</a>.</p>
 		<p>In addition, when using a wrapper for the editor and/or avatar SWF files, it's important that those files and your wrapper be placed on the same domain. Security restrictions prevent cross-domain ActionScript communication between SWFs.</p>
@@ -309,7 +309,7 @@ swfobject.embedSWF(&quot;myavatareditor.swf&quot;,
 		<p>There are a large number of tools that can create SWF files. The tool used for My Avatar Editor was <a href="http://www.adobe.com/products/flash">Flash Professional CS4</a>. Another popular tool is <a href="http://www.adobe.com/products/flex/">Flex Builder</a> which is a rich coding environment that uses the <a href="http://opensource.adobe.com/wiki/display/flexsdk/">free Flex SDK</a> to compiling MXML markup and ActionScript code into SWFs.</p>
 		<p>If you are modifying the source of My Avatar Editor, you will need to use Flash CS4. However, if you are creating a wrapper SWF as covered by the section explaining <a href="#actionscriptdriven">ActionScript-driven Usage</a>, you can use any tool capable of creating a SWF targeting Flash Player 10. If you are not using Flash CS4, then the free Flex SDK would probably be your best alternative.</p>
 		<h4 id="flashcs4">Flash CS4</h4>
-		<p><a href="http://www.adobe.com/products/flash">Adobe Flash CS4</a> is probably the easiest tool to create SWF files. When starting a new file, create a new Flash File for ActionScript 3.0 and make sure the settings are targeting Flash Player 10. This, for CS4, should be the default. If you want to be sure, or modify this target, you can do so using <kbd>File &gt; Publish Settings... &gt; Flash [Tab].</kbd></p>
+		<p><a href="https://animatearchive.neocities.org/">Adobe Flash CS4</a> is probably the easiest tool to create SWF files. When starting a new file, create a new Flash File for ActionScript 3.0 and make sure the settings are targeting Flash Player 10. This, for CS4, should be the default. If you want to be sure, or modify this target, you can do so using <kbd>File &gt; Publish Settings... &gt; Flash [Tab].</kbd></p>
 		<p>Once you have a new file loaded, you're ready to go.  Graphics can be added to the screen and code can be written in frames in the timeline. For more information about using Flash, see the included documentation.</p>
 		<p>Flash CS4 will cost you to buy. For a free option, consider using the <a href="#flexsdk">Flex SDK</a>. My Avatar Editor was built using Flash CS4.</p>
 		<h4 id="flexsdk">Free Flex SDK</h4>
@@ -413,7 +413,7 @@ swfobject.embedSWF(&quot;myavatareditor.swf&quot;,
 &lt;/Avatar&gt;</pre>
 		<p>The document type definition (DTD) for this XML can be found here:</p>
 		<ul>
-			<li><a href="xml/avatar.html">http://www.myavatareditor.com/xml/avatar.dtd</a></li>
+			<li><a href="xml/avatar.html">https://helloiti.github.io/mae/xml/avatar.dtd</a></li>
 		</ul>
 		<p>When an XML file is read by either the editor or avatar SWFs,  the definitions in the XML are applied to the current avatar character. If the XML file is incomplete, the missing XML elements are ignored and those characteristics of the current avatar remain unchanged. The following XML would only change the <code>y</code> and <code>size</code> an avatar's nose.</p>
 <pre class="xml">&lt;Avatar xmlns="http://www.myavatareditor.com/xml/avatar/1"&gt;
