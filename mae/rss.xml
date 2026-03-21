@@ -1,0 +1,28 @@
+<!-- Um, you aren't supposed to see... this? -->
+<rss version="2.0">
+  <channel>
+    <title>My Avatar Editor</title>
+    <description>My Avatar Editor</description>
+    <link>https://myavatareditor.nekoweb.org</link>
+    
+    <item>
+      <title>Testing RSS Post</title>
+      <link>https://myavatareditor.nekoweb.org</link>
+         <description><![CDATA[
+         Nekoweb RSS Testing Post!! :D
+]]></description>
+      <guid>post-1</guid>
+      <pubDate>Sat, 14 Mar 2026 19:06:00 GMT</pubDate>
+    </item>
+    
+    <style>
+                .post-box {
+                    color: black;
+                }
+                
+                .post-title {
+                	color: black;
+                }
+            </style>
+  </channel>
+</rss>
