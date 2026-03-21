@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const os = sl.getAttribute("src"); // safer than sl.src :D
 
   function osl() {
-    sl.src = "https://hellot.nekoweb.org/img/helloTop.png";
+    sl.src = "https://helloiti.github.io/img/helloTop.png";
     if (lg) {
       lg.currentTime = 0;
       lg.play().catch(() => {});
