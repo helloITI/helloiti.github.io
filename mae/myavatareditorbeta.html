@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Avatar Editor Beta RC1</title>
+
+  <link rel="icon" href="favicon.ico">
+
+  <script>
+    window.RufflePlayer = window.RufflePlayer || {};
+    window.RufflePlayer.config = {
+      autoplay: "on",
+      unmuteOverlay: "hidden"
+    };
+  </script>
+  <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+  <script src="https://helloiti.github.io/mae/scripts/swfobject.js"></script>
+  <script src="https://helloiti.github.io/mae/scripts/utils.js"></script>
+
+  <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      swfobject.embedSWF(
+        "https://helloiti.github.io/mae/myavatareditor.swf",
+        "editorSWFContainer",
+        "640",
+        "500",
+        "10.0.0",
+        null,
+        getQueryObj()
+      );
+
+      swfobject.embedSWF(
+        "https://helloiti.github.io/mae/airbadge.swf",
+        "air-badge-container",
+        "217",
+        "180",
+        "9.0.0",
+        null,
+        getBadgeParams()
+      );
+    });
+  </script>
+</head>
+
+<body>
+
+  <div style="padding:1em; margin:1em; border:1px solid #999; background-color:#FFC; color:red;">
+    WARNING: This page is an early demo page.
+    The main 
+    <a href="https://helloiti.github.io/mae/">My Avatar Editor website</a>
+    is now online.
+  </div>
+
+  <div id="editorSWFContainer">
+    <h3>Flash Player required</h3>
+    <p>
+      <a href="https://archive.org/details/adobeflash-10_1">
+        <img src="https://helloiti.github.io/mae/images/shared/download_buttons/get_flash_player.png" alt="Get Flash">
+      </a>
+    </p>
+  </div>
+
+  <p>
+    <strong>Note:</strong> Internet Explorer users on Windows Vista may need to turn 
+    <a href="http://www.microsoft.com/windows/windows-vista/features/IE7-protected-mode.aspx">
+      Protected Mode
+    </a> off.
+  </p>
+
+  <div id="air-badge-container">
+    <h3>To install My Avatar Editor for your desktop</h3>
+    <ol>
+      <li>
+        <a href="https://archive.org/details/adobe-air">
+          Download Adobe AIR Runtime
+        </a>
+      </li>
+      <li>
+        <a href="https://helloiti.github.io/mae/downloads/MyAvatarEditor.air">
+          Download My Avatar Editor Installer
+        </a>
+      </li>
+    </ol>
+  </div>
+
+</body>
+</html>
