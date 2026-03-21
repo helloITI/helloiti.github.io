@@ -83,25 +83,22 @@ pageTracker._trackPageview();
 	
 	<script>
 <script>
-window.addEventListener("DOMContentLoaded", () => {
-    const DEFAULT_MII = "000000640065006600610075006c00740042006f0079404080807f5fc242899800044240318028a2088c08401448b88d008a008a25040000000000000000000000000000000000000000";
+(function () {
+    const miiData = getMiiFromURL();
 
-    const miiData = getMiiFromURL() || DEFAULT_MII;
+    let flashVars = "";
+    if (miiData) {
+        flashVars = "mii=" + encodeURIComponent(miiData);
+    }
+    if (flashVars) {
+        embed.setAttribute("flashvars", flashVars);
+    }
 
-    const flashvars = {
-        mii: miiData
-    };
+    document.getElementById("flash-container").appendChild(embed);
+})();
+const DEFAULT_MII = "000000640065006600610075006c00740042006f0079404080807f5fc242899800044240318028a2088c08401448b88d008a008a25040000000000000000000000000000000000000000";
 
-    swfobject.embedSWF(
-        "myavatareditor.swf",
-        "editorSWFContainer",
-        "640",
-        "500",
-        "10.0.0",
-        null,
-        flashvars
-    );
-});
+const miiData = getMiiFromURL() || DEFAULT_MII;
 </script>
 </script>
 </body>
