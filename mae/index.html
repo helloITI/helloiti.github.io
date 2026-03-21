@@ -22,6 +22,12 @@
     "wmode": "transparent" // Optional: for transparency
   };
 </script>
+	<script>
+function getMiiFromURL() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("avatar"); // returns the Mii hex string or null
+}
+</script>
 </head>
 <body>
 <div id="page">
@@ -74,5 +80,29 @@ try {
 var pageTracker = _gat._getTracker("UA-7459471-1");
 pageTracker._trackPageview();
 } catch(err) {}</script>
+	
+	<script>
+<script>
+window.addEventListener("DOMContentLoaded", () => {
+    const DEFAULT_MII = "000000640065006600610075006c00740042006f0079404080807f5fc242899800044240318028a2088c08401448b88d008a008a25040000000000000000000000000000000000000000";
+
+    const miiData = getMiiFromURL() || DEFAULT_MII;
+
+    const flashvars = {
+        mii: miiData
+    };
+
+    swfobject.embedSWF(
+        "myavatareditor.swf",
+        "editorSWFContainer",
+        "640",
+        "500",
+        "10.0.0",
+        null,
+        flashvars
+    );
+});
+</script>
+</script>
 </body>
 </html>
