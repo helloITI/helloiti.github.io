@@ -1,0 +1,11 @@
+(https://mt-tools.nekoweb.org/projectproto/graphics/prp_log.png)
+Based on the unreleased prototype 'Otona no Onna Uranai Techō'
+
+
+@realstinkbaby - 3D Modeling, Texturing, Coding
+@max7866889 - 3D Modeling, Texturing, Animating
+@rottenmemsyt - Sound Effects & Music
+@ezzydunez - Music
+@gabriels.1301 - Texturing, Font creator
+@rfguy - UI Graphics
+@tylerblu - UI Graphics
