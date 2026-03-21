@@ -39,7 +39,7 @@ align-items: center;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       /* cursor, again */
-      cursor: url('https://hellot.github.io/assets/Wii.png') 0 0, pointer;
+      cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, pointer;
     }
     a:hover { text-decoration: underline; }
     a img {
