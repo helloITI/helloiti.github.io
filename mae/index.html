@@ -1,10 +1,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
+	<base href="https://helloiti.github.io/mae/">
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 	<title>My Avatar Editor</title>
-	<link rel="canonical" href="https://myavatareditor.nekoweb.org" />
-	<link rel="icon" type="image/ico&quot;&quot;" href="favicon.ico"/>
+	<link rel="canonical" href="https://helloiti.github.io/mae/" />
+	<link rel="icon" type="image/x-icon" href="favicon.ico"/>
 	<link href="styles/main.css" rel="stylesheet" type="text/css"/>
 	<script type="text/javascript" src="scripts/swfobject.js"></script>
 	<script type="text/javascript" src="scripts/utils.js"></script>
@@ -15,30 +16,29 @@
 	</script>
 	<script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
 	
-		<script>
-  window.RufflePlayer = window.RufflePlayer || {};
-  window.RufflePlayer.config = {
-    "autoplay": "on", // Sets autoplay to on
-    "unmuteOverlay": "hidden", // Hides the unmute button
-    "wmode": "transparent" // Optional: for transparency
-  }; 
-</script>
-	
 <script>
-    window.RufflePlayer = window.RufflePlayer || {};
-    window.RufflePlayer.config = {
-        "autoplay": "on", 
-        "unmuteOverlay": "hidden", 
-        "wmode": "transparent",
-        "resolveUrl": function(url) {
-            if (url && url.includes("myavatareditor.com")) {
-                return url
-                    .replace("http://www.myavatareditor.com", "https://helloiti.github.io/mae/")
-                    .replace("https://www.myavatareditor.com", "https://helloiti.github.io/mae/");
-            }
-            return url;
+window.RufflePlayer = window.RufflePlayer || {};
+window.RufflePlayer.config = {
+    autoplay: "on",
+    unmuteOverlay: "hidden",
+    wmode: "transparent",
+
+    resolveUrl: function (url) {
+        if (!url) return url;
+
+        // catch ALL variants
+        if (url.includes("myavatareditor.com")) {
+            console.log("Redirecting:", url);
+
+            return url.replace(
+                /https?:\/\/(www\.)?myavatareditor\.com/gi,
+                "https://helloiti.github.io/mae"
+            );
         }
-    }; 
+
+        return url;
+    }
+};
 </script>
 
 </head>
