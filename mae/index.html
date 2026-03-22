@@ -23,22 +23,21 @@ window.RufflePlayer.config = {
     unmuteOverlay: "hidden",
     wmode: "transparent",
 
-    resolveUrl: function (url) {
-        if (!url) return url;
+  // resolveUrl: function (url) {
+       // if (!url) return url;
+		
+       // if (url.includes("myavatareditor.com")) {
+           // console.log("redirecting:", url);
 
-        // catch ALL variants
-        if (url.includes("myavatareditor.com")) {
-            console.log("Redirecting:", url);
+           // return url.replace(
+               // /https?:\/\/(www\.)?myavatareditor\.com/gi,
+               // "https://helloiti.github.io/mae"
+       //     );
+     //   }
 
-            return url.replace(
-                /https?:\/\/(www\.)?myavatareditor\.com/gi,
-                "https://helloiti.github.io/mae"
-            );
-        }
-
-        return url;
-    }
-};
+       // return url;
+   // }
+// };
 </script>
 
 </head>
