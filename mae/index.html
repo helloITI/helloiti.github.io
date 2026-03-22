@@ -29,22 +29,14 @@
       document.addEventListener("ruffle_navigate", (event) => {
         let url = event.detail.url;
 
-        if (url && url.includes("myavatareditor.com")) {
+        if (url && url.includes("http://www.myavatareditor.com")) {
           window.location.href = url.replace(
-            "http://www.myavatareditor.com/",
             "https://helloiti.github.io/mae/index.html"
           );
         }
       });
     });
   </script>
-	<!-- makes it so that loading ?avatar=DATA or ?mii=DATA works eachother, even if someone accidentally typed ?mii=DATA instead of ?avatar=DATA -->
-	<script>
-function getMiiFromURL() {
-    const params = new URLSearchParams(window.location.search);
-    return params.get("mii") || params.get("avatar");
-}
-</script>
 </head>
 <body>
 <div id="page">
@@ -76,7 +68,7 @@ function getMiiFromURL() {
 <script>
 function getMiiFromURL() {
     const params = new URLSearchParams(window.location.search);
-    return params.get("mii"); // IMPORTANT: use "mii"
+    return params.get("mii") || params.get("avatar");
 }
 
 window.addEventListener("DOMContentLoaded", () => {
