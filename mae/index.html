@@ -22,20 +22,6 @@
     "wmode": "transparent" // Optional: for transparency
   };
 </script>
-<script>
-window.addEventListener("DOMContentLoaded", () => {
-  swfobject.embedSWF(
-    "myavatareditor.swf",
-    "editorSWFContainer",
-    "640",
-    "500",
-    "10.0.0",
-    null,
-    getQueryObj()
-  );
-});
-</script>
-
 </head>
 <body>
 <div id="page">
@@ -62,8 +48,40 @@ window.addEventListener("DOMContentLoaded", () => {
 	<div class="content-top">
 		<div id="editor-wrapper">
 		<div id="editorSWFContainer">
-			<embed src="myavatareditor.swf" width="640" height="500" align="middle" play="true" name="classicGUI"></embed>
+			<!-- <embed src="myavatareditor.swf" width="640" height="500" align="middle" play="true" name="classicGUI"></embed> -->
 		</div>
+<script>
+function getMiiFromURL() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("mii"); // IMPORTANT: use "mii"
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+
+    const DEFAULT_MII = "000000640065006600610075006c00740042006f0079414080807f5fc242899800044240318028a2088c08401448b88d008a008a25040000000000000000000000000000000000000000";
+
+    const miiData = getMiiFromURL() || DEFAULT_MII;
+
+    let flashVars = "";
+    if (miiData) {
+        flashVars = "mii=" + encodeURIComponent(miiData);
+    }
+
+    const embed = document.createElement("embed");
+    embed.src = "myavatareditor.swf";
+    embed.width = "640";
+    embed.height = "500";
+    embed.setAttribute("play", "true");
+    embed.setAttribute("name", "avatarEditor");
+    embed.setAttribute("allowScriptAccess", "always");
+
+    if (flashVars) {
+        embed.setAttribute("flashvars", flashVars);
+    }
+
+    document.getElementById("editorSWFContainer").appendChild(embed);
+});
+</script>
 		</div>
 		<div class="avatar-links">Load <a href="?avatar=000000640065006600610075006c00740042006f0079404080807f5fc242899800044240318028a2088c08401448b88d008a008a25040000000000000000000000000000000000000000">Default Boy</a> | <a href="?avatar=400000640065006600610075006c007400470072006c404080807f73c242899800041840018028a2106c08401448b88d008a008a25040000000000000000000000000000000000000000">Default Girl</a></div>
 		<h3>Features</h3>
