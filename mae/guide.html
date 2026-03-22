@@ -3,14 +3,14 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 	<title>My Avatar Editor Guide</title>
-	<link rel="canonical" href="https://helloiti.github.io/mae" />
+	<link rel="canonical" href="https://helloiti.github.io/mae/" />
 	<link rel="icon" type="image/ico&quot;&quot;" href="favicon.ico"/>
 	<link href="styles/main.css" rel="stylesheet" type="text/css"/>
 	<script type="text/javascript" src="scripts/swfobject.js"></script>
 	<script type="text/javascript" src="scripts/utils.js"></script>
 	<script type="text/javascript">
 		//<![CDATA[
-		swfobject.embedSWF("/myavatareditor.swf", "editorSWFContainer", "640", "500", "10.0.0", null, getQueryObj());
+		swfobject.embedSWF("myavatareditor.swf", "editorSWFContainer", "640", "500", "10.0.0", null, getQueryObj());
 		//]]>
 	</script>
 	<script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
@@ -26,18 +26,18 @@
 <body>
 <div id="page">
 	<div id="header">
-		<h1 class="logo"><a href="/"><img src="images/header_logo.png" alt="My Avatar Editor"/></a></h1>
+		<h1 class="logo"><a href="https://helloiti.github.io/mae/"><img src="images/header_logo.png" alt="My Avatar Editor"/></a></h1>
 		<p class="caption">Create and edit personalized avatar characters compatible with Mii&trade; characters found on the Nintendo&reg; Wii&trade;</p>
 		<div class="main-menu">
 		<div class="main-menu-left">
 		<div class="main-menu-right">
 			<ul>
-				<li><a href="/">Editor</a></li>
-				<li><a href="guide.html" class="selected">Guide</a></li>
+				<li><a href="https://helloiti.github.io/mae/">Editor</a></li>
+				<li><a href="guide" class="selected">Guide</a></li>
 				<li><a href="http://myavatareditor.blogspot.com/" target="_blank">Blog <img title="External link" alt="(new window)" src="images/icon_new_window.gif"/></a></li>
-				<li><a href="download.html">Download</a></li>
-				<li><a href="developers.html">Developers</a></li>
-				<li><a href="contact.html">Contact</a></li>
+				<li><a href="download">Download</a></li>
+				<li><a href="developers">Developers</a></li>
+				<li><a href="contact">Contact</a></li>
 			</ul>
 		</div>
 		</div>
@@ -77,16 +77,22 @@
 		<p>MiiEditor.com was, and MyAvatarEditor.com is, and always will be, a fan site created with the best intentions in mind by expanding those capabilities  that  exist in the home gaming space and helping users share their love for  avatars in the context of the world wide web.</p>
 		<h3 id="systemrequirements">System Requirements</h3>
 		<div style="width:200px;float:right;text-align:right;">
-			<a href="http://get.adobe.com/flashplayer"><img src="images/shared/download_buttons/get_adobe_flash_player.png" alt="Get Adobe Flash Player" title="Get Adobe Flash Player"></a><br>
-			<a href="http://get.adobe.com/flashplayer"><img src="images/shared/download_buttons/get_adobe_air.png" alt="Get Adobe AIR" title="Get Adobe AIR"></a><br>
+			<a href="https://archive.org/details/adobeflash-10_1"><img src="images/shared/download_buttons/get_adobe_flash_player.png" alt="Get Adobe Flash Player" title="Get Adobe Flash Player"></a><br>
+			<!-- windows -->
+			<p>Download Adobe AIR for your Windows PC</p>
+			<a href="downloads/AdobeAIRInstaller.exe"><img src="images/shared/download_buttons/get_adobe_air.png" alt="Get Adobe AIR" title="Get Adobe AIR"></a><br>
+			<!-- macOS -->
+			<p>Download Adobe AIR for your macOS PC</p>
+			<a href="downloads/AdobeAIR.dmg"><img src="images/shared/download_buttons/get_adobe_air.png" alt="Get Adobe AIR" title="Get Adobe AIR"></a><br>
 		</div>
-		<p>Requirements for use of <a href="https://helloiti.github.io/mae">My Avatar Editor in the browser</a>:</p>
+		<p>Requirements for use of <a href="https://helloiti.github.io/mae/">My Avatar Editor in the browser</a>:</p>
 		<ul>
-			<li><a href="http://get.adobe.com/flashplayer">Adobe Flash Player 10</a></li>
+			<li><a href="https://archive.org/details/adobeflash-10_1">Adobe Flash Player 10</a></li>
 		</ul>
-		<p>Requirements for the <a href="download.html#myavatareditorforyourdesktop">My Avatar Editor  desktop application</a>:</p>
+		<p>Requirements for the <a href="download#myavatareditorforyourdesktop">My Avatar Editor  desktop application</a>:</p>
 		<ul>
-			<li><a href="http://get.adobe.com/air">Adobe AIR 1.5</a></li>
+			<li><a href="downloads/AdobeAIRInstaller.exe">Adobe AIR 1.5 (Windows)</a></li>
+			<li><a href="downloads/AdobeAIR.dmg">Adobe AIR 1.5 (macOS)</a></li>
 			</ul>
 		<p>&nbsp;</p>
 <p>Note that not all platforms support Flash Player 10 or AIR 1.5.  For example, as of the time of this writing, Flash Player 10 is only supported on: </p>
@@ -117,7 +123,7 @@
 		<p>This URL is a unique URL specific to the avatar currently in the editor. Navigating to this URL will load the main MyAvatarEditor.com web site with that character automatically loaded in.</p>
 		<p> You can select and copy it in the main URL field, or you can click on the text that says "Avatar link". This will open up the link in a new browser window.</p>
 		<p>As an alternative, you can share a link of just your avatar without the editor interface. For these URLs, you must include a "show/" after the "myavatareditor.com/" in the standard My Avatar Editor URL link. For example:</p>
-		<p><a href="https://helloiti.github.io/mae/show/?avatar=056000730065006e006f00630075006c0061007200005c0df27746ffc2428998000467c07940c6746c4884a06430426d0049fec9865000730065006e006f00630075006c006100720000">http://www.myavatareditor.com/<strong>show/</strong>?avatar=056000730065006e006f00630075006c0<br>
+		<p><a href="https://helloiti.github.io/mae/show?avatar=056000730065006e006f00630075006c0061007200005c0df27746ffc2428998000467c07940c6746c4884a06430426d0049fec9865000730065006e006f00630075006c006100720000">https://helloiti.github.io/mae/<strong>show</strong>?avatar=056000730065006e006f00630075006c0<br>
 			061007200005c0df27746ffc2428998000467c07940c6746c4884a06430426d0049fec9<br>
 			865000730065006e006f00630075006c006100720000</a></p>
 		<h4>Sharing images</h4>
@@ -185,7 +191,7 @@
 			</ol>
 		<p>Clicking the save button will prompt you to save the exported version of your avatar to a location on your computer. Clicking Back will return you to the File Menu.</p>
 <h3 id="myavatareditoronyourwebsite">Using My Avatar Editor on Your Website</h3>
-		<p>If you'd like, you can <a href="download.html#myavatareditorforyourwebsite">Download My Avatar Editor</a>, or just the avatar character component so that you can use it on your own web site. For more information on setting this up, see the <a href="developers.html">Developer section</a>.</p>
+		<p>If you'd like, you can <a href="download#myavatareditorforyourwebsite">Download My Avatar Editor</a>, or just the avatar character component so that you can use it on your own web site. For more information on setting this up, see the <a href="developers.html">Developer section</a>.</p>
 		<h3 id="troubleshooting">Troubleshooting</h3>
 		<h4><strong>My Avatar Editor does not load or display or a screen appears with the message "Please Update Your Flash Player"</strong></h4>
 		<p>			My Avatar Editor was built using <a href="http://www.adobe.com/products/flash/">Adobe Flash</a>.  It requires version 10 of <a href="http://www.adobe.com/products/flashplayer/">Adobe Flash Player</a> or greater to function properly. Seeing this message, or not seeing the editor at all, would suggest that you need to install or update your version of Flash Player. You can do so here: <a href="https://web.archive.org/web/20090721143118/http://get.adobe.com/flashplayer">http://get.adobe.com/flashplayer</a>.</p>
