@@ -10,7 +10,7 @@
 	<script type="text/javascript" src="scripts/utils.js"></script>
 	<script type="text/javascript">
 		//<![CDATA[
-		swfobject.embedSWF("/myavatareditor.swf", "editorSWFContainer", "640", "500", "10.0.0", null, getQueryObj());
+		swfobject.embedSWF("myavatareditor.swf", "editorSWFContainer", "640", "500", "10.0.0", null, getQueryObj());
 		//]]>
 	</script>
 	<script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
@@ -23,43 +23,16 @@
   };
 </script>
 <script>
-function getMiiFromURL() {
-    const params = new URLSearchParams(window.location.search);
-    return params.get("avatar");
-}
-
 window.addEventListener("DOMContentLoaded", () => {
-
-    const DEFAULT_MII = "000000640065006600610075006c00740042006f0079414080807f5fc242899800044240318028a2088c08401448b88d008a008a25040000000000000000000000000000000000000000";
-
-    const miiData = getMiiFromURL() || DEFAULT_MII;
-
-    const flashvars = {
-        avatar: miiData   // try "avatar" (most likely)
-        // mii: miiData    // ← if avatar doesn’t work, try this instead
-    };
-
-    const params = {
-        allowScriptAccess: "always",
-        wmode: "transparent"
-    };
-
-    const attributes = {
-        id: "avatarEditor",
-        name: "avatarEditor"
-    };
-
-    swfobject.embedSWF(
-        "myavatareditor.swf",
-        "editorSWFContainer",
-        "640",
-        "500",
-        "10.0.0",
-        null,
-        flashvars,
-        params,
-        attributes
-    );
+  swfobject.embedSWF(
+    "myavatareditor.swf",
+    "editorSWFContainer",
+    "640",
+    "500",
+    "10.0.0",
+    null,
+    getQueryObj()
+  );
 });
 </script>
 
@@ -73,7 +46,7 @@ window.addEventListener("DOMContentLoaded", () => {
 		<div class="main-menu-left">
 		<div class="main-menu-right">
 			<ul>
-				<li><a href="/" class="selected">Editor</a></li>
+				<li><a href="index.html" class="selected">Editor</a></li>
 				<li><a href="guide.html">Guide</a></li>
 				<li><a href="http://myavatareditor.blogspot.com/" target="_blank">Blog <img title="External link" alt="(new window)" src="images/icon_new_window.gif"/></a></li>
 				<li><a href="download.html">Download</a></li>
@@ -92,7 +65,7 @@ window.addEventListener("DOMContentLoaded", () => {
 			<embed src="myavatareditor.swf" width="640" height="500" align="middle" play="true" name="classicGUI"></embed>
 		</div>
 		</div>
-		<div class="avatar-links">Load <a href="avatar-000000640065006600610075006c00740042006f0079404080807f5fc242899800044240318028a2088c08401448b88d008a008a25040000000000000000000000000000000000000000.html">Default Boy</a> | <a href="avatar-400000640065006600610075006c007400470072006c404080807f73c242899800041840018028a2106c08401448b88d008a008a25040000000000000000000000000000000000000000.html">Default Girl</a></div>
+		<div class="avatar-links">Load <a href="?avatar=000000640065006600610075006c00740042006f0079404080807f5fc242899800044240318028a2088c08401448b88d008a008a25040000000000000000000000000000000000000000">Default Boy</a> | <a href="?avatar=400000640065006600610075006c007400470072006c404080807f73c242899800041840018028a2106c08401448b88d008a008a25040000000000000000000000000000000000000000">Default Girl</a></div>
 		<h3>Features</h3>
 		<ul>
 			<li>Create customizable avatars online or from your desktop computer <span class="more">(<a href="guide.html#creatingandeditingavatars">more info...</a>)</span></li>
