@@ -25,18 +25,27 @@
 </script>
 	
   <script>
-    window.addEventListener("load", () => {
       document.addEventListener("ruffle_navigate", (event) => {
         let url = event.detail.url;
-
+		  
         if (url && url.includes("http://www.myavatareditor.com")) {
           window.location.href = url.replace(
-            "https://helloiti.github.io/mae/"
+            "http://www.myavatareditor.com", // Ugly doesn't work not very cook
+            "https://helloiti.github.io/mae/"  // Wow very cool awesome cute
           );
         }
       });
     });
+	  
+    const originalWindowOpen = window.open;
+    window.open = function(url, target, features) {
+      if (typeof url === 'string' && url.includes("http://www.myavatareditor.com")) {
+        url = url.replace("http://www.myavatareditor.com", "https://helloiti.github.io/mae/");
+      }
+      return originalWindowOpen.call(window, url, target, features);
+    };
   </script>
+
 </head>
 <body>
 <div id="page">
