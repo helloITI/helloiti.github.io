@@ -306,7 +306,7 @@ swfobject.embedSWF(&quot;myavatareditor.swf&quot;,
 		<p class="note">Note: This requires the inclusion of the SWFObject javascript file.</p>
 		<p>Query variables in a web page's URL will need to be transferred from that URL to the embedded SWF. This could be handled using a server-side script, appending those values on the end of the SWF URL, or be done dynamically  using JavaScript. SWFObject allows you to do this through a parameter in the <code>embedSWF</code> call.</p>
 		<h3 id="creatingswffiles">Creating SWF Files</h3>
-		<p>There are a large number of tools that can create SWF files. The tool used for My Avatar Editor was <a href="http://www.adobe.com/products/flash">Flash Professional CS4</a>. Another popular tool is <a href="http://www.adobe.com/products/flex/">Flex Builder</a> which is a rich coding environment that uses the <a href="http://opensource.adobe.com/wiki/display/flexsdk/">free Flex SDK</a> to compiling MXML markup and ActionScript code into SWFs.</p>
+		<p>There are a large number of tools that can create SWF files. The tool used for My Avatar Editor was <a href="https://animatearchive.neocities.org/">Flash Professional CS4</a>. Another popular tool is <a href="http://www.adobe.com/products/flex/">Flex Builder</a> which is a rich coding environment that uses the <a href="http://opensource.adobe.com/wiki/display/flexsdk/">free Flex SDK</a> to compiling MXML markup and ActionScript code into SWFs.</p>
 		<p>If you are modifying the source of My Avatar Editor, you will need to use Flash CS4. However, if you are creating a wrapper SWF as covered by the section explaining <a href="#actionscriptdriven">ActionScript-driven Usage</a>, you can use any tool capable of creating a SWF targeting Flash Player 10. If you are not using Flash CS4, then the free Flex SDK would probably be your best alternative.</p>
 		<h4 id="flashcs4">Flash CS4</h4>
 		<p><a href="https://animatearchive.neocities.org/">Adobe Flash CS4</a> is probably the easiest tool to create SWF files. When starting a new file, create a new Flash File for ActionScript 3.0 and make sure the settings are targeting Flash Player 10. This, for CS4, should be the default. If you want to be sure, or modify this target, you can do so using <kbd>File &gt; Publish Settings... &gt; Flash [Tab].</kbd></p>
@@ -328,7 +328,7 @@ swfobject.embedSWF(&quot;myavatareditor.swf&quot;,
 		<h4 id="avatarhexcode">Avatar Hex Code</h4>
 		<p>An avatar's hex code is a string representation of the <a href="#avatarbinary">Avatar Binary</a>. A hex code string should be 148 characters long. Characters are grouped into hexadecimal couples representing a single byte. When a hex code shorter than 148 characters is read into My Avatar Editor, the missing values are replaced with 0. Zero values are not ideal; consider the following avatar:</p>
 		<ul>
-			<li><a href="myavatareditorbeta_avatar-0.html">http://www.myavatareditor.com/myavatareditorbeta.html?avatar=0</a></li>
+			<li><a href="myavatareditorbeta?avatar=0">https://helloiti.github.io/mae/myavatareditorbeta.html?avatar=0</a></li>
 		</ul>
 		<h4 id="avatarxml">Avatar XML</h4>
 		<p>The XML format used to represent avatar characters is a custom set of XML elements designed specifically for My Avatar Editor.  In the editor interface, an avatar's XML can be viewed in the <a href="guide.html#xmlscreen">XML Screen</a> of the <a href="guide.html#filemenu">File Menu</a>. Example:</p>
