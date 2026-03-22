@@ -55,7 +55,7 @@ align-items: center;
       text-decoration: none;
       background-size: 400% 400%;
       -webkit-background-clip: text;
-      -webkit-text-fill-color: white;
+      -webkit-text-fill-color: black;
       /* cursor, again */
       cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, pointer;
     }
