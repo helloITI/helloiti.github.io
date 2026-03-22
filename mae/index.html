@@ -14,13 +14,36 @@
 		//]]>
 	</script>
 	<script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
-	<script>
+	
+		<script>
   window.RufflePlayer = window.RufflePlayer || {};
   window.RufflePlayer.config = {
     "autoplay": "on", // Sets autoplay to on
     "unmuteOverlay": "hidden", // Hides the unmute button
     "wmode": "transparent" // Optional: for transparency
-  };
+  }; 
+</script>
+	
+  <script>
+    window.addEventListener("load", () => {
+      document.addEventListener("ruffle_navigate", (event) => {
+        let url = event.detail.url;
+
+        if (url && url.includes("myavatareditor.com")) {
+          window.location.href = url.replace(
+            "http://www.myavatareditor.com/",
+            "https://helloiti.github.io/mae/index.html"
+          );
+        }
+      });
+    });
+  </script>
+	<!-- makes it so that loading ?avatar=DATA or ?mii=DATA works eachother, even if someone accidentally typed ?mii=DATA instead of ?avatar=DATA -->
+	<script>
+function getMiiFromURL() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("mii") || params.get("avatar");
+}
 </script>
 </head>
 <body>
