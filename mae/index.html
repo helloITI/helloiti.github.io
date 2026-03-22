@@ -22,12 +22,47 @@
     "wmode": "transparent" // Optional: for transparency
   };
 </script>
-	<script>
+<script>
 function getMiiFromURL() {
     const params = new URLSearchParams(window.location.search);
-    return params.get("avatar"); // returns the Mii hex string or null
+    return params.get("avatar");
 }
+
+window.addEventListener("DOMContentLoaded", () => {
+
+    const DEFAULT_MII = "000000640065006600610075006c00740042006f0079414080807f5fc242899800044240318028a2088c08401448b88d008a008a25040000000000000000000000000000000000000000";
+
+    const miiData = getMiiFromURL() || DEFAULT_MII;
+
+    const flashvars = {
+        avatar: miiData   // try "avatar" (most likely)
+        // mii: miiData    // ← if avatar doesn’t work, try this instead
+    };
+
+    const params = {
+        allowScriptAccess: "always",
+        wmode: "transparent"
+    };
+
+    const attributes = {
+        id: "avatarEditor",
+        name: "avatarEditor"
+    };
+
+    swfobject.embedSWF(
+        "myavatareditor.swf",
+        "editorSWFContainer",
+        "640",
+        "500",
+        "10.0.0",
+        null,
+        flashvars,
+        params,
+        attributes
+    );
+});
 </script>
+
 </head>
 <body>
 <div id="page">
@@ -80,26 +115,5 @@ try {
 var pageTracker = _gat._getTracker("UA-7459471-1");
 pageTracker._trackPageview();
 } catch(err) {}</script>
-	
-	<script>
-<script>
-(function () {
-    const miiData = getMiiFromURL();
-
-    let flashVars = "";
-    if (miiData) {
-        flashVars = "mii=" + encodeURIComponent(miiData);
-    }
-    if (flashVars) {
-        embed.setAttribute("flashvars", flashVars);
-    }
-
-    document.getElementById("flash-container").appendChild(embed);
-})();
-const DEFAULT_MII = "000000640065006600610075006c00740042006f0079414080807f5fc242899800044240318028a2088c08401448b88d008a008a25040000000000000000000000000000000000000000";
-
-const miiData = getMiiFromURL() || DEFAULT_MII;
-</script>
-</script>
 </body>
 </html>
