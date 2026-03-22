@@ -25,6 +25,24 @@ display: flex;
 flex-direction: column;
 align-items: center;
     }
+/* credits to RFGuy (https://rfguy.nekoweb.org) for this code! */
+    .nv-br {
+    background-color: rgb(209 79 79);
+    height: fit-content;
+    padding: 18px 65px;
+    width: fit-content;
+    top: 0;
+    border-radius: 0 0 12px 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    position: absolute; 
+    z-index: 0; 
+    outline: 4px;
+    outline-style: solid;
+    outline-color: #9e2222;
+    align-items: center;
+    margin-bottom: 100px;
+}
     h1, h2, h3 {
       margin: 10px 0;
       padding: 0;
@@ -36,6 +54,8 @@ align-items: center;
     a {
       text-decoration: none;
       background-size: 400% 400%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: white;
       /* cursor, again */
       cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, pointer;
     }
