@@ -24,27 +24,22 @@
   }; 
 </script>
 	
-  <script>
-      document.addEventListener("ruffle_navigate", (event) => {
-        let url = event.detail.url;
-		  
-        if (url && url.includes("http://www.myavatareditor.com")) {
-          window.location.href = url.replace(
-            "http://www.myavatareditor.com", // Ugly doesn't work not very cook
-            "https://helloiti.github.io/mae/"  // Wow very cool awesome cute
-          );
+<script>
+    window.RufflePlayer = window.RufflePlayer || {};
+    window.RufflePlayer.config = {
+        "autoplay": "on", 
+        "unmuteOverlay": "hidden", 
+        "wmode": "transparent",
+        "resolveUrl": function(url) {
+            if (url && url.includes("myavatareditor.com")) {
+                return url
+                    .replace("http://www.myavatareditor.com", "https://helloiti.github.io/mae/")
+                    .replace("https://www.myavatareditor.com", "https://helloiti.github.io/mae/");
+            }
+            return url;
         }
-      });
-    });
-	  
-    const originalWindowOpen = window.open;
-    window.open = function(url, target, features) {
-      if (typeof url === 'string' && url.includes("http://www.myavatareditor.com")) {
-        url = url.replace("http://www.myavatareditor.com", "https://helloiti.github.io/mae/");
-      }
-      return originalWindowOpen.call(window, url, target, features);
-    };
-  </script>
+    }; 
+</script>
 
 </head>
 <body>
