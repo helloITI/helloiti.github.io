@@ -46,6 +46,21 @@
 	<div class="content">
 	<div class="content-bottom">
 	<div class="content-top">
+		<button onclick="saveAvatar()">Save Avatar</button>
+<script>
+function saveAvatar() {
+    const swf = document.getElementsByName("avatarEditor")[0];
+
+    try {
+        const mii = swf.getMiiData(); // may fail!
+        localStorage.setItem("savedAvatar", mii);
+        alert("Avatar saved!");
+    } catch (e) {
+        alert("Saving not supported in this version.");
+        console.error(e);
+    }
+}
+</script>
 		<div id="editor-wrapper">
 				<div id="editorSWFContainer">
 			<!-- <embed src="myavatareditor.swf" width="640" height="500" align="middle" play="true" name="classicGUI"></embed> -->
@@ -83,7 +98,7 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 		</div>
-		<div class="avatar-links">Load <a href="?avatar=000000640065006600610075006c00740042006f0079404080807f5fc242899800044240318028a2088c08401448b88d008a008a25040000000000000000000000000000000000000000">Default Boy</a> | <a href="?avatar=400000640065006600610075006c007400470072006c404080807f73c242899800041840018028a2106c08401448b88d008a008a25040000000000000000000000000000000000000000">Default Girl</a></div>
+		<div class="avatar-links">Load <a href="?avatar=000000640065006600610075006c00740042006f0079404080807f5fc242899800044240318028a2088c08401448b88d008a008a25040000000000000000000000000000000000000000">Default Boy</a> | <a href="?avatar=400000640065006600610075006c007400470072006c404080807f73c242899800041840018028a2106c08401448b88d008a008a25040000000000000000000000000000000000000000">Default Girl</a> | <a href="?avatar=0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000">???</a></div>
 		<h3>Features</h3>
 		<ul>
 			<li>Create customizable avatars online or from your desktop computer <span class="more">(<a href="guide#creatingandeditingavatars">more info...</a>)</span></li>
