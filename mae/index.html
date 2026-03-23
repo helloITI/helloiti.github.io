@@ -1,6 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
-<!-- If you're reading the code, yes I know I used AI, but it was for a good cause, and it's helping me improve more on this kind of stuff. -->
 <head>
 	<base href="https://helloiti.github.io/mae/">
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -8,22 +7,30 @@
 	<link rel="canonical" href="https://helloiti.github.io/mae/" />
 	<link rel="icon" type="image/x-icon" href="favicon.ico"/>
 	<link href="styles/main.css" rel="stylesheet" type="text/css"/>
+
+	<!-- ✅ Load Ruffle FIRST -->
+	<script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+
+	<script>
+	window.RufflePlayer = window.RufflePlayer || {};
+	window.RufflePlayer.config = {
+		autoplay: "on",
+		unmuteOverlay: "hidden",
+		wmode: "transparent"
+	};
+	</script>
+
 	<script type="text/javascript" src="scripts/swfobject.js"></script>
 	<script type="text/javascript" src="scripts/utils.js"></script>
+
 	<script type="text/javascript">
-		//<![CDATA[
-		swfobject.embedSWF("myavatareditor.swf", "editorSWFContainer", "640", "500", "10.0.0", null, getQueryObj());
-		//]]>
+		// Prevent Flash error by delaying embed until Ruffle is ready
+		window.addEventListener("DOMContentLoaded", function () {
+			if (!window.RufflePlayer || !window.RufflePlayer.newest) {
+				swfobject.embedSWF("myavatareditor.swf", "editorSWFContainer", "640", "500", "10.0.0", null, getQueryObj());
+			}
+		});
 	</script>
-	<script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
-	
-<script>
-window.RufflePlayer = window.RufflePlayer || {};
-window.RufflePlayer.config = {
-    autoplay: "on",
-    unmuteOverlay: "hidden",
-    wmode: "transparent",
-</script>
 
 </head>
 <body>
@@ -46,13 +53,16 @@ window.RufflePlayer.config = {
 		</div>
 		</div>
 	</div>
+
 	<div class="content">
 	<div class="content-bottom">
 	<div class="content-top">
 		<div id="editor-wrapper">
+
 		<div id="editorSWFContainer">
-			<!-- <embed src="myavatareditor.swf" width="640" height="500" align="middle" play="true" name="classicGUI"></embed> -->
+			<!-- ok -->
 		</div>
+
 <script>
 function getMiiFromURL() {
     const params = new URLSearchParams(window.location.search);
@@ -77,6 +87,7 @@ window.addEventListener("DOMContentLoaded", () => {
     embed.setAttribute("play", "true");
     embed.setAttribute("name", "avatarEditor");
     embed.setAttribute("allowScriptAccess", "always");
+    embed.setAttribute("type", "application/x-shockwave-flash"); // helps Ruffle hook it
 
     if (flashVars) {
         embed.setAttribute("flashvars", flashVars);
@@ -85,8 +96,11 @@ window.addEventListener("DOMContentLoaded", () => {
     document.getElementById("editorSWFContainer").appendChild(embed);
 });
 </script>
+
 		</div>
+
 		<div class="avatar-links">Load <a href="?avatar=000000640065006600610075006c00740042006f0079404080807f5fc242899800044240318028a2088c08401448b88d008a008a25040000000000000000000000000000000000000000">Default Boy</a> | <a href="?avatar=400000640065006600610075006c007400470072006c404080807f73c242899800041840018028a2106c08401448b88d008a008a25040000000000000000000000000000000000000000">Default Girl</a></div>
+
 		<h3>Features</h3>
 		<ul>
 			<li>Create customizable avatars online or from your desktop computer <span class="more">(<a href="guide.html#creatingandeditingavatars">more info...</a>)</span></li>
@@ -94,20 +108,26 @@ window.addEventListener("DOMContentLoaded", () => {
 			<li>Supports .mii character files as well as avatars defined in XML <span class="more">(<a href="guide.html#miicompatibility">more info...</a>)</span></li>
 			<li>Export your avatars to a JPEG or PNG image for sharing on the web! <span class="more">(<a href="guide.html#exportscreen">more info...</a>)</span></li>
 		</ul>
+
 		<p class="note">Requires <a href="https://archive.org/details/adobeflash-10_1">Adobe Flash Player 10</a> or greater.</p>
 	</div>
 	</div>
 	</div>
+
 	<div id="footer">This website is not affiliated with or endorsed by Nintendo&reg; Co. Ltd. or any of its sister branches or subsidiaries globally. Mii&trade; and Wii&trade; are a trademark of Nintendo&reg; Co. Ltd. All other patents and trademarks are owned by their respective holders.</div>
 </div>
+
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
 </script>
+
 <script type="text/javascript">
 try {
 var pageTracker = _gat._getTracker("UA-7459471-1");
 pageTracker._trackPageview();
-} catch(err) {}</script>
+} catch(err) {}
+</script>
+
 </body>
-</html>
+	</html>
