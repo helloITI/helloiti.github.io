@@ -54,9 +54,9 @@ function saveAvatar() {
     try {
         const mii = swf.getMiiData(); // may fail!
         localStorage.setItem("savedAvatar", mii);
-        alert("Avatar saved!");
+        alert("Avatar saved! :)");
     } catch (e) {
-        alert("Saving not supported in this version.");
+        alert("Saving failed, or not supported on this version. :(");
         console.error(e);
     }
 }
@@ -75,7 +75,10 @@ window.addEventListener("DOMContentLoaded", () => {
 
     const DEFAULT_MII = "000000640065006600610075006c00740042006f0079414080807f5fc242899800044240318028a2088c08401448b88d008a008a25040000000000000000000000000000000000000000";
 
-    const miiData = getMiiFromURL() || DEFAULT_MII;
+    const miiData =
+    getMiiFromURL() ||
+    localStorage.getItem("savedAvatar") ||
+    DEFAULT_MII;
 
     let flashVars = "";
     if (miiData) {
