@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
-<!-- If you're reading the code, yes I know I used AI, but it was for a good cause, and it's helping me improve more on this kind of stuff. -->
+<!-- If you're reading the code, yes I know I used (a bit of) AI, but it was for a good cause, and it's helping me improve more on this kind of stuff. -->
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 	<title>My Avatar Editor</title>
@@ -55,7 +55,7 @@
 <script>
 function getMiiFromURL() {
     const params = new URLSearchParams(window.location.search);
-    return params.get("mii") || params.get("avatar");
+    return params.get("mii") || params.get("avatar") || params.get("a");
 }
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -64,12 +64,12 @@ window.addEventListener("DOMContentLoaded", () => {
 
     let miiData =
         getMiiFromURL() ||
-        localStorage.getItem("savedMii") ||
+        localStorage.getItem("savA") ||
         DEFAULT_MII;
 
     // saves to localStorage if coming from a URL
     if (getMiiFromURL()) {
-        localStorage.setItem("savedMii", miiData);
+        localStorage.setItem("savA", miiData);
     }
 
     let flashVars = "mii=" + encodeURIComponent(miiData);
@@ -96,6 +96,8 @@ window.addEventListener("DOMContentLoaded", () => {
 			<li>Export your avatars to a JPEG or PNG image for sharing on the web! <span class="more">(<a href="guide#exportscreen">more info...</a>)</span></li>
 		</ul>
 		<p class="note">Requires <a href="https://archive.org/details/adobeflash-10_1">Adobe Flash Player 10</a> or greater.</p>
+		<p>You can also check credited people that helped making this My Avatar Editor website revival.</p>
+		<p><a href="credits">https://helloiti.github.io/mae/credits</a></p>
 	</div>
 	</div>
 	</div>
