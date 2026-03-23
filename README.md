@@ -4,3 +4,6 @@
 <h3 align="center">
   :electron: (<a href="https://helloiti.github.io/">click here to check it out!</a>) :electron:
 </h3>
+<h1 align="center">
+  <img src="https://helloiti.github.io/img/spin.gif" style="width:150px;">
+</h1>
