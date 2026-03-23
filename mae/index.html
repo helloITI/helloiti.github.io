@@ -1,5 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<!-- If you're reading the code, yes I know I used AI, but it was for a good cause, and it's helping me improve more on this kind of stuff. -->
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 	<title>My Avatar Editor</title>
@@ -46,21 +47,7 @@
 	<div class="content">
 	<div class="content-bottom">
 	<div class="content-top">
-		<button onclick="saveAvatar()">Save Avatar</button>
-<script>
-function saveAvatar() {
-    const swf = document.getElementsByName("avatarEditor")[0];
-
-    try {
-        const mii = swf.getMiiData(); // may fail!
-        localStorage.setItem("savedAvatar", mii);
-        alert("Avatar saved! :)");
-    } catch (e) {
-        alert("Saving failed, or not supported on this version. :(");
-        console.error(e);
-    }
-}
-</script>
+		<!-- <button onclick="saveAvatar()">Save Avatar</button> -->
 		<div id="editor-wrapper">
 				<div id="editorSWFContainer">
 			<!-- <embed src="myavatareditor.swf" width="640" height="500" align="middle" play="true" name="classicGUI"></embed> -->
@@ -75,15 +62,17 @@ window.addEventListener("DOMContentLoaded", () => {
 
     const DEFAULT_MII = "000000640065006600610075006c00740042006f0079414080807f5fc242899800044240318028a2088c08401448b88d008a008a25040000000000000000000000000000000000000000";
 
-    const miiData =
-    getMiiFromURL() ||
-    localStorage.getItem("savedAvatar") ||
-    DEFAULT_MII;
+    let miiData =
+        getMiiFromURL() ||
+        localStorage.getItem("savedMii") ||
+        DEFAULT_MII;
 
-    let flashVars = "";
-    if (miiData) {
-        flashVars = "mii=" + encodeURIComponent(miiData);
+    // saves to localStorage if coming from a URL
+    if (getMiiFromURL()) {
+        localStorage.setItem("savedMii", miiData);
     }
+
+    let flashVars = "mii=" + encodeURIComponent(miiData);
 
     const embed = document.createElement("embed");
     embed.src = "myavatareditor.swf";
@@ -92,10 +81,7 @@ window.addEventListener("DOMContentLoaded", () => {
     embed.setAttribute("play", "true");
     embed.setAttribute("name", "avatarEditor");
     embed.setAttribute("allowScriptAccess", "always");
-
-    if (flashVars) {
-        embed.setAttribute("flashvars", flashVars);
-    }
+    embed.setAttribute("flashvars", flashVars);
 
     document.getElementById("editorSWFContainer").appendChild(embed);
 });
