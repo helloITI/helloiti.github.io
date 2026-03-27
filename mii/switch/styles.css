@@ -7,15 +7,12 @@
     }
     body {
       font-family: 'NintendoNTLG', sans-serif;
-      margin: 0;
-      padding: 10px;
        /* bg */
       background-image: url('https://helloiti.github.io/assets/background1.png');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
       background-attachment: fixed;
-      color: white;
       /* cursor */
       cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, auto;
       overflow-y: scroll;
@@ -104,6 +101,10 @@ button {
 * {
 	margin: 0;
 	padding: 0;
+	box-sizing: border-box;
+}
+
+html, body {
 	height: 100%;
 }
 
