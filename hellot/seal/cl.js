@@ -143,7 +143,7 @@ window.translations = {
     title: "※⁜ helloT seal clicker ⁜※",
     subtitle: "※⁜ each click updates the <b>global</b> counter! ⁜※",
     clicks: "clicks",
-    button: " Yap yoo! ",
+    button: " Yap yoo! ",
     randomTexts: [
       "1 click = 1 seal will appear on someone's door /j",
       "1 click = +1 baddie 😍",
@@ -170,7 +170,7 @@ window.translations = {
     title: "※⁜ clicker de foca helloT ⁜※",
     subtitle: "※⁜ cada clic actualiza el contador <b>global</b>! ⁜※",
     clicks: "clics",
-    button: " Yap yoo! ",
+    button: " Yap yoo! ",
     randomTexts: [
       "1 clic = 1 foca aparecerá en la puerta de alguien /j",
       "1 clic = +1 baddie 😍",
@@ -197,7 +197,7 @@ window.translations = {
     title: "※⁜ clicker de phoque helloT ⁜※",
     subtitle: "※⁜ chaque clic met à jour le compteur <b>global</b> ! ⁜※",
     clicks: "clics",
-    button: " Yap yoo! ",
+    button: " Yap yoo! ",
     randomTexts: [
       "1 clic = 1 phoque apparaîtra à la porte de quelqu'un /j",
       "1 clic = +1 baddie 😍",
@@ -224,7 +224,7 @@ window.translations = {
     title: "※⁜ Yap Yoo! ⁜※",
     subtitle: "※⁜ Yap yap yap, yoo, yap, yoo yoo! ⁜※",
     clicks: "yap yoos!",
-    button: " Yap yoo! ",
+    button: " Yap yoo! ",
     randomTexts: [
       "1 yap yoo = 1 yap yoo, yap yap yoo yoo yap, yoo /j",
       "1 yap yoo = +1 yap yoo 😍",
