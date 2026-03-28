@@ -14,6 +14,11 @@
 	<link href="styles/main.css" rel="stylesheet" type="text/css"/>
 	<script type="text/javascript" src="scripts/swfobject.js"></script>
 	<script type="text/javascript" src="scripts/utils.js"></script>
+	<script type="text/javascript">
+		//<![CDATA[
+		swfobject.embedSWF("myavatareditor.swf", "editorSWFContainer", "640", "500", "10.0.0", null, getQueryObj());
+		//]]>
+	</script>
 	<script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
 	<script>
   window.RufflePlayer = window.RufflePlayer || {};
@@ -53,63 +58,30 @@
 			<!-- <embed src="myavatareditor.swf" width="640" height="500" align="middle" play="true" name="classicGUI"></embed> -->
 		</div>
 <script>
-const STORAGE_KEY = "savA";
-
-const DEFAULT_MII =
-"000000640065006600610075006c00740042006f0079414080807f5fc242899800044240318028a2088c08401448b88d008a008a25040000000000000000000000000000000000000000";
-
 function getMiiFromURL() {
     const params = new URLSearchParams(window.location.search);
     return params.get("mii") || params.get("avatar") || params.get("a");
 }
-
-function saveMii(mii, fromInit = false) {
-    if (!mii) return;
-    localStorage.setItem(STORAGE_KEY, mii);
-    if (!fromInit && mii !== DEFAULT_MII) {
-        try {
-            const url = new URL(window.location);
-            url.searchParams.set("avatar", mii);
-            window.history.replaceState({}, "", url);
-        } catch (e) {}
-    }
-}
-
 window.addEventListener("DOMContentLoaded", () => {
-
-    const urlMii = getMiiFromURL();
-    const localMii = localStorage.getItem(STORAGE_KEY);
-
-    let miiData = localMii || urlMii || DEFAULT_MII;
-
-    saveMii(miiData, true);
-
-    const flashVars = "mii=" + encodeURIComponent(miiData);
-
+    const DEFAULT_MII = "000000640065006600610075006c00740042006f0079414080807f5fc242899800044240318028a2088c08401448b88d008a008a25040000000000000000000000000000000000000000";
+    let miiData =
+        getMiiFromURL() ||
+        localStorage.getItem("savA") ||
+        DEFAULT_MII;
+    // saves to localStorage if coming from a URL
+    if (getMiiFromURL()) {
+        localStorage.setItem("savA", miiData);
+    }
+    let flashVars = "mii=" + encodeURIComponent(miiData);
     const embed = document.createElement("embed");
     embed.src = "myavatareditor.swf";
     embed.width = "640";
     embed.height = "500";
+    embed.setAttribute("play", "true");
+    embed.setAttribute("name", "avatarEditor");
     embed.setAttribute("allowScriptAccess", "always");
     embed.setAttribute("flashvars", flashVars);
-    embed.setAttribute("name", "avatarEditor");
-
     document.getElementById("editorSWFContainer").appendChild(embed);
-
-    setInterval(() => {
-        const flash = document.getElementsByName("avatarEditor")[0];
-        if (!flash) return;
-
-        try {
-            let mii =
-                (flash.getMii && flash.getMii()) ||
-                (flash.getAvatar && flash.getAvatar());
-
-            if (mii && typeof mii === "string") {
-                saveMii(mii);
-            }
-        } catch (e) {}
-    }, 2500);
 });
 </script>
 		</div>
