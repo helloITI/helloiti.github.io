@@ -91,23 +91,16 @@ window.addEventListener("DOMContentLoaded", () => {
     document.getElementById("editorSWFContainer").appendChild(embed);
 });
 </script>
-			<script>
-// called by the Flash editor when the Mii changes
+<script>
 function saveMiiData(miiString) {
     if (!miiString) return;
-
-    console.log("Saving Avatar:", miiString);
+    console.log("Saved Mii:", miiString);
     localStorage.setItem("savA", miiString);
 }
-</script>
-			<script>
-function saveMiiData(miiString) {
-    if (!miiString) return;
-    localStorage.setItem("savA", miiString);
-}
-
+// backup name some SWFs use
 function saveAvatar(miiString) {
     if (!miiString) return;
+    console.log("Saved Avatar:", miiString);
     localStorage.setItem("savA", miiString);
 }
 </script>
