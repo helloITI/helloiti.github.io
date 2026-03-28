@@ -26,22 +26,22 @@ flex-direction: column;
 align-items: center;
     }
 /* credits to RFGuy (https://rfguy.nekoweb.org) for this code! */
-    .nv-br {
-    background-color: rgb(209 79 79);
-    height: fit-content;
-    padding: 18px 65px;
-    width: fit-content;
-    top: 0;
-    border-radius: 0 0 12px 12px;
-    left: 50%;
-    transform: translateX(-50%);
-    position: absolute; 
-    z-index: 0; 
-    outline: 4px;
-    outline-style: solid;
-    outline-color: #9e2222;
-    align-items: center;
-    margin-bottom: 100px;
+.nv-br {
+  background-color: rgb(209 79 79);
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto; /* important */
+  max-width: 95%; /* prevents overflow */
+  padding: 12px 20px; /* smaller so it fits */
+  border-radius: 0 0 12px 12px;
+  outline: 4px solid #9e2222;
+  display: flex;
+  flex-wrap: wrap; /* allows wrapping */
+  justify-content: center;
+  gap: 8px;
+  z-index: 11;
 }
     h1, h2, h3 {
       margin: 10px 0;
@@ -74,17 +74,14 @@ align-items: center;
       margin-top: 20px;
       margin-bottom: 10px;
     }
-    .cl {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      color: black !important;
-      font-size: 12px;
-      text-decoration: none;
-      background: none !important;
-      -webkit-text-fill-color: black !important;
-      z-index: 9999;
-    }
+.cl {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1; /* <-- lower than navbar */
+  color: black !important;
+  font-size: 12px;
+}
     .cl:hover { text-decoration: underline; }
     html { scroll-behavior: smooth; }
     .lb {
