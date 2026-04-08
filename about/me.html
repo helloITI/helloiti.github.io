@@ -60,10 +60,43 @@ li::before {
   font-size: 10px;
   opacity: 0.67;
 }
+    /* credits to RFGuy (https://rfguy.nekoweb.org) for this code! */
+.nv-br {
+  background-color: rgb(209 79 79);
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto; /* important */
+  max-width: 95%; /* prevents overflow */
+  padding: 12px 20px; /* smaller so it fits */
+  border-radius: 0 0 12px 12px;
+  outline: 4px solid #9e2222;
+  display: flex;
+  flex-wrap: wrap; /* allows wrapping */
+  justify-content: center;
+  gap: 8px;
+  z-index: 11;
+}
   </style>
 </head>
 
 <body>
+<!-- navigation bar -->
+<div class="nv-br" style="text-align: center;">
+  <a href="https://helloiti.github.io" style="margin-right:5px;">
+    <b><u> Home </u></b>
+  </a>
+  <span style="color:#683030; margin-right:5px;">│</span>
+  <a href="about/me" style="color:red; margin-right:5px; pointer-events: none;">
+    <span> About Me </span>
+  </a>
+  <span style="color:#683030; margin-right:5px;">│</span>
+  <a href="instructions" style="margin-right:5px;">
+    <span> My Mii's Instructions </span>
+  </a>
+</div><br><br>
+  
 <div class="mn">
   <center><h1>※⁜ about me ⁜※</h1></center>
   <center><p>hi there, i'm helloT! (aka PNID, Peanud, etc.)</p>
@@ -82,7 +115,7 @@ li::before {
   </div><br>
 
   <div class="mn">
-  <center><h1>※⁜ favorite games ⁜※</h1></center>
+  <center><h1>※ Favorite games ※</h1></center>
   <ul>
   <li>MARIO KART</li>
   <p class="st">(MK7 and MKWii are <b>gem</b>!)</p>
