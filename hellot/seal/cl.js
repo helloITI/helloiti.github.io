@@ -134,9 +134,8 @@ const songs = [
   "https://helloiti.github.io/assets/3ds.mp3",
   "https://helloiti.github.io/assets/back_music.mp3",
   "https:/helloiti.github.io/assets/egg_song.mp3",
-  "https://file.garden/aRzXHaa7jkbrRXjj/dwnmng.mp3",
-  "https://file.garden/aRzXHaa7jkbrRXjj/psvita.mp3",
-  "https://file.garden/aRzXHaa7jkbrRXjj/editor.mp3"
+  "https://helloiti.github.io/assets/dwnmng.mp3",
+  "https://helloiti.github.io/assets/psvita.mp3"
 ];
 window.translations = {
   en: {
