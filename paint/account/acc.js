@@ -11,14 +11,15 @@ onAuthStateChanged
 import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app-check.js";
 import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
 
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-apiKey: "AIzaSyBVpaaiwzHah24ugYMXPS8F5l_oWi5sdLI",
-authDomain: "draw-e5ea1.firebaseapp.com",
-databaseURL: "https://draw-e5ea1-default-rtdb.europe-west1.firebasedatabase.app",
-projectId: "draw-e5ea1",
-storageBucket: "draw-e5ea1.appspot.com",
-messagingSenderId: "749520633273",
-appId: "1:749520633273:web:7150347948e8fcf37c8a68"
+  apiKey: "AIzaSyBlzXn9bygeN_0AyDQHYDf2T2vO66WAzfw",
+  authDomain: "paint-project-e3ecd.firebaseapp.com",
+  projectId: "paint-project-e3ecd",
+  storageBucket: "paint-project-e3ecd.firebasestorage.app",
+  messagingSenderId: "141114177317",
+  appId: "1:141114177317:web:d6c78155f2837e7b4a0ccc",
+  measurementId: "G-253C1HZB1V"
 };
 
 const app = initializeApp(firebaseConfig);
