@@ -1,11 +1,12 @@
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyBVpaaiwzHah24ugYMXPS8F5l_oWi5sdLI",
-  authDomain: "draw-e5ea1.firebaseapp.com",
-  databaseURL: "https://draw-e5ea1-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "draw-e5ea1",
-  storageBucket: "draw-e5ea1.firebasestorage.app",
-  messagingSenderId: "749520633273",
-  appId: "1:749520633273:web:b7a49d7588fe15e87c8a68"
+  apiKey: "AIzaSyBlzXn9bygeN_0AyDQHYDf2T2vO66WAzfw",
+  authDomain: "paint-project-e3ecd.firebaseapp.com",
+  projectId: "paint-project-e3ecd",
+  storageBucket: "paint-project-e3ecd.firebasestorage.app",
+  messagingSenderId: "141114177317",
+  appId: "1:141114177317:web:9ca63f9d8cc1975c4a0ccc",
+  measurementId: "G-Y7188HLWD8"
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
