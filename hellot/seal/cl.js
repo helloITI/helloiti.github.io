@@ -1,6 +1,4 @@
-// i use file.garden for files beacuse of nekoweb's storage limit for free users, and i don't want my website's storage go full
-// so... yeah.
-// anyways, enjoy playing helloT seal clicker! this is basically a recreation of sk*b*b*'s helloT seal clicker, which got removed.
+// enjoy playing helloT seal clicker! this is basically a recreation of sk*b*b*'s helloT seal clicker, which got removed.
 // (aka, the owner of mt-tools, which he used a lot of ai for his stuff, and i mean, an unhealthy amount of ai, so please, don't use his projects,
 // beacuse most of them are broken as fuck, and the reason is ai, so yeah!)
 // other stuff that i can remember will be added some day in my recreation, so, in the meanwhile, have fun using this!
