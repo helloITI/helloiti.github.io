@@ -3,14 +3,14 @@ const dl = document.getElementById("dl");
 const bd = document.body;
 if (localStorage.getItem("tm") === "dk") {
 	bd.classList.add("dk");
-	dl.textContent = "※⁜ light mode ⁜※";
+	dl.textContent = "※ Light Mode ※";
 } else {
-	dl.textContent = "※⁜ dark mode ⁜※";
+	dl.textContent = "※ Dark Mode ※";
 }
 dl.addEventListener("click", () => {
 	bd.classList.toggle("dk");
 	const dk = bd.classList.contains("dk");
-	dl.textContent = dk ? "※⁜ light mode ⁜※" : "※⁜ dark mode ⁜※";
+	dl.textContent = dk ? "※ Light Mode ※" : "※ Dark Mode ※";
 	localStorage.setItem("tm", dk ? "dk" : "lt");
 });
 // the epik music!!!
@@ -24,7 +24,7 @@ function sg() {
 	document.getElementById("mp2").style.display = "flex";
 	document.getElementById("cr").innerHTML = `
         <div style="font-size:14px; text-align:left; padding:8px;">
-            <b>※⁜ credits! ⁜※</b><br><br>
+            <b>Credits</b><br><br>
             • <a href="https://discord.com/users/1277753820713324675">helloT</a> for making the entire html
             <h5 style="display:inline; margin:0; padding:0;">🤣</h5><br>
             • <a href="https://discord.com/users/1406637354709549057">helloT seal</a> for simply just existing here
@@ -34,7 +34,7 @@ function sg() {
             • <a href="https://mii-unsecure.ariankordi.net">Mii Renderer (REAL)</a> for the Mii Renders<br>
             <button onclick="document.getElementById('mp2').style.display='none'"
                     style="margin-top:10px; padding:6px 14px; background:#222; color:#fff; border:1px solid #444; border-radius:6px; cursor:pointer;">
-                ※⁜ close ⁜※
+                ※ CLose ※
             </button>
         </div>
     `;
@@ -45,23 +45,21 @@ function sp() {
 	document.getElementById("mp1").style.display = "flex";
 	document.getElementById("pt").innerHTML = `
         <div style="font-size:14px; text-align:left; padding:8px;">
-            ※⁜ you may be wondering why is there a "※⁜ pants ⁜※" value on charinfo mii's... ⁜※<br><br>
-            ⁜ well, you see, charinfo has a normal pants and special pants ( aka gold pants ) state ⁜<br>
-            ※ which you can get by hex editing any charinfo mii! ※<br>
-            ⁜ here are some hex codes for the uh... charinfo mii to make it special ⁜<br>
-            (you need to figure out wheres the pants value)<br><br>
-            <code>00</code> = ※⁜ normal pants ⁜※<br>
-            <code>01</code> = ※⁜ special pants ⁜※ (⁜ gold pants ⁜)<br><br>
-            ※⁜ and here is some charinfo examples that you can download: ⁜※<br><br>
-            <a href="https://helloiti.github.io/mii/Gold_Male.charinfo">⁜ example 1 ⁜</a><br>
-            <a href="https://helloiti.github.io/mii/Gold_Girl.charinfo">⁜ example 2 ⁜</a><br><br>
-            ⁜ <b>note:</b> these examples WON'T work on real nintendo switches, they work on this tool (that you are currently using right now), <a href="https://mii-unsecure.ariankordi.net">Mii Renderer (REAL)</a><br>
-            (won't show up the gold pants as long you render the mii's pants to gold) and <a href="https://mii.nxw.pw">Mii Creator</a><br>
-            (the gold pants will also not show up, but as long you set the mii's type to "special") ⁜<br><br>
-            ※⁜ also... ever wanted to have a <b>tutorial</b> to make your charinfo mii have gold pants? ⁜※<br>
-            ⁜ go check this <a href="https://helloiti.github.io/mii/tutorial">one</a>! ⁜<br>
+            You may be wondering why is there a "※ Pants ※" value on CHARINFO Miis...<br><br>
+            Well, you see, charinfo has a normal pants and special pants (aka gold pants) state that still exists to this day. ⁜<br>
+            <i>(Which you can get by hex editing any charinfo Mii!)</i><br>
+            Here are some hex codes for CHARINFO files to make it special ⁜<br>
+            (You need to figure out where's the pants value)<br><br>
+            <code>00</code> = ※ normal pants ※<br>
+            <code>01</code> = ※ special pants ※ (⁜ gold pants ⁜)<br><br>
+            Here is some charinfo examples that are special Miis that you can download:<br>
+            <a href="https://helloiti.github.io/mii/Gold_Male.charinfo">※ Example 1 ※</a><br>
+            <a href="https://helloiti.github.io/mii/Gold_Girl.charinfo">※ Example 2 ※</a><br><br>
+            <i><b>Note:</b></i> <i>These examples WON'T work on real Nintendo Switches, they work on this tool (that you are currently using right now), <a href="https://mii-unsecure.ariankordi.net">Mii Renderer (REAL)</a></i><br>
+            <i>(won't show up the gold pants as long you render the mii's pants to "gold") and <a href="https://mii.nxw.pw">Mii Creator</a></i><br>
+            <i>(The gold pants will also not show up, but as long you set the Mii's type to "Special")</i><br><br>
             <button onclick="cp()" style="margin-top:5px; padding:5px 12px; background:#222; color:white; border:1px solid #444;">
-                ※⁜ close ⁜※
+                ※ Close ※
             </button>
         </div>
     `;
