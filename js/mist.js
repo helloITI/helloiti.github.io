@@ -67,30 +67,31 @@ function sp() {
 function cp() {
 	document.getElementById("mp1").style.display = "none";
 }
-// here comes the (not) fun stuff...
+// hi
 const ca = [
-	{ off: 16, len: 22, name: "※⁜ nickname ⁜※", type: "utf16" },
-	{ off: 40, name: "※⁜ gender ⁜※", type: "u8" },
-	{ off: 39, name: "※⁜ favorite color ⁜※", type: "u8" },
-	{ off: 43, name: "※⁜ pants ⁜※", type: "u8" },
-	{ off: 41, name: "※⁜ height ⁜※", type: "u8" },
-	{ off: 42, name: "※⁜ weight ⁜※", type: "u8" },
+	{ off: 16, len: 22, name: "Nickname", type: "utf16" },
+	{ off: 40, name: "Gender", type: "u8" },
+	{ off: 39, name: "Favorite Color", type: "u8" },
+	{ off: 43, name: "Type", type: "u8" },
+	{ off: 41, name: "Height", type: "u8" },
+	{ off: 42, name: "Weight", type: "u8" },
 ];
 const fc = [
-	"⁜ red ⁜",
-	"⁜ orange ⁜",
-	"⁜ yellow ⁜",
-	"⁜ green ⁜",
-	"⁜ lime green ⁜",
-	"⁜ blue ⁜",
-	"⁜ light blue ⁜",
-	"⁜ pink ⁜",
-	"⁜ purple ⁜",
-	"⁜ brown ⁜",
-	"⁜ white ⁜",
-	"⁜ black ⁜",
+	"Red",
+	"Orange",
+	"Yellow",
+	"Green",
+	"Lime Green",
+	"Blue",
+	"Light Blue",
+	"Pink",
+	"Purple",
+	"Brown",
+	"White",
+	"Black",
 ];
-const pt = { 0: "⁜ normal ⁜", 1: "⁜ special ⁜" };
+// pants
+const pt = { 0: "Normal", 1: "Special" };
 function hb(hx) {
 	return new Uint8Array(hx.match(/.{2}/g).map((b) => parseInt(b, 16)));
 }
@@ -104,18 +105,18 @@ document.getElementById("ih").onclick = () => {
 	// this is what happens if you import a blank hex data :p
 	if (!hx)
 		return alert(
-			"※⁜ ts pmo sm icl vro bfr rn lmao im crine lowk sybau tststs pmo pmo ts ts ts ts ts ts ts ts ts ts pmo ts pmo pmo syfm u lowk pmo cornball stfu fym lil vro like bfr rn twin ⁜※",
+			"Please type a valid Mii HEX data.",
 		);
 	// this means that you entered a invalid hex data, such as spamming your keyboard, typing random stuff, or a unsupported mii hex data.
 	// reminder: this tool ONLY uses ffsd and charinfo miis, more mii data files will be added probably soon, in the future, such as .rsd, etc.
 	if (!/^[0-9a-fA-F]+$/.test(hx))
-		return alert("※⁜ invalid mii charinfo/ffsd hex data! ⁜※");
-	if (hx.length % 2 !== 0) return alert("※⁜ hex length must be even! ⁜※");
+		return alert("Invalid CHARINFO/FFSD HEX data!!!");
+	if (hx.length % 2 !== 0) return alert("HEX length must be even!");
 	const bl = hx.length / 2;
 	// this happens if you enter a mii studio hex data code, which you can get it from ariankordi's mii renderer:
 	// https://mii-unsecure.ariankordi.net/
 	if (bl !== 88 && bl !== 96)
-		return alert("※⁜ this is a mii studio hex data... remember, this tool ONLY supports charinfo and ffsd miis. more supported types will be added in the future. ⁜※");
+		return alert("Mii Storage doesn't support Mii Studio HEX data, only FFSD and CHARINFO.");
 	let ex = bl === 88 ? "charinfo" : "ffsd";
 	const bf = new Uint8Array(hx.match(/.{2}/g).map((b) => parseInt(b, 16)));
 	ls.push({ id: Date.now(), data: bf, dataHex: hx, ext: ex });
@@ -129,7 +130,7 @@ document.getElementById("fl").onchange = async (e) => {
 	if (!f) return;
 	const ex = f.name.split(".").pop().toLowerCase();
 	if (ex !== "charinfo" && ex !== "ffsd")
-		return alert("※⁜ please use .charinfo or .ffsd mii files only! ⁜※");
+		return alert("Please use .charinfo or .ffsd Mii files only!");
 	const bf = new Uint8Array(await f.arrayBuffer());
 	const hx = Array.from(bf)
 		.map((x) => x.toString(16).padStart(2, "0"))
@@ -153,19 +154,19 @@ function pm(bf, ex) {
 				ifo[a.name] = bf[a.off];
 			}
 		});
-		ifo["※⁜ gender ⁜※"] =
-			ifo["※⁜ gender ⁜※"] === 0 ? "⁜ male ⁜" : "⁜ female ⁜";
-		ifo["※⁜ favorite color ⁜※"] =
-			fc[ifo["※⁜ favorite color ⁜※"]] || "⁜ unknown ⁜";
-		ifo["※⁜ pants ⁜※"] = pt[ifo["※⁜ pants ⁜※"]] || "⁜ unknown ⁜";
-		if (!ifo["※⁜ nickname ⁜※"]) ifo["※⁜ nickname ⁜※"] = "Mii";
+		ifo["Gender"] =
+			ifo["Gender"] === 0 ? "⁜ male ⁜" : "⁜ female ⁜";
+		ifo["Favorite Color"] =
+			fc[ifo["Gender"]] || "Unknown";
+		ifo["Pants"] = pt[ifo["Pants"]] || "Unknown";
+		if (!ifo["Nickname"]) ifo["Nickname"] = "Mii";
 	} else if (ex === "ffsd") {
-		ifo["※⁜ nickname ⁜※"] =
+		ifo["Nickname"] =
 			dc
 				.decode(bf.slice(0x1a, 0x1a + 20))
 				.replace(/\0/g, "")
 				.trim() || "Mii";
-		ifo["※⁜ creator's name ⁜※"] =
+		ifo["Creator's Name"] =
 			dc
 				.decode(bf.slice(0x48, 0x48 + 20))
 				.replace(/\0/g, "")
