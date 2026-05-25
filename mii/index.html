@@ -1,13 +1,13 @@
 <!doctype html>
 <html lang="en">
 <head>
-<title>※⁜ mii storage ⁜※</title>
+<title>Mii Storage</title>
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" href="https://helloiti.github.io/assets/miiST.png">
 <meta property="og:title" content="※⁜ mii storage ⁜※" />
-<meta property="og:description" content="※⁜ mii storage is a mii tool that lets you upload .charinfo or .ffsd mii's and saves them in your browser! ⁜※" />
+<meta property="og:description" content="Mii Storage is a tool that lets you upload CHARINFO or FFSD Miis and saves them in your browser!" />
 <meta property="og:url" content="https://helloiti.github.io/mii/" />
 <meta property="og:image" content="https://helloiti.github.io/assets/miiST.png" />
 <meta property="og:type" content="website" />
@@ -16,8 +16,8 @@
 <body>
 <center>
 <h1> Welcome to Mii Storage! </h1>
-<h2> Here, you can save your CHARINFO or FFSD Miis just in a website! <br>
-<i>Isn't that cool?</i>li></h2>
+<h2> Here, you can save your CHARINFO or FFSD Miis just in a website! <br></h2>
+<h3><i>Isn't that cool?</i></h3>
 </center>
 <a href="https://helloiti.github.io/" id="mw"
    style="position: absolute; top: 10px; right: 10px; font-size: 12px; text-decoration: none;">
@@ -25,18 +25,20 @@
 </a>
 <center><input type="file" id="fl" accept=".charinfo,.ffsd"></center>
 <center>
-<h3>Or... import via raw Mii HEX data! ⁜※</h3>
+<h3><i>Or...</i><br>
+You can also import your raw Mii HEX data!</h3>
+<h4><i></i></h4>
 <textarea id="hx" placeholder="Paste your CHARINFO/FFSD's HEX data here..."
           style="width:45%; height:80px; margin:5px; font-family:monospace;"></textarea><br>
 <button id="ih" style="max-width:100% !important; height:auto !important; border-radius:8px !important;">Import</button>
 </center>
-<center><h2>Saved Miis!</h2></center>
+<center><h2>Saved Miis:</h2></center>
 <div id="ls"></div>
 <div id="mp">
     <div class="pp">
         <img id="pi" style="max-width:100%; height:auto; border-radius:8px;">
         <br>
-        <button onclick="document.getElementById('mp').style.display='none'"> ※⁜ close ⁜※ </button>
+        <button onclick="document.getElementById('mp').style.display='none'"> ※ Close ※ </button>
     </div>
 </div>
 <div id="mp1">
@@ -45,8 +47,8 @@
 <div id="mp2">
     <div class="pp" id="cr"></div>
 </div>
-<button id="gi" onclick="sg()">※⁜ credits ⁜※</button>
-<button id="dl">※⁜ dark mode ⁜※</button>
+<button id="gi" onclick="sg()">Credits</button>
+<button id="dl">※ Dark Mode ※</button>
 <audio id="bg" loop>
     <source src="https://helloiti.github.io/assets/dwnmng.mp3" type="audio/mpeg">
 </audio>
