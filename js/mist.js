@@ -24,7 +24,7 @@ function sg() {
 	document.getElementById("mp2").style.display = "flex";
 	document.getElementById("cr").innerHTML = `
         <div style="font-size:14px; text-align:left; padding:8px;">
-            <h4><b>Credits</b></h4><br><br>
+            <b>Credits</b><br><br>
             • <a href="https://discord.com/users/1277753820713324675">helloT</a> for making the entire thing
             <h5 style="display:inline; margin:0; padding:0;">🤣</h5><br>
             • <a href="https://discord.com/users/1406637354709549057">helloT seal</a> for simply just existing here
@@ -34,7 +34,7 @@ function sg() {
             • <a href="https://mii-unsecure.ariankordi.net">Mii Renderer (REAL)</a> for the Mii Renders<br>
             <button onclick="document.getElementById('mp2').style.display='none'"
                     style="margin-top:10px; padding:6px 14px; background:#222; color:#fff; border:1px solid #444; border-radius:6px; cursor:pointer;">
-                ※ CLose ※
+                ※ Close ※
             </button>
         </div>
     `;
