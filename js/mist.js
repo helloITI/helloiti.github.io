@@ -24,8 +24,8 @@ function sg() {
 	document.getElementById("mp2").style.display = "flex";
 	document.getElementById("cr").innerHTML = `
         <div style="font-size:14px; text-align:left; padding:8px;">
-            <b>Credits</b><br><br>
-            • <a href="https://discord.com/users/1277753820713324675">helloT</a> for making the entire html
+            <h4><b>Credits</b></h4><br><br>
+            • <a href="https://discord.com/users/1277753820713324675">helloT</a> for making the entire thing
             <h5 style="display:inline; margin:0; padding:0;">🤣</h5><br>
             • <a href="https://discord.com/users/1406637354709549057">helloT seal</a> for simply just existing here
             <h5 style="display:inline; margin:0; padding:0;">
@@ -39,13 +39,13 @@ function sg() {
         </div>
     `;
 }
-// explains why is there a pants value on charinfo miis (also, no, i will NOT add a pants value on ffsd miis, last time i did that, it broke my entire code)
-// (thankfully, i had a backup that the pants value on ffsd miis werent added, so, yeah!)
+// explains why is there a pants value on CHARINFO miis
+// :P
 function sp() {
 	document.getElementById("mp1").style.display = "flex";
 	document.getElementById("pt").innerHTML = `
         <div style="font-size:14px; text-align:left; padding:8px;">
-            You may be wondering why is there a "※ Pants ※" value on CHARINFO Miis...<br><br>
+            You may be wondering why is there a "Type" value on CHARINFO Miis...<br><br>
             Well, you see, charinfo has a normal pants and special pants (aka gold pants) state that still exists to this day. ⁜<br>
             <i>(Which you can get by hex editing any charinfo Mii!)</i><br>
             Here are some hex codes for CHARINFO files to make it special ⁜<br>
@@ -90,7 +90,7 @@ const fc = [
 	"White",
 	"Black",
 ];
-// pants
+// pants/type
 const pt = { 0: "Normal", 1: "Special" };
 function hb(hx) {
 	return new Uint8Array(hx.match(/.{2}/g).map((b) => parseInt(b, 16)));
@@ -155,10 +155,10 @@ function pm(bf, ex) {
 			}
 		});
 		ifo["Gender"] =
-			ifo["Gender"] === 0 ? "⁜ male ⁜" : "⁜ female ⁜";
+			ifo["Gender"] === 0 ? "Male" : "Female";
 		ifo["Favorite Color"] =
 			fc[ifo["Gender"]] || "Unknown";
-		ifo["Pants"] = pt[ifo["Pants"]] || "Unknown";
+		ifo["Type"] = pt[ifo["Type"]] || "Unknown";
 		if (!ifo["Nickname"]) ifo["Nickname"] = "Mii";
 	} else if (ex === "ffsd") {
 		ifo["Nickname"] =
@@ -170,14 +170,14 @@ function pm(bf, ex) {
 			dc
 				.decode(bf.slice(0x48, 0x48 + 20))
 				.replace(/\0/g, "")
-				.trim() || "⁜ unknown ⁜";
-		ifo["※⁜ height ⁜※"] = bf[0x2e];
-		ifo["※⁜ weight ⁜※"] = bf[0x2f];
+				.trim() || "Unknown";
+		ifo["Height"] = bf[0x2e];
+		ifo["Weight"] = bf[0x2f];
 		const mb = (bf[0x19] << 8) | bf[0x18];
 		const gb = mb & 0x01;
-		ifo["※⁜ gender ⁜※"] = gb === 0 ? "⁜ male ⁜" : "⁜ female ⁜";
+		ifo["Gender"] = gb === 0 ? "Male" : "Female";
 		const ci = (mb >> 10) & 0x0f;
-		ifo["※⁜ favorite color ⁜※"] = fc[ci] || "⁜ unknown ⁜";
+		ifo["Favorite Color"] = fc[ci] || "Unknown";
 	}
 	return ifo;
 }
@@ -198,7 +198,7 @@ try {
 			}));
 	}
 } catch (e) {
-	console.warn("localStorage miis was sadly corrupted... resetting!!!");
+	console.warn("localStorage miis is corrupted... resetting!!!");
 	localStorage.removeItem("miis");
 	ls = [];
 }
@@ -211,7 +211,7 @@ function rd() {
 		const dv = document.createElement("div");
 		dv.className = "cd";
 		const pp =
-			m.ext === "charinfo" && ifo["※⁜ pants ⁜※"] === "⁜ special ⁜"
+			m.ext === "charinfo" && ifo["Type"] === "Special"
 				? "gold"
 				: "gray";
 		const cf = `https://mii-unsecure.ariankordi.net/miis/image.png?erri=s4mwu-rs1&data=${m.dataHex}&shaderType=switch&type=face&width=270&pantsColor=${pp}&bodyType=switch&verifyCharInfo=0`;
@@ -229,13 +229,13 @@ function rd() {
 		// adds a little star next to the charinfo mii's nickname if its a special mii, if not, it will not add the star.
 		const mt = document.createElement("div");
 		const gb =
-			m.ext === "charinfo" && ifo["※⁜ pants ⁜※"] === "⁜ special ⁜"
+			m.ext === "charinfo" && ifo["Type"] === "Special"
 				? " ⭐"
 				: "";
-		let t = "<table><tr><th>※⁜ attribute ⁜※</th><th>※⁜ value ⁜※</th></tr>";
+		let t = "<table><tr><th>Attribute</th><th>Value</th></tr>";
 		for (const k in ifo) {
-			if (m.ext === "ffsd" && k === "※⁜ pants ⁜※") continue;
-			if (m.ext === "charinfo" && k === "※⁜ creator's name ⁜※") continue;
+			if (m.ext === "ffsd" && k === "Type") continue;
+			if (m.ext === "charinfo" && k === "Creator's Name") continue;
 			t += `<tr><td>${k}</td><td>${ifo[k]}</td></tr>`;
 		}
 		t += "</table>";
@@ -244,10 +244,10 @@ function rd() {
 				? `<button style="background:#222; color:#fff; border:1px solid #555; cursor:pointer; padding:2px 6px; border-radius:6px; font-size:12px;" onclick="sp()">?</button>`
 				: "";
 		mt.innerHTML =
-			`<div style="font-weight:600">${ifo["※⁜ nickname ⁜※"]}${gb} ${pi}</div>` +
+			`<div style="font-weight:600">${ifo["Nickname"]}${gb} ${pi}</div>` +
 			t;
 		const dl = document.createElement("button");
-		dl.textContent = "※⁜ remove ⁜※";
+		dl.textContent = "※ Remove ※";
 		dl.style.cssText =
 			"background:#c33; color:#fff; border:1px solid #a00; cursor:pointer; padding:4px 8px; border-radius:6px; font-size:12px;";
 		dl.onclick = () => {
