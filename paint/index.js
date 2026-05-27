@@ -221,7 +221,7 @@ function ff(sx,sy,fc){
   ctx.putImageData(id, 0, 0);
 }
 pb.addEventListener('click', async ()=>{
-  if(!confirm("※⁜ are you sure you want to generate a link to this drawing? ⁜※")) return;
+  if(!confirm("Are you sure you want to generate a link for this drawing?")) return;
   try{
     const data = cv.toDataURL();
     const id = Date.now().toString(36) + Math.random().toString(36).substring(2,8);
@@ -235,9 +235,9 @@ pb.addEventListener('click', async ()=>{
     const url = `${location.origin}${location.pathname}#id=${id}`;
     shl.value = url;
     history.replaceState(null, '', `#id=${id}`);
-    alert('※⁜ generated link! go to https://hellot.nekoweb.org/paint/gallery to publish your drawing there! :D ⁜※');
+    alert('Done! Go to https://helloiti.github.io/paint/gallery to publish your drawing there! :D');
   }catch(e){
-    alert('※⁜ couldnt generate your link... ⁜※ error: ' + e.message);
+    alert('I couldnt generate your link... error: ' + e.message);
   }
 });
 async function lfh(){
@@ -251,7 +251,7 @@ async function lfh(){
       const {image} = snap.val();
       await rdu(image);
     }else{
-      alert('the drawing was not found...');
+      alert('The drawing was not found.');
     }
   }
 }
