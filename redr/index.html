@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>※⁜ redr ⁜※</title>
-  <link rel="icon" type="image/png" href="https://hellot.nekoweb.org/assets/apple.png">
+  <title>※ Redr ※</title>
+  <link rel="icon" type="image/png" href="https://helloiti.github.io/assets/apple.png">
   <style>
     @font-face {
       font-family: 'NintendoNTLG';
@@ -16,11 +16,11 @@
     html, body {
       height: 100%;
       margin: 0;
-      cursor: url("https://hellot.nekoweb.org/assets/Wii.png"), auto;
+      cursor: url("https://helloiti.github.io/assets/Wii.png"), auto;
     }
 
     body:active {
-      cursor: url("https://hellot.nekoweb.org/assets/Wii.png"), auto;
+      cursor: url("https://helloiti.github.io/assets/Wii.png"), auto;
     }
 
     body {
@@ -30,7 +30,7 @@
       max-width: 900px;
       margin: 0 auto;
       padding: 16px;
-      background: url("https://hellot.nekoweb.org/assets/background1.png") no-repeat center center fixed;
+      background: url("https://helloiti.github.io/assets/background1.png") no-repeat center center fixed;
       background-size: cover;
       font-family: 'NintendoNTLG', sans-serif;
     }
@@ -136,51 +136,53 @@ body::-webkit-scrollbar {
   <header>
     <h1>
       <center>
-      ※⁜ welcome to redr! this is a website that lets you remove anything from an image, except for parts that have the color red. redr could be really useful for other stuff! ⁜※
+      Welcome to Redr!<br>
+      This is a website that lets you remove anything from an image, except for parts that have the color red.<br>
+      Redr could be really useful for other stuff!
       </center>
     </h1>
   </header>
   
-    <a href="https://hellot.nekoweb.org/" class="corner-link">Go Back?</a>
+     <a href="https://helloiti.github.io" style="position: absolute; top: 10px; right: 10px; color: black !important; font-size: 12px; text-decoration: none; background: none !important; -webkit-text-fill-color: black !important;">Go Back?</a>
 
   <div class="card">
     <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
       <input type="file" id="file" accept="image/*" />
-      <button id="download" class="btn">※⁜ download image ⁜※</button>
-      <button id="reset" class="btn secondary">※⁜ reset ⁜※</button>
+      <button id="download" class="btn">※ Download Image ※</button>
+      <button id="reset" class="btn secondary">※ Reset ※</button>
     </div>
 
     <div style="margin-top:12px" class="controls">
       <div>
-        <label for="mode">※⁜ detection mode ⁜※</label>
+        <label for="mode">※ Detection Mode ※</label>
         <select id="mode">
-          <option value="hue">※⁜ hue range ⁜※ (recommend using this option!)</option>
-          <option value="channel">※⁜ red-channel ⁜※ (fast version!)</option>
+          <option value="hue">※ Hue Range ※ (recommend using this option!)</option>
+          <option value="channel">※ Red-channel ※ (fast version!)</option>
         </select>
       </div>
 
       <div>
-        <label for="soft">※⁜ softness px ⁜※(feather)</label>
+        <label for="soft">※ Softness <b>px</b> ※(feather)</label>
         <input type="range" id="soft" min="0" max="100" value="12" />
       </div>
 
       <div>
-        <label for="hueRange">※⁜ hue degrees ⁜※ (degrees)</label>
+        <label for="hueRange">※ Hue Degrees※ (degrees)</label>
         <input type="range" id="hueRange" min="0" max="100" value="18" />
       </div>
 
       <div>
-        <label for="satMin">※⁜ min saturation ⁜※ (%)</label>
+        <label for="satMin">※ Min Saturation ※ (%)</label>
         <input type="range" id="satMin" min="0" max="100" value="30" />
       </div>
 
       <div>
-        <label for="valMin">※⁜ min value/brightness ⁜※ (%)</label>
+        <label for="valMin">※ Min Value/Brightness ※ (%)</label>
         <input type="range" id="valMin" min="0" max="100" value="20" />
       </div>
 
       <div>
-        <label for="redBoost">※⁜ channel threshold multiplier ⁜※</label>
+        <label for="redBoost">※ Channel Threshold Multiplier ※</label>
         <input type="range" id="redBoost" min="1" max="5" step="0.05" value="1.5" />
       </div>
     </div>
@@ -199,7 +201,7 @@ body::-webkit-scrollbar {
   </div>
 
   <footer>
-  adjust the controls to make the red areas more precise. use "※⁜ hue range ⁜※" + "※⁜ min saturation/value ⁜※" for best results.
+  Adjust the controls to make the red areas more precise. Use "※ Hue Range ※" + "※ Min Saturation/Value ※" for best results.
   </footer>
 
   <script>
