@@ -15,178 +15,251 @@ const auth = firebase.auth();
 
 const $ = id => document.getElementById(id);
 
-const gallery = $('gallery');
-const favoritesGallery = $('favoritesGallery');
-const input = $('drawingLinkInput');
-const addBtn = $('addDrawingBtn');
-const popupOverlay = $('popupOverlay');
-const popupMessage = $('popupMessage');
-const editBtn = $('editBtn');
-const remixBtn = $('remixBtn');
-const closePopup = $('closePopup');
-const toggleFavoritesBtn = $('toggleFavorites');
+const gallery = $('gal');
+const favG = $('fG');
+const input = $('dLI');
+const addBtn = $('aDB');
+const pOvr = $('pO');
+const pMsg = $('pM');
+const edit = $('eB');
+const remix = $('rB');
+const clPo = $('ok');
+const togFavB = $('tF');
 
-closePopup.addEventListener('click', () => popupOverlay.style.display = 'none');
+clPo.addEventListener('click', () => pOvr.style.display = 'none');
 
 let drawings = [];
 let drawingIds = [];
 let authorUsernames = {};
-let currentPopupDrawingId = null;
+let drawID = null;
 
-editBtn.onclick = () => currentPopupDrawingId && (location.href = `/paint/#id=${currentPopupDrawingId}`);
-remixBtn.onclick = () => currentPopupDrawingId && (location.href = `/paint/#id=${currentPopupDrawingId}`);
+edit.onclick = () => drawID && (location.href = `/paint/#id=${drawID}`);
+remix.onclick = () => drawID && (location.href = `/paint/#id=${drawID}`);
 
-// === FIXED: only sign in anonymously if you're truly not logged in ===
-auth.onAuthStateChanged((user) => {
-  if (user) {
-    console.log(`✅ Logged in: ${user.isAnonymous ? 'Anonymous' : 'Real Account'} (${user.uid})`);
-    loadDrawings();
-  } else {
-    console.log("No user found → signing in anonymously");
-    auth.signInAnonymously().catch(err => {
-      console.error("Anonymous sign-in failed:", err);
-    });
-  }
-});
-
-function createSafeImage(src) {
+function cSI(src) {
   const img = document.createElement('img');
   img.src = src || '';
-  img.onerror = () => img.src = 'https://hellot.nekoweb.org/assets/paint.png';
+  img.onerror = () =>
+    img.src = 'https://helloiti.github.io/assets/paint.png';
   return img;
 }
 
 async function fetchUsername(uid) {
   if (!uid) return "@unknown";
   if (authorUsernames[uid]) return authorUsernames[uid];
+
   try {
     const snap = await db.ref(`users/${uid}/username`).get();
+
     if (snap.exists()) {
       const val = snap.val();
-      authorUsernames[uid] = "@" + (typeof val === 'string' ? val : val.username || "unknown");
+
+      authorUsernames[uid] =
+        "@" + (typeof val === 'string'
+          ? val
+          : val.username || "unknown");
+
       return authorUsernames[uid];
     }
-  } catch(e) {}
+  } catch {}
+
   return "@unknown";
 }
 
-async function showPopupForDrawing(d, id) {
-  currentPopupDrawingId = id;
+async function sPFD(d, id) {
+  drawID = id;
+
   const user = auth.currentUser;
-  
   const username = await fetchUsername(d.authorId);
-  popupMessage.textContent = `※⁜ drawing by: ${username} ⁜※`;
+
+  pMsg.textContent = ` Drawing by: ${username} `;
 
   if (user && d.authorId === user.uid && !user.isAnonymous) {
-    editBtn.style.display = 'inline-block';
-    remixBtn.style.display = 'none';
+    edit.style.display = 'inline-block';
+    remix.style.display = 'none';
   } else {
-    editBtn.style.display = 'none';
-    remixBtn.style.display = 'inline-block';
+    edit.style.display = 'none';
+    remix.style.display = 'inline-block';
   }
-  popupOverlay.style.display = 'flex';
+
+  pOvr.style.display = 'flex';
 }
 
 async function loadDrawings() {
   try {
-    const gallerySnap = await db.ref('galleryDrawings').get();
-    if (!gallerySnap.exists()) {
-      gallery.innerHTML = '<p>No drawings yet.</p>';
+    const gSnap = await db.ref('gD').get();
+
+    if (!gSnap.exists()) {
+      gallery.innerHTML = '<p style="color:white;font-size:20px;">There is no drawings yet, maybe try uploading one?</p>';
       return;
     }
-    drawingIds = Object.keys(gallerySnap.val());
+
+    drawingIds = Object.keys(gSnap.val());
     drawings = [];
+
     for (const id of drawingIds) {
       const dSnap = await db.ref('drawings/' + id).get();
-      drawings.push(dSnap.exists() ? dSnap.val() : null);
+
+      drawings.push(
+        dSnap.exists()
+          ? dSnap.val()
+          : null
+      );
     }
+
     displayGallery();
     displayFavorites();
-  } catch(err) { console.error(err); }
+
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 function displayGallery() {
   gallery.innerHTML = '';
+
   const user = auth.currentUser;
+
   drawings.forEach((d, i) => {
     if (!d) return;
+
     const id = drawingIds[i];
+
     const div = document.createElement('div');
-    div.className = 'gallery-item';
-    if (user && d.authorId === user.uid && !user.isAnonymous) {
-      div.classList.add('gallery-item-owner');
+    div.className = 'g-i';
+
+    if (
+      user &&
+      d.authorId === user.uid &&
+      !user.isAnonymous
+    ) {
+      div.classList.add('g-i-o');
     }
 
-    const img = createSafeImage(d.image);
-    img.addEventListener('click', () => showPopupForDrawing(d, id));
+    const img = cSI(d.image);
 
-    const likeBtn = document.createElement('button');
-    likeBtn.className = 'like-btn';
-    
-    const likesCount = d.likes || 0;
-    const likedMap = JSON.parse(localStorage.getItem('likedDrawings') || '{}');
-    likeBtn.textContent = likedMap[id] ? `💖 ${likesCount}` : `❤️ ${likesCount}`;
+    img.addEventListener('click', () =>
+      sPFD(d, id)
+    );
 
-    likeBtn.addEventListener('click', async (e) => {
+    const btn = document.createElement('button');
+    btn.className = 'l-b';
+
+    const likes = d.likes || 0;
+
+    const liked =
+      JSON.parse(localStorage.getItem('lD') || '{}');
+
+    btn.textContent =
+      liked[id]
+        ? `💖 ${likes}`
+        : `❤️ ${likes}`;
+
+    btn.addEventListener('click', async e => {
       e.stopPropagation();
-      if (likeBtn._busy) return;
-      likeBtn._busy = true;
 
-      const likesRef = db.ref("drawings/" + id + "/likes");
-      const likedMapLocal = JSON.parse(localStorage.getItem("likedDrawings") || "{}");
-      const wasLiked = !!likedMapLocal[id];
+      if (btn._busy) return;
+      btn._busy = true;
+
+      const ref =
+        db.ref("drawings/" + id + "/likes");
+
+      const map =
+        JSON.parse(localStorage.getItem("lD") || "{}");
+
+      const wasLiked = !!map[id];
 
       try {
-        const result = await likesRef.transaction(current => {
-          return wasLiked ? Math.max(0, (current||0) - 1) : (current||0) + 1;
-        });
-        const newLikes = result.snapshot.val() || 0;
+        const result =
+          await ref.transaction(cur =>
+            wasLiked
+              ? Math.max(0, (cur || 0) - 1)
+              : (cur || 0) + 1
+          );
+
+        const newLikes =
+          result.snapshot.val() || 0;
 
         if (wasLiked) {
-          delete likedMapLocal[id];
-          likeBtn.textContent = `💔 ${newLikes}`;
-          setTimeout(() => likeBtn.textContent = `❤️ ${newLikes}`, 600);
+          delete map[id];
+
+          btn.textContent = `💔 ${newLikes}`;
+
+          setTimeout(() => {
+            btn.textContent = `❤️ ${newLikes}`;
+          }, 600);
+
         } else {
-          likedMapLocal[id] = true;
-          likeBtn.textContent = `💖 ${newLikes}`;
+          map[id] = true;
+          btn.textContent = `💖 ${newLikes}`;
         }
-        localStorage.setItem("likedDrawings", JSON.stringify(likedMapLocal));
+
+        localStorage.setItem(
+          'lD',
+          JSON.stringify(map)
+        );
+
         displayFavorites();
-      } catch(err) {}
-      likeBtn._busy = false;
+
+      } catch {}
+
+      btn._busy = false;
     });
 
-    div.append(img, likeBtn);
+    div.append(img, btn);
     gallery.appendChild(div);
   });
 }
 
 function displayFavorites() {
-  favoritesGallery.innerHTML = '';
-  const likedMap = JSON.parse(localStorage.getItem("likedDrawings") || "{}");
+  favG.innerHTML = '';
+
+  const liked =
+    JSON.parse(localStorage.getItem("lD") || "{}");
+
   drawingIds.forEach((id, i) => {
-    if (!likedMap[id] || !drawings[i]) return;
+    if (!liked[id] || !drawings[i]) return;
+
     const div = document.createElement('div');
-    div.className = 'gallery-item';
-    const img = createSafeImage(drawings[i].image);
-    img.addEventListener('click', () => showPopupForDrawing(drawings[i], id));
+    div.className = 'g-i';
+
+    const img = cSI(drawings[i].image);
+
+    img.addEventListener('click', () =>
+      sPFD(drawings[i], id)
+    );
+
     div.appendChild(img);
-    favoritesGallery.appendChild(div);
+    favG.appendChild(div);
   });
 }
 
 addBtn.addEventListener('click', async () => {
   const url = input.value.trim();
-  const match = url.match(/#id=([A-Za-z0-9_-]+)/);
-  if (match) {
-    await db.ref('galleryDrawings/' + match[1]).set(true);
-    input.value = '';
-    loadDrawings();
-  }
+
+  const match =
+    url.match(/#id=([A-Za-z0-9_-]+)/);
+
+  if (!match) return;
+
+  await db.ref('gD/' + match[1]).set(true);
+
+  input.value = '';
+
+  loadDrawings();
 });
 
-toggleFavoritesBtn.addEventListener('click', () => {
-  const hidden = favoritesGallery.style.display === 'none';
-  favoritesGallery.style.display = hidden ? 'grid' : 'none';
-  toggleFavoritesBtn.textContent = hidden ? '※⁜ hide ⁜※' : '※⁜ show ⁜※';
+togFavB.addEventListener('click', () => {
+  const hidden =
+    favG.style.display === 'none';
+
+  favG.style.display =
+    hidden
+      ? 'grid'
+      : 'none';
+
+  togFavB.textContent =
+    hidden
+      ? '※ Hide ※'
+      : '※ Show ※';
 });
