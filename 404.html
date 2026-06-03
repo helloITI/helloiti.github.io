@@ -65,10 +65,21 @@ a{
     document.removeEventListener("click", playMusic);
   });
 </script>
-	<script>
-  if (location.pathname.startsWith('/mae/')) {
-    window.location.href = '/mae/404.html';
-  }
+<script>
+if (
+  location.pathname.startsWith('/mae/') &&
+  location.pathname !== '/mae/404.html'
+) {
+  document.body.innerHTML = '';
+
+  const iframe = document.createElement('iframe');
+  iframe.src = '/mae/404.html';
+  iframe.style.width = '100vw';
+  iframe.style.height = '100vh';
+  iframe.style.border = 'none';
+
+  document.body.appendChild(iframe);
+}
 </script>
   <meta property="og:title" content="※⁜ ??? ⁜※" />
   <meta property="og:description" content="※⁜ ??? ⁜※"/>
