@@ -15,7 +15,7 @@ body {
   src: url('https://helloiti.github.io/assets/nintendo_NTLG-DB_002.ttf') format('truetype');
 }
 
-.card {
+.penis {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -28,7 +28,7 @@ body {
   margin-bottom: 20px; /* and also neither this one too */
 }
 
-.link {
+.fuck {
   cursor: pointer;
   color: #add8e6; /* bluee */
   text-decoration: underline;
