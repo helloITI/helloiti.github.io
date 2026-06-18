@@ -1,48 +1,12 @@
 // hi mt-tools!!! 🤣🤣🤣
-const firebaseConfig = {
-  apiKey: "AIzaSyBlzXn9bygeN_0AyDQHYDf2T2vO66WAzfw",
-  authDomain: "paint-project-e3ecd.firebaseapp.com",
-  projectId: "paint-project-e3ecd",
-  storageBucket: "paint-project-e3ecd.firebasestorage.app",
-  messagingSenderId: "141114177317",
-  appId: "1:141114177317:web:9ca63f9d8cc1975c4a0ccc",
-  measurementId: "G-Y7188HLWD8"
-};
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-const auth = firebase.auth();
-
-const $ = id => document.getElementById(id);
-
-const gallery = $('gal');
-const favG = $('fG');
-const input = $('dLI');
-const addBtn = $('aDB');
-const pOvr = $('pO');
-const pMsg = $('pM');
-const edit = $('eB');
-const remix = $('rB');
-const clPo = $('ok');
-const togFavB = $('tF');
-
+const [_a,_b,_c,_d,_e,_f,_g,_h] = ["QUl6YVN5Qmx6WG45YnlnZU5fMEF5RFFIWURmMlQydk82NldBemZ3","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZWFwcC5jb20","aHR0cHM6Ly9wYWludC1wcm9qZWN0LWUzZWNkLWRlZmF1bHQtcnRkYi5ldXJvcGUtd2VzdDEuZmlyZWJhc2VkYXRhYmFzZS5hcHA","cGFpbnQtcHJvamVjdC1lM2VjZA","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZXN0b3JhZ2UuYXBw","MTQxMTE0MTc3MzE3","MToxNDExMTQxNzczMTc6d2ViOmQ2Yzc4MTU1ZjI4MzdlN2I0YTBjY2M","Ry0yNTNDMUhaQjFW"].map(atob);
+const firebaseConfig = {apiKey:_a,authDomain:_b,databaseURL:_c,projectId:_d,storageBucket:_e,messagingSenderId:_f,appId:_g,measurementId:_h};
+firebase.initializeApp(firebaseConfig);const db = firebase.database();const auth = firebase.auth();const $ = id => document.getElementById(id);
+const gallery = $('gal');const favG = $('fG');const input = $('dLI');const addBtn = $('aDB');const pOvr = $('pO');const pMsg = $('pM');const edit = $('eB');const remix = $('rB');const clPo = $('ok');const togFavB = $('tF');
 clPo.addEventListener('click', () => pOvr.style.display = 'none');
-
-let drawings = [];
-let drawingIds = [];
-let authorUsernames = {};
-let drawID = null;
-
-edit.onclick = () => drawID && (location.href = `/paint/#id=${drawID}`);
-remix.onclick = () => drawID && (location.href = `/paint/#id=${drawID}`);
-
-function cSI(src) {
-  const img = document.createElement('img');
-  img.src = src || '';
-  img.onerror = () =>
-    img.src = 'https://helloiti.github.io/assets/paint.png';
-  return img;
-}
+let drawings = [];let drawingIds = [];let authorUsernames = {};let drawID = null;
+edit.onclick = () => drawID && (location.href = `/paint/#id=${drawID}`);remix.onclick = () => drawID && (location.href = `/paint/#id=${drawID}`);
+function cSI(src) {const img = document.createElement('img');img.src = src || '';img.onerror = () =>img.src = 'https://helloiti.github.io/assets/paint.png';return img;}
 
 async function fetchUsername(uid) {
   if (!uid) return "@unknown";
