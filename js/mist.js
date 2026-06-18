@@ -40,7 +40,6 @@ function sg() {
     `;
 }
 // explains why is there a pants value on CHARINFO miis
-// :P
 function sp() {
 	document.getElementById("mp1").style.display = "flex";
 	document.getElementById("pt").innerHTML = `
