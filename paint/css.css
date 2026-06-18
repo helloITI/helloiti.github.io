@@ -1,20 +1,20 @@
 @font-face {
   font-family: 'NintendoNTLG';
-  src: url('https://hellot.nekoweb.org/assets/nintendo_NTLG-DB_002.ttf') format('truetype');
+  src: url('https://helloiti.github.io/assets/nintendo_NTLG-DB_002.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 body {
   margin: 0;
   font-family: 'NintendoNTLG', sans-serif;
-  background: url('https://hellot.nekoweb.org/assets/background.png') center/cover no-repeat fixed;
+  background: url('https://helloiti.github.io/assets/background.png') center/cover no-repeat fixed;
   padding: 20px;
   color: white;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  cursor: url('https://hellot.nekoweb.org/assets/pencil.png') 0 0, auto;
+  cursor: url('https://helloiti.github.io/assets/pen.png') 0 0, auto;
 }
 h1 { margin: 10px; }
 canvas {
@@ -25,7 +25,7 @@ canvas {
   user-select: none;
 }
 a, button {
-  cursor: url('https://hellot.nekoweb.org/assets/pencil.png') 0 0, pointer;
+  cursor: url('https://helloiti.github.io/assets/pen.png') 0 0, pointer;
 }
 .ct {
   margin: 10px;
