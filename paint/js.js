@@ -1,7 +1,6 @@
 // hi skibibi!!! 🤣🤣🤣
-const firebaseConfig = JSON.parse(atob(
-  "eyJhcGlLZXkiOiJBSXphU3lCbHpYbjlieWdlTl8wQXlEUUhZRGYyVDJ2TzY2V0F6ZnciLCJhdXRoRG9tYWluIjoicGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZWFwcC5jb20iLCJwcm9qZWN0SWQiOiJwYWludC1wcm9qZWN0LWUzZWNkIiwic3RvcmFnZUJ1Y2tldCI6InBhaW50LXByb2plY3QtZTNlY2QuZmlyZWJhc2VzdG9yYWdlLmFwcCIsIm1lc3NhZ2luZ1NlbmRlcklkIjoiMTQxMTE0MTc3MzE3IiwiYXBwSWQiOiIxOjE0MTExNDE3NzMxNzp3ZWI6OWNhNjNmOWQ4Y2MxOTc1YzRhMGNjYyIsIm1lYXN1cmVtZW50SWQiOiJHLVk3MTg4SExXRDgifQ=="
-));
+const [_a,_b,_c,_d,_e,_f,_g,_h] = ["QUl6YVN5Qmx6WG45YnlnZU5fMEF5RFFIWURmMlQydk82NldBemZ3","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZWFwcC5jb20","aHR0cHM6Ly9wYWludC1wcm9qZWN0LWUzZWNkLWRlZmF1bHQtcnRkYi5ldXJvcGUtd2VzdDEuZmlyZWJhc2VkYXRhYmFzZS5hcHA","cGFpbnQtcHJvamVjdC1lM2VjZA","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZXN0b3JhZ2UuYXBw","MTQxMTE0MTc3MzE3","MToxNDExMTQxNzczMTc6d2ViOmQ2Yzc4MTU1ZjI4MzdlN2I0YTBjY2M","Ry0yNTNDMUhaQjFW"].map(atob);
+const firebaseConfig = {apiKey:_a,authDomain:_b,databaseURL:_c,projectId:_d,storageBucket:_e,messagingSenderId:_f,appId:_g,measurementId:_h};
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 const auth = firebase.auth();
