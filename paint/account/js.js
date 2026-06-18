@@ -185,7 +185,7 @@ onAuthStateChanged(auth, async (user) => {
     actC.style.display = "block";
     lCD.style.display = "none";
     sCD.style.display = "none";
-    sSU.parentElement.style.display = "none";
+    sSUP.parentElement.style.display = "none";
     sLG.style.display = "none";
 
     document.querySelector("h2").style.display = "none";
@@ -193,7 +193,7 @@ onAuthStateChanged(auth, async (user) => {
     actC.style.display = "none";
     lCD.style.display = "flex";
     sCD.style.display = "none";
-    sSU.parentElement.style.display = "block";
+    sSUP.parentElement.style.display = "block";
     sLG.style.display = "none";
 
     const h = document.querySelector("h2");
