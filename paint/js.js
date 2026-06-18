@@ -134,7 +134,9 @@ dbtn.addEventListener('click', ()=>{
   a.download = 'drawing.png';
   a.click();
 });
-cp.addEventListener('click',()=>po.style.display = 'none');
+cp.addEventListener('click',()=>{
+  po.classList.remove('visible');
+});
 cob.addEventListener('click', async ()=>{
   if(shl.value){
     await navigator.clipboard.writeText(shl.value);
@@ -220,11 +222,11 @@ pb.addEventListener('click', async ()=>{
     const id = Date.now().toString(36) + Math.random().toString(36).substring(2,8);
     const user = auth.currentUser;
     const authorId = user ? user.uid : null;
- await db.ref('drawings/' + id).set({
-  image: data,
-  created: Date.now(),
-  authorId: authorId
-});
+    await db.ref('drawings/' + id).set({
+      image: data,
+      created: firebase.database.ServerValue.TIMESTAMP,
+      authorId: authorId
+    });
     const url = `${location.origin}${location.pathname}#id=${id}`;
     shl.value = url;
     history.replaceState(null, '', `#id=${id}`);
