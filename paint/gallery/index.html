@@ -1,56 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>※ Paint Gallery ※</title>
-  <link rel="icon" type="image/png" href="https://helloiti.github.io/assets/paint.png">
-  <link rel="stylesheet" href="gal.css">
-</head>
-<body>
-  <h1>※ Welcome to Paint Gallery! ※</h1>
-  
-  <div class="input-container">
-    <input type="text" id="dLi" placeholder="Paste your generated drawing's link here.">
-    <button id="aDB">Add Drawing</button>
-  </div>
-
-  <canvas id="canvas" width="900" height="600" style="display:none;"></canvas>
-
-  <h2> Your favorited drawings: 
-    <button id="tF">Hide</button>
-  </h2>
-  <div id="fG"></div>
-
-  <h2> Shared Drawings: </h2>
+<head><meta charset="UTF-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /></script><title>※ Paint Gallery ※</title><link rel="icon" type="image/png" href="https://helloiti.github.io/assets/paint.png"><link rel="stylesheet" href="css.css">
+</head><body><h1>※ Welcome to Paint Gallery! ※</h1>
+<div class="input-container"><input type="text" id="dLi" placeholder="Paste your generated drawing's link here."><button id="aDB">Add Drawing</button></div><canvas id="canvas" width="900" height="600" style="display:none;"></canvas>
+<h2> Your favorited drawings: <button id="tF">Hide</button></h2><div id="fG"></div><h2> Shared Drawings: </h2>
   <div id="gal"></div>
-
-  <div id="pO">
-    <div id="pB">
-      <p id="pM"></p>
-      <div class="p-c">
-        <button id="eB">Edit</button>
-        <button id="rB">Remix</button>
-        <button id="cB">Close</button>
-      </div>
-    </div>
-  </div>
-
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="gal.js"></script>
-
-  <audio id="ok" loop>
-    <source src="https://helloiti.github.io/assets/bgm_ps.mp3" type="audio/mpeg">
-  </audio>
-
-  <script>
-    document.addEventListener("click", function playMusic() {
-      document.getElementById("ok").play().catch(()=>{});
-      document.removeEventListener("click", playMusic);
-    });
-  </script>
-</body>
-</html>
+<div id="pO"><div id="pB"><p id="pM"></p><div class="p-c"><button id="eB">Edit</button><button id="rB">Remix</button><button id="cB">Close</button></div></div></div>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script><script src="js.js"></script> </script><script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<audio id="ok" loop><source src="https://helloiti.github.io/assets/bgm_ps.mp3" type="audio/mpeg"></audio><script>document.addEventListener("click", function playMusic() {document.getElementById("ok").play().catch(()=>{});document.removeEventListener("click", playMusic);});</script></body></html>
