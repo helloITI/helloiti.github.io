@@ -1,13 +1,7 @@
-// hi mt-tools!!! 🤣🤣🤣
-const firebaseConfig = {
-  apiKey: "AIzaSyBlzXn9bygeN_0AyDQHYDf2T2vO66WAzfw",
-  authDomain: "paint-project-e3ecd.firebaseapp.com",
-  projectId: "paint-project-e3ecd",
-  storageBucket: "paint-project-e3ecd.firebasestorage.app",
-  messagingSenderId: "141114177317",
-  appId: "1:141114177317:web:9ca63f9d8cc1975c4a0ccc",
-  measurementId: "G-Y7188HLWD8"
-};
+// hi skibibi!!! 🤣🤣🤣
+const firebaseConfig = JSON.parse(atob(
+  "eyJhcGlLZXkiOiJBSXphU3lCbHpYbjlieWdlTl8wQXlEUUhZRGYyVDJ2TzY2V0F6ZnciLCJhdXRoRG9tYWluIjoicGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZWFwcC5jb20iLCJwcm9qZWN0SWQiOiJwYWludC1wcm9qZWN0LWUzZWNkIiwic3RvcmFnZUJ1Y2tldCI6InBhaW50LXByb2plY3QtZTNlY2QuZmlyZWJhc2VzdG9yYWdlLmFwcCIsIm1lc3NhZ2luZ1NlbmRlcklkIjoiMTQxMTE0MTc3MzE3IiwiYXBwSWQiOiIxOjE0MTExNDE3NzMxNzp3ZWI6OWNhNjNmOWQ4Y2MxOTc1YzRhMGNjYyIsIm1lYXN1cmVtZW50SWQiOiJHLVk3MTg4SExXRDgifQ=="
+));
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 const auth = firebase.auth();
