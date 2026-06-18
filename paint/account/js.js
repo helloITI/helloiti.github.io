@@ -57,7 +57,7 @@ const sLGL = document.getElementById("sLGL");
 function usernameToEmail(username) {
   return username.trim().toLowerCase() + "@app.local";
 }
-
+// dih
 sSP.onchange = () => {
   sPA.type = sSP.checked ? "text" : "password";
   sCOPA.type = sSP.checked ? "text" : "password";
