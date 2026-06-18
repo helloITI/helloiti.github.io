@@ -70,7 +70,7 @@ sSUP.onclick = () => {
   sCD.style.display = "flex";
   sSUP.parentElement.style.display = "none";
   sLG.style.display = "block";
-  document.querySelector("h2").textContent = "※⁜ register your paint account! ⁜※";
+  document.querySelector("h2").textContent = "※ Register your very own Paint Account! ※";
 };
 
 sLGL.onclick = () => {
@@ -78,7 +78,7 @@ sLGL.onclick = () => {
   lCD.style.display = "flex";
   sSUP.parentElement.style.display = "block";
   sLG.style.display = "none";
-  document.querySelector("h2").textContent = "※⁜ log in your paint account! ⁜※";
+  document.querySelector("h2").textContent = "※ Log in your Paint Account! ※";
 };
 
 btnSUP.onclick = async () => {
