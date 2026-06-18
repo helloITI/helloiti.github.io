@@ -3,8 +3,8 @@
 <h2>There is an entire Google Document about him doing disgusting and horrible stuff in the past, and guess what?</h2>
 <h1><b>HE NEVER APOLOGIZE FOR HIS PREVIOUS ACTIONS AT ALL.</b></h1>
 <h2>So it's best to leave his Discord servers he made, such as:<br></h2>
-<h3><li>Kubox (about a game he made)</li>
-<li>Project Portrait
+<h3><li><a href="https://kbxgame.nekoweb.org/kubox/world">Kubox</a> (about a game he made)</li>
+<li><a href="https://portrait.nekoweb.org">Project Portrait</a>
 (a vibecoded web recreation of a unreleased Tomodachi Collection game named "Otona no Onna no Uranai Techō", nothing else special)</li></h3>
 <h3>Here is a link about the document of him if you're curious:<br>
 <a href="https://docs.google.com/document/d/10aGPs2VTm6eWwn9Z1YSVeDy5UKg0dfBDX6TdWAl8rew/edit?tab=t.k4ct81mulfxi">[Link to the Document]</a></h3>
