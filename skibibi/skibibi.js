@@ -29,7 +29,7 @@ light.castShadow = true;
 scene.add(light);
 
 const loader = new THREE.GLTFLoader();
-loader.load("https://hellot.nekoweb.org/skibibi/anim_baby.glb", gltf => {
+loader.load("https://helloiti.github.io/skibibi/anim_baby.glb", gltf => {
 
   model = gltf.scene;
   model.position.set(0, -1.1, 0);
