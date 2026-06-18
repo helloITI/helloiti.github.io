@@ -2,7 +2,6 @@
   font-family: 'NintendoNTLG';
   src: url('https://helloiti.github.io/assets/nintendo_NTLG-DB_002.ttf') format('truetype');
 }
-
 body {
   margin: 0; padding: 20px;
   font-family: 'NintendoNTLG', sans-serif;
@@ -10,24 +9,18 @@ body {
   text-align: center;
   color: white;
 }
-
 h1 { margin: 10px 0 20px; }
 h2 { margin: 25px 0 12px; }
-
 .input-container { margin-bottom: 20px; }
-
 #dLI { width: 300px; max-width: 65%; padding: 8px 12px; border-radius: 6px; border: none; }
 #aDB { padding: 8px 14px; border: none; border-radius: 6px; background: #222; color: white; cursor: pointer; }
-
 #gal, #fG {
   display: grid;
   grid-template-columns: repeat(auto-fill, 150px);
   gap: 12px;
   justify-content: center;
 }
-
 .g-i { display: flex; flex-direction: column; align-items: center; gap: 6px; }
-
 .g-i img {
   width: 150px; height: 100px; object-fit: cover;
   cursor: pointer; background: white;
@@ -35,50 +28,42 @@ h2 { margin: 25px 0 12px; }
   transition: transform .2s;
 }
 .g-i img:hover { transform: scale(1.06); }
-
 .g-i-o img {
   border-color: gold;
   box-shadow: 0 0 15px rgba(255,215,0,0.7);
 }
-
-.l-B {
+.l-b {
   padding: 4px 10px; font-size: 13px;
   background: #222; color: white;
   border: none; border-radius: 6px;
   cursor: pointer;
 }
-.l-B:hover { background: #555; }
-
+.l-b:hover { background: #555; }
 #pO {
   display: none; position: fixed; inset: 0;
   background: rgba(0,0,0,0.75);
   justify-content: center; align-items: center;
   z-index: 999;
 }
-
 #pB {
   background: #222; padding: 24px;
   border-radius: 12px; max-width: 360px;
   border: 2px solid #444;
 }
-
 .p-c button {
   padding: 8px 14px; margin: 4px;
   border: none; border-radius: 6px;
   color: white; cursor: pointer;
 }
-
 #eB { background: #4a4; }
 #rB { background: #44a; }
 #ok { background: #555; }
-
 #tF {
   padding: 6px 10px; margin-left: 8px;
   background: #444; border: none;
   border-radius: 6px; color: white;
   cursor: pointer;
 }
-
 @media (max-width: 520px) {
   #gal, #fG { grid-template-columns: repeat(auto-fill, 120px); }
   .g-i img { width: 120px; height: 90px; }
