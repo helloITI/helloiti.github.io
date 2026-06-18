@@ -7,6 +7,6 @@
 <li>Project Portrait
 (a vibecoded web recreation of a unreleased Tomodachi Collection game named "Otona no Onna no Uranai Techō", nothing else special)</li></h3>
 <h3>Here is a link about the document of him if you're curious:<br>
-https://example.com</h3>
+<a href="https://docs.google.com/document/d/10aGPs2VTm6eWwn9Z1YSVeDy5UKg0dfBDX6TdWAl8rew/edit?tab=t.k4ct81mulfxi">[Link to the Document]</a></h3>
 <h4><b>I don't really know how to explain all of this, so please check it out.</b></h4>
 Thanks.
