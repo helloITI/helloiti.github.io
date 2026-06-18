@@ -109,7 +109,6 @@ function displayGallery() {
     const btn = document.createElement('button');
     btn.className = 'l-b';
 
-    // likes are now stored per-user in DB, use localStorage just for UI state
     const liked = JSON.parse(localStorage.getItem('lD') || '{}');
     const likeCount = d.likes ? Object.keys(d.likes).length : 0;
     btn.textContent = liked[id] ? `💖 ${likeCount}` : `❤️ ${likeCount}`;
@@ -186,4 +185,10 @@ togFavB.addEventListener('click', () => {
   togFavB.textContent = hidden ? '※ Hide ※' : '※ Show ※';
 });
 
-auth.onAuthStateChanged(() => loadDrawings());
+auth.onAuthStateChanged(async (user) => {
+  if (user && user.isAnonymous) {
+    await auth.signOut();
+    return;
+  }
+  loadDrawings();
+});
