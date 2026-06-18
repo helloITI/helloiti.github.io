@@ -58,6 +58,9 @@ input[type="text"] { width: 400px; }
   align-items: center;
   z-index: 999;
 }
+#po.visible {
+  display: flex;
+}
 #pb {
   background: #222;
   padding: 20px;
