@@ -1,4 +1,4 @@
-    @font-face {
+@font-face {
       font-family: 'NintendoNTLG';
       src: url('https://helloiti.github.io/assets/nintendo_NTLG-DB_002.ttf') format('truetype');
       font-weight: normal;
@@ -8,11 +8,11 @@
     html, body {
       height: 100%;
       margin: 0;
-      cursor: url("https://hellot.nekoweb.org/assets/Wii.png"), auto;
+      cursor: url("https://helloiti.github.io/assets/Wii.png"), auto;
     }
 
     body:active {
-      cursor: url("https://hellot.nekoweb.org/assets/Wii.png"), auto;
+      cursor: url("https://helloiti.github.io/assets/Wii.png"), auto;
     }
 
     body {
@@ -22,7 +22,7 @@
       max-width: 900px;
       margin: 0 auto;
       padding: 16px;
-      background: url("https://hellot.nekoweb.org/assets/background1.png") no-repeat center center fixed;
+      background: url("https://helloiti.github.io/assets/background1.png") no-repeat center center fixed;
       background-size: cover;
       font-family: 'NintendoNTLG', sans-serif;
     }
