@@ -1,35 +1,7 @@
 // hi skibibi!!! 🤣🤣🤣
-const [_a,_b,_c,_d,_e,_f,_g,_h] = ["QUl6YVN5Qmx6WG45YnlnZU5fMEF5RFFIWURmMlQydk82NldBemZ3","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZWFwcC5jb20","aHR0cHM6Ly9wYWludC1wcm9qZWN0LWUzZWNkLWRlZmF1bHQtcnRkYi5ldXJvcGUtd2VzdDEuZmlyZWJhc2VkYXRhYmFzZS5hcHA","cGFpbnQtcHJvamVjdC1lM2VjZA","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZXN0b3JhZ2UuYXBw","MTQxMTE0MTc3MzE3","MToxNDExMTQxNzczMTc6d2ViOmQ2Yzc4MTU1ZjI4MzdlN2I0YTBjY2M","Ry0yNTNDMUhaQjFW"].map(atob);
-const firebaseConfig = {apiKey:_a,authDomain:_b,databaseURL:_c,projectId:_d,storageBucket:_e,messagingSenderId:_f,appId:_g,measurementId:_h};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-const auth = firebase.auth();
-auth.signInAnonymously().catch(err => console.log("anon auth error:", err));
-const cv = document.getElementById('cv');
-const ctx = cv.getContext('2d');
-const ci = document.getElementById('col');
-const si = document.getElementById('sz');
-const eb = document.getElementById('er');
-const fb = document.getElementById('fl');
-const ub = document.getElementById('un');
-const rb = document.getElementById('re');
-const cb = document.getElementById('clr');
-const dbtn = document.getElementById('dl');
-const pb = document.getElementById('pub');
-const shl = document.getElementById('shl');
-const cob = document.getElementById('cpy');
-const po = document.getElementById('po');
-const pm = document.getElementById('pm');
-const cp = document.getElementById('cp');
-let dr = false;
-let bc = ci.value;
-let bs = Number(si.value);
-let m = 'draw';
-let lst = {x:0, y:0};
-const mu = 30;
-const us = [];
-const rs = [];
-
+const [_a,_b,_c,_d,_e,_f,_g,_h] = ["QUl6YVN5Qmx6WG45YnlnZU5fMEF5RFFIWURmMlQydk82NldBemZ3","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZWFwcC5jb20","aHR0cHM6Ly9wYWludC1wcm9qZWN0LWUzZWNkLWRlZmF1bHQtcnRkYi5ldXJvcGUtd2VzdDEuZmlyZWJhc2VkYXRhYmFzZS5hcHA","cGFpbnQtcHJvamVjdC1lM2VjZA","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZXN0b3JhZ2UuYXBw","MTQxMTE0MTc3MzE3","MToxNDExMTQxNzczMTc6d2ViOmQ2Yzc4MTU1ZjI4MzdlN2I0YTBjY2M","Ry0yNTNDMUhaQjFW"].map(atob); const firebaseConfig = {apiKey:_a,authDomain:_b,databaseURL:_c,projectId:_d,storageBucket:_e,messagingSenderId:_f,appId:_g,measurementId:_h};firebase.initializeApp(firebaseConfig);const db = firebase.database();const auth = firebase.auth();
+const cv = document.getElementById('cv');const ctx = cv.getContext('2d');const ci = document.getElementById('col');const si = document.getElementById('sz');const eb = document.getElementById('er');const fb = document.getElementById('fl');const ub = document.getElementById('un');const rb = document.getElementById('re');const cb = document.getElementById('clr');const dbtn = document.getElementById('dl');const pb = document.getElementById('pub');const shl = document.getElementById('shl');const cob = document.getElementById('cpy');const po = document.getElementById('po');const pm = document.getElementById('pm');const cp = document.getElementById('cp');
+let dr = false;let bc = ci.value;let bs = Number(si.value);let m = 'draw';let lst = {x:0, y:0};const mu = 30;const us = [];const rs = [];
 function ps() {
   if(us.length >= mu) us.shift();
   us.push(cv.toDataURL());
@@ -90,14 +62,7 @@ function sp(e){
     dr = false;
   }
 }
-cv.addEventListener('mousedown', st);
-cv.addEventListener('mousemove', dw);
-cv.addEventListener('mouseup', sp);
-cv.addEventListener('mouseout', sp);
-cv.addEventListener('touchstart', st);
-cv.addEventListener('touchmove', dw);
-cv.addEventListener('touchend', sp);
-cv.addEventListener('touchcancel', sp);
+cv.addEventListener('mousedown', st);cv.addEventListener('mousemove', dw);cv.addEventListener('mouseup', sp);cv.addEventListener('mouseout', sp);cv.addEventListener('touchstart', st);cv.addEventListener('touchmove', dw);cv.addEventListener('touchend', sp);cv.addEventListener('touchcancel', sp);
 ci.addEventListener('input', e=>{
   bc = e.target.value;
   m = 'draw';
