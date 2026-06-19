@@ -1,5 +1,13 @@
 // hi skibibi!!! 🤣🤣🤣
-const [_a,_b,_c,_d,_e,_f,_g,_h] = ["QUl6YVN5Qmx6WG45YnlnZU5fMEF5RFFIWURmMlQydk82NldBemZ3","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZWFwcC5jb20","aHR0cHM6Ly9wYWludC1wcm9qZWN0LWUzZWNkLWRlZmF1bHQtcnRkYi5ldXJvcGUtd2VzdDEuZmlyZWJhc2VkYXRhYmFzZS5hcHA","cGFpbnQtcHJvamVjdC1lM2VjZA","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZXN0b3JhZ2UuYXBw","MTQxMTE0MTc3MzE3","MToxNDExMTQxNzczMTc6d2ViOmQ2Yzc4MTU1ZjI4MzdlN2I0YTBjY2M","Ry0yNTNDMUhaQjFW"].map(atob); const firebaseConfig = {apiKey:_a,authDomain:_b,databaseURL:_c,projectId:_d,storageBucket:_e,messagingSenderId:_f,appId:_g,measurementId:_h};firebase.initializeApp(firebaseConfig);const db = firebase.database();const auth = firebase.auth();
+const [_a,_b,_c,_d,_e,_f,_g,_h] = ["QUl6YVN5Qmx6WG45YnlnZU5fMEF5RFFIWURmMlQydk82NldBemZ3","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZWFwcC5jb20","aHR0cHM6Ly9wYWludC1wcm9qZWN0LWUzZWNkLWRlZmF1bHQtcnRkYi5ldXJvcGUtd2VzdDEuZmlyZWJhc2VkYXRhYmFzZS5hcHA","cGFpbnQtcHJvamVjdC1lM2VjZA","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZXN0b3JhZ2UuYXBw","MTQxMTE0MTc3MzE3","MToxNDExMTQxNzczMTc6d2ViOmQ2Yzc4MTU1ZjI4MzdlN2I0YTBjY2M","Ry0yNTNDMUhaQjFW"].map(atob);
+const firebaseConfig = {apiKey:_a,authDomain:_b,databaseURL:_c,projectId:_d,storageBucket:_e,messagingSenderId:_f,appId:_g,measurementId:_h};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const auth = firebase.auth();
+
+// sign in anonymously on load for guest users — real accounts override this
+auth.signInAnonymously().catch(err => console.log("anon auth error:", err));
+
 const cv = document.getElementById('cv');const ctx = cv.getContext('2d');const ci = document.getElementById('col');const si = document.getElementById('sz');const eb = document.getElementById('er');const fb = document.getElementById('fl');const ub = document.getElementById('un');const rb = document.getElementById('re');const cb = document.getElementById('clr');const dbtn = document.getElementById('dl');const pb = document.getElementById('pub');const shl = document.getElementById('shl');const cob = document.getElementById('cpy');const po = document.getElementById('po');const pm = document.getElementById('pm');const cp = document.getElementById('cp');
 let dr = false;let bc = ci.value;let bs = Number(si.value);let m = 'draw';let lst = {x:0, y:0};const mu = 30;const us = [];const rs = [];
 function ps() {
@@ -63,10 +71,7 @@ function sp(e){
   }
 }
 cv.addEventListener('mousedown', st);cv.addEventListener('mousemove', dw);cv.addEventListener('mouseup', sp);cv.addEventListener('mouseout', sp);cv.addEventListener('touchstart', st);cv.addEventListener('touchmove', dw);cv.addEventListener('touchend', sp);cv.addEventListener('touchcancel', sp);
-ci.addEventListener('input', e=>{
-  bc = e.target.value;
-  m = 'draw';
-});
+ci.addEventListener('input', e=>{ bc = e.target.value; m = 'draw'; });
 si.addEventListener('input', e=>bs = Number(e.target.value));
 eb.addEventListener('click', ()=>{
   m = m === 'erase' ? 'draw' : 'erase';
@@ -99,9 +104,7 @@ dbtn.addEventListener('click', ()=>{
   a.download = 'drawing.png';
   a.click();
 });
-cp.addEventListener('click',()=>{
-  po.classList.remove('visible');
-});
+cp.addEventListener('click',()=>{ po.classList.remove('visible'); });
 cob.addEventListener('click', async ()=>{
   if(shl.value){
     await navigator.clipboard.writeText(shl.value);
@@ -119,10 +122,7 @@ function htr(hex){
   }
   throw new Error('Bad Hex');
 }
-function cm(a,b){
-  return a.r === b.r && a.g === b.g && a.b === b.b && a.a === b.a;
-}
-
+function cm(a,b){ return a.r === b.r && a.g === b.g && a.b === b.b && a.a === b.a; }
 function ff(sx,sy,fc){
   if(sx < 0 || sx >= cv.width || sy < 0 || sy >= cv.height) return;
   const id = ctx.getImageData(0,0,cv.width,cv.height);
@@ -137,69 +137,65 @@ function ff(sx,sy,fc){
   const stk = [{x: sx, y: sy}];
   while(stk.length){
     const {x: sx, y: sy} = stk.pop();
-    let x = sx;
-    let y = sy;
+    let x = sx; let y = sy;
     while(x >= 0){
       const pos = pk(x,y);
       if(!cm({r:data[pos],g:data[pos+1],b:data[pos+2],a:data[pos+3]}, sc)) break;
       x--;
     }
     x++;
-    let ru = false;
-    let rd = false;
+    let ru = false; let rd = false;
     for(let nx = x; nx < w; nx++){
       const pos = pk(nx,y);
       if(!cm({r:data[pos],g:data[pos+1],b:data[pos+2],a:data[pos+3]}, sc)) break;
-      data[pos] = tc.r;
-      data[pos+1] = tc.g;
-      data[pos+2] = tc.b;
-      data[pos+3] = tc.a;
+      data[pos] = tc.r; data[pos+1] = tc.g; data[pos+2] = tc.b; data[pos+3] = tc.a;
       if(y > 0){
         const up = pk(nx, y-1);
-        if(cm({r:data[up],g:data[up+1],b:data[up+2],a:data[up+3]}, sc)){
-          if(!ru){
-            stk.push({x:nx, y:y-1});
-            ru = true;
-          }
-        } else if(ru){
-          ru = false;
-        }
+        if(cm({r:data[up],g:data[up+1],b:data[up+2],a:data[up+3]}, sc)){ if(!ru){ stk.push({x:nx, y:y-1}); ru = true; } } else if(ru){ ru = false; }
       }
       if(y < h-1){
         const dn = pk(nx, y+1);
-        if(cm({r:data[dn],g:data[dn+1],b:data[dn+2],a:data[dn+3]}, sc)){
-          if(!rd){
-            stk.push({x:nx, y:y+1});
-            rd = true;
-          }
-        } else if(rd){
-          rd = false;
-        }
+        if(cm({r:data[dn],g:data[dn+1],b:data[dn+2],a:data[dn+3]}, sc)){ if(!rd){ stk.push({x:nx, y:y+1}); rd = true; } } else if(rd){ rd = false; }
       }
     }
   }
   ctx.putImageData(id, 0, 0);
 }
+
 pb.addEventListener('click', async ()=>{
   if(!confirm("Are you sure you want to generate a link for this drawing?")) return;
+
   try{
+    const user = auth.currentUser;
+    if (!user) { alert('Still connecting, please try again in a second!'); return; }
+
     const data = cv.toDataURL();
     const id = Date.now().toString(36) + Math.random().toString(36).substring(2,8);
-    const user = auth.currentUser;
-    const authorId = user ? user.uid : null;
+    const authorId = user.uid;
+
     await db.ref('drawings/' + id).set({
       image: data,
       created: firebase.database.ServerValue.TIMESTAMP,
       authorId: authorId
     });
+
+    // update rate limit fields so firebase rules can enforce cooldown + cap
+    await db.ref('users/' + authorId + '/lastUpload').set(firebase.database.ServerValue.TIMESTAMP);
+    await db.ref('users/' + authorId + '/drawingCount').set(firebase.database.ServerValue.increment(1));
+
     const url = `${location.origin}${location.pathname}#id=${id}`;
     shl.value = url;
     history.replaceState(null, '', `#id=${id}`);
     alert('Done! Go to https://helloiti.github.io/paint/gallery to publish your drawing there! :D');
   }catch(e){
-    alert('I couldnt generate your link... error: ' + e.message);
+    if (e.message && e.message.includes('PERMISSION_DENIED')) {
+      alert('You are posting too fast or have reached the drawing limit. Please wait a moment!');
+    } else {
+      alert('I couldnt generate your link... error: ' + e.message);
+    }
   }
 });
+
 async function lfh(){
   const hash = location.hash;
   if(!hash) return;
