@@ -8,15 +8,8 @@ import {
   setPersistence,
   browserSessionPersistence,
   onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
-
-const [_a,_b,_c,_d,_e,_f,_g,_h] = ["QUl6YVN5Qmx6WG45YnlnZU5fMEF5RFFIWURmMlQydk82NldBemZ3","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZWFwcC5jb20","aHR0cHM6Ly9wYWludC1wcm9qZWN0LWUzZWNkLWRlZmF1bHQtcnRkYi5ldXJvcGUtd2VzdDEuZmlyZWJhc2VkYXRhYmFzZS5hcHA","cGFpbnQtcHJvamVjdC1lM2VjZA","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZXN0b3JhZ2UuYXBw","MTQxMTE0MTc3MzE3","MToxNDExMTQxNzczMTc6d2ViOmQ2Yzc4MTU1ZjI4MzdlN2I0YTBjY2M","Ry0yNTNDMUhaQjFW"].map(atob);
-const firebaseConfig = {apiKey:_a,authDomain:_b,databaseURL:_c,projectId:_d,storageBucket:_e,messagingSenderId:_f,appId:_g,measurementId:_h};
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getDatabase(app);
-
+} from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";const [_a,_b,_c,_d,_e,_f,_g,_h] = ["QUl6YVN5Qmx6WG45YnlnZU5fMEF5RFFIWURmMlQydk82NldBemZ3","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZWFwcC5jb20","aHR0cHM6Ly9wYWludC1wcm9qZWN0LWUzZWNkLWRlZmF1bHQtcnRkYi5ldXJvcGUtd2VzdDEuZmlyZWJhc2VkYXRhYmFzZS5hcHA","cGFpbnQtcHJvamVjdC1lM2VjZA","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZXN0b3JhZ2UuYXBw","MTQxMTE0MTc3MzE3","MToxNDExMTQxNzczMTc6d2ViOmQ2Yzc4MTU1ZjI4MzdlN2I0YTBjY2M","Ry0yNTNDMUhaQjFW"].map(atob);const firebaseConfig = {apiKey:_a,authDomain:_b,databaseURL:_c,projectId:_d,storageBucket:_e,messagingSenderId:_f,appId:_g,measurementId:_h};
+const app = initializeApp(firebaseConfig);const auth = getAuth(app);const db = getDatabase(app);
 // hi guys
 const sUS = document.getElementById("sUS");const sPA = document.getElementById("sPA");const sCOPA = document.getElementById("sCOPA");const sSP = document.getElementById("sSP");const sMsg = document.getElementById("sMsg");
 // wow
@@ -55,23 +48,20 @@ btnSUP.onclick = async () => {
   }
 
   try {
-    // sign out anonymous user first before creating a real account
-    if (auth.currentUser && auth.currentUser.isAnonymous) {
-      await signOut(auth);
-    }
+    if (auth.currentUser && auth.currentUser.isAnonymous) await signOut(auth);
 
     const emailAlias = usernameToEmail(username);
     const cred = await createUserWithEmailAndPassword(auth, emailAlias, password);
     const userUid = cred.user.uid;
 
     await set(ref(db, "usernames/" + username), { uid: userUid });
-    await set(ref(db, "users/" + userUid), { username });
+    await set(ref(db, "users/" + userUid), { username, drawingCount: 0 });
 
     sMsg.textContent = "※ Successfully created your Paint Account, enjoy! :D ※ " + username;
   } catch (err) {
     let errorMessage = "An error has occurred...";
     if (err.code === "auth/email-already-in-use") {
-      errorMessage = "This username is already in use. Try logging in or use a different username. ⁜※";
+      errorMessage = "This username is already in use. Try logging in or use a different username.";
     } else if (err.code === "auth/weak-password") {
       errorMessage = "Your password is too weak. Please choose a stronger password.";
     } else if (err.message && err.message.includes("Permission denied")) {
@@ -92,10 +82,7 @@ btnLG.onclick = async () => {
   if (!username || !password) { lMsg.textContent = "Please enter your username and password!"; return; }
 
   try {
-    // sign out anonymous user first before logging in
-    if (auth.currentUser && auth.currentUser.isAnonymous) {
-      await signOut(auth);
-    }
+    if (auth.currentUser && auth.currentUser.isAnonymous) await signOut(auth);
 
     await setPersistence(auth, browserSessionPersistence);
     const emailAlias = usernameToEmail(username);
@@ -120,8 +107,13 @@ btnLT.onclick = async () => {
 };
 
 onAuthStateChanged(auth, async (user) => {
-  // ignore anonymous users — treat them as logged out
-  if (user && !user.isAnonymous) {
+  // sign out anonymous users immediately
+  if (user && user.isAnonymous) {
+    await signOut(auth);
+    return;
+  }
+
+  if (user) {
     const snap = await get(child(ref(db), "users/" + user.uid));
     const uname = snap.exists() ? snap.val().username : "(unknown)";
 
