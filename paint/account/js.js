@@ -133,7 +133,7 @@ onAuthStateChanged(auth, async (user) => {
 
     const h = document.querySelector("h2");
     h.style.display = "block";
-    h.textContent = "※ Log in your paint account! ※";
+    h.textContent = "※ Log in your Paint Account! ※";
   }
 });
 
