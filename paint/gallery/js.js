@@ -1,12 +1,11 @@
 // hi skibibi!!! 🤣🤣🤣
 const [_a,_b,_c,_d,_e,_f,_g,_h] = ["QUl6YVN5Qmx6WG45YnlnZU5fMEF5RFFIWURmMlQydk82NldBemZ3","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZWFwcC5jb20","aHR0cHM6Ly9wYWludC1wcm9qZWN0LWUzZWNkLWRlZmF1bHQtcnRkYi5ldXJvcGUtd2VzdDEuZmlyZWJhc2VkYXRhYmFzZS5hcHA","cGFpbnQtcHJvamVjdC1lM2VjZA","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZXN0b3JhZ2UuYXBw","MTQxMTE0MTc3MzE3","MToxNDExMTQxNzczMTc6d2ViOmQ2Yzc4MTU1ZjI4MzdlN2I0YTBjY2M","Ry0yNTNDMUhaQjFW"].map(atob);
 const firebaseConfig = {apiKey:_a,authDomain:_b,databaseURL:_c,projectId:_d,storageBucket:_e,messagingSenderId:_f,appId:_g,measurementId:_h};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-const auth = firebase.auth();
-const $ = id => document.getElementById(id);
+firebase.initializeApp(firebaseConfig);const db = firebase.database();const auth = firebase.auth();const $ = id => document.getElementById(id);
 // sign in anonymously on load so guests can like drawings
 auth.signInAnonymously().catch(err => console.log("anon auth error:", err));
+// resolves once the first auth state (anon or real) is known
+let resolveAuthReady;const authReady = new Promise(res => { resolveAuthReady = res; });
 const gallery = $('gal');const favG = $('fG');const input = $('dLI');const addBtn = $('aDB');const pOvr = $('pO');const pMsg = $('pM');const edit = $('eB');const remix = $('rB');const clPo = $('ok');const togFavB = $('tF');
 clPo.addEventListener('click', () => pOvr.style.display = 'none');
 let drawings = [];let drawingIds = [];let authorUsernames = {};let drawID = null;
@@ -76,12 +75,16 @@ const img = cSI(d.image);img.addEventListener('click', () => sPFD(d, id));const 
 btn.addEventListener('click', async e => {
 e.stopPropagation();
   if (btn._busy) return;
+
+      btn._busy = true;
+      // wait for auth to be ready instead of bailing out immediately
+      await authReady;
       const user = auth.currentUser;
       if (!user) {
-        alert('Still connecting, please try again in a second!');
+        alert('Could not connect to the server, please refresh the page!');
+        btn._busy = false;
         return;
       }
-      btn._busy = true;
       const likeRef = db.ref(`drawings/${id}/likes/${user.uid}`);
       const map = JSON.parse(localStorage.getItem('lD') || '{}');
       const wasLiked = !!map[id];
@@ -111,7 +114,6 @@ e.stopPropagation();
 }
 function displayFavorites() {
   favG.innerHTML = '';const liked = JSON.parse(localStorage.getItem('lD') || '{}');
-  
   drawingIds.forEach((id, i) => {
     if (!liked[id] || !drawings[i]) return;
     const div = document.createElement('div');
@@ -123,6 +125,7 @@ function displayFavorites() {
   });
 }
 addBtn.addEventListener('click', async () => {
+  await authReady;
   const user = auth.currentUser;
   if (!user || user.isAnonymous) {
     alert('You need to be logged in to a Paint Account to publish drawings in the gallery!');
@@ -146,6 +149,13 @@ addBtn.addEventListener('click', async () => {
 togFavB.addEventListener('click', () => {
   const hidden = favG.style.display === 'none';
   favG.style.display = hidden ? 'grid' : 'none';
-  togFavB.textContent = hidden ? 'Hide ※' : 'Show';
+  togFavB.textContent = hidden ? 'Hide' : 'Show';
 });
-auth.onAuthStateChanged(() => loadDrawings());
+let firstAuthFired = false;
+auth.onAuthStateChanged((user) => {
+  if (!firstAuthFired) {
+    firstAuthFired = true;
+    resolveAuthReady();
+  }
+  loadDrawings();
+});
