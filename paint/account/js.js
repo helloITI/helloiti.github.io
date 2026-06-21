@@ -19,7 +19,7 @@ const actC = document.getElementById("actC");const actI = document.getElementByI
 const lCD = document.getElementById("lCD");const sCD = document.getElementById("sCD");
 // i also don't know
 const sSUP = document.getElementById("sSUP");const sLG = document.getElementById("sLG");const sLGL = document.getElementById("sLGL");
-// captcha widget ids, set once grecaptcha finishes rendering both widgets
+// widget ids, set once grecaptcha finishes rendering both widgets
 let lCid = null;let sCid = null;
 function rCap() {
 document.getElementById("liCaptcha").setAttribute("data-sitekey", rk);document.getElementById("sCaptcha").setAttribute("data-sitekey", rk);
@@ -31,7 +31,7 @@ setTimeout(rCap, 300);
 rCap();
 // ok
 function usernameToEmail(username) { return username.trim().toLowerCase() + "@app.local"; }
-// flag to ignore the listener while we're manually handling a login/signup
+// flag
 let manualAuthInProgress = false;
 // dih
 sSP.onchange = () => { sPA.type = sSP.checked ? "text" : "password"; sCOPA.type = sSP.checked ? "text" : "password"; }; liSP.onchange = () => { liPA.type = liSP.checked ? "text" : "password"; };
