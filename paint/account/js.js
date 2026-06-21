@@ -21,10 +21,12 @@ const lCD = document.getElementById("lCD");const sCD = document.getElementById("
 const sSUP = document.getElementById("sSUP");const sLG = document.getElementById("sLG");const sLGL = document.getElementById("sLGL");
 // widget ids
 let lCid = null;let sCid = null;
+let liVerified = false; let sVerified = false;
 function rCap() {
 document.getElementById("liCaptcha").setAttribute("data-sitekey", rk);document.getElementById("sCaptcha").setAttribute("data-sitekey", rk);
 if (window.grecaptcha && window.grecaptcha.render) {
-lCid = grecaptcha.render("liCaptcha", { sitekey: rk });sCid = grecaptcha.render("sCaptcha", { sitekey: rk });
+lCid = grecaptcha.render("liCaptcha", { sitekey: rk, callback: () => { liVerified = true; } });
+sCid = grecaptcha.render("sCaptcha", { sitekey: rk, callback: () => { sVerified = true; } });
 } else {
 setTimeout(rCap, 300);
 } }
@@ -52,8 +54,7 @@ if (username.length === 0 || username.length > 20 || !usernameRegex.test(usernam
 sMsg.textContent = "Username must be 1-20 characters long and contain only lowercase letters, numbers, or underscores!";
 return;
 }
-const cr = sCid !== null ? grecaptcha.getResponse(sCid) : "";
-if (!cr) {
+if (!sVerified) {
 sMsg.textContent = "Please complete the reCAPTCHA before registering!";return;
 }
 manualAuthInProgress = true;
@@ -75,13 +76,12 @@ errorMessage = "Unexpected error: " + err.message;
 }
 sMsg.textContent = "※ " + errorMessage + " ※";console.error("Signup error:", err);
 } finally {
-manualAuthInProgress = false;if (sCid !== null) grecaptcha.reset(sCid);
+manualAuthInProgress = false;if (sCid !== null) { grecaptcha.reset(sCid); sVerified = false; }
 } };
 btnLG.onclick = async () => {
 const username = liUS.value.trim().toLowerCase();const password = liPA.value;lMsg.textContent = "";
 if (!username || !password) { lMsg.textContent = "Please enter your username and password!"; return; }
-const cr = lCid !== null ? grecaptcha.getResponse(lCid) : "";
-if (!cr) {
+if (!liVerified) {
 lMsg.textContent = "Please complete the reCAPTCHA before logging in!";return;
 }
 manualAuthInProgress = true;
@@ -97,7 +97,7 @@ errorMessage = "Invalid email format.";
 }
 lMsg.textContent = "※ " + errorMessage + " Error: " + err.message;console.error("Login error:", err);
 } finally {
-manualAuthInProgress = false;if (lCid !== null) grecaptcha.reset(lCid);
+manualAuthInProgress = false;if (lCid !== null) { grecaptcha.reset(lCid); liVerified = false; }
 } };
 btnLT.onclick = async () => {
 await signOut(auth);sMsg.textContent = "";lMsg.textContent = "";
