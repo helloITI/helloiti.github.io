@@ -19,21 +19,19 @@ const actC = document.getElementById("actC");const actI = document.getElementByI
 const lCD = document.getElementById("lCD");const sCD = document.getElementById("sCD");
 // i also don't know
 const sSUP = document.getElementById("sSUP");const sLG = document.getElementById("sLG");const sLGL = document.getElementById("sLGL");
-// widget ids
+// captcha widget ids, set once grecaptcha finishes rendering both widgets
 let lCid = null;let sCid = null;
-let liVerified = false; let sVerified = false;
 function rCap() {
 document.getElementById("liCaptcha").setAttribute("data-sitekey", rk);document.getElementById("sCaptcha").setAttribute("data-sitekey", rk);
 if (window.grecaptcha && window.grecaptcha.render) {
-lCid = grecaptcha.render("liCaptcha", { sitekey: rk, callback: () => { liVerified = true; } });
-sCid = grecaptcha.render("sCaptcha", { sitekey: rk, callback: () => { sVerified = true; } });
+lCid = grecaptcha.render("liCaptcha", { sitekey: rk });sCid = grecaptcha.render("sCaptcha", { sitekey: rk });
 } else {
 setTimeout(rCap, 300);
 } }
 rCap();
 // ok
 function usernameToEmail(username) { return username.trim().toLowerCase() + "@app.local"; }
-// flag
+// flag to ignore the listener while we're manually handling a login/signup
 let manualAuthInProgress = false;
 // dih
 sSP.onchange = () => { sPA.type = sSP.checked ? "text" : "password"; sCOPA.type = sSP.checked ? "text" : "password"; }; liSP.onchange = () => { liPA.type = liSP.checked ? "text" : "password"; };
@@ -54,7 +52,8 @@ if (username.length === 0 || username.length > 20 || !usernameRegex.test(usernam
 sMsg.textContent = "Username must be 1-20 characters long and contain only lowercase letters, numbers, or underscores!";
 return;
 }
-if (!sVerified) {
+const cr = sCid !== null ? grecaptcha.getResponse(sCid) : "";
+if (!cr) {
 sMsg.textContent = "Please complete the reCAPTCHA before registering!";return;
 }
 manualAuthInProgress = true;
@@ -76,12 +75,13 @@ errorMessage = "Unexpected error: " + err.message;
 }
 sMsg.textContent = "※ " + errorMessage + " ※";console.error("Signup error:", err);
 } finally {
-manualAuthInProgress = false;if (sCid !== null) { grecaptcha.reset(sCid); sVerified = false; }
+manualAuthInProgress = false;if (sCid !== null) grecaptcha.reset(sCid);
 } };
 btnLG.onclick = async () => {
 const username = liUS.value.trim().toLowerCase();const password = liPA.value;lMsg.textContent = "";
 if (!username || !password) { lMsg.textContent = "Please enter your username and password!"; return; }
-if (!liVerified) {
+const cr = lCid !== null ? grecaptcha.getResponse(lCid) : "";
+if (!cr) {
 lMsg.textContent = "Please complete the reCAPTCHA before logging in!";return;
 }
 manualAuthInProgress = true;
@@ -97,7 +97,7 @@ errorMessage = "Invalid email format.";
 }
 lMsg.textContent = "※ " + errorMessage + " Error: " + err.message;console.error("Login error:", err);
 } finally {
-manualAuthInProgress = false;if (lCid !== null) { grecaptcha.reset(lCid); liVerified = false; }
+manualAuthInProgress = false;if (lCid !== null) grecaptcha.reset(lCid);
 } };
 btnLT.onclick = async () => {
 await signOut(auth);sMsg.textContent = "";lMsg.textContent = "";
