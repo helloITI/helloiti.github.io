@@ -245,6 +245,21 @@ function rd() {
 		mt.innerHTML =
 			`<div style="font-weight:600">${ifo["Nickname"]}${gb} ${pi}</div>` +
 			t;
+		// downloads the saved mii back as a real .charinfo/.ffsd file, in case you lost the original!
+		const dw = document.createElement("button");
+		dw.textContent = "※ Download ※";
+		dw.style.cssText =
+			"background:#222; color:#fff; border:1px solid #444; cursor:pointer; padding:4px 8px; border-radius:6px; font-size:12px;";
+		dw.onclick = () => {
+			const blob = new Blob([m.data], { type: "application/octet-stream" });
+			const url = URL.createObjectURL(blob);
+			const a = document.createElement("a");
+			a.href = url;
+			const nick = (ifo["Nickname"] || "Mii").replace(/[^a-zA-Z0-9_-]/g, "_");
+			a.download = `${nick}.${m.ext}`;
+			a.click();
+			URL.revokeObjectURL(url);
+		};
 		const dl = document.createElement("button");
 		dl.textContent = "※ Remove ※";
 		dl.style.cssText =
@@ -254,7 +269,7 @@ function rd() {
 			sl();
 			rd();
 		};
-		dv.append(im, mt, dl);
+		dv.append(im, mt, dw, dl);
 		wp.append(dv);
 	});
 }
