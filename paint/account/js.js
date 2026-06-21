@@ -19,7 +19,7 @@ const actC = document.getElementById("actC");const actI = document.getElementByI
 const lCD = document.getElementById("lCD");const sCD = document.getElementById("sCD");
 // i also don't know
 const sSUP = document.getElementById("sSUP");const sLG = document.getElementById("sLG");const sLGL = document.getElementById("sLGL");
-// widget ids, set once grecaptcha finishes rendering both widgets
+// widget ids
 let lCid = null;let sCid = null;
 function rCap() {
 document.getElementById("liCaptcha").setAttribute("data-sitekey", rk);document.getElementById("sCaptcha").setAttribute("data-sitekey", rk);
