@@ -1,7 +1,12 @@
 // hi skibibi!!! 🤣🤣🤣
 const [_a,_b,_c,_d,_e,_f,_g,_h] = ["QUl6YVN5Qmx6WG45YnlnZU5fMEF5RFFIWURmMlQydk82NldBemZ3","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZWFwcC5jb20","aHR0cHM6Ly9wYWludC1wcm9qZWN0LWUzZWNkLWRlZmF1bHQtcnRkYi5ldXJvcGUtd2VzdDEuZmlyZWJhc2VkYXRhYmFzZS5hcHA","cGFpbnQtcHJvamVjdC1lM2VjZA","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZXN0b3JhZ2UuYXBw","MTQxMTE0MTc3MzE3","MToxNDExMTQxNzczMTc6d2ViOmQ2Yzc4MTU1ZjI4MzdlN2I0YTBjY2M","Ry0yNTNDMUhaQjFW"].map(atob);
-const firebaseConfig = {apiKey:_a,authDomain:_b,databaseURL:_c,projectId:_d,storageBucket:_e,messagingSenderId:_f,appId:_g,measurementId:_h};
-firebase.initializeApp(firebaseConfig);const db = firebase.database();const auth = firebase.auth();auth.signInAnonymously().catch(err => console.log("anon auth error:", err));
+const firebaseConfig = {apiKey:_a,authDomain:_b,databaseURL:_c,projectId:_d,storageBucket:_e,messagingSenderId:_f,appId:_g,measurementId:_h};firebase.initializeApp(firebaseConfig);const db = firebase.database();const auth = firebase.auth(); let resolveAuthReady;const authReady = new Promise(res => { resolveAuthReady = res; }); let checkedInitialAuth = false;
+auth.onAuthStateChanged((user) => {
+if (!checkedInitialAuth) {
+checkedInitialAuth = true; if (user) { resolveAuthReady(); } else { auth.signInAnonymously().catch(err => console.log("anon auth error:", err)); }
+} else if (user) {
+resolveAuthReady();
+} });
 const cv = document.getElementById('cv');const ctx = cv.getContext('2d');const ci = document.getElementById('col');const si = document.getElementById('sz');const eb = document.getElementById('er');const fb = document.getElementById('fl');const ub = document.getElementById('un');const rb = document.getElementById('re');const cb = document.getElementById('clr');const dbtn = document.getElementById('dl');const pb = document.getElementById('pub');const shl = document.getElementById('shl');const cob = document.getElementById('cpy');const po = document.getElementById('po');const pm = document.getElementById('pm');const cp = document.getElementById('cp');
 let dr = false;let bc = ci.value;let bs = Number(si.value);let m = 'draw';let lst = {x:0, y:0};const mu = 30;const us = [];const rs = [];
 function ps() { if(us.length >= mu) us.shift();us.push(cv.toDataURL());rs.length = 0; }
@@ -99,6 +104,7 @@ ctx.putImageData(id, 0, 0);
 pb.addEventListener('click', async ()=>{
 if(!confirm("Are you sure you want to generate a link for this drawing?")) return;
 try{
+await authReady;
 const user = auth.currentUser; if (!user) { alert('Still connecting, please try again in a second!'); return; }
 const data = cv.toDataURL();const id = Date.now().toString(36) + Math.random().toString(36).substring(2,8);const authorId = user.uid;
 await db.ref('drawings/' + id).set({image: data,created: firebase.database.ServerValue.TIMESTAMP,authorId: authorId});
@@ -123,8 +129,7 @@ const {image} = snap.val();await rdu(image);
 }else{
 alert('The drawing was not found.');
 } } }
-document.addEventListener("click", function playMusic() {const audio = document.getElementById("bgm");audio.play().catch(err => console.log(err));document.removeEventListener("click", playMusic);});
-ctx.fillStyle = 'white';ctx.fillRect(0,0,cv.width,cv.height);
+document.addEventListener("click", function playMusic() {const audio = document.getElementById("bgm");audio.play().catch(err => console.log(err));document.removeEventListener("click", playMusic);});ctx.fillStyle = 'white';ctx.fillRect(0,0,cv.width,cv.height);
 ps();
 lfh();
 // ok
