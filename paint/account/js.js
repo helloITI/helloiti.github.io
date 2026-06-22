@@ -39,13 +39,27 @@ const username = liUS.value.trim().toLowerCase();const password = liPA.value;lMs
 if (!grecaptcha.getResponse(lCid)) { lMsg.textContent = "Please complete the reCAPTCHA!"; return; }
 manualAuthInProgress = true;
 try {
-await signInWithEmailAndPassword(auth, usernameToEmail(username), password);
-showLoggedInUI(username);
+await signInWithEmailAndPassword(auth, usernameToEmail(username), password);showLoggedInUI(username);
 } catch (err) { lMsg.textContent = "※ Error: " + err.message + " ※"; } finally { manualAuthInProgress = false; grecaptcha.reset(lCid); } };
 btnLT.onclick = async () => { await signOut(auth); };
 onAuthStateChanged(auth, async (user) => {
-if (manualAuthInProgress) return;
-if (user) { const snap = await get(child(ref(db), "users/" + user.uid)); showLoggedInUI(snap.exists() ? snap.val().username : "(unknown)"); } else { showLoggedOutUI(); }
+if (manualAuthInProgress) return; if (user) { console.log("[auth] restored user:", user.uid, user.email);let snap;
+try { snap = await get(child(ref(db), "users/" + user.uid));
+} catch (err) { console.error("[auth] users/<uid> lookup threw:", err);await new Promise(r => setTimeout(r, 800));
+try { snap = await get(child(ref(db), "users/" + user.uid));
+} catch (err2) {
+console.error("[auth] users/<uid> retry also failed:", err2);showLoggedInUI(user.email ? user.email.split("@")[0] : "(unknown)");return;
+} }
+console.log("[auth] snap.exists():", snap.exists(), "value:", snap.val());
+if (snap.exists() && snap.val().username) {
+showLoggedInUI(snap.val().username);
+} else {
+const fallbackName = user.email ? user.email.split("@")[0] : "(unknown)";console.warn("[auth] users/" + user.uid + " missing in DB, recreating with username:", fallbackName);
+try { await set(ref(db, "users/" + user.uid), { username: fallbackName, drawingCount: 0 }); await set(ref(db, "usernames/" + fallbackName), { uid: user.uid });
+} catch (err3) {
+console.error("[auth] self-heal write failed:", err3); }
+showLoggedInUI(fallbackName); }
+} else { showLoggedOutUI(); }
 });
 document.addEventListener("click", function playMusic() { const audio = document.getElementById("bgm"); if (audio) audio.play().catch(console.error); document.removeEventListener("click", playMusic); }, { once: true });
 // sigh...
