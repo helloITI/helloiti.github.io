@@ -2,9 +2,15 @@
 const [_a,_b,_c,_d,_e,_f,_g,_h] = ["QUl6YVN5Qmx6WG45YnlnZU5fMEF5RFFIWURmMlQydk82NldBemZ3","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZWFwcC5jb20","aHR0cHM6Ly9wYWludC1wcm9qZWN0LWUzZWNkLWRlZmF1bHQtcnRkYi5ldXJvcGUtd2VzdDEuZmlyZWJhc2VkYXRhYmFzZS5hcHA","cGFpbnQtcHJvamVjdC1lM2VjZA","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZXN0b3JhZ2UuYXBw","MTQxMTE0MTc3MzE3","MToxNDExMTQxNzczMTc6d2ViOmQ2Yzc4MTU1ZjI4MzdlN2I0YTBjY2M","Ry0yNTNDMUhaQjFW"].map(atob);
 const firebaseConfig = {apiKey:_a,authDomain:_b,databaseURL:_c,projectId:_d,storageBucket:_e,messagingSenderId:_f,appId:_g,measurementId:_h};
 firebase.initializeApp(firebaseConfig);const db = firebase.database();const auth = firebase.auth();const $ = id => document.getElementById(id);
-// sign in anonymously on load so guests can like drawings
+let checkedInitialAuth = false;
+auth.onAuthStateChanged((user) => {
+if (!checkedInitialAuth) {
+checkedInitialAuth = true;
+if (!user) {
 auth.signInAnonymously().catch(err => console.log("anon auth error:", err));
-// resolves once the first auth state (anon or real) is known
+}
+}
+});
 let resolveAuthReady;const authReady = new Promise(res => { resolveAuthReady = res; });
 const gallery = $('gal');const favG = $('fG');const input = $('dLI');const addBtn = $('aDB');const pOvr = $('pO');const pMsg = $('pM');const edit = $('eB');const remix = $('rB');const clPo = $('ok');const togFavB = $('tF');
 clPo.addEventListener('click', () => pOvr.style.display = 'none');
