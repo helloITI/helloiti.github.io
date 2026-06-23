@@ -1,0 +1,4 @@
+@font-face { font-family: 'wiiu'; src: url('https://helloiti.github.io/assets/nintendo_NTLG-DB_002.ttf') format('truetype'); }
+body { margin: 0;padding: 20px;font-family: 'wiiu', sans-serif;background: url('https://helloiti.github.io/assets/background.png') center/cover no-repeat fixed;overflow: hidden;color: white;cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, auto; }
+h1 { text-align: center;margin-top: 15px;font-size: 2rem; }
+canvas { position: fixed;top: 0;left: 0;width: 100vw;height: 100vh;z-index: -1; }
