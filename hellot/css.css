@@ -1,37 +1,6 @@
-    body { overflow: hidden; }
-    @font-face {
-      font-family: 'NintendoNTLG';
-      src: url('https://helloiti.github.io/assets/nintendo_NTLG-DB_002.ttf') format('truetype');
-      font-weight: normal;
-      font-style: normal;
-    }
-    body {
-      font-family: 'NintendoNTLG', sans-serif;
-      margin: 0;
-      padding: 20px;
-      background-image: url('https://helloiti.github.io/assets/background.png');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      color: white;
-      cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, auto;
-    }
-    a {
-      background-size: 400% 400%;
-      cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, pointer;
-    }
-    .title {
-      text-align: center;
-      margin-top: 15px;
-      font-size: 2rem;
-      font-family: 'NintendoNTLG', sans-serif;
-      position: relative;
-      z-index: 10;
-    }
-    canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: -1;
-    }
+body { overflow: hidden; }
+@font-face { font-family: 'wiiu';src: url('https://helloiti.github.io/assets/nintendo_NTLG-DB_002.ttf') format('truetype');font-weight: normal;font-style: normal; }
+body { font-family: 'wiiu', sans-serif;margin: 0;padding: 20px;background-image: url('https://helloiti.github.io/assets/background.png');background-size: cover;background-position: center;background-repeat: no-repeat;background-attachment: fixed;color: white;cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, auto; }
+a { background-size: 400% 400%;cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, pointer; }
+.title { text-align: center;margin-top: 15px;font-size: 2rem;font-family: 'wiiu', sans-serif;position: relative;z-index: 10; }
+canvas { position: fixed;top: 0;left: 0;z-index: -1; }
