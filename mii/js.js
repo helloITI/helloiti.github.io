@@ -163,11 +163,11 @@ function pm(bf, ex) {
 		ifo["Gender"] = gb === 0 ? "Male" : "Female";
 		const ci = (mb >> 10) & 0x0f;
 		ifo["Favorite Color"] = fc[ci] || "Unknown";
-		const isSpecial = (bf[0x0c] & 0x80) === 0;const isFavorited = (bf[0x19] & 0x40) !== 0;
+		const isSpecial = (bf[0x0c] & 0x80) === 0;const isFavorite = (bf[0x19] & 0x40) !== 0;
 		if (isSpecial) {
 			ifo["Type"] = "Special";
-		} else if (isFavorited) {
-			ifo["Type"] = "Favorited";
+		} else if (isFavorite) {
+			ifo["Type"] = "Favorite";
 		} else {
 			ifo["Type"] = "Normal";
 		}
@@ -208,7 +208,7 @@ function rd() {
 		const fp =
 			ifo["Type"] === "Special"
 				? "gold"
-				: ifo["Type"] === "Favorited"
+				: ifo["Type"] === "Favorite"
 					? "red"
 					: "gray";
 const cf = `https://mii-unsecure.ariankordi.net/miis/image.png?erri=s4mwu-rs1&data=${m.dataHex}&shaderType=switch&type=face&width=270&pantsColor=${pp}&bodyType=switch&verifyCharInfo=0`;const cb = `https://mii-unsecure.ariankordi.net/miis/image.png?erri=s4mwu-rs1&data=${m.dataHex}&shaderType=switch&type=all_body_sugar&width=270&pantsColor=${pp}&bodyType=switch&verifyCharInfo=0`;const ff = `https://mii-unsecure.ariankordi.net/miis/image.png?data=${m.dataHex}&type=face&width=270&pantsColor=gray&bodyType=wiiu&verifyCharInfo=0`;const fb = `https://mii-unsecure.ariankordi.net/miis/image.png?erri=s6s37-r99&data=${m.dataHex}&type=all_body_sugar&width=270&pantsColor=${fp}&verifyCharInfo=0`;const fu = m.ext === "charinfo" ? cf : ff;const bu = m.ext === "charinfo" ? cb : fb;const im = document.createElement("img");
@@ -217,13 +217,13 @@ const cf = `https://mii-unsecure.ariankordi.net/miis/image.png?erri=s4mwu-rs1&da
 			document.getElementById("pi").src = bu;
 			document.getElementById("mp").style.display = "flex";
 		};
-// adds a little star next to the mii's nickname if its a special charinfo mii, or a little heart if its a favorited ffsd mii! :)
+// adds a little star next to the mii's nickname if its a special charinfo mii, or a little heart if its a favorite ffsd mii! :)
 const mt = document.createElement("div");
 		const gb =
 			(m.ext === "charinfo" && ifo["Type"] === "Special") ||
 			(m.ext === "ffsd" && ifo["Type"] === "Special")
 				? " ⭐"
-				: m.ext === "ffsd" && ifo["Type"] === "Favorited"
+				: m.ext === "ffsd" && ifo["Type"] === "Favorite"
 					? " ♥️"
 					: "";
 		let t = "<table><tr><th>Attribute</th><th>Value</th></tr>";
