@@ -45,83 +45,69 @@ function sp() {
 	document.getElementById("pt").innerHTML = `
         <div style="font-size:14px; text-align:left; padding:8px;">
             You may be wondering why is there a "Type" value on CHARINFO Miis...<br><br>
-            Well, you see, charinfo has a normal pants and special pants (aka gold pants) state that still exists to this day. ⁜<br>
+            Well, you see, charinfo has a normal pants and special pants state that still exists to this day.<br>
             <i>(Which you can get by hex editing any charinfo Mii!)</i><br>
-            Here are some hex codes for CHARINFO files to make it special ⁜<br>
+            Here are some HEX codes for CHARINFO files to edit the pants value:<br>
             (You need to figure out where's the pants value)<br><br>
-            <code>00</code> = ※ normal pants ※<br>
-            <code>01</code> = ※ special pants ※ (⁜ gold pants ⁜)<br><br>
+            <code>00</code> = Normal<br>
+            <code>01</code> = Special<br><br>
             Here is some charinfo examples that are special Miis that you can download:<br>
             <a href="https://helloiti.github.io/mii/Gold_Male.charinfo">※ Example 1 ※</a><br>
             <a href="https://helloiti.github.io/mii/Gold_Girl.charinfo">※ Example 2 ※</a><br><br>
             <i><b>Note:</b></i> <i>These examples WON'T work on real Nintendo Switches, they work on this tool (that you are currently using right now), <a href="https://mii-unsecure.ariankordi.net">Mii Renderer (REAL)</a></i><br>
-            <i>(won't show up the gold pants as long you render the mii's pants to "gold") and <a href="https://mii.nxw.pw">Mii Creator</a></i><br>
-            <i>(The gold pants will also not show up, but as long you set the Mii's type to "Special")</i><br><br>
+            <i>(won't show up the special pants as long you render the Mii's pants to "Gold") and <a href="https://mii.nxw.pw">Mii Creator</a></i><br>
+            <i>(The special pants will also not show up, but as long you set the Mii's type to "Special")</i><br><br>
             <button onclick="cp()" style="margin-top:5px; padding:5px 12px; background:#222; color:white; border:1px solid #444;">
                 ※ Close ※
             </button>
         </div>
     `;
 }
-function cp() {
-	document.getElementById("mp1").style.display = "none";
-}
+function cp() { document.getElementById("mp1").style.display = "none"; }
 // hi
 const ca = [
-	{ off: 16, len: 22, name: "Nickname", type: "utf16" },
-	{ off: 40, name: "Gender", type: "u8" },
-	{ off: 39, name: "Favorite Color", type: "u8" },
-	{ off: 43, name: "Type", type: "u8" },
-	{ off: 41, name: "Height", type: "u8" },
-	{ off: 42, name: "Weight", type: "u8" },
+{ off: 16, len: 22, name: "Nickname", type: "utf16" },
+{ off: 40, name: "Gender", type: "u8" },
+{ off: 39, name: "Favorite Color", type: "u8" },
+{ off: 43, name: "Type", type: "u8" },
+{ off: 41, name: "Height", type: "u8" },
+{ off: 42, name: "Weight", type: "u8" },
 ];
-const fc = [
-	"Red",
-	"Orange",
-	"Yellow",
-	"Green",
-	"Lime Green",
-	"Blue",
-	"Light Blue",
-	"Pink",
-	"Purple",
-	"Brown",
-	"White",
-	"Black",
-];
+const fc = [ "Red","Orange","Yellow","Green","Lime Green","Blue","Light Blue","Pink","Purple","Brown","White","Black", ];
 // pants/type
 const pt = { 0: "Normal", 1: "Special" };
+// ok
+const ft = { charinfo: ".charinfo", ffsd: ".ffsd" };
 function hb(hx) {
-	return new Uint8Array(hx.match(/.{2}/g).map((b) => parseInt(b, 16)));
+return new Uint8Array(hx.match(/.{2}/g).map((b) => parseInt(b, 16)));
 }
 function sl() {
-	const st = ls.map((m) => ({ id: m.id, dataHex: m.dataHex, ext: m.ext }));
-	localStorage.setItem("miis", JSON.stringify(st));
+const st = ls.map((m) => ({ id: m.id, dataHex: m.dataHex, ext: m.ext }));
+localStorage.setItem("miis", JSON.stringify(st));
 }
 // checks if the hex text data of the mii is valid or not!!! (if not, it will give you an error)
 document.getElementById("ih").onclick = () => {
-	const hx = document.getElementById("hx").value.trim().replace(/\s+/g, "");
-	// this is what happens if you import a blank hex data :p
-	if (!hx)
-		return alert(
-			"Please type a valid Mii HEX data.",
-		);
-	// this means that you entered a invalid hex data, such as spamming your keyboard, typing random stuff, or a unsupported mii hex data.
-	// reminder: this tool ONLY uses ffsd and charinfo miis, more mii data files will be added probably soon, in the future, such as .rsd, etc.
-	if (!/^[0-9a-fA-F]+$/.test(hx))
-		return alert("Invalid CHARINFO/FFSD HEX data!!!");
-	if (hx.length % 2 !== 0) return alert("HEX length must be even!");
-	const bl = hx.length / 2;
-	// this happens if you enter a mii studio hex data code, which you can get it from ariankordi's mii renderer:
-	// https://mii-unsecure.ariankordi.net/
-	if (bl !== 88 && bl !== 96)
-		return alert("Mii Storage doesn't support Mii Studio HEX data, only FFSD and CHARINFO.");
-	let ex = bl === 88 ? "charinfo" : "ffsd";
-	const bf = new Uint8Array(hx.match(/.{2}/g).map((b) => parseInt(b, 16)));
-	ls.push({ id: Date.now(), data: bf, dataHex: hx, ext: ex });
-	sl();
-	rd();
-	document.getElementById("hx").value = "";
+const hx = document.getElementById("hx").value.trim().replace(/\s+/g, "");
+// this is what happens if you import a blank hex data :p
+if (!hx)
+return alert(
+"Please type a valid Mii HEX data.",
+);
+// this means that you entered a invalid hex data, such as spamming your keyboard, typing random stuff, or a unsupported mii hex data.
+// reminder: this tool ONLY uses ffsd and charinfo miis, more mii data files will be added probably soon, in the future, such as .rsd, etc. (will probably never happen lol)
+if (!/^[0-9a-fA-F]+$/.test(hx))
+return alert("Invalid CHARINFO/FFSD HEX data!");
+if (hx.length % 2 !== 0) return alert("HEX length must be even!");
+const bl = hx.length / 2;
+// this happens if you enter a mii studio hex data code, which you can get it from ariankordi's mii renderer:
+// https://mii-unsecure.ariankordi.net/
+if (bl !== 88 && bl !== 96)
+return alert("Mii Storage doesn't support Mii Studio HEX data, only FFSD and CHARINFO.");
+let ex = bl === 88 ? "charinfo" : "ffsd";const bf = new Uint8Array(hx.match(/.{2}/g).map((b) => parseInt(b, 16)));
+ls.push({ id: Date.now(), data: bf, dataHex: hx, ext: ex });
+sl();
+rd();
+document.getElementById("hx").value = "";
 };
 // checks if the user has imported a valid charinfo or ffsd mii file, if not, it will give you an error.
 document.getElementById("fl").onchange = async (e) => {
@@ -142,6 +128,7 @@ document.getElementById("fl").onchange = async (e) => {
 function pm(bf, ex) {
 	const ifo = {};
 	const dc = new TextDecoder("utf-16le");
+	ifo["File Type"] = ft[ex] || ex;
 	if (ex === "charinfo") {
 		ca.forEach((a) => {
 			if (a.type === "utf16") {
@@ -153,10 +140,9 @@ function pm(bf, ex) {
 				ifo[a.name] = bf[a.off];
 			}
 		});
+		ifo["Favorite Color"] = fc[ifo["Favorite Color"]] || "Unknown";
 		ifo["Gender"] =
 			ifo["Gender"] === 0 ? "Male" : "Female";
-		ifo["Favorite Color"] =
-			fc[ifo["Gender"]] || "Unknown";
 		ifo["Type"] = pt[ifo["Type"]] || "Unknown";
 		if (!ifo["Nickname"]) ifo["Nickname"] = "Mii";
 	} else if (ex === "ffsd") {
@@ -177,15 +163,21 @@ function pm(bf, ex) {
 		ifo["Gender"] = gb === 0 ? "Male" : "Female";
 		const ci = (mb >> 10) & 0x0f;
 		ifo["Favorite Color"] = fc[ci] || "Unknown";
+		const isSpecial = (bf[0x0c] & 0x80) === 0;const isFavorited = (bf[0x19] & 0x40) !== 0;
+		if (isSpecial) {
+			ifo["Type"] = "Special";
+		} else if (isFavorited) {
+			ifo["Type"] = "Favorited";
+		} else {
+			ifo["Type"] = "Normal";
+		}
 	}
 	return ifo;
 }
 // saves the imported miis into your browser's local storage!!
 let ls = [];
-
 try {
-	const raw = JSON.parse(localStorage.getItem("miis") || "[]");
-
+const raw = JSON.parse(localStorage.getItem("miis") || "[]");
 	if (Array.isArray(raw)) {
 		ls = raw
 			.filter((m) => m && m.dataHex && m.ext)
@@ -197,7 +189,7 @@ try {
 			}));
 	}
 } catch (e) {
-	console.warn("localStorage miis is corrupted... resetting!!!");
+	console.warn("localStorage 'miis' is corrupted... removing it!");
 	localStorage.removeItem("miis");
 	ls = [];
 }
@@ -213,27 +205,29 @@ function rd() {
 			m.ext === "charinfo" && ifo["Type"] === "Special"
 				? "gold"
 				: "gray";
-		const cf = `https://mii-unsecure.ariankordi.net/miis/image.png?erri=s4mwu-rs1&data=${m.dataHex}&shaderType=switch&type=face&width=270&pantsColor=${pp}&bodyType=switch&verifyCharInfo=0`;
-		const cb = `https://mii-unsecure.ariankordi.net/miis/image.png?erri=s4mwu-rs1&data=${m.dataHex}&shaderType=switch&type=all_body_sugar&width=270&pantsColor=${pp}&bodyType=switch&verifyCharInfo=0`;
-		const ff = `https://mii-unsecure.ariankordi.net/miis/image.png?data=${m.dataHex}&type=face&width=270&pantsColor=gray&bodyType=wiiu&verifyCharInfo=0`;
-		const fb = `https://mii-unsecure.ariankordi.net/miis/image.png?data=${m.dataHex}&type=all_body_sugar&width=270&pantsColor=gray&bodyType=wiiu&verifyCharInfo=0`;
-		const fu = m.ext === "charinfo" ? cf : ff;
-		const bu = m.ext === "charinfo" ? cb : fb;
-		const im = document.createElement("img");
+		const fp =
+			ifo["Type"] === "Special"
+				? "gold"
+				: ifo["Type"] === "Favorited"
+					? "red"
+					: "gray";
+const cf = `https://mii-unsecure.ariankordi.net/miis/image.png?erri=s4mwu-rs1&data=${m.dataHex}&shaderType=switch&type=face&width=270&pantsColor=${pp}&bodyType=switch&verifyCharInfo=0`;const cb = `https://mii-unsecure.ariankordi.net/miis/image.png?erri=s4mwu-rs1&data=${m.dataHex}&shaderType=switch&type=all_body_sugar&width=270&pantsColor=${pp}&bodyType=switch&verifyCharInfo=0`;const ff = `https://mii-unsecure.ariankordi.net/miis/image.png?data=${m.dataHex}&type=face&width=270&pantsColor=gray&bodyType=wiiu&verifyCharInfo=0`;const fb = `https://mii-unsecure.ariankordi.net/miis/image.png?erri=s6s37-r99&data=${m.dataHex}&type=all_body_sugar&width=270&pantsColor=${fp}&verifyCharInfo=0`;const fu = m.ext === "charinfo" ? cf : ff;const bu = m.ext === "charinfo" ? cb : fb;const im = document.createElement("img");
 		im.src = fu;
 		im.onclick = () => {
 			document.getElementById("pi").src = bu;
 			document.getElementById("mp").style.display = "flex";
 		};
-		// adds a little star next to the charinfo mii's nickname if its a special mii, if not, it will not add the star.
-		const mt = document.createElement("div");
+// adds a little star next to the mii's nickname if its a special charinfo mii, or a little heart if its a favorited ffsd mii! :)
+const mt = document.createElement("div");
 		const gb =
-			m.ext === "charinfo" && ifo["Type"] === "Special"
+			(m.ext === "charinfo" && ifo["Type"] === "Special") ||
+			(m.ext === "ffsd" && ifo["Type"] === "Special")
 				? " ⭐"
-				: "";
+				: m.ext === "ffsd" && ifo["Type"] === "Favorited"
+					? " ♥️"
+					: "";
 		let t = "<table><tr><th>Attribute</th><th>Value</th></tr>";
 		for (const k in ifo) {
-			if (m.ext === "ffsd" && k === "Type") continue;
 			if (m.ext === "charinfo" && k === "Creator's Name") continue;
 			t += `<tr><td>${k}</td><td>${ifo[k]}</td></tr>`;
 		}
