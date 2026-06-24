@@ -1,0 +1,64 @@
+    @font-face {
+      font-family: 'NintendoNTLG';
+      src: url('https://helloiti.github.io/assets/nintendo_NTLG-DB_002.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+    body {
+      font-family: 'NintendoNTLG', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-image: url('https://helloiti.github.io/assets/background.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: white;
+      cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, auto;
+    }
+    a {
+      background-size: 400% 400%;
+      cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, pointer;
+    }
+    .mn {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 20px;
+  border-radius: 12px;
+  max-width: 600px;
+  margin: auto;
+}
+    p {
+      margin: 12px 0;
+      line-height: 1.5;
+    }
+ul {
+  list-style: none;
+  padding: 0;
+  text-align: center;
+}
+li::before {
+  content: "•  ";
+  color: #d3e7e8;
+}
+    .st {
+  font-size: 10px;
+  opacity: 0.67;
+}
+    /* credits to RFGuy (https://rfguy.nekoweb.org) for this code! */
+.nv-br {
+  background-color: rgb(209 79 79);
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto; /* important */
+  max-width: 95%; /* prevents overflow */
+  padding: 12px 20px; /* smaller so it fits */
+  border-radius: 0 0 12px 12px;
+  outline: 4px solid #9e2222;
+  display: flex;
+  flex-wrap: wrap; /* allows wrapping */
+  justify-content: center;
+  gap: 8px;
+  z-index: 11;
+}
