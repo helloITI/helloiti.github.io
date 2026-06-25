@@ -1,19 +1,19 @@
+/* hi skibibi!!! 🤣🤣🤣 */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
 import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-// TSTTTTTTTTTTTTTTTTTS PMOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO 😂😂😂
-// i love and hate firebase at the same time.
-// well firebase is easier than... other stuff such as cloudflare, even if it has 1GB of storage its still easy 🥹
-  const firebaseConfig = {
-    apiKey: "AIzaSyBMBAlA_yAXxzeos2xQGrvGRh05UaxomjM",
-    authDomain: "son-im-crine.firebaseapp.com",
-    databaseURL: "https://son-im-crine-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "son-im-crine",
-    storageBucket: "son-im-crine.firebasestorage.app",
-    messagingSenderId: "826626917380",
-    appId: "1:826626917380:web:66e2e78d9d7f92cc25a151",
-    measurementId: "G-T2YGTXMVSF"
-  };
+
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyAQgHeDZ43_9JciQN1SRSCGBSJUZ2BgDT8",
+  authDomain: "sealcl.firebaseapp.com",
+  databaseURL: "https://sealcl-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "sealcl",
+  storageBucket: "sealcl.firebasestorage.app",
+  messagingSenderId: "136985893697",
+  appId: "1:136985893697:web:4792c2a645841be067dfc0",
+  measurementId: "G-RN8BDPZXX4"
+};
 const app = initializeApp(firebaseConfig); const db = getDatabase(app); const auth = getAuth(app); signInAnonymously(auth);
 const counterRef = ref(db, "tictac");
 let currentClicks = 0;
