@@ -9,4 +9,4 @@ button { cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, pointer; 
 #fuck{ position: fixed; bottom: 95px;left: 50%;transform: translateX(-50%);font-size: clamp(1.2rem, 4vw, 1.8rem);z-index: 20; }
 #okcool { position: fixed;bottom: 135px;left: 50%;transform: translateX(-50%);font-size: clamp(0.9rem, 3.5vw, 1.1rem);max-width: 95%;z-index: 20;opacity: 0.95; }
 canvas { position: fixed; inset: 0; z-index: 0; }
-#language-selector { position: absolute;top: 10px;right: 10px;font-size: 16px;padding: 4px;z-index: 1;cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, pointer; }
+#boring { position: absolute;top: 10px;right: 10px;font-size: 16px;padding: 4px;z-index: 1;cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, pointer; }
