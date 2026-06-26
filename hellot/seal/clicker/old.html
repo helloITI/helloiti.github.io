@@ -994,10 +994,12 @@
       if (!msg) return;
       const visitorEl = document.getElementById(`visitor-${msg.userId}`);
       if (!visitorEl) return;
+      const bubbleLayer = visitorEl.querySelector(".bubble-layer");
+      if (!bubbleLayer) return;
       const bubble = document.createElement("div");
       bubble.textContent = msg.text;
       bubble.className = "chat-bubble";
-      visitorEl.appendChild(bubble);
+      bubbleLayer.appendChild(bubble);
       setTimeout(() => {
         bubble.style.opacity = "0";
         setTimeout(() => bubble.remove(), 1000);
