@@ -288,27 +288,15 @@
     const sealSound = document.getElementById('seal-sound');
     const button = document.getElementById('seal-btn');
     const counterDiv = document.getElementById('counter');
-    const NAMESPACE = "hellotseal";
-    const KEY = "sealbutton";
 
-    async function fetchCounter() {
-      try {
-        let res = await fetch(`https://abacus.jasoncameron.dev/get/${NAMESPACE}/${KEY}`);
-        let data = await res.json();
-        counterDiv.textContent = `${data.value}`;
-      } catch(e) { console.error("fetchCounter failed:", e); }
+    const clickCounterRef = firebase.database().ref("totalClicks");
+    clickCounterRef.on("value", snap => {
+      counterDiv.textContent = (snap.val() ?? 0) + " clicks";
+    });
+
+    function incrementCounter() {
+      clickCounterRef.transaction(current => (current || 0) + 1);
     }
-
-    async function incrementCounter() {
-      try {
-        let res = await fetch(`https://abacus.jasoncameron.dev/hit/${NAMESPACE}/${KEY}`);
-        let data = await res.json();
-        counterDiv.textContent = `${data.value}`;
-      } catch(e) { console.error("incrementCounter failed:", e); }
-    }
-
-    setInterval(fetchCounter, 2000);
-    fetchCounter();
   </script>
 
   <!-- three.js scene -->
