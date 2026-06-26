@@ -61,9 +61,73 @@
       padding: 4px;
       z-index: 1;
     }
+    #mii-modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+    #mii-modal {
+      background: #222;
+      color: #fff;
+      padding: 20px 24px;
+      border-radius: 10px;
+      max-width: 420px;
+      width: 90%;
+      font-size: 14px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+    #mii-modal h2 {
+      margin: 0 0 10px;
+      font-size: 17px;
+    }
+    #mii-modal textarea {
+      width: 100%;
+      box-sizing: border-box;
+      resize: vertical;
+      min-height: 60px;
+      margin: 10px 0;
+      font-family: monospace;
+      font-size: 12px;
+      padding: 6px;
+    }
+    #mii-modal .mii-modal-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+    #mii-modal button {
+      padding: 6px 14px;
+      cursor: pointer;
+      border: 1px solid #555;
+      background: #333;
+      color: #fff;
+      border-radius: 6px;
+    }
+    #mii-modal-error {
+      color: #ff6b6b;
+      font-size: 12px;
+      min-height: 16px;
+    }
   </style>
 </head>
 <body>
+  <div id="mii-modal-overlay" style="display:none;">
+    <div id="mii-modal">
+      <h2>※ Show your own Mii! ※</h2>
+      <p>Paste your Mii's hex data below to use it as your face here (visitor list + crowd). If you skip this, a default anonymous face will be used instead.</p>
+      <textarea id="mii-modal-input" placeholder="Paste Mii HEX data here..."></textarea>
+      <div id="mii-modal-error"></div>
+      <div class="mii-modal-buttons">
+        <button id="mii-modal-skip">Skip</button>
+        <button id="mii-modal-save">Save</button>
+      </div>
+    </div>
+  </div>
+
   <h1></h1>
   <select id="lang-selector">
     <option value="en">English</option>
@@ -250,6 +314,59 @@
     });
     firebase.auth().signInAnonymously();
     const db = firebase.database();
+
+    // ---- custom Mii data popup ----
+    // localStorage keys: "customMiiData" (the hex string, only set if the user
+    // actually saved one) and "customMiiChoiceMade" (set on either Save or Skip,
+    // so the popup doesn't nag returning visitors who chose to skip).
+    let miiDataResolve;
+    window.miiDataReady = new Promise(res => { miiDataResolve = res; });
+
+    function getMyMiiData() {
+      return localStorage.getItem("customMiiData") || null;
+    }
+    window.getMyMiiData = getMyMiiData;
+
+    (function initMiiPopup() {
+      const overlay = document.getElementById("mii-modal-overlay");
+      const input = document.getElementById("mii-modal-input");
+      const errorEl = document.getElementById("mii-modal-error");
+      const saveBtn = document.getElementById("mii-modal-save");
+      const skipBtn = document.getElementById("mii-modal-skip");
+
+      const choiceMade = localStorage.getItem("customMiiChoiceMade");
+      if (choiceMade) {
+        miiDataResolve(getMyMiiData());
+        return;
+      }
+
+      overlay.style.display = "flex";
+
+      function closeModal(savedData) {
+        overlay.style.display = "none";
+        localStorage.setItem("customMiiChoiceMade", "1");
+        if (savedData) {
+          localStorage.setItem("customMiiData", savedData);
+        }
+        miiDataResolve(savedData || null);
+      }
+
+      saveBtn.addEventListener("click", () => {
+        const hx = input.value.trim().replace(/\s+/g, "");
+        if (!hx) {
+          closeModal(null);
+          return;
+        }
+        if (!/^[0-9a-fA-F]+$/.test(hx) || hx.length % 2 !== 0) {
+          errorEl.textContent = "That doesn't look like valid Mii HEX data.";
+          return;
+        }
+        closeModal(hx);
+      });
+
+      skipBtn.addEventListener("click", () => closeModal(null));
+    })();
+    // ---- end custom Mii data popup ----
 
     function triggerEasterEgg() {
       if (!model || easterEggActive) return;
@@ -534,6 +651,40 @@
         crowdGroup.add(personGroup);
         personGroups.push(personGroup);
       }
+
+      // add the current page visitor as one extra crowd figure, using whatever
+      // Mii data they entered in the popup (or a plain default-colored figure
+      // with no face sprite if they skipped it).
+      await window.miiDataReady;
+      const myMiiData = window.getMyMiiData();
+      const myGroup = new THREE.Group();
+      const myBodyColor = new THREE.Color().setHSL(Math.random(), 0.7, 0.5);
+      const myBodyHeight = 0.3, myBodyRadius = 0.08;
+      const myBody = new THREE.Mesh(new THREE.CylinderGeometry(myBodyRadius, myBodyRadius, myBodyHeight, 16), new THREE.MeshStandardMaterial({ color: myBodyColor }));
+      myBody.position.y = myBodyHeight / 2;
+      const myTop = new THREE.Mesh(new THREE.SphereGeometry(myBodyRadius, 16, 16, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshStandardMaterial({ color: myBodyColor }));
+      myTop.position.y = myBodyHeight;
+      myGroup.add(myBody, myTop);
+
+      if (myMiiData) {
+        try {
+          const myTexture = texLoader.load(`https://mii-unsecure.ariankordi.net/miis/image.png?erri=sqkn3-rfb&data=${myMiiData}&type=face_only&width=270&pantsColor=red&verifyCRC16=0&verifyCharInfo=0`);
+          const mySprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: myTexture, transparent: true }));
+          mySprite.scale.set(0.56, 0.56, 1);
+          mySprite.position.y = 0.6;
+          mySprite.position.z = 0.015;
+          myGroup.add(mySprite);
+        } catch (err) {
+          console.error("Failed to load own Mii for crowd figure:", err);
+        }
+      }
+
+      const myTotal = total + 1;
+      const myAngle = ((total - (myTotal - 1) / 2) / myTotal) * Math.PI / 2;
+      myGroup.position.set(radius * Math.sin(myAngle), 0, -radius * Math.cos(myAngle) + 5);
+      myGroup.userData = { swayOffset: Math.random() * Math.PI * 2, bobOffset: Math.random() * Math.PI * 2 };
+      crowdGroup.add(myGroup);
+      personGroups.push(myGroup);
     }
 
     initCrowd();
@@ -568,6 +719,7 @@
         id: userId,
         guest: isGuest,
         username: username || userId,
+        miiData: getMyMiiData() || null,
         timestamp: firebase.database.ServerValue.TIMESTAMP
       }).catch(err => console.error("Failed to add/update visitor:", err));
       thisVisitorRef.onDisconnect().remove().catch(err => console.error("onDisconnect failed:", err));
@@ -577,17 +729,19 @@
       authReady.then(() => {
       firebase.database().ref('.info/connected').on('value', snap => {
         if (snap.val() === true) {
-          if (!isGuest) {
-            fetch(`https://mii-unsecure.ariankordi.net/miitomo_get_player_data/${userId}?namespace=own_mii`)
-              .then(res => res.json())
-              .then(data => {
-                const player = data.players?.[0]?.player_data?.own_mii;
-                addOrUpdateVisitor(player?.nameExtension || userId);
-              })
-              .catch(() => addOrUpdateVisitor());
-          } else {
-            addOrUpdateVisitor();
-          }
+          window.miiDataReady.then(() => {
+            if (!isGuest) {
+              fetch(`https://mii-unsecure.ariankordi.net/miitomo_get_player_data/${userId}?namespace=own_mii`)
+                .then(res => res.json())
+                .then(data => {
+                  const player = data.players?.[0]?.player_data?.own_mii;
+                  addOrUpdateVisitor(player?.nameExtension || userId);
+                })
+                .catch(() => addOrUpdateVisitor());
+            } else {
+              addOrUpdateVisitor();
+            }
+          });
         }
       });
 
@@ -641,8 +795,14 @@
           const img = document.createElement("img");
           img.width = 50; img.height = 50;
           img.style.cssText = "border-radius:50%;margin-right:8px;";
-          img.src = visitor.guest ? "https://helloiti.github.io/assets/anonface.png" : `https://tomop.kaeru.world/miiface/${visitor.id}`;
-          img.onerror = () => { img.src = "anonface.png"; };
+          if (visitor.miiData) {
+            img.src = `https://mii-unsecure.ariankordi.net/miis/image.png?erri=sqkn3-rfb&data=${visitor.miiData}&shaderType=miitomo&type=face_only&width=270&pantsColor=red&verifyCRC16=0&verifyCharInfo=0`;
+          } else if (visitor.guest) {
+            img.src = "https://helloiti.github.io/assets/anonface.png";
+          } else {
+            img.src = `https://tomop.kaeru.world/miiface/${visitor.id}`;
+          }
+          img.onerror = () => { img.src = "https://helloiti.github.io/hellot/seal/clicker/anonface.png"; };
 
           const infoSpan = document.createElement("span");
           infoSpan.style.cssText = "display:flex;flex-direction:column;";
