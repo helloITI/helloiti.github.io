@@ -32,7 +32,7 @@ animate(); window.addEventListener('resize', () => { camera.aspect = window.inne
 const songs = ["https://helloiti.github.io/assets/13._Exhibition.mp3","https://helloiti.github.io/assets/07main.mp3","https://helloiti.github.io/assets/3ds.mp3","https://helloiti.github.io/assets/dsi.mp3","https://helloiti.github.io/assets/mk.mp3","https://helloiti.github.io/assets/mii.mp3" ];
 window.translations = {
 en: {
-title: " helloT seal clicker ",
+title: "※ helloT seal clicker ※",
 subtitle: " Each click updates the <b>global</b> counter! ",
  clicks: "clicks",
     button: " Yap yoo! ",
@@ -59,7 +59,7 @@ subtitle: " Each click updates the <b>global</b> counter! ",
     ]
   },
   es: {
-    title: " Clicker de foca helloT ",
+    title: "※ Clicker de foca helloT ※",
     subtitle: " Cada clic actualiza el contador <b>global</b>! ",
     clicks: "clics",
     button: " Yap yoo! ",
@@ -86,7 +86,7 @@ subtitle: " Each click updates the <b>global</b> counter! ",
     ]
   },
   fr: {
-    title: " Clicker de phoque helloT ",
+    title: "※ Clicker de phoque helloT ※",
     subtitle: " Chaque clic met à jour le compteur <b>global</b> ! ",
     clicks: "clics",
     button: " Yap yoo! ",
@@ -113,7 +113,7 @@ subtitle: " Each click updates the <b>global</b> counter! ",
     ]
   },
   yapyoo: {
-    title: " Yap Yoo! ",
+    title: "※ Yap Yoo! ※",
     subtitle: " Yap yap yap, yoo, yap, yoo yoo! ",
     clicks: "yap yoos!",
     button: " Yap yoo! ",
