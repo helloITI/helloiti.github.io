@@ -243,6 +243,11 @@
     const [_a,_b,_c,_d,_e,_f,_g,_h] = ["QUl6YVN5Q0YyTmMzZWhyaFZkMXNBSjdwS3lJTGhEZHlCRy1iVXZN","b2xkc2VhbGNsLmZpcmViYXNlYXBwLmNvbQ","aHR0cHM6Ly9vbGRzZWFsY2wtZGVmYXVsdC1ydGRiLmV1cm9wZS13ZXN0MS5maXJlYmFzZWRhdGFiYXNlLmFwcA","b2xkc2VhbGNs","b2xkc2VhbGNsLmZpcmViYXNlc3RvcmFnZS5hcHA","NjMzMDcyMzU0MjI2","MTY2MzMwNzIzNTQyMjY6d2ViOjI3ZTk3YzUzY2JjMTgwNmVmMTVhYWI","Ry02WUdSNzZHUkYw"].map(atob);
     const firebaseConfig = {apiKey:_a,authDomain:_b,databaseURL:_c,projectId:_d,storageBucket:_e,messagingSenderId:_f,appId:_g,measurementId:_h};
     firebase.initializeApp(firebaseConfig);
+    const authReady = new Promise(resolve => {
+      firebase.auth().onAuthStateChanged(user => {
+        if (user) resolve(user);
+      });
+    });
     firebase.auth().signInAnonymously();
     const db = firebase.database();
 
@@ -663,21 +668,24 @@
     button.addEventListener("click", () => {
       sealSound.currentTime = 0;
       sealSound.play();
-      incrementCounter();
 
       const lang = langSelector.value;
       const t = translations[lang];
       document.getElementById('click-message').textContent =
         t.messages[Math.floor(Math.random() * t.messages.length)];
 
-      const userClickRef = userClicksRef.child(userId);
-      userClickRef.transaction(current => (current || 0) + 1);
-
       // hyperMode tracking
       const now = Date.now();
       clickTimes.push(now);
       clickTimes = clickTimes.filter(t => now - t < TIME_WINDOW);
       if (clickTimes.length >= CLICK_THRESHOLD) hyperMode = true;
+
+      // wait for auth before any Firebase writes
+      authReady.then(() => {
+        incrementCounter();
+        const userClickRef = userClicksRef.child(userId);
+        userClickRef.transaction(current => (current || 0) + 1);
+      });
     });
 
     // chat
