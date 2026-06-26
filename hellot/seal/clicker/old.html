@@ -21,6 +21,7 @@
       padding: 12px 20px;
       font-size: 18px;
       cursor: pointer;
+      z-index: 10;
     }
     #counter {
       position: absolute;
@@ -29,6 +30,7 @@
       transform: translateX(-50%);
       font-size: 20px;
       color: #fff;
+      z-index: 10;
     }
     p {
       position: absolute;
@@ -37,6 +39,7 @@
       transform: translateX(-50%);
       font-size: 20px;
       color: #fff;
+      z-index: 10;
     }
     h1 {
       position: absolute;
@@ -44,6 +47,7 @@
       transform: translateX(-50%);
       font-size: 20px;
       color: #fff;
+      z-index: 10;
     }
     canvas {
       display: block;
@@ -70,7 +74,7 @@
       right: 10px;
       font-size: 16px;
       padding: 4px;
-      z-index: 1;
+      z-index: 10;
     }
     #mii-edit-btn {
       position: absolute;
@@ -79,7 +83,7 @@
       font-size: 13px;
       padding: 5px 10px;
       cursor: pointer;
-      z-index: 1;
+      z-index: 10;
       border-radius: 6px;
       border: 1px solid #555;
       background: #333;
@@ -92,7 +96,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 100;
+      z-index: 1000;
     }
     #mii-modal {
       background: #222;
@@ -104,10 +108,7 @@
       font-size: 14px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.5);
     }
-    #mii-modal h2 {
-      margin: 0 0 10px;
-      font-size: 17px;
-    }
+    #mii-modal h2 { margin: 0 0 10px; font-size: 17px; }
     #mii-modal textarea {
       width: 100%;
       box-sizing: border-box;
@@ -118,11 +119,7 @@
       font-size: 12px;
       padding: 6px;
     }
-    #mii-modal .mii-modal-buttons {
-      display: flex;
-      justify-content: flex-end;
-      gap: 8px;
-    }
+    #mii-modal .mii-modal-buttons { display: flex; justify-content: flex-end; gap: 8px; }
     #mii-modal button {
       padding: 6px 14px;
       cursor: pointer;
@@ -131,18 +128,14 @@
       color: #fff;
       border-radius: 6px;
     }
-    #mii-modal-error {
-      color: #ff6b6b;
-      font-size: 12px;
-      min-height: 16px;
-    }
+    #mii-modal-error { color: #ff6b6b; font-size: 12px; min-height: 16px; }
   </style>
 </head>
 <body>
   <div id="mii-modal-overlay" style="display:none;">
     <div id="mii-modal">
       <h2>※ Show your own Mii! ※</h2>
-      <p>Paste your Mii's hex data below to use it as your face here (visitor list + crowd). If you skip this, a default anonymous face will be used instead. You can come back and change this anytime with the "Change my Mii" button.</p>
+      <p>Paste your Mii's hex data below to use it as your face here. You can come back and change this anytime with the "Change my Mii" button.</p>
       <textarea id="mii-modal-input" placeholder="Paste Mii HEX data here..."></textarea>
       <div id="mii-modal-error"></div>
       <div class="mii-modal-buttons">
@@ -161,14 +154,14 @@
     <option value="fi">Suomi</option>
     <option value="fr">Français</option>
   </select>
-  <div id="visitor-list"></div>
-  <input id="chat-input" type="text" placeholder="Say something..." style="width:10%; position: relative; z-index: 2;">
-  <button id="chat-send" style="position: relative; z-index: 2;">Send</button>
+  <div id="visitor-list" style="position:relative;z-index:10;"></div>
+  <input id="chat-input" type="text" placeholder="Say something..." style="width:10%; position:relative; z-index:10;">
+  <button id="chat-send" style="position:relative; z-index:10;">Send</button>
 
   <canvas id="canvas"></canvas>
   <p id="click-message"></p>
   <div id="counter">Loading...</div>
-  <div id="visitor-counter" style="position:absolute;bottom:50px;left:50%;transform:translateX(-50%);font-size:16px;color:#fff;"></div>
+  <div id="visitor-counter" style="position:absolute;bottom:50px;left:50%;transform:translateX(-50%);font-size:16px;color:#fff;z-index:10;"></div>
   <button id="seal-btn"></button>
 
   <audio id="seal-sound">
@@ -185,148 +178,49 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
 
-  <!-- translations + language -->
   <script>
     const translations = {
       en: {
-        title: "seal of HelloT",
-        h1: "Each click updates a global counter!",
-        button: "Yap Yoo!",
-        messages: [
-          "1 click = 1 seal will appear on someone's door /j",
-          "1 click = 100000 slay rizz 💅",
-          "1 click = +1 Baddie 😍",
-          "1 click = the seal will fly (not really)",
-          "1 click = 1 more minute of screentime for me 🤤",
-          "1 click = 1 more day of summer (NOT REAL :(( )",
-          "1 click = You become immortal 😱 (NO)",
-          "1 click = MrBreast will give you 1000000 BILKION 🤑",
-          "1 click = Donation to TEAM SEALS, (i'm poor ok?)",
-          "1 click = GTA6 will come 1 hour earlier",
-          "1 click = 1 glass of Fart Free Water!",
-          "1 click = parapa 🥹",
-          "1 click = + 0.0001% possibility of Hellot seal cameo in webroom.",
-          "1 click = 1 temu ad terminated 💅",
-          "1 click = MORE SEALS 🤑 /j",
-          "1 click = Update to the global counter! /srs",
-          "1 click = Good luck",
-          "1 click = 1 italian brainrot meme killed.",
-          "1 click = 1 labubu will explode!!!!"
-        ]
+        title: "seal of HelloT", h1: "Each click updates a global counter!", button: "Yap Yoo!",
+        messages: ["1 click = 1 seal will appear on someone's door /j","1 click = 100000 slay rizz 💅","1 click = +1 Baddie 😍","1 click = the seal will fly (not really)","1 click = 1 more minute of screentime for me 🤤","1 click = 1 more day of summer (NOT REAL :(( )","1 click = You become immortal 😱 (NO)","1 click = MrBreast will give you 1000000 BILKION 🤑","1 click = Donation to TEAM SEALS, (i'm poor ok?)","1 click = GTA6 will come 1 hour earlier","1 click = 1 glass of Fart Free Water!","1 click = parapa 🥹","1 click = + 0.0001% possibility of Hellot seal cameo in webroom.","1 click = 1 temu ad terminated 💅","1 click = MORE SEALS 🤑 /j","1 click = Update to the global counter! /srs","1 click = Good luck","1 click = 1 italian brainrot meme killed.","1 click = 1 labubu will explode!!!!"]
       },
       es: {
-        title: "foca de HelloT",
-        h1: "¡Cada clic actualiza un contador global!",
-        button: "¡Yap Yoo!",
-        messages: [
-          "1 clic = 1 foca aparecerá en la puerta de alguien /j",
-          "1 clic = 100000 slay rizz 💅",
-          "1 clic = +1 Baddie 😍",
-          "1 clic = el foca volará (no realmente)",
-          "1 clic = 1 minuto más de tiempo frente a la pantalla 🤤",
-          "1 clic = 1 día más de verano (NO REAL :(( )",
-          "1 clic = Te vuelves inmortal 😱 (NO)",
-          "1 clic = MrBreast te dará 1000000 BILKION 🤑",
-          "1 clic = Donación a TEAM SEALS, (estoy pobre ok?)",
-          "1 clic = GTA6 llegará 1 hora antes",
-          "1 clic = 1 vaso de agua libre de pedos!",
-          "1 clic = parapa 🥹",
-          "1 clic = + 0.0001% posibilidad de cameo del foca Hellot en webroom.",
-          "1 clic = 1 anuncio de temu terminado 💅",
-          "1 clic = MÁS FOCAS 🤑 /j",
-          "1 clic = Actualiza el contador global! /srs",
-          "1 clic = Buena suerte",
-          "1 clic = 1 meme italiano eliminado.",
-          "1 clic = 1 labubu explotará!!!!"
-        ]
+        title: "foca de HelloT", h1: "¡Cada clic actualiza un contador global!", button: "¡Yap Yoo!",
+        messages: ["1 clic = 1 foca aparecerá en la puerta de alguien /j","1 clic = 100000 slay rizz 💅","1 clic = +1 Baddie 😍","1 clic = el foca volará (no realmente)","1 clic = 1 minuto más de tiempo frente a la pantalla 🤤","1 clic = 1 día más de verano (NO REAL :(( )","1 clic = Te vuelves inmortal 😱 (NO)","1 clic = MrBreast te dará 1000000 BILKION 🤑","1 clic = Donación a TEAM SEALS, (estoy pobre ok?)","1 clic = GTA6 llegará 1 hora antes","1 clic = 1 vaso de agua libre de pedos!","1 clic = parapa 🥹","1 clic = + 0.0001% posibilidad de cameo del foca Hellot en webroom.","1 clic = 1 anuncio de temu terminado 💅","1 clic = MÁS FOCAS 🤑 /j","1 clic = Actualiza el contador global! /srs","1 clic = Buena suerte","1 clic = 1 meme italiano eliminado.","1 clic = 1 labubu explotará!!!!"]
       },
       fi: {
-        title: "HelloT:n hylje",
-        h1: "Jokainen klikkaus päivittää julkisen laskurin!",
-        button: "Jäp Joo!",
-        messages: [
-          "1 klikki = 1 hylje teleportaalisesti ilmestyy jonkun ovelle /j",
-          "1 klikki = 100000 slay rizz 💅",
-          "1 klikki = +1 Baddie 😍",
-          "1 klikki = hylje lentää (nah bro)",
-          "1 klikki = 1 minuutti lisää ruutuaikaa mulle 🤤",
-          "1 klikki = 1 päivä lisää kesälomaa (EI AITO BRO :(( )",
-          "1 klikki = Susta tulee immortaali 😱 (EI OIKEESTI)",
-          "1 klikki = MrBreast(herra tissi :D) antaa sulle 1000000 MILJARDEITA 🤑",
-          "1 klikki = Lahjoitus TEAM SEALS järjrstölle, (oon käyhö okei?)",
-          "1 klikki = GTA6 julkaistaan tunti aikaisemmin",
-          "1 klikki = 1 lasillinen Pierun vapaata vettä!",
-          "1 klikki = parapa 🥹",
-          "1 klikki = + 0.0001% mahdollisuutta että HelloT hylje saapuu WebRoomiin.",
-          "1 klikki = 1 temu mainos poistettu 💅",
-          "1 klikki = LISÄÄ HYLJEITÄ 🤑 /j",
-          "1 klikki = Päivitys laskuriin! /srs",
-          "1 klikki = Hyvää onnea",
-          "1 klikki = 1 italian brainrot meemi kuolee fyysisesti.",
-          "1 klikki = 1 labubu räjähtää lol!!!!"
-        ]
+        title: "HelloT:n hylje", h1: "Jokainen klikkaus päivittää julkisen laskurin!", button: "Jäp Joo!",
+        messages: ["1 klikki = 1 hylje teleportaalisesti ilmestyy jonkun ovelle /j","1 klikki = 100000 slay rizz 💅","1 klikki = +1 Baddie 😍","1 klikki = hylje lentää (nah bro)","1 klikki = 1 minuutti lisää ruutuaikaa mulle 🤤","1 klikki = 1 päivä lisää kesälomaa (EI AITO BRO :(( )","1 klikki = Susta tulee immortaali 😱 (EI OIKEESTI)","1 klikki = MrBreast(herra tissi :D) antaa sulle 1000000 MILJARDEITA 🤑","1 klikki = Lahjoitus TEAM SEALS järjrstölle, (oon käyhö okei?)","1 klikki = GTA6 julkaistaan tunti aikaisemmin","1 klikki = 1 lasillinen Pierun vapaata vettä!","1 klikki = parapa 🥹","1 klikki = + 0.0001% mahdollisuutta että HelloT hylje saapuu WebRoomiin.","1 klikki = 1 temu mainos poistettu 💅","1 klikki = LISÄÄ HYLJEITÄ 🤑 /j","1 klikki = Päivitys laskuriin! /srs","1 klikki = Hyvää onnea","1 klikki = 1 italian brainrot meemi kuolee fyysisesti.","1 klikki = 1 labubu räjähtää lol!!!!"]
       },
       fr: {
-        title: "Le phoque de HelloT",
-        h1: "Chaque clic met à jour un compteur global.",
-        button: "Yap Yoo!",
-        messages: [
-          "1 clic = 1 phoque apparaîtra sur la porte de quelqu'un /j",
-          "1 clic = 100000 slay rizz 💅",
-          "1 clic = +1 Baddie 😍",
-          "1 clic = le phoque volera (pas vraiment)",
-          "1 clic = 1 autre minute de temps d'écran pour moi🤤",
-          "1 clic = 1 autre journée des vacances d'été (PAS RÉEL :(( )",
-          "1 clic = Tu deviens immortel😱 (NON)",
-          "1 clic = MrBreast te donnera 1000000 MILLIARDS🤑",
-          "1 clic = Don pour TEAM SEALS, (je suis pauvre ok?)",
-          "1 clic = GTA6 sortira 1 heure plus tôt",
-          "1 clic = 1 verre d'eau sans pets",
-          "1 clic = parapa 🥹",
-          "1 clic = + 0.0001% de possibilité d'un caméo du phoque HelloT dans Webroom",
-          "1 clic = 1 publicité temu tuée 💅",
-          "1 clic = PLUS DE PHOQUES 🤑 /j",
-          "1 clic = Mise à jour au compteur global /srs",
-          "1 clic = Bonne chance",
-          "1 clic = 1 mème brainrot italien tué",
-          "1 clic = 1 labubu explosera!!!!"
-        ]
+        title: "Le phoque de HelloT", h1: "Chaque clic met à jour un compteur global.", button: "Yap Yoo!",
+        messages: ["1 clic = 1 phoque apparaîtra sur la porte de quelqu'un /j","1 clic = 100000 slay rizz 💅","1 clic = +1 Baddie 😍","1 clic = le phoque volera (pas vraiment)","1 clic = 1 autre minute de temps d'écran pour moi🤤","1 clic = 1 autre journée des vacances d'été (PAS RÉEL :(( )","1 clic = Tu deviens immortel😱 (NON)","1 clic = MrBreast te donnera 1000000 MILLIARDS🤑","1 clic = Don pour TEAM SEALS, (je suis pauvre ok?)","1 clic = GTA6 sortira 1 heure plus tôt","1 clic = 1 verre d'eau sans pets","1 clic = parapa 🥹","1 clic = + 0.0001% de possibilité d'un caméo du phoque HelloT dans Webroom","1 clic = 1 publicité temu tuée 💅","1 clic = PLUS DE PHOQUES 🤑 /j","1 clic = Mise à jour au compteur global /srs","1 clic = Bonne chance","1 clic = 1 mème brainrot italien tué","1 clic = 1 labubu explosera!!!!"]
       }
     };
-
     function setLanguage(lang = 'en') {
       const t = translations[lang] || translations['en'];
       document.title = t.title;
       document.querySelector('h1').textContent = t.h1;
       document.getElementById('seal-btn').textContent = t.button;
-      document.getElementById('click-message').textContent =
-        t.messages[Math.floor(Math.random() * t.messages.length)];
+      document.getElementById('click-message').textContent = t.messages[Math.floor(Math.random() * t.messages.length)];
     }
-
     const langSelector = document.getElementById('lang-selector');
     langSelector.addEventListener('change', e => setLanguage(e.target.value));
     setLanguage('en');
   </script>
 
-  <!-- firebase + easter egg + counter -->
   <script>
     let easterEggActive = false;
     let resetTimeout = null;
     let shockSound = new Audio("https://helloiti.github.io/hellot/seal/clicker/miscassets/wii-sports-bowling-strike.mp3");
-
     const secretCode = "wiisports";
     let typedKeys = "";
-
     window.addEventListener("keydown", (e) => {
       const key = e.key.toLowerCase();
       if (/^[a-z]$/.test(key)) {
         typedKeys += key;
-        if (typedKeys.length > secretCode.length) {
-          typedKeys = typedKeys.slice(-secretCode.length);
-        }
-        if (typedKeys === secretCode && !easterEggActive) {
-          triggerEasterEgg();
-        }
+        if (typedKeys.length > secretCode.length) typedKeys = typedKeys.slice(-secretCode.length);
+        if (typedKeys === secretCode && !easterEggActive) triggerEasterEgg();
       }
     });
 
@@ -334,24 +228,14 @@
     const firebaseConfig = {apiKey:_a,authDomain:_b,databaseURL:_c,projectId:_d,storageBucket:_e,messagingSenderId:_f,appId:_g,measurementId:_h};
     firebase.initializeApp(firebaseConfig);
     const authReady = new Promise(resolve => {
-      firebase.auth().onAuthStateChanged(user => {
-        if (user) resolve(user);
-      });
+      firebase.auth().onAuthStateChanged(user => { if (user) resolve(user); });
     });
     firebase.auth().signInAnonymously();
     const db = firebase.database();
 
-    // ---- custom Mii data popup ----
-    // localStorage keys: "customMiiData" (the hex string, only set if the user
-    // actually saved one) and "customMiiChoiceMade" (set on either Save, Skip,
-    // or Remove, so the popup doesn't nag returning visitors automatically -
-    // they can always reopen it manually with the "Change my Mii" button).
     let miiDataResolve;
     window.miiDataReady = new Promise(res => { miiDataResolve = res; });
-
-    function getMyMiiData() {
-      return localStorage.getItem("customMiiData") || null;
-    }
+    function getMyMiiData() { return localStorage.getItem("customMiiData") || null; }
     window.getMyMiiData = getMyMiiData;
 
     (function initMiiPopup() {
@@ -362,152 +246,65 @@
       const skipBtn = document.getElementById("mii-modal-skip");
       const removeBtn = document.getElementById("mii-modal-remove");
       const editBtn = document.getElementById("mii-edit-btn");
-
       let firstVisitResolved = false;
-
-      function resolveFirstVisitOnce(data) {
-        if (!firstVisitResolved) {
-          firstVisitResolved = true;
-          miiDataResolve(data);
-        }
-      }
-
-      // called any time the saved Mii data changes (first visit OR a later
-      // edit via the "Change my Mii" button) - pushes the update live to
-      // Firebase so the visitor list reflects it immediately without needing
-      // a page refresh. The 3D crowd figure's face sprite, however, is only
-      // built once at page load, so a live edit won't move that texture
-      // until the page is reloaded - flagged in the modal copy below.
-      function pushLiveUpdate() {
-        if (typeof addOrUpdateVisitor === "function" && window.miiDataReady) {
-          window.miiDataReady.then(() => addOrUpdateVisitor());
-        }
-      }
-
-      function openModal() {
-        input.value = getMyMiiData() || "";
-        errorEl.textContent = "";
-        overlay.style.display = "flex";
-      }
-
+      function resolveFirstVisitOnce(data) { if (!firstVisitResolved) { firstVisitResolved = true; miiDataResolve(data); } }
+      function pushLiveUpdate() { if (typeof addOrUpdateVisitor === "function") window.miiDataReady.then(() => addOrUpdateVisitor()); }
+      function openModal() { input.value = getMyMiiData() || ""; errorEl.textContent = ""; overlay.style.display = "flex"; }
       function closeModal(newData, { isFirstVisit } = {}) {
         overlay.style.display = "none";
         localStorage.setItem("customMiiChoiceMade", "1");
-        if (newData) {
-          localStorage.setItem("customMiiData", newData);
-        } else {
-          localStorage.removeItem("customMiiData");
-        }
-        if (isFirstVisit) {
-          resolveFirstVisitOnce(newData || null);
-        } else {
-          pushLiveUpdate();
-        }
+        if (newData) { localStorage.setItem("customMiiData", newData); } else { localStorage.removeItem("customMiiData"); }
+        if (isFirstVisit) { resolveFirstVisitOnce(newData || null); } else { pushLiveUpdate(); }
       }
-
       const choiceMade = localStorage.getItem("customMiiChoiceMade");
-      if (!choiceMade) {
-        openModal();
-      } else {
-        resolveFirstVisitOnce(getMyMiiData());
-      }
-
-      // Accepts either raw hex ("0a1b2c...") or base64 ("AwBgMIJU...") Mii data.
-      // Whatever format the user pastes, it's normalized to hex here so every
-      // downstream URL (visitor avatar, crowd figure) only ever has to deal
-      // with one format.
+      if (!choiceMade) { openModal(); } else { resolveFirstVisitOnce(getMyMiiData()); }
       function normalizeMiiInput(raw) {
         const trimmed = raw.trim().replace(/\s+/g, "");
         if (!trimmed) return { hex: null, error: null };
-
-        // hex first: plain hex strings are unambiguous (only 0-9a-f, even length)
-        if (/^[0-9a-fA-F]+$/.test(trimmed) && trimmed.length % 2 === 0) {
-          return { hex: trimmed.toLowerCase(), error: null };
-        }
-
-        // otherwise, try base64. A valid base64 string only contains
-        // A-Z a-z 0-9 + / and optional = padding.
+        if (/^[0-9a-fA-F]+$/.test(trimmed) && trimmed.length % 2 === 0) return { hex: trimmed.toLowerCase(), error: null };
         if (/^[A-Za-z0-9+/]+={0,2}$/.test(trimmed)) {
           try {
             const binaryStr = atob(trimmed);
             let hex = "";
-            for (let i = 0; i < binaryStr.length; i++) {
-              hex += binaryStr.charCodeAt(i).toString(16).padStart(2, "0");
-            }
-            // real Mii data (FFSD/CHARINFO) is always 88 or 96 bytes - reject
-            // anything else early rather than silently saving garbage.
-            if (hex.length / 2 !== 88 && hex.length / 2 !== 96) {
-              return { hex: null, error: "That decoded, but isn't a valid Mii data size. Expected a CHARINFO or FFSD Mii." };
-            }
+            for (let i = 0; i < binaryStr.length; i++) hex += binaryStr.charCodeAt(i).toString(16).padStart(2, "0");
+            if (hex.length / 2 !== 88 && hex.length / 2 !== 96) return { hex: null, error: "That decoded, but isn't a valid Mii data size." };
             return { hex, error: null };
-          } catch (e) {
-            return { hex: null, error: "That doesn't look like valid Mii HEX or Base64 data." };
-          }
+          } catch (e) { return { hex: null, error: "That doesn't look like valid Mii HEX or Base64 data." }; }
         }
-
         return { hex: null, error: "That doesn't look like valid Mii HEX or Base64 data." };
       }
-
       saveBtn.addEventListener("click", () => {
         const raw = input.value;
-        if (!raw.trim()) {
-          closeModal(null, { isFirstVisit: !choiceMade });
-          return;
-        }
+        if (!raw.trim()) { closeModal(null, { isFirstVisit: !choiceMade }); return; }
         const { hex, error } = normalizeMiiInput(raw);
-        if (error) {
-          errorEl.textContent = error;
-          return;
-        }
+        if (error) { errorEl.textContent = error; return; }
         closeModal(hex, { isFirstVisit: !choiceMade });
       });
-
-      skipBtn.addEventListener("click", () => {
-        closeModal(null, { isFirstVisit: !choiceMade });
-      });
-
-      removeBtn.addEventListener("click", () => {
-        closeModal(null, { isFirstVisit: !choiceMade });
-      });
-
+      skipBtn.addEventListener("click", () => closeModal(null, { isFirstVisit: !choiceMade }));
+      removeBtn.addEventListener("click", () => closeModal(null, { isFirstVisit: !choiceMade }));
       editBtn.addEventListener("click", openModal);
     })();
-    // ---- end custom Mii data popup ----
 
     function triggerEasterEgg() {
       if (!model || easterEggActive) return;
       easterEggActive = true;
-      shockSound.currentTime = 0;
-      shockSound.play();
+      shockSound.currentTime = 0; shockSound.play();
       model.userData.originalPos = model.position.clone();
       model.userData.originalRot = model.rotation.clone();
       gsap.to(model.position, { z: 20, duration: 0.7, ease: "power2.out" });
       setTimeout(shockCrowd, 100);
     }
-
     function shockCrowd() {
-      personGroups.forEach((p) => {
-        gsap.to(p.rotation, { x: -Math.PI/2, duration: 0.6, ease: "back.out(1)" });
-      });
+      personGroups.forEach(p => gsap.to(p.rotation, { x: -Math.PI/2, duration: 0.6, ease: "back.out(1)" }));
       resetTimeout = setTimeout(resetEasterEgg, 3000);
     }
-
     function resetEasterEgg() {
-      if (model) {
-        gsap.to(model.position, { x: 0, y: 0, z: 0, duration: 1, ease: "power2.inOut" });
-      }
-      personGroups.forEach((p) => {
-        gsap.to(p.rotation, { x: 0, y: 0, z: 0, duration: 1, ease: "power2.inOut" });
-      });
+      if (model) gsap.to(model.position, { x: 0, y: 0, z: 0, duration: 1, ease: "power2.inOut" });
+      personGroups.forEach(p => gsap.to(p.rotation, { x: 0, y: 0, z: 0, duration: 1, ease: "power2.inOut" }));
       easterEggActive = false;
     }
 
-    // music - defined here so audioCtx below can reference it safely
-    const musicList = [
-      "https://helloiti.github.io/assets/07main.mp3",
-      "https://helloiti.github.io/assets/mii.mp3",
-      "https://helloiti.github.io/assets/13._Exhibition.mp3"
-    ];
+    const musicList = ["https://helloiti.github.io/assets/07main.mp3","https://helloiti.github.io/assets/mii.mp3","https://helloiti.github.io/assets/13._Exhibition.mp3"];
     const bgMusic = document.getElementById('bg-music');
     const bgSource = document.getElementById('bg-source');
     bgSource.src = musicList[Math.floor(Math.random() * musicList.length)];
@@ -521,7 +318,6 @@
     clickCounterRef.on("value", snap => {
       counterDiv.textContent = (snap.val() ?? 0) + " clicks";
     });
-
     function incrementCounter() {
       authReady.then(() => {
         clickCounterRef.transaction(current => (current || 0) + 1);
@@ -529,270 +325,156 @@
     }
   </script>
 
-  <!-- three.js scene -->
   <script>
     const canvas = document.getElementById('canvas');
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
-
     const scene = new THREE.Scene();
     scene.background = null;
-
     const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 100);
     camera.position.set(0, 0.5, 5);
-
     scene.add(new THREE.AmbientLight(0xffffff, 2));
     scene.add(new THREE.DirectionalLight(0xffffff, 3));
 
     const loader = new THREE.GLTFLoader();
-    let model = null;
-    let swingGroup, spinGroup;
-
+    let model = null, swingGroup, spinGroup;
     loader.load("https://helloiti.github.io/assets/models/seal/seal.gltf", (gltf) => {
       model = gltf.scene;
       model.traverse((child) => {
         if (child.isMesh) {
           const oldMat = child.material;
-          child.material = new THREE.MeshStandardMaterial({
-            map: oldMat.map,
-            color: 0xffffff,
-            side: THREE.DoubleSide,
-            metalness: 0.2,
-            roughness: 1
-          });
-          if (child.geometry && child.geometry.attributes.normal) {
-            child.geometry.computeVertexNormals();
-          }
+          child.material = new THREE.MeshStandardMaterial({ map: oldMat.map, color: 0xffffff, side: THREE.DoubleSide, metalness: 0.2, roughness: 1 });
+          if (child.geometry && child.geometry.attributes.normal) child.geometry.computeVertexNormals();
         }
       });
-      swingGroup = new THREE.Group();
-      spinGroup = new THREE.Group();
-      scene.add(spinGroup);
-      spinGroup.add(swingGroup);
-      swingGroup.add(model);
+      swingGroup = new THREE.Group(); spinGroup = new THREE.Group();
+      scene.add(spinGroup); spinGroup.add(swingGroup); swingGroup.add(model);
       model.rotation.y = -Math.PI / 2;
     });
 
-    // audioCtx defined AFTER bgMusic is set up
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     const audioSource = audioCtx.createMediaElementSource(bgMusic);
     const analyser = audioCtx.createAnalyser();
     analyser.fftSize = 256;
-    const bufferLength = analyser.frequencyBinCount;
-    const dataArray = new Uint8Array(bufferLength);
-    audioSource.connect(analyser);
-    analyser.connect(audioCtx.destination);
+    audioSource.connect(analyser); analyser.connect(audioCtx.destination);
     document.body.addEventListener("click", () => { if (audioCtx.state === "suspended") audioCtx.resume(); });
 
     let clock = new THREE.Clock();
     let clickTimes = [];
-    const CLICK_THRESHOLD = 5;
-    const TIME_WINDOW = 1000;
+    const CLICK_THRESHOLD = 5, TIME_WINDOW = 1000;
     let hyperMode = false;
-
     let personGroups = [];
 
     function animate() {
       requestAnimationFrame(animate);
       const elapsed = clock.getElapsedTime();
-
       if (model && spinGroup && swingGroup) {
         if (!easterEggActive) {
           spinGroup.rotation.y += 0.04;
-          if (hyperMode) {
-            swingGroup.rotation.z = Math.sin(elapsed * 4) * 0.5;
-            swingGroup.position.y = Math.cos(elapsed * 8) * 0.4;
-            spinGroup.rotation.y += 0.001;
-          } else {
-            swingGroup.rotation.z = 0;
-            swingGroup.position.y = 0;
-          }
-        } else {
-          spinGroup.rotation.y = Math.PI;
-          swingGroup.rotation.set(0, 0, 0);
-        }
+          if (hyperMode) { swingGroup.rotation.z = Math.sin(elapsed * 4) * 0.5; swingGroup.position.y = Math.cos(elapsed * 8) * 0.4; spinGroup.rotation.y += 0.001; }
+          else { swingGroup.rotation.z = 0; swingGroup.position.y = 0; }
+        } else { spinGroup.rotation.y = Math.PI; swingGroup.rotation.set(0, 0, 0); }
       }
-
       const now = Date.now();
-      if (hyperMode && (clickTimes.length === 0 || now - clickTimes[clickTimes.length - 1] > TIME_WINDOW)) {
-        hyperMode = false;
-      }
-
+      if (hyperMode && (clickTimes.length === 0 || now - clickTimes[clickTimes.length - 1] > TIME_WINDOW)) hyperMode = false;
       animateCrowd(elapsed);
       renderer.render(scene, camera);
     }
 
-    function animateCrowd(elapsed) {
-      if (!personGroups || personGroups.length === 0) return;
-
-      if (hyperMode) {
-        if (Math.random() < 0.03) {
-          const person = personGroups[Math.floor(Math.random() * personGroups.length)];
-          const emojiChar = emojiList[Math.floor(Math.random() * emojiList.length)];
-          const sprite = createEmojiSprite(emojiChar);
-          sprite.position.set(
-            person.position.x + (Math.random() - 0.5) * 0.1,
-            person.position.y + 0.8 + Math.random() * 0.2,
-            person.position.z + (Math.random() - 0.5) * 0.1
-          );
-          emojiSprites.push({
-            sprite,
-            velocityY: Math.random() * 0.02 + 0.01,
-            scaleUp: 0.002,
-            swayOffset: Math.random() * Math.PI * 2
-          });
-          scene.add(sprite);
-        }
-      }
-
-      for (let i = emojiSprites.length - 1; i >= 0; i--) {
-        const e = emojiSprites[i];
-        e.sprite.position.y += e.velocityY;
-        e.sprite.position.x += Math.sin(clock.getElapsedTime() * 4 + e.swayOffset) * 0.001;
-        e.sprite.scale.x += e.scaleUp;
-        e.sprite.scale.y += e.scaleUp;
-        e.sprite.material.opacity = Math.max(0, e.sprite.material.opacity - 0.01);
-        if (e.sprite.material.opacity <= 0) {
-          scene.remove(e.sprite);
-          emojiSprites.splice(i, 1);
-        }
-      }
-
-      personGroups.forEach((personGroup) => {
-        personGroup.position.y = Math.sin(elapsed * 3 + personGroup.userData.bobOffset) * 0.05;
-      });
-    }
-
     const emojiList = ["👍","🎉","❤️","😂","🔥"];
     const emojiSprites = [];
-
     function createEmojiSprite(char) {
-      const c = document.createElement("canvas");
-      c.width = 128; c.height = 128;
-      const ctx = c.getContext("2d");
-      ctx.font = "100px serif";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText(char, 64, 64);
-      const texture = new THREE.CanvasTexture(c);
-      const material = new THREE.SpriteMaterial({ map: texture, transparent: true });
-      return new THREE.Sprite(material);
+      const c = document.createElement("canvas"); c.width = 128; c.height = 128;
+      const ctx = c.getContext("2d"); ctx.font = "100px serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(char, 64, 64);
+      return new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(c), transparent: true }));
     }
 
-    // Hardcoded CHARINFO Mii hex blobs for the background crowd. These replace
-    // a previous version that pulled Mii IDs from a Google Sheet and looked
-    // each one up via mii-unsecure.ariankordi.net/miitomo_get_player_data/ -
-    // that lookup endpoint no longer works (every request failed with a
-    // JSON-parse error / OpaqueResponseBlocking), so the crowd was silently
-    // empty except for the current visitor's own figure. These are
-    // synthetic-but-valid 88-byte CHARINFO Miis: nickname, gender, favorite
-    // color, height, weight, and type (normal/special) are all real and will
-    // parse correctly anywhere CHARINFO data is read; every other Mii feature
-    // (face shape, eyes, hair, etc.) is zero-filled, which corresponds to
-    // each feature's first/default option rather than invalid data.
+    function animateCrowd(elapsed) {
+      if (!personGroups || personGroups.length === 0) return;
+      if (hyperMode && Math.random() < 0.03) {
+        const person = personGroups[Math.floor(Math.random() * personGroups.length)];
+        const sprite = createEmojiSprite(emojiList[Math.floor(Math.random() * emojiList.length)]);
+        sprite.position.set(person.position.x + (Math.random()-0.5)*0.1, person.position.y+0.8+Math.random()*0.2, person.position.z+(Math.random()-0.5)*0.1);
+        emojiSprites.push({ sprite, velocityY: Math.random()*0.02+0.01, scaleUp: 0.002, swayOffset: Math.random()*Math.PI*2 });
+        scene.add(sprite);
+      }
+      for (let i = emojiSprites.length-1; i >= 0; i--) {
+        const e = emojiSprites[i];
+        e.sprite.position.y += e.velocityY;
+        e.sprite.position.x += Math.sin(clock.getElapsedTime()*4+e.swayOffset)*0.001;
+        e.sprite.scale.x += e.scaleUp; e.sprite.scale.y += e.scaleUp;
+        e.sprite.material.opacity = Math.max(0, e.sprite.material.opacity-0.01);
+        if (e.sprite.material.opacity <= 0) { scene.remove(e.sprite); emojiSprites.splice(i,1); }
+      }
+      personGroups.forEach(g => { g.position.y = Math.sin(elapsed*3+g.userData.bobOffset)*0.05; });
+    }
+
     const crowdMiis = [
-      { hex: "000000000000000000000000000000005300650061006c002000460061006e000000000000000005004040000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000", gender: 0 }, // Seal Fan
-      { hex: "00000000000000000000000000000000480065006c006c006f005400000000000000000000000007015032000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000", gender: 1 }, // HelloT
-      { hex: "0000000000000000000000000000000047006f006c0064005300650061006c00000000000000000b005a46010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000", gender: 0 }, // GoldSeal (special)
-      { hex: "0000000000000000000000000000000059006100700059006f006f00000000000000000000000003013728000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000", gender: 1 }, // YapYoo
-      { hex: "0000000000000000000000000000000057006100640064006c0065004f006e000000000000000009004650000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000", gender: 0 }, // WaddleOn
-      { hex: "000000000000000000000000000000005300650061006c0062006f00690000000000000000000006013c2d000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000", gender: 1 }, // Sealboi
-      { hex: "00000000000000000000000000000000460069006e006e006500670061006e00000000000000000200645a000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000", gender: 0 }, // Finnegan
-      { hex: "0000000000000000000000000000000046006c006900700070006500720073000000000000000008012d23000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000", gender: 1 }, // Flippers
+      { hex: "000000000000000000000000000000005300650061006c002000460061006e000000000000000005004040000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000", gender: 0 },
+      { hex: "00000000000000000000000000000000480065006c006c006f005400000000000000000000000007015032000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000", gender: 1 },
+      { hex: "0000000000000000000000000000000047006f006c0064005300650061006c00000000000000000b005a46010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000", gender: 0 },
+      { hex: "0000000000000000000000000000000059006100700059006f006f00000000000000000000000003013728000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000", gender: 1 },
+      { hex: "0000000000000000000000000000000057006100640064006c0065004f006e000000000000000009004650000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000", gender: 0 },
+      { hex: "000000000000000000000000000000005300650061006c0062006f00690000000000000000000006013c2d000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000", gender: 1 },
+      { hex: "00000000000000000000000000000000460069006e006e006500670061006e00000000000000000200645a000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000", gender: 0 },
+      { hex: "0000000000000000000000000000000046006c006900700070006500720073000000000000000008012d23000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000", gender: 1 },
     ];
 
     function initCrowd() {
-      const crowdGroup = new THREE.Group();
-      scene.add(crowdGroup);
-
-      const radius = 9;
-      const texLoader = new THREE.TextureLoader();
-
-      const total = crowdMiis.length;
+      const crowdGroup = new THREE.Group(); scene.add(crowdGroup);
+      const radius = 9, texLoader = new THREE.TextureLoader(), total = crowdMiis.length;
       for (let i = 0; i < total; i++) {
-        const mii = crowdMiis[i];
-        const personGroup = new THREE.Group();
-        let body, top;
+        const mii = crowdMiis[i], personGroup = new THREE.Group();
         const bodyColor = new THREE.Color().setHSL(Math.random(), 0.7, 0.5);
-
-        const bodyHeight = 0.3, bodyRadius = 0.08;
-        body = new THREE.Mesh(new THREE.CylinderGeometry(bodyRadius, bodyRadius, bodyHeight, 16), new THREE.MeshStandardMaterial({ color: bodyColor }));
-        body.position.y = bodyHeight / 2;
-        top = new THREE.Mesh(new THREE.SphereGeometry(bodyRadius, 16, 16, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshStandardMaterial({ color: bodyColor }));
-        top.position.y = bodyHeight;
+        const body = new THREE.Mesh(new THREE.CylinderGeometry(0.08,0.08,0.3,16), new THREE.MeshStandardMaterial({ color: bodyColor }));
+        body.position.y = 0.15;
+        const top = new THREE.Mesh(new THREE.SphereGeometry(0.08,16,16,0,Math.PI*2,0,Math.PI/2), new THREE.MeshStandardMaterial({ color: bodyColor }));
+        top.position.y = 0.3;
         if (mii.gender === 1) {
-          const bodyDress = new THREE.Mesh(new THREE.ConeGeometry(0.12, 0.35, 16), new THREE.MeshStandardMaterial({ color: bodyColor }));
-          bodyDress.position.y = -(0.35 / 2) + 0.35;
-          personGroup.add(bodyDress);
+          const dress = new THREE.Mesh(new THREE.ConeGeometry(0.12,0.35,16), new THREE.MeshStandardMaterial({ color: bodyColor }));
+          dress.position.y = 0.175; personGroup.add(dress);
         }
-
-        const texture = texLoader.load(`https://mii-unsecure.ariankordi.net/miis/image.png?data=${mii.hex}&type=face_only&width=40&verifyCRC16=0&verifyCharInfo=0`);
-        const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, transparent: true }));
-        sprite.scale.set(0.56, 0.56, 1);
-        sprite.position.y = 0.6;
-        sprite.position.z = 0.015;
+        personGroup.add(body, top);
+        const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texLoader.load(`https://mii-unsecure.ariankordi.net/miis/image.png?data=${mii.hex}&type=face_only&width=40&verifyCRC16=0&verifyCharInfo=0`), transparent: true }));
+        sprite.scale.set(0.56,0.56,1); sprite.position.y = 0.6; sprite.position.z = 0.015;
         personGroup.add(sprite);
-
-        if (body && top) { personGroup.add(body); personGroup.add(top); }
-
-        const angle = ((i - (total - 1) / 2) / total) * Math.PI / 2;
-        personGroup.position.set(radius * Math.sin(angle), 0, -radius * Math.cos(angle) + 5);
-        personGroup.userData = { swayOffset: Math.random() * Math.PI * 2, bobOffset: Math.random() * Math.PI * 2 };
-        crowdGroup.add(personGroup);
-        personGroups.push(personGroup);
+        const angle = ((i-(total-1)/2)/total)*Math.PI/2;
+        personGroup.position.set(radius*Math.sin(angle), 0, -radius*Math.cos(angle)+5);
+        personGroup.userData = { swayOffset: Math.random()*Math.PI*2, bobOffset: Math.random()*Math.PI*2 };
+        crowdGroup.add(personGroup); personGroups.push(personGroup);
       }
-
       addOwnCrowdFigure(crowdGroup, radius, texLoader, total);
     }
 
-    // add the current page visitor as one extra crowd figure, using whatever
-    // Mii data they entered in the popup (or a plain default-colored figure
-    // with no face sprite if they skipped it).
     async function addOwnCrowdFigure(crowdGroup, radius, texLoader, total) {
       await window.miiDataReady;
       const myMiiData = window.getMyMiiData();
       const myGroup = new THREE.Group();
-      const myBodyColor = new THREE.Color().setHSL(Math.random(), 0.7, 0.5);
-      const myBodyHeight = 0.3, myBodyRadius = 0.08;
-      const myBody = new THREE.Mesh(new THREE.CylinderGeometry(myBodyRadius, myBodyRadius, myBodyHeight, 16), new THREE.MeshStandardMaterial({ color: myBodyColor }));
-      myBody.position.y = myBodyHeight / 2;
-      const myTop = new THREE.Mesh(new THREE.SphereGeometry(myBodyRadius, 16, 16, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshStandardMaterial({ color: myBodyColor }));
-      myTop.position.y = myBodyHeight;
+      const myColor = new THREE.Color().setHSL(Math.random(), 0.7, 0.5);
+      const myBody = new THREE.Mesh(new THREE.CylinderGeometry(0.08,0.08,0.3,16), new THREE.MeshStandardMaterial({ color: myColor }));
+      myBody.position.y = 0.15;
+      const myTop = new THREE.Mesh(new THREE.SphereGeometry(0.08,16,16,0,Math.PI*2,0,Math.PI/2), new THREE.MeshStandardMaterial({ color: myColor }));
+      myTop.position.y = 0.3;
       myGroup.add(myBody, myTop);
-
       if (myMiiData) {
         try {
-          const myTexture = texLoader.load(`https://mii-unsecure.ariankordi.net/miis/image.png?erri=sqkn3-rfb&data=${myMiiData}&type=face_only&width=270&pantsColor=red&verifyCRC16=0&verifyCharInfo=0`);
-          const mySprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: myTexture, transparent: true }));
-          mySprite.scale.set(0.56, 0.56, 1);
-          mySprite.position.y = 0.6;
-          mySprite.position.z = 0.015;
+          const mySprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texLoader.load(`https://mii-unsecure.ariankordi.net/miis/image.png?erri=sqkn3-rfb&data=${myMiiData}&type=face_only&width=270&pantsColor=red&verifyCRC16=0&verifyCharInfo=0`), transparent: true }));
+          mySprite.scale.set(0.56,0.56,1); mySprite.position.y = 0.6; mySprite.position.z = 0.015;
           myGroup.add(mySprite);
-        } catch (err) {
-          console.error("Failed to load own Mii for crowd figure:", err);
-        }
+        } catch(err) { console.error("Failed to load own Mii:", err); }
       }
-
-      const myTotal = total + 1;
-      const myAngle = ((total - (myTotal - 1) / 2) / myTotal) * Math.PI / 2;
-      myGroup.position.set(radius * Math.sin(myAngle), 0, -radius * Math.cos(myAngle) + 5);
-      myGroup.userData = { swayOffset: Math.random() * Math.PI * 2, bobOffset: Math.random() * Math.PI * 2 };
-      crowdGroup.add(myGroup);
-      personGroups.push(myGroup);
+      const myTotal = total+1, myAngle = ((total-(myTotal-1)/2)/myTotal)*Math.PI/2;
+      myGroup.position.set(radius*Math.sin(myAngle), 0, -radius*Math.cos(myAngle)+5);
+      myGroup.userData = { swayOffset: Math.random()*Math.PI*2, bobOffset: Math.random()*Math.PI*2 };
+      crowdGroup.add(myGroup); personGroups.push(myGroup);
     }
 
     initCrowd();
     animate();
-
-    window.addEventListener('resize', () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    });
+    window.addEventListener('resize', () => { camera.aspect = window.innerWidth/window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); });
   </script>
 
-  <!-- firebase visitors + chat + single click handler -->
   <script>
     const visitorListDiv = document.getElementById("visitor-list");
     const visitorsRef = firebase.database().ref("onlineUsers");
@@ -806,217 +488,129 @@
       userId = "guest_" + Math.random().toString(36).substr(2, 9);
       localStorage.setItem("useridentifier", userId);
     }
-
     const thisVisitorRef = visitorsRef.child(userId);
 
     function addOrUpdateVisitor(username = null) {
-      thisVisitorRef.update({
-        id: userId,
-        guest: isGuest,
-        username: username || userId,
-        miiData: getMyMiiData() || null,
-        timestamp: firebase.database.ServerValue.TIMESTAMP
-      }).catch(err => console.error("Failed to add/update visitor:", err));
-      thisVisitorRef.onDisconnect().remove().catch(err => console.error("onDisconnect failed:", err));
+      authReady.then(() => {
+        thisVisitorRef.update({ id: userId, guest: isGuest, username: username || userId, miiData: getMyMiiData() || null, timestamp: firebase.database.ServerValue.TIMESTAMP })
+          .catch(err => console.error("Failed to add/update visitor:", err));
+        thisVisitorRef.onDisconnect().remove().catch(err => console.error("onDisconnect failed:", err));
+      });
     }
 
     authReady.then(() => {
-      authReady.then(() => {
       firebase.database().ref('.info/connected').on('value', snap => {
         if (snap.val() === true) {
-          window.miiDataReady.then(() => {
-            // previously this fetched a display name from
-            // mii-unsecure.ariankordi.net/miitomo_get_player_data/ for
-            // non-guest users, but that endpoint no longer works (same dead
-            // service the crowd lookup used) - it always failed and fell
-            // back to the userId anyway, so just use the userId directly.
-            addOrUpdateVisitor();
-          });
+          window.miiDataReady.then(() => addOrUpdateVisitor());
         }
       });
-
       setInterval(() => {
         thisVisitorRef.update({ timestamp: firebase.database.ServerValue.TIMESTAMP });
       }, 10000);
-    });
     });
 
     visitorsRef.on('value', snapshot => {
       const now = Date.now();
       snapshot.forEach(childSnap => {
         const visitor = childSnap.val();
-        if (visitor && visitor.timestamp && now - visitor.timestamp > 30000) {
-          visitorsRef.child(visitor.id).remove();
-        }
+        if (visitor && visitor.timestamp && now - visitor.timestamp > 30000) visitorsRef.child(visitor.id).remove();
       });
     });
 
-    // tracks per-visitor click listeners so we can detach the old one before
-    // attaching a new one, instead of leaking a new listener every render.
     const clickListenerRefs = {};
-
     function renderVisitors(snapshot) {
       const visitors = [];
-      snapshot.forEach(childSnap => {
-        const visitor = childSnap.val();
-        if (visitor && visitor.id) visitors.push(visitor);
-      });
-
+      snapshot.forEach(childSnap => { const v = childSnap.val(); if (v && v.id) visitors.push(v); });
       const seenIds = new Set(visitors.map(v => v.id));
-
-      // remove DOM entries (and their click listeners) for visitors who left,
-      // instead of wiping the whole list and rebuilding it from scratch -
-      // that wipe-and-rebuild was the bug: it deleted every visitor-${id} div
-      // (including the one chat bubbles attach to) on every single visitor
-      // update, anywhere, for anyone, which happens constantly (every
-      // connected visitor pings a timestamp update every 10s). A chat
-      // message arriving while that async rebuild was mid-flight had nothing
-      // to attach to and silently got dropped.
       Array.from(visitorListDiv.children).forEach(child => {
         const id = child.id.replace(/^visitor-/, "");
         if (!seenIds.has(id)) {
-          if (clickListenerRefs[id]) {
-            userClicksRef.child(id).off("value", clickListenerRefs[id]);
-            delete clickListenerRefs[id];
-          }
+          if (clickListenerRefs[id]) { userClicksRef.child(id).off("value", clickListenerRefs[id]); delete clickListenerRefs[id]; }
           child.remove();
         }
       });
-
-      const clickPromises = visitors.map(visitor =>
-        userClicksRef.child(visitor.id).get().then(snap => ({ ...visitor, clicks: snap.val() || 0 }))
-      );
-
+      const clickPromises = visitors.map(v => userClicksRef.child(v.id).get().then(snap => ({ ...v, clicks: snap.val() || 0 })));
       Promise.all(clickPromises).then(visitorsWithClicks => {
         visitorsWithClicks.sort((a, b) => b.clicks - a.clicks);
         visitorsWithClicks.forEach((visitor, index) => {
           let visitorDiv = document.getElementById(`visitor-${visitor.id}`);
-          let img, infoSpan, nameSpan, clicksSpan;
-
+          let img, nameSpan, clicksSpan;
           if (!visitorDiv) {
             visitorDiv = document.createElement("div");
             visitorDiv.id = `visitor-${visitor.id}`;
-            visitorDiv.style.cssText = "display:flex;align-items:center;margin-bottom:5px;position:relative;z-index:3;";
+            visitorDiv.style.cssText = "display:flex;align-items:center;margin-bottom:5px;position:relative;z-index:10;";
             const bubbleLayer = document.createElement("div");
             bubbleLayer.className = "bubble-layer";
             bubbleLayer.style.cssText = "position:absolute;left:60px;top:-5px;";
             visitorDiv.appendChild(bubbleLayer);
-
-            img = document.createElement("img");
-            img.width = 50; img.height = 50;
-            img.style.cssText = "border-radius:50%;margin-right:8px;";
-            img.className = "visitor-img";
-
-            infoSpan = document.createElement("span");
-            infoSpan.className = "visitor-info";
-            infoSpan.style.cssText = "display:flex;flex-direction:column;";
-            nameSpan = document.createElement("span");
-            nameSpan.className = "visitor-name";
-            clicksSpan = document.createElement("span");
-            clicksSpan.className = "visitor-clicks";
-            clicksSpan.style.cssText = "font-size:0.9em;color:#00ff00;";
-            infoSpan.appendChild(nameSpan);
-            infoSpan.appendChild(clicksSpan);
-
-            visitorDiv.appendChild(img);
-            visitorDiv.appendChild(infoSpan);
+            img = document.createElement("img"); img.width = 50; img.height = 50;
+            img.style.cssText = "border-radius:50%;margin-right:8px;"; img.className = "visitor-img";
+            const infoSpan = document.createElement("span"); infoSpan.className = "visitor-info"; infoSpan.style.cssText = "display:flex;flex-direction:column;";
+            nameSpan = document.createElement("span"); nameSpan.className = "visitor-name";
+            clicksSpan = document.createElement("span"); clicksSpan.className = "visitor-clicks"; clicksSpan.style.cssText = "font-size:0.9em;color:#00ff00;";
+            infoSpan.appendChild(nameSpan); infoSpan.appendChild(clicksSpan);
+            visitorDiv.appendChild(img); visitorDiv.appendChild(infoSpan);
             visitorListDiv.appendChild(visitorDiv);
           } else {
             img = visitorDiv.querySelector(".visitor-img");
-            infoSpan = visitorDiv.querySelector(".visitor-info");
             nameSpan = visitorDiv.querySelector(".visitor-name");
             clicksSpan = visitorDiv.querySelector(".visitor-clicks");
           }
-
           if (visitor.miiData) {
             img.src = `https://mii-unsecure.ariankordi.net/miis/image.png?erri=sqkn3-rfb&data=${visitor.miiData}&shaderType=miitomo&type=face_only&width=270&pantsColor=red&verifyCRC16=0&verifyCharInfo=0`;
-          } else if (visitor.guest) {
-            img.src = "https://helloiti.github.io/assets/anonface.png";
           } else {
-            img.src = `https://tomop.kaeru.world/miiface/${visitor.id}`;
+            img.src = "https://helloiti.github.io/assets/anonface.png";
           }
-          img.onerror = () => { img.src = "https://helloiti.github.io/hellot/seal/clicker/anonface.png"; };
-
+          img.onerror = () => { img.src = "https://helloiti.github.io/assets/anonface.png"; };
           nameSpan.textContent = (visitor.guest ? visitor.id : visitor.username || visitor.id) + (index === 0 ? " 👑" : "");
           nameSpan.style.color = visitor.id === userId ? "white" : "";
           nameSpan.style.fontWeight = visitor.id === userId ? "bold" : "";
-
           clicksSpan.textContent = `Clicks: ${visitor.clicks}`;
-
-          // also keep the DOM in visual rank order (highest clicks first)
           visitorListDiv.appendChild(visitorDiv);
-
           if (!clickListenerRefs[visitor.id]) {
-            const listener = snap => {
-              clicksSpan.textContent = `Clicks: ${snap.val() || 0}`;
-            };
+            const listener = snap => { clicksSpan.textContent = `Clicks: ${snap.val() || 0}`; };
             clickListenerRefs[visitor.id] = listener;
             userClicksRef.child(visitor.id).on("value", listener);
           }
         });
-
         document.getElementById("visitor-counter").textContent = `Visitors online: ${snapshot.numChildren()}`;
       });
     }
-
     visitorsRef.on('value', renderVisitors);
 
-    // SINGLE unified click handler
     button.addEventListener("click", () => {
-      sealSound.currentTime = 0;
-      sealSound.play();
-
-      const lang = langSelector.value;
-      const t = translations[lang];
-      document.getElementById('click-message').textContent =
-        t.messages[Math.floor(Math.random() * t.messages.length)];
-
-      // hyperMode tracking
+      sealSound.currentTime = 0; sealSound.play();
+      const lang = langSelector.value, t = translations[lang];
+      document.getElementById('click-message').textContent = t.messages[Math.floor(Math.random() * t.messages.length)];
       const now = Date.now();
       clickTimes.push(now);
       clickTimes = clickTimes.filter(t => now - t < TIME_WINDOW);
       if (clickTimes.length >= CLICK_THRESHOLD) hyperMode = true;
-
-      // wait for auth before any Firebase writes
       authReady.then(() => {
         incrementCounter();
-        const userClickRef = userClicksRef.child(userId);
-        userClickRef.transaction(current => (current || 0) + 1);
+        userClicksRef.child(userId).transaction(current => (current || 0) + 1);
       });
     });
 
-    // chat
     const chatInput = document.getElementById("chat-input");
     const chatSend = document.getElementById("chat-send");
-
     chatRef.on("child_added", (snapshot) => {
-      const msg = snapshot.val();
-      if (!msg) return;
-      const visitorEl = document.getElementById(`visitor-${msg.userId}`);
-      if (!visitorEl) return;
-      const bubbleLayer = visitorEl.querySelector(".bubble-layer");
-      if (!bubbleLayer) return;
-      const bubble = document.createElement("div");
-      bubble.textContent = msg.text;
-      bubble.className = "chat-bubble";
+      const msg = snapshot.val(); if (!msg) return;
+      const visitorEl = document.getElementById(`visitor-${msg.userId}`); if (!visitorEl) return;
+      const bubbleLayer = visitorEl.querySelector(".bubble-layer"); if (!bubbleLayer) return;
+      const bubble = document.createElement("div"); bubble.textContent = msg.text; bubble.className = "chat-bubble";
       bubbleLayer.appendChild(bubble);
-      setTimeout(() => {
-        bubble.style.opacity = "0";
-        setTimeout(() => bubble.remove(), 1000);
-      }, 5000);
+      setTimeout(() => { bubble.style.opacity = "0"; setTimeout(() => bubble.remove(), 1000); }, 5000);
     });
-
     setInterval(() => {
-      const cutoff = Date.now() - 30000;
-      chatRef.orderByChild("timestamp").endAt(cutoff).once("value", snap => {
-        snap.forEach(child => child.ref.remove());
-      });
+      const cutoff = Date.now()-30000;
+      chatRef.orderByChild("timestamp").endAt(cutoff).once("value", snap => { snap.forEach(child => child.ref.remove()); });
     }, 10000);
-
     chatSend.addEventListener("click", () => {
-      const text = chatInput.value.trim();
-      if (!text) return;
-      chatRef.push({ userId, text, timestamp: firebase.database.ServerValue.TIMESTAMP });
+      const text = chatInput.value.trim(); if (!text) return;
+      authReady.then(() => {
+        chatRef.push({ userId, text, timestamp: firebase.database.ServerValue.TIMESTAMP });
+      });
       chatInput.value = "";
     });
   </script>
