@@ -571,25 +571,29 @@
       thisVisitorRef.onDisconnect().remove().catch(err => console.error("onDisconnect failed:", err));
     }
 
-    firebase.database().ref('.info/connected').on('value', snap => {
-      if (snap.val() === true) {
-        if (!isGuest) {
-          fetch(`https://mii-unsecure.ariankordi.net/miitomo_get_player_data/${userId}?namespace=own_mii`)
-            .then(res => res.json())
-            .then(data => {
-              const player = data.players?.[0]?.player_data?.own_mii;
-              addOrUpdateVisitor(player?.nameExtension || userId);
-            })
-            .catch(() => addOrUpdateVisitor());
-        } else {
-          addOrUpdateVisitor();
+    authReady.then(() => {
+      authReady.then(() => {
+      firebase.database().ref('.info/connected').on('value', snap => {
+        if (snap.val() === true) {
+          if (!isGuest) {
+            fetch(`https://mii-unsecure.ariankordi.net/miitomo_get_player_data/${userId}?namespace=own_mii`)
+              .then(res => res.json())
+              .then(data => {
+                const player = data.players?.[0]?.player_data?.own_mii;
+                addOrUpdateVisitor(player?.nameExtension || userId);
+              })
+              .catch(() => addOrUpdateVisitor());
+          } else {
+            addOrUpdateVisitor();
+          }
         }
-      }
-    });
+      });
 
-    setInterval(() => {
-      thisVisitorRef.update({ timestamp: firebase.database.ServerValue.TIMESTAMP });
-    }, 10000);
+      setInterval(() => {
+        thisVisitorRef.update({ timestamp: firebase.database.ServerValue.TIMESTAMP });
+      }, 10000);
+    });
+    });
 
     visitorsRef.on('value', snapshot => {
       const now = Date.now();
