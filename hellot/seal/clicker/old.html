@@ -78,6 +78,7 @@
   <canvas id="canvas"></canvas>
   <p id="click-message"></p>
   <div id="counter">Loading...</div>
+  <div id="visitor-counter" style="position:absolute;bottom:50px;left:50%;transform:translateX(-50%);font-size:16px;color:#fff;"></div>
   <button id="seal-btn"></button>
 
   <audio id="seal-sound">
@@ -641,7 +642,7 @@
           const img = document.createElement("img");
           img.width = 50; img.height = 50;
           img.style.cssText = "border-radius:50%;margin-right:8px;";
-          img.src = visitor.guest ? "anonface.png" : `https://tomop.kaeru.world/miiface/${visitor.id}`;
+          img.src = visitor.guest ? "https://helloiti.github.io/assets/anonface.png" : `https://tomop.kaeru.world/miiface/${visitor.id}`;
           img.onerror = () => { img.src = "anonface.png"; };
 
           const infoSpan = document.createElement("span");
@@ -664,7 +665,7 @@
           visitorDiv.appendChild(infoSpan);
         });
 
-        document.getElementById("counter").textContent = `Visitors online: ${snapshot.numChildren()}`;
+        document.getElementById("visitor-counter").textContent = `Visitors online: ${snapshot.numChildren()}`;
       });
     }
 
