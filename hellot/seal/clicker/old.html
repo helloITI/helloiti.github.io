@@ -52,6 +52,17 @@
       top: 0;
       left: 0;
       z-index: 0;
+      pointer-events: none;
+    }
+    .chat-bubble {
+      background: rgba(0,0,0,0.75);
+      color: #fff;
+      padding: 4px 10px;
+      border-radius: 10px;
+      font-size: 13px;
+      white-space: nowrap;
+      transition: opacity 1s;
+      margin-bottom: 2px;
     }
     #lang-selector {
       position: absolute;
@@ -840,12 +851,36 @@
       });
     });
 
+    // tracks per-visitor click listeners so we can detach the old one before
+    // attaching a new one, instead of leaking a new listener every render.
+    const clickListenerRefs = {};
+
     function renderVisitors(snapshot) {
-      visitorListDiv.innerHTML = "";
       const visitors = [];
       snapshot.forEach(childSnap => {
         const visitor = childSnap.val();
         if (visitor && visitor.id) visitors.push(visitor);
+      });
+
+      const seenIds = new Set(visitors.map(v => v.id));
+
+      // remove DOM entries (and their click listeners) for visitors who left,
+      // instead of wiping the whole list and rebuilding it from scratch -
+      // that wipe-and-rebuild was the bug: it deleted every visitor-${id} div
+      // (including the one chat bubbles attach to) on every single visitor
+      // update, anywhere, for anyone, which happens constantly (every
+      // connected visitor pings a timestamp update every 10s). A chat
+      // message arriving while that async rebuild was mid-flight had nothing
+      // to attach to and silently got dropped.
+      Array.from(visitorListDiv.children).forEach(child => {
+        const id = child.id.replace(/^visitor-/, "");
+        if (!seenIds.has(id)) {
+          if (clickListenerRefs[id]) {
+            userClicksRef.child(id).off("value", clickListenerRefs[id]);
+            delete clickListenerRefs[id];
+          }
+          child.remove();
+        }
       });
 
       const clickPromises = visitors.map(visitor =>
@@ -856,6 +891,8 @@
         visitorsWithClicks.sort((a, b) => b.clicks - a.clicks);
         visitorsWithClicks.forEach((visitor, index) => {
           let visitorDiv = document.getElementById(`visitor-${visitor.id}`);
+          let img, infoSpan, nameSpan, clicksSpan;
+
           if (!visitorDiv) {
             visitorDiv = document.createElement("div");
             visitorDiv.id = `visitor-${visitor.id}`;
@@ -864,16 +901,33 @@
             bubbleLayer.className = "bubble-layer";
             bubbleLayer.style.cssText = "position:absolute;left:60px;top:-5px;";
             visitorDiv.appendChild(bubbleLayer);
+
+            img = document.createElement("img");
+            img.width = 50; img.height = 50;
+            img.style.cssText = "border-radius:50%;margin-right:8px;";
+            img.className = "visitor-img";
+
+            infoSpan = document.createElement("span");
+            infoSpan.className = "visitor-info";
+            infoSpan.style.cssText = "display:flex;flex-direction:column;";
+            nameSpan = document.createElement("span");
+            nameSpan.className = "visitor-name";
+            clicksSpan = document.createElement("span");
+            clicksSpan.className = "visitor-clicks";
+            clicksSpan.style.cssText = "font-size:0.9em;color:#00ff00;";
+            infoSpan.appendChild(nameSpan);
+            infoSpan.appendChild(clicksSpan);
+
+            visitorDiv.appendChild(img);
+            visitorDiv.appendChild(infoSpan);
             visitorListDiv.appendChild(visitorDiv);
           } else {
-            Array.from(visitorDiv.children).forEach(child => {
-              if (!child.classList.contains("bubble-layer")) child.remove();
-            });
+            img = visitorDiv.querySelector(".visitor-img");
+            infoSpan = visitorDiv.querySelector(".visitor-info");
+            nameSpan = visitorDiv.querySelector(".visitor-name");
+            clicksSpan = visitorDiv.querySelector(".visitor-clicks");
           }
 
-          const img = document.createElement("img");
-          img.width = 50; img.height = 50;
-          img.style.cssText = "border-radius:50%;margin-right:8px;";
           if (visitor.miiData) {
             img.src = `https://mii-unsecure.ariankordi.net/miis/image.png?erri=sqkn3-rfb&data=${visitor.miiData}&shaderType=miitomo&type=face_only&width=270&pantsColor=red&verifyCRC16=0&verifyCharInfo=0`;
           } else if (visitor.guest) {
@@ -883,24 +937,22 @@
           }
           img.onerror = () => { img.src = "https://helloiti.github.io/hellot/seal/clicker/anonface.png"; };
 
-          const infoSpan = document.createElement("span");
-          infoSpan.style.cssText = "display:flex;flex-direction:column;";
-
-          const nameSpan = document.createElement("span");
           nameSpan.textContent = (visitor.guest ? visitor.id : visitor.username || visitor.id) + (index === 0 ? " 👑" : "");
-          if (visitor.id === userId) { nameSpan.style.color = "white"; nameSpan.style.fontWeight = "bold"; }
+          nameSpan.style.color = visitor.id === userId ? "white" : "";
+          nameSpan.style.fontWeight = visitor.id === userId ? "bold" : "";
 
-          const clicksSpan = document.createElement("span");
-          clicksSpan.style.cssText = "font-size:0.9em;color:#00ff00;";
           clicksSpan.textContent = `Clicks: ${visitor.clicks}`;
-          userClicksRef.child(visitor.id).on("value", snap => {
-            clicksSpan.textContent = `Clicks: ${snap.val() || 0}`;
-          });
 
-          infoSpan.appendChild(nameSpan);
-          infoSpan.appendChild(clicksSpan);
-          visitorDiv.appendChild(img);
-          visitorDiv.appendChild(infoSpan);
+          // also keep the DOM in visual rank order (highest clicks first)
+          visitorListDiv.appendChild(visitorDiv);
+
+          if (!clickListenerRefs[visitor.id]) {
+            const listener = snap => {
+              clicksSpan.textContent = `Clicks: ${snap.val() || 0}`;
+            };
+            clickListenerRefs[visitor.id] = listener;
+            userClicksRef.child(visitor.id).on("value", listener);
+          }
         });
 
         document.getElementById("visitor-counter").textContent = `Visitors online: ${snapshot.numChildren()}`;
