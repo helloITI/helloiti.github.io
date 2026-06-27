@@ -13,7 +13,8 @@
       font-family: sans-serif;
       z-index: 0;
     }
-    canvas{pointer-events:none;}
+    * { pointer-events: none; }
+    select, button, input, a, #visitor-list > div, #mii-modal-overlay, #mii-modal, #mii-modal * { pointer-events: auto; }
     #seal-btn {
       position: absolute;
       bottom: 20px;
@@ -130,7 +131,7 @@
       border-radius: 6px;
     }
     #mii-modal-error { color: #ff6b6b; font-size: 12px; min-height: 16px; }
-    #visitor-list > div { pointer-events: none; }
+    #visitor-list > div { pointer-events: auto; }
     #chat-input, #chat-send { pointer-events: auto; }
   </style>
 </head>
@@ -157,7 +158,7 @@
     <option value="fi">Suomi</option>
     <option value="fr">Français</option>
   </select>
-  <div id="visitor-list" style="position:fixed;top:50px;left:10px;z-index:10;pointer-events:none;"></div>
+  <div id="visitor-list" style="position:relative;z-index:10;pointer-events:none;"></div>
   <input id="chat-input" type="text" placeholder="Say something..." style="width:10%; position:relative; z-index:10;">
   <button id="chat-send" style="position:relative; z-index:10;">Send</button>
 
@@ -175,7 +176,7 @@
   </audio>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
   <script src="https://unpkg.com/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
@@ -333,6 +334,7 @@
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.outputEncoding = THREE.sRGBEncoding;
     const scene = new THREE.Scene();
     scene.background = null;
     const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 100);
@@ -347,7 +349,7 @@
       model.traverse((child) => {
         if (child.isMesh) {
           const oldMat = child.material;
-          child.material = new THREE.MeshStandardMaterial({ map: oldMat.map, color: 0xffffff, side: THREE.DoubleSide, metalness: 0.2, roughness: 1 });
+          child.material = new THREE.MeshStandardMaterial({ map: oldMat.map, color: 0xffffff, side: THREE.DoubleSide, metalness: 0.2, roughness: 1, transparent: true, alphaTest: 0.1 });
           if (child.geometry && child.geometry.attributes.normal) child.geometry.computeVertexNormals();
         }
       });
@@ -439,7 +441,7 @@
           dress.position.y = 0.175; personGroup.add(dress);
         }
         personGroup.add(body, top);
-        const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texLoader.load(`https://mii-unsecure.ariankordi.net/miis/image.png?data=${mii.hex}&type=face_only&width=40&verifyCRC16=0&verifyCharInfo=0`), transparent: true }));
+        const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texLoader.load(`https://mii-unsecure.ariankordi.net/miis/image.png?data=${mii.hex}&type=face_only&width=40&verifyCRC16=0&verifyCharInfo=0`), transparent: true, alphaTest: 0.1 }));
         sprite.scale.set(0.56,0.56,1); sprite.position.y = 0.6; sprite.position.z = 0.015;
         personGroup.add(sprite);
         const angle = ((i-(total-1)/2)/total)*Math.PI/2;
@@ -462,7 +464,7 @@
       myGroup.add(myBody, myTop);
       if (myMiiData) {
         try {
-          const mySprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texLoader.load(`https://mii-unsecure.ariankordi.net/miis/image.png?erri=sqkn3-rfb&data=${myMiiData}&type=face_only&width=270&pantsColor=red&verifyCRC16=0&verifyCharInfo=0`), transparent: true }));
+          const mySprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texLoader.load(`https://mii-unsecure.ariankordi.net/miis/image.png?erri=sqkn3-rfb&data=${myMiiData}&type=face_only&width=270&pantsColor=red&verifyCRC16=0&verifyCharInfo=0`), transparent: true, alphaTest: 0.1 }));
           mySprite.scale.set(0.56,0.56,1); mySprite.position.y = 0.6; mySprite.position.z = 0.015;
           myGroup.add(mySprite);
         } catch(err) { console.error("Failed to load own Mii:", err); }
@@ -544,16 +546,7 @@
             visitorDiv.style.cssText = "display:flex;align-items:center;margin-bottom:5px;position:relative;z-index:10;";
             const bubbleLayer = document.createElement("div");
             bubbleLayer.className = "bubble-layer";
-            bubbleLayer.style.cssText = `
-    position:absolute;
-    left:100%;
-    top:0;
-    margin-left:8px;
-    display:flex;
-    flex-direction:column;
-    align-items:flex-start;
-    pointer-events:none;
-`;
+            bubbleLayer.style.cssText = "position:absolute;left:60px;top:-5px;";
             visitorDiv.appendChild(bubbleLayer);
             img = document.createElement("img"); img.width = 50; img.height = 50;
             img.style.cssText = "border-radius:50%;margin-right:8px;"; img.className = "visitor-img";
