@@ -1,4 +1,4 @@
-    let easterEggActive = false;
+let easterEggActive = false;
     let resetTimeout = null;
     let shockSound = new Audio("https://helloiti.github.io/hellot/seal/clicker/miscassets/wii-sports-bowling-strike.mp3");
     const secretCode = "wiisports";
