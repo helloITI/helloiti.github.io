@@ -66,50 +66,72 @@ function sp() {
 function cp() { document.getElementById("mp1").style.display = "none"; }
 // hi
 const ca = [
-{ off: 16, len: 22, name: "Nickname", type: "utf16" },
-{ off: 40, name: "Gender", type: "u8" },
-{ off: 39, name: "Favorite Color", type: "u8" },
-{ off: 43, name: "Type", type: "u8" },
-{ off: 41, name: "Height", type: "u8" },
-{ off: 42, name: "Weight", type: "u8" },
+	{ off: 16, len: 22, name: "Nickname", type: "utf16" },
+	{ off: 40, name: "Gender", type: "u8" },
+	{ off: 39, name: "Favorite Color", type: "u8" },
+	{ off: 43, name: "Type", type: "u8" },
+	{ off: 41, name: "Height", type: "u8" },
+	{ off: 42, name: "Weight", type: "u8" },
 ];
-const fc = [ "Red","Orange","Yellow","Green","Lime Green","Blue","Light Blue","Pink","Purple","Brown","White","Black", ];
+const fc = ["Red","Orange","Yellow","Green","Lime Green","Blue","Light Blue","Pink","Purple","Brown","White","Black"];
 // pants/type
 const pt = { 0: "Normal", 1: "Special" };
 // ok
 const ft = { charinfo: ".charinfo", ffsd: ".ffsd" };
 function hb(hx) {
-return new Uint8Array(hx.match(/.{2}/g).map((b) => parseInt(b, 16)));
+	return new Uint8Array(hx.match(/.{2}/g).map((b) => parseInt(b, 16)));
 }
 function sl() {
-const st = ls.map((m) => ({ id: m.id, dataHex: m.dataHex, ext: m.ext }));
-localStorage.setItem("miis", JSON.stringify(st));
+	const st = ls.map((m) => ({ id: m.id, dataHex: m.dataHex, ext: m.ext }));
+	localStorage.setItem("miis", JSON.stringify(st));
 }
-// checks if the hex text data of the mii is valid or not!!! (if not, it will give you an error)
+function b64ToHex(b64) {
+	const binary = atob(b64);
+	let hex = "";
+	for (let i = 0; i < binary.length; i++) {
+		hex += binary.charCodeAt(i).toString(16).padStart(2, "0");
+	}
+	return hex;
+}
+function normalizeInput(raw) {
+	const trimmed = raw.trim().replace(/\s+/g, "");
+	if (!trimmed) return { hex: null, error: "Please type a valid Mii HEX data or Base64 data." };
+	if (/^[0-9a-fA-F]+$/.test(trimmed)) {
+		if (trimmed.length % 2 !== 0) return { hex: null, error: "HEX length must be even!" };
+		return { hex: trimmed.toLowerCase(), error: null };
+	}
+	if (/^[A-Za-z0-9+/]+=*$/.test(trimmed)) {
+		try {
+			const hex = b64ToHex(trimmed);
+			return { hex, error: null };
+		} catch (e) {
+			return { hex: null, error: "Invalid Base64 data!" };
+		}
+	}
+
+	return { hex: null, error: "Invalid CHARINFO/FFSD HEX or Base64 data!" };
+}
+// checks if the hex text data of the mii is valid or not!!!
 document.getElementById("ih").onclick = () => {
-const hx = document.getElementById("hx").value.trim().replace(/\s+/g, "");
-// this is what happens if you import a blank hex data :p
-if (!hx)
-return alert(
-"Please type a valid Mii HEX data.",
-);
-// this means that you entered a invalid hex data, such as spamming your keyboard, typing random stuff, or a unsupported mii hex data.
-// reminder: this tool ONLY uses ffsd and charinfo miis, more mii data files will be added probably soon, in the future, such as .rsd, etc. (will probably never happen lol)
-if (!/^[0-9a-fA-F]+$/.test(hx))
-return alert("Invalid CHARINFO/FFSD HEX data!");
-if (hx.length % 2 !== 0) return alert("HEX length must be even!");
-const bl = hx.length / 2;
-// this happens if you enter a mii studio hex data code, which you can get it from ariankordi's mii renderer:
-// https://mii-unsecure.ariankordi.net/
-if (bl !== 88 && bl !== 96)
-return alert("Mii Storage doesn't support Mii Studio HEX data, only FFSD and CHARINFO.");
-let ex = bl === 88 ? "charinfo" : "ffsd";const bf = new Uint8Array(hx.match(/.{2}/g).map((b) => parseInt(b, 16)));
-ls.push({ id: Date.now(), data: bf, dataHex: hx, ext: ex });
-sl();
-rd();
-document.getElementById("hx").value = "";
+	const raw = document.getElementById("hx").value;
+	if (!raw.trim()) return alert("Please type a valid Mii HEX or Base64 data.");
+
+	const { hex: hx, error } = normalizeInput(raw);
+	if (error) return alert(error);
+
+	const bl = hx.length / 2;
+	if (bl !== 88 && bl !== 96)
+		return alert("Mii Storage doesn't support Mii Studio HEX data, only FFSD and CHARINFO.");
+
+	let ex = bl === 88 ? "charinfo" : "ffsd";
+	const bf = new Uint8Array(hx.match(/.{2}/g).map((b) => parseInt(b, 16)));
+	ls.push({ id: Date.now(), data: bf, dataHex: hx, ext: ex });
+	sl();
+	rd();
+	document.getElementById("hx").value = "";
 };
-// checks if the user has imported a valid charinfo or ffsd mii file, if not, it will give you an error.
+
+// checks if the user has imported a valid charinfo or ffsd mii file
 document.getElementById("fl").onchange = async (e) => {
 	const f = e.target.files[0];
 	if (!f) return;
@@ -141,21 +163,14 @@ function pm(bf, ex) {
 			}
 		});
 		ifo["Favorite Color"] = fc[ifo["Favorite Color"]] || "Unknown";
-		ifo["Gender"] =
-			ifo["Gender"] === 0 ? "Male" : "Female";
+		ifo["Gender"] = ifo["Gender"] === 0 ? "Male" : "Female";
 		ifo["Type"] = pt[ifo["Type"]] || "Unknown";
 		if (!ifo["Nickname"]) ifo["Nickname"] = "Mii";
 	} else if (ex === "ffsd") {
 		ifo["Nickname"] =
-			dc
-				.decode(bf.slice(0x1a, 0x1a + 20))
-				.replace(/\0/g, "")
-				.trim() || "Mii";
+			dc.decode(bf.slice(0x1a, 0x1a + 20)).replace(/\0/g, "").trim() || "Mii";
 		ifo["Creator's Name"] =
-			dc
-				.decode(bf.slice(0x48, 0x48 + 20))
-				.replace(/\0/g, "")
-				.trim() || "Unknown";
+			dc.decode(bf.slice(0x48, 0x48 + 20)).replace(/\0/g, "").trim() || "Unknown";
 		ifo["Height"] = bf[0x2e];
 		ifo["Weight"] = bf[0x2f];
 		const mb = (bf[0x19] << 8) | bf[0x18];
@@ -163,7 +178,8 @@ function pm(bf, ex) {
 		ifo["Gender"] = gb === 0 ? "Male" : "Female";
 		const ci = (mb >> 10) & 0x0f;
 		ifo["Favorite Color"] = fc[ci] || "Unknown";
-		const isSpecial = (bf[0x0c] & 0x80) === 0;const isFavorite = (bf[0x19] & 0x40) !== 0;
+		const isSpecial = (bf[0x0c] & 0x80) === 0;
+		const isFavorite = (bf[0x19] & 0x40) !== 0;
 		if (isSpecial) {
 			ifo["Type"] = "Special";
 		} else if (isFavorite) {
@@ -177,7 +193,7 @@ function pm(bf, ex) {
 // saves the imported miis into your browser's local storage!!
 let ls = [];
 try {
-const raw = JSON.parse(localStorage.getItem("miis") || "[]");
+	const raw = JSON.parse(localStorage.getItem("miis") || "[]");
 	if (Array.isArray(raw)) {
 		ls = raw
 			.filter((m) => m && m.dataHex && m.ext)
@@ -202,23 +218,23 @@ function rd() {
 		const dv = document.createElement("div");
 		dv.className = "cd";
 		const pp =
-			m.ext === "charinfo" && ifo["Type"] === "Special"
-				? "gold"
-				: "gray";
+			m.ext === "charinfo" && ifo["Type"] === "Special" ? "gold" : "gray";
 		const fp =
-			ifo["Type"] === "Special"
-				? "gold"
-				: ifo["Type"] === "Favorite"
-					? "red"
-					: "gray";
-const cf = `https://mii-unsecure.ariankordi.net/miis/image.png?erri=s4mwu-rs1&data=${m.dataHex}&shaderType=switch&type=face&width=270&pantsColor=${pp}&bodyType=switch&verifyCharInfo=0`;const cb = `https://mii-unsecure.ariankordi.net/miis/image.png?erri=s4mwu-rs1&data=${m.dataHex}&shaderType=switch&type=all_body_sugar&width=270&pantsColor=${pp}&bodyType=switch&verifyCharInfo=0`;const ff = `https://mii-unsecure.ariankordi.net/miis/image.png?data=${m.dataHex}&type=face&width=270&pantsColor=gray&bodyType=wiiu&verifyCharInfo=0`;const fb = `https://mii-unsecure.ariankordi.net/miis/image.png?erri=s6s37-r99&data=${m.dataHex}&type=all_body_sugar&width=270&pantsColor=${fp}&verifyCharInfo=0`;const fu = m.ext === "charinfo" ? cf : ff;const bu = m.ext === "charinfo" ? cb : fb;const im = document.createElement("img");
+			ifo["Type"] === "Special" ? "gold" : ifo["Type"] === "Favorite" ? "red" : "gray";
+		const cf = `https://mii-unsecure.ariankordi.net/miis/image.png?erri=s4mwu-rs1&data=${m.dataHex}&shaderType=switch&type=face&width=270&pantsColor=${pp}&bodyType=switch&verifyCharInfo=0`;
+		const cb = `https://mii-unsecure.ariankordi.net/miis/image.png?erri=s4mwu-rs1&data=${m.dataHex}&shaderType=switch&type=all_body_sugar&width=270&pantsColor=${pp}&bodyType=switch&verifyCharInfo=0`;
+		const ff = `https://mii-unsecure.ariankordi.net/miis/image.png?data=${m.dataHex}&type=face&width=270&pantsColor=gray&bodyType=wiiu&verifyCharInfo=0`;
+		const fb = `https://mii-unsecure.ariankordi.net/miis/image.png?erri=s6s37-r99&data=${m.dataHex}&type=all_body_sugar&width=270&pantsColor=${fp}&verifyCharInfo=0`;
+		const fu = m.ext === "charinfo" ? cf : ff;
+		const bu = m.ext === "charinfo" ? cb : fb;
+		const im = document.createElement("img");
 		im.src = fu;
 		im.onclick = () => {
 			document.getElementById("pi").src = bu;
 			document.getElementById("mp").style.display = "flex";
 		};
-// adds a little star next to the mii's nickname if its a special charinfo mii, or a little heart if its a favorite ffsd mii! :)
-const mt = document.createElement("div");
+		// adds a little star next to the mii's nickname if its a special charinfo mii, or a little heart if its a favorite ffsd mii!
+		const mt = document.createElement("div");
 		const gb =
 			(m.ext === "charinfo" && ifo["Type"] === "Special") ||
 			(m.ext === "ffsd" && ifo["Type"] === "Special")
@@ -237,9 +253,8 @@ const mt = document.createElement("div");
 				? `<button style="background:#222; color:#fff; border:1px solid #555; cursor:pointer; padding:2px 6px; border-radius:6px; font-size:12px;" onclick="sp()">?</button>`
 				: "";
 		mt.innerHTML =
-			`<div style="font-weight:600">${ifo["Nickname"]}${gb} ${pi}</div>` +
-			t;
-		// downloads the saved mii back as a real .charinfo/.ffsd file, in case you lost the original!
+			`<div style="font-weight:600">${ifo["Nickname"]}${gb} ${pi}</div>` + t;
+		// downloads the saved mii back as a real .charinfo/.ffsd file
 		const dw = document.createElement("button");
 		dw.textContent = "※ Download ※";
 		dw.style.cssText =
