@@ -339,8 +339,10 @@
     scene.background = null;
     const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 100);
     camera.position.set(0, 0.5, 5);
-    scene.add(new THREE.AmbientLight(0xffffff, 2));
-    scene.add(new THREE.DirectionalLight(0xffffff, 3));
+    scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+    const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    dirLight.position.set(5, 5, 5);
+    scene.add(dirLight);
 
     const loader = new THREE.GLTFLoader();
     let model = null, swingGroup, spinGroup;
