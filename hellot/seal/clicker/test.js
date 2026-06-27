@@ -63,7 +63,7 @@ const visitorListDiv = document.getElementById("visitor-list");
             visitorDiv.style.cssText = "display:flex;align-items:center;margin-bottom:5px;position:relative;z-index:10;";
             const bubbleLayer = document.createElement("div");
             bubbleLayer.className = "bubble-layer";
-            bubbleLayer.style.cssText = "position:absolute;left:60px;top:-5px;";
+            bubbleLayer.style.cssText = "position:absolute;left:100%;top:50%;transform:translateY(-50%);margin-left:8px;white-space:nowrap;";
             visitorDiv.appendChild(bubbleLayer);
             img = document.createElement("img"); img.width = 50; img.height = 50;
             img.style.cssText = "border-radius:50%;margin-right:8px;"; img.className = "visitor-img";
