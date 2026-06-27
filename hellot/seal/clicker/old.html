@@ -129,6 +129,8 @@
       border-radius: 6px;
     }
     #mii-modal-error { color: #ff6b6b; font-size: 12px; min-height: 16px; }
+    #visitor-list > div { pointer-events: auto; }
+    #chat-input, #chat-send { pointer-events: auto; }
   </style>
 </head>
 <body>
@@ -154,7 +156,7 @@
     <option value="fi">Suomi</option>
     <option value="fr">Français</option>
   </select>
-  <div id="visitor-list" style="position:relative;z-index:10;"></div>
+  <div id="visitor-list" style="position:relative;z-index:10;pointer-events:none;"></div>
   <input id="chat-input" type="text" placeholder="Say something..." style="width:10%; position:relative; z-index:10;">
   <button id="chat-send" style="position:relative; z-index:10;">Send</button>
 
