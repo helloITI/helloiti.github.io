@@ -1,4 +1,4 @@
-    const visitorListDiv = document.getElementById("visitor-list");
+const visitorListDiv = document.getElementById("visitor-list");
     const visitorsRef = firebase.database().ref("onlineUsers");
     const userClicksRef = firebase.database().ref("userClicks");
     const chatRef = firebase.database().ref("chatMessages");
