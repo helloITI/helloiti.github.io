@@ -13,8 +13,7 @@
       font-family: sans-serif;
       z-index: 0;
     }
-    * { pointer-events: none; }
-    select, button, input, a, #visitor-list > div, #mii-modal-overlay, #mii-modal, #mii-modal * { pointer-events: auto; }
+    canvas{pointer-events:none;}
     #seal-btn {
       position: absolute;
       bottom: 20px;
@@ -131,7 +130,7 @@
       border-radius: 6px;
     }
     #mii-modal-error { color: #ff6b6b; font-size: 12px; min-height: 16px; }
-    #visitor-list > div { pointer-events: auto; }
+    #visitor-list > div { pointer-events: none; }
     #chat-input, #chat-send { pointer-events: auto; }
   </style>
 </head>
@@ -158,7 +157,7 @@
     <option value="fi">Suomi</option>
     <option value="fr">Français</option>
   </select>
-  <div id="visitor-list" style="position:relative;z-index:10;pointer-events:none;"></div>
+  <div id="visitor-list" style="position:fixed;top:50px;left:10px;z-index:10;pointer-events:none;"></div>
   <input id="chat-input" type="text" placeholder="Say something..." style="width:10%; position:relative; z-index:10;">
   <button id="chat-send" style="position:relative; z-index:10;">Send</button>
 
