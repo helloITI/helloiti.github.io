@@ -9,51 +9,7 @@
   <meta property="og:url" content="https://helloiti.github.io/mae/" />
   <meta property="og:image" content="https://helloiti.github.io/mae/favicon.png" />
   <meta property="og:type" content="website" />
-  <style>
-    html, body, #avatarSWFContainer {
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      border: none;
-    }
-        @font-face {
-      font-family: 'NintendoNTLG';
-      src: url('https://helloiti.github.io/assets/nintendo_NTLG-DB_002.ttf') format('truetype'); /* ttf file name too long so i pasted it 🤣🤣🤣 me is funny */
-      /* normal weight... i think? */
-      font-weight: normal;
-      font-style: normal;
-    }
-body {
-  font-family: 'NintendoNTLG', sans-serif;
-  margin: 0;
-  padding: 0;
-  /* bg */
-  color: white;
-  overflow: hidden; /* disables scrolling around the page completely */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-body::-webkit-scrollbar { display: none; }
-    a {
-      text-decoration: none;
-      background-size: 400% 400%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-	  html {
-  overflow: hidden;
-}
-  </style>
-  <!-- Ruffle -->
-  <script>
-    window.RufflePlayer = window.RufflePlayer || {};
-    window.RufflePlayer.config = {
-      autoplay: "on",
-      unmuteOverlay: "hidden"
-    };
-  </script>
+<link rel="stylesheet" href="styles/show.css">
   <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
   <!-- SWFObject -->
   <script src="https://helloiti.github.io/mae/scripts/swfobject.js"></script>
@@ -77,7 +33,7 @@ body::-webkit-scrollbar { display: none; }
   <div id="avatarSWFContainer">
 <h3>Flash Player 10 is required (you have <script type="text/javascript">document.write(swfobject.getFlashPlayerVersion() || "(unknown)");</script>).</h3>
 		<p><a href="https://archive.org/details/adobeflash-10_1"><img src="https://helloiti.github.io/mae/images/shared/download_buttons/get_flash_player.png" alt="Get Adobe Flash player" border="0"/></a></p>
-    <a href="https://helloiti.github.io/mae" style="position: absolute; top: 10px; right: 10px; color: black !important; font-size: 12px; text-decoration: none; background: none !important; -webkit-text-fill-color: white !important;">Go Back?</a>
+    <a href="https://helloiti.github.io/mae" style="position: absolute; top: 10px; right: 10px; color: black !important; font-size: 12px; text-decoration: none; background: none !important; -webkit-text-fill-color: black !important;">Go Back?</a>
   </div>
 </body>
 </html>
