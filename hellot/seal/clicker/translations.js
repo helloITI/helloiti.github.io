@@ -1,4 +1,4 @@
-    const translations = {
+const translations = {
       en: {
         title: "seal of HelloT", h1: "Each click updates a global counter!", button: "Yap Yoo!",
         messages: ["1 click = 1 seal will appear on someone's door /j","1 click = 100000 slay rizz 💅","1 click = +1 Baddie 😍","1 click = the seal will fly (not really)","1 click = 1 more minute of screentime for me 🤤","1 click = 1 more day of summer (NOT REAL :(( )","1 click = You become immortal 😱 (NO)","1 click = MrBreast will give you 1000000 BILKION 🤑","1 click = Donation to TEAM SEALS, (i'm poor ok?)","1 click = GTA6 will come 1 hour earlier","1 click = 1 glass of Fart Free Water!","1 click = parapa 🥹","1 click = + 0.0001% possibility of Hellot seal cameo in webroom.","1 click = 1 temu ad terminated 💅","1 click = MORE SEALS 🤑 /j","1 click = Update to the global counter! /srs","1 click = Good luck","1 click = 1 italian brainrot meme killed.","1 click = 1 labubu will explode!!!!"]
