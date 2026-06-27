@@ -85,24 +85,24 @@ function sl() {
 	const st = ls.map((m) => ({ id: m.id, dataHex: m.dataHex, ext: m.ext }));
 	localStorage.setItem("miis", JSON.stringify(st));
 }
-function b64ToHex(b64) {
-	const binary = atob(b64);
-	let hex = "";
-	for (let i = 0; i < binary.length; i++) {
-		hex += binary.charCodeAt(i).toString(16).padStart(2, "0");
-	}
-	return hex;
-}
 function normalizeInput(raw) {
 	const trimmed = raw.trim().replace(/\s+/g, "");
-	if (!trimmed) return { hex: null, error: "Please type a valid Mii HEX data or Base64 data." };
+	if (!trimmed) return { hex: null, error: "Please type a valid Mii HEX or Base64 data." };
 	if (/^[0-9a-fA-F]+$/.test(trimmed)) {
 		if (trimmed.length % 2 !== 0) return { hex: null, error: "HEX length must be even!" };
 		return { hex: trimmed.toLowerCase(), error: null };
 	}
 	if (/^[A-Za-z0-9+/]+=*$/.test(trimmed)) {
 		try {
-			const hex = b64ToHex(trimmed);
+			const binary = atob(trimmed);
+			const maybehex = binary.replace(/\s+/g, "");
+			if (/^[0-9a-fA-F]+$/.test(maybehex) && maybehex.length % 2 === 0) {
+				return { hex: maybehex.toLowerCase(), error: null };
+			}
+			let hex = "";
+			for (let i = 0; i < binary.length; i++) {
+				hex += binary.charCodeAt(i).toString(16).padStart(2, "0");
+			}
 			return { hex, error: null };
 		} catch (e) {
 			return { hex: null, error: "Invalid Base64 data!" };
@@ -130,7 +130,6 @@ document.getElementById("ih").onclick = () => {
 	rd();
 	document.getElementById("hx").value = "";
 };
-
 // checks if the user has imported a valid charinfo or ffsd mii file
 document.getElementById("fl").onchange = async (e) => {
 	const f = e.target.files[0];
