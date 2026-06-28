@@ -1,0 +1,29 @@
+@font-face {
+  font-family: "wiiu";
+  src: url("https://helloiti.github.io/assets/nintendo_NTLG-DB_002.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+  body {
+  background-color: black;
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, auto;
+  font-family: 'wiiu', monospace;
+  text-align: center;
+}
+    h1 {
+      margin-bottom: 20px;
+    }
+a { cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, pointer; }
+    img {
+      width: 450px;
+      max-width: 90%;
+      height: auto;
+    }
