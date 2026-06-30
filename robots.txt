@@ -81,6 +81,7 @@ User-agent: GoogleAgent-URLContext
 User-agent: GoogleOther
 User-agent: GoogleOther-Image
 User-agent: GoogleOther-Video
+User-agent: Googlebot
 User-agent: GPTBot
 User-agent: HenkBot
 User-agent: iAskBot
