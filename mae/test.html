@@ -88,12 +88,35 @@ function saveFromPastedText() {
         setSaveStatus("Couldn't find a valid avatar code in that text — paste the full \"Avatar link\" from the editor.");
         return;
     }
-    const value = m[1];
-    localStorage.setItem("savA", value);
-    lastSavedMii = value;
-    setSaveStatus("Saved (" + new Date().toLocaleTimeString() + "). It'll load automatically next time you open this page.");
+    saveAvatarValue(m[1], "pasted");
     input.value = "";
 }
+
+function saveAvatarValue(value, source) {
+    if (value === lastSavedMii) {
+        setSaveStatus("Already up to date (" + new Date().toLocaleTimeString() + ")");
+        return;
+    }
+    localStorage.setItem("savA", value);
+    lastSavedMii = value;
+    const label = source === "copy" ? "Auto-saved from your copy" : "Saved";
+    setSaveStatus(label + " (" + new Date().toLocaleTimeString() + "). It'll load automatically next time you open this page.");
+}
+
+// The "Avatar link" text apparently only becomes real, readable page
+// content for the instant you select and copy it (which is why background
+// scanning couldn't find it, but manual copy-paste worked). So instead of
+// requiring you to paste it into a box, we listen for the browser's native
+// "copy" event and grab the avatar data straight out of it automatically —
+// just select the link text and hit Ctrl+C (or right-click > Copy).
+document.addEventListener("copy", (e) => {
+    try {
+        const cd = e.clipboardData || window.clipboardData;
+        const text = cd ? (cd.getData("text/plain") || cd.getData("text")) : "";
+        const m = text && text.match(AVATAR_HEX_RE);
+        if (m) saveAvatarValue(m[1], "copy");
+    } catch (err) { /* ignore */ }
+});
 
 window.addEventListener("DOMContentLoaded", () => {
     const DEFAULT_MII = "000000640065006600610075006c00740042006f0079414080807f5fc242899800044240318028a2088c08401448b88d008a008a25040000000000000000000000000000000000000000";
@@ -120,9 +143,14 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 		<div id="editor-controls" style="margin-top:8px;">
-			<p style="font-size:0.9em; color:#444; margin:4px 0;">To save your progress: select/copy the <strong>Avatar link</strong> text shown at the bottom of the editor above, paste it here, then click Save.</p>
-			<input type="text" id="avatar-paste-input" placeholder="Paste the Avatar link here" style="width:60%; max-width:420px; padding:4px;" />
-			<button type="button" onclick="saveFromPastedText()">Save Pasted Avatar</button>
+			<p style="font-size:0.9em; color:#444; margin:4px 0;">Auto-save: select the <strong>Avatar link</strong> text shown at the bottom of the editor above and copy it (Ctrl+C, or right-click &gt; Copy) — it'll save automatically, no pasting needed.</p>
+			<details style="font-size:0.85em; color:#666;">
+				<summary style="cursor:pointer;">Copy didn't trigger a save? Paste it manually instead</summary>
+				<div style="margin-top:6px;">
+					<input type="text" id="avatar-paste-input" placeholder="Paste the Avatar link here" style="width:60%; max-width:420px; padding:4px;" />
+					<button type="button" onclick="saveFromPastedText()">Save Pasted Avatar</button>
+				</div>
+			</details>
 			<div id="save-status" style="margin-top:4px; font-size:0.9em; color:#666;">Nothing saved this session yet.</div>
 		</div>
 		</div>
