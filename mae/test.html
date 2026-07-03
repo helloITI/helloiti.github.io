@@ -1,184 +1,74 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
-<!-- hi -->
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-	<title>My Avatar Editor</title>
-	<link rel="canonical" href="https://helloiti.github.io/mae/" />
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" style="--wm-toolbar-height: 67px;"><head><script src="//archive.org/includes/athena.js" type="text/javascript"></script>
+	<title>My Avatar Editor Contact Page</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<link rel="icon" type="image/ico&quot;&quot;" href="favicon.ico">
   <meta property="og:title" content="My Avatar Editor" />
   <meta property="og:description" content="Create and edit personalized avatar characters compatible with Mii™ characters found on the Nintendo® Wii™" />
   <meta property="og:url" content="https://helloiti.github.io/mae/" />
   <meta property="og:image" content="https://helloiti.github.io/mae/favicon.png" />
   <meta property="og:type" content="website" />
-	<link rel="icon" type="image/ico&quot;&quot;" href="favicon.ico"/>
-	<link href="styles/main.css" rel="stylesheet" type="text/css"/>
+	<link href="styles/main.css" rel="stylesheet" type="text/css">
 	<script type="text/javascript" src="scripts/swfobject.js"></script>
 	<script type="text/javascript" src="scripts/utils.js"></script>
 	<script type="text/javascript">
 		//<![CDATA[
-		swfobject.embedSWF("myavatareditor.swf", "editorSWFContainer", "640", "500", "10.0.0", null, getQueryObj());
+		swfobject.embedSWF("airbadge.swf", "air-badge-container", "217", "180", "9.0.0", null, getBadgeParams());
 		//]]>
-	</script>
-	<script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
-	<script>
-  window.RufflePlayer = window.RufflePlayer || {};
-  window.RufflePlayer.config = {
-    "autoplay": "on", // Sets autoplay to on
-    "unmuteOverlay": "hidden", // Hides the unmute button
-    "wmode": "transparent" // Optional: for transparency
-  };
-</script>
+	</script><style type="text/css" media="screen">#air-badge-container {visibility:hidden}</style>
+	<link rel="canonical" href="https://helloiti.github.io/mae/" />
+	<link rel="icon" type="image/ico&quot;&quot;" href="favicon.ico"/>
+	<link href="styles/main.css" rel="stylesheet" type="text/css"/>
+	<script type="text/javascript" src="scripts/swfobject.js"></script>
+	<script type="text/javascript" src="scripts/utils.js"></script>
 </head>
 <body>
+
 <div id="page">
 	<div id="header">
-		<h1 class="logo"><a href="https://helloiti.github.io/mae/"><img src="images/header_logo.png" alt="My Avatar Editor"/></a></h1>
-		<p class="caption">Create and edit personalized avatar characters compatible with Mii&trade; characters found on the Nintendo&reg; Wii&trade;</p>
+		<h1 class="logo"><a href="https://helloiti.github.io/mae/"><img src="images/header_logo.png" alt="My Avatar Editor"></a></h1>
+		<p class="caption">Create and edit personalized avatar characters compatible with Mii™ characters found on the Nintendo® Wii™</p>
+		
 		<div class="main-menu">
-		<div class="main-menu-left">
 		<div class="main-menu-right">
+		<div class="main-menu-left">
 			<ul>
-				<li><a href="https://helloiti.github.io/mae/" class="selected">Editor</a></li>
+				<li><a href="https://helloiti.github.io/mae/">Editor</a></li>
 				<li><a href="guide">Guide</a></li>
-				<li><a href="http://myavatareditor.blogspot.com/" target="_blank">Blog <img title="External link" alt="(new window)" src="images/icon_new_window.gif"/></a></li>
+				<li><a href="https://myavatareditor.blogspot.com/" target="_blank">Blog <img title="External link" alt="(new window)" src="https://myavatareditor.nekoweb.org/images/icon_new_window.gif"></a></li>
 				<li><a href="download">Download</a></li>
 				<li><a href="developers">Developers</a></li>
-				<li><a href="contact">Contact</a></li>
+				<li><a href="contact" class="selected">Contact</a></li>
 			</ul>
 		</div>
 		</div>
 		</div>
 	</div>
+	
 	<div class="content">
 	<div class="content-bottom">
 	<div class="content-top">
-		<!-- <button onclick="saveAvatar()">Save Avatar</button> -->
-		<div id="editor-wrapper">
-				<div id="editorSWFContainer">
-			<!-- <embed src="myavatareditor.swf" width="640" height="500" align="middle" play="true" name="classicGUI"></embed> -->
-		</div>
-<script>
-function getMiiFromURL() {
-    const params = new URLSearchParams(window.location.search);
-    return params.get("mii") || params.get("avatar") || params.get("a");
-}
-
-let autoSaveEmbed = null;
-let lastSavedMii = null;
-
-function setSaveStatus(text) {
-    const el = document.getElementById("save-status");
-    if (el) el.textContent = text;
-}
-
-// Ruffle does not implement the legacy Flash GetVariable/SetVariable API,
-// and this build doesn't mirror the editor's "Avatar link" text into real
-// scannable HTML either — so there's no reliable way to read the movie's
-// state from JavaScript automatically. The one thing we CAN trust is the
-// text you see on screen, so: copy the "Avatar link" shown at the bottom of
-// the editor and paste it below to save it.
-const AVATAR_HEX_RE = /(?:[?&](?:avatar|mii|a)=)?([0-9a-fA-F]{60,})/;
-
-function saveFromPastedText() {
-    const input = document.getElementById("avatar-paste-input");
-    if (!input) return;
-    const raw = input.value.trim();
-    const m = raw.match(AVATAR_HEX_RE);
-    if (!m) {
-        setSaveStatus("Couldn't find a valid avatar code in that text — paste the full \"Avatar link\" from the editor.");
-        return;
-    }
-    saveAvatarValue(m[1], "pasted");
-    input.value = "";
-}
-
-function saveAvatarValue(value, source) {
-    if (value === lastSavedMii) {
-        setSaveStatus("Already up to date (" + new Date().toLocaleTimeString() + ")");
-        return;
-    }
-    localStorage.setItem("savA", value);
-    lastSavedMii = value;
-    const label = source === "copy" ? "Auto-saved from your copy" : "Saved";
-    setSaveStatus(label + " (" + new Date().toLocaleTimeString() + "). It'll load automatically next time you open this page.");
-}
-
-// The "Avatar link" text apparently only becomes real, readable page
-// content for the instant you select and copy it (which is why background
-// scanning couldn't find it, but manual copy-paste worked). So instead of
-// requiring you to paste it into a box, we listen for the browser's native
-// "copy" event and grab the avatar data straight out of it automatically —
-// just select the link text and hit Ctrl+C (or right-click > Copy).
-document.addEventListener("copy", (e) => {
-    try {
-        const cd = e.clipboardData || window.clipboardData;
-        const text = cd ? (cd.getData("text/plain") || cd.getData("text")) : "";
-        const m = text && text.match(AVATAR_HEX_RE);
-        if (m) saveAvatarValue(m[1], "copy");
-    } catch (err) { /* ignore */ }
-});
-
-window.addEventListener("DOMContentLoaded", () => {
-    const DEFAULT_MII = "000000640065006600610075006c00740042006f0079414080807f5fc242899800044240318028a2088c08401448b88d008a008a25040000000000000000000000000000000000000000";
-    let miiData =
-        getMiiFromURL() ||
-        localStorage.getItem("savA") ||
-        DEFAULT_MII;
-    // saves to localStorage if coming from a URL
-    if (getMiiFromURL()) {
-        localStorage.setItem("savA", miiData);
-    }
-    lastSavedMii = miiData;
-    let flashVars = "mii=" + encodeURIComponent(miiData);
-    const embed = document.createElement("embed");
-    embed.src = "myavatareditor.swf";
-    embed.width = "640";
-    embed.height = "500";
-    embed.setAttribute("play", "true");
-    embed.setAttribute("name", "avatarEditor");
-    embed.setAttribute("allowScriptAccess", "always");
-    embed.setAttribute("flashvars", flashVars);
-    document.getElementById("editorSWFContainer").appendChild(embed);
-    autoSaveEmbed = embed;
-});
-</script>
-		<div id="editor-controls" style="margin-top:8px;">
-			<p style="font-size:0.9em; color:#444; margin:4px 0;">Auto-save: select the <strong>Avatar link</strong> text shown at the bottom of the editor above and copy it (Ctrl+C, or right-click &gt; Copy) — it'll save automatically, no pasting needed.</p>
-			<details style="font-size:0.85em; color:#666;">
-				<summary style="cursor:pointer;">Copy didn't trigger a save? Paste it manually instead</summary>
-				<div style="margin-top:6px;">
-					<input type="text" id="avatar-paste-input" placeholder="Paste the Avatar link here" style="width:60%; max-width:420px; padding:4px;" />
-					<button type="button" onclick="saveFromPastedText()">Save Pasted Avatar</button>
-				</div>
-			</details>
-			<div id="save-status" style="margin-top:4px; font-size:0.9em; color:#666;">Nothing saved this session yet.</div>
-		</div>
-		</div>
-		<div class="avatar-links">Load <a href="?avatar=000000640065006600610075006c00740042006f0079404080807f5fc242899800044240318028a2088c08401448b88d008a008a25040000000000000000000000000000000000000000">Default Boy</a> | <a href="?avatar=400000640065006600610075006c007400470072006c404080807f73c242899800041840018028a2106c08401448b88d008a008a25040000000000000000000000000000000000000000">Default Girl</a> | <a href="?avatar=0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000">???</a></div>
-		<h3>Features</h3>
-		<ul>
-			<li>Create customizable avatars online or from your desktop computer <span class="more">(<a href="guide#creatingandeditingavatars">more info...</a>)</span></li>
-			<li>Save and load your avatars to and from your hard drive <span class="more">(<a href="guide#filemenu">more info...</a>)</span></li>
-			<li>Supports .mii and .rcd character files as well as avatars defined in XML <span class="more">(<a href="guide#miicompatibility">more info...</a>)</span></li>
-			<li>Export your avatars to a JPEG or PNG image for sharing on the web! <span class="more">(<a href="guide#exportscreen">more info...</a>)</span></li>
-		</ul>
-		<p class="note">Requires <a href="https://archive.org/details/adobeflash-10_1">Adobe Flash Player 10</a> or greater.</p>
-		<h3>Credits</h3>
-		<p>You can also check credited people/tools that helped making this My Avatar Editor website revival.</p>
-		<p><a href="credits">https://helloiti.github.io/mae/credits</a></p>
+		<h2>Test</h2>
+		<p>Test</p>
+		<p>&nbsp;</p>
+		<p>&nbsp;</p>
 	</div>
 	</div>
 	</div>
-	<div id="footer">This website is not affiliated with or endorsed by Nintendo&reg; Co. Ltd. or any of its sister branches or subsidiaries globally. Mii&trade; and Wii&trade; are a trademark of Nintendo&reg; Co. Ltd. All other patents and trademarks are owned by their respective holders.</div>
+	
+	<div id="footer">This website is not affiliated with or endorsed by Nintendo® Co. Ltd. or any of its sister branches or subsidiaries globally. Mii™ and Wii™ are a trademark of Nintendo® Co. Ltd. All other patents and trademarks are owned by their respective holders.</div>
 </div>
+
 <script type="text/javascript">
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+var gaJsHost = (("https:" == document.location.protocol) ? "http://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
+</script><script src="https://ssl.google-analytics.com/ga.js" type="text/javascript"></script>
 <script type="text/javascript">
 try {
 var pageTracker = _gat._getTracker("UA-7459471-1");
 pageTracker._trackPageview();
 } catch(err) {}</script>
-</body>
-</html>
+
+
+
+</body></html>
