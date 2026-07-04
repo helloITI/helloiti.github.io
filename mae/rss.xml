@@ -1,15 +1,16 @@
-<!-- Ignore this XML file, it was for nekoweb. -->
+<!-- TEST RSS XML -->
+<!-- SAT 14 MAR 2026 -->
 <rss version="2.0">
   <channel>
     <title>My Avatar Editor</title>
     <description>My Avatar Editor</description>
-    <link>https://myavatareditor.nekoweb.org</link>
+    <link>https://helloiti.github.io/mae/</link>
     
     <item>
       <title>Testing RSS Post</title>
-      <link>https://myavatareditor.nekoweb.org</link>
+      <link>https://helloiti.github.io/mae/</link>
          <description><![CDATA[
-         Nekoweb RSS Testing Post!! :D
+         Test
 ]]></description>
       <guid>post-1</guid>
       <pubDate>Sat, 14 Mar 2026 19:06:00 GMT</pubDate>
