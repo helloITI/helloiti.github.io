@@ -16,17 +16,23 @@
   <script src="https://helloiti.github.io/mae/scripts/utils.js"></script>
   <script>
     // ok
-    window.addEventListener("DOMContentLoaded", () => {
-      swfobject.embedSWF(
-        "myavatarshow.swf",
-        "avatarSWFContainer",
-        "100%",
-        "100%",
-        "10.0.0",
-        null,
-        getQueryObj()
-      );
-    });
+  window.addEventListener("DOMContentLoaded", () => {
+  const params = new URLSearchParams(window.location.search);
+  const mii = params.get("mii") || params.get("avatar") || params.get("wii");
+  const queryObj = getQueryObj();
+  if (mii) {
+    queryObj.mii = mii;
+  }
+  swfobject.embedSWF(
+    "myavatarshow.swf",
+    "avatarSWFContainer",
+    "100%",
+    "100%",
+    "10.0.0",
+    null,
+    queryObj
+  );
+});
   </script>
 </head>
 <body>
