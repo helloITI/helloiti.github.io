@@ -2,9 +2,7 @@ const ICON_COLOR = {
   off: '#7a3b32',
   on: '#ffcac7'
 };
-
 const tintedImagesCache = {};
-
 const imagePaths = {
   button: ['graphics/btn_off.png', 'graphics/btn_on.png'],
   tab: ['graphics/tab_off.png', 'graphics/tab_on.png'],
@@ -13,7 +11,6 @@ const imagePaths = {
   ok: ['graphics/ok_btn_off.png', 'graphics/ok_btn_on.png'],
   color: ['graphics/color_off.png', 'graphics/color_on.png'],
 };
-
 // Preload image helper
 function preloadImage(url) {
   return new Promise(resolve => {
@@ -23,7 +20,6 @@ function preloadImage(url) {
     img.src = url;
   });
 }
-
 // Recolor an icon image to a hex color
 async function recolorIconToDataURL(iconSrc, colorHex) {
   const img = new Image();
@@ -50,7 +46,6 @@ async function recolorIconToDataURL(iconSrc, colorHex) {
   ctx.putImageData(imageData, 0, 0);
   return canvas.toDataURL();
 }
-
 // Tint an image for color buttons
 async function tintImage(img, colorHex) {
   const canvas = document.createElement('canvas');
@@ -65,7 +60,6 @@ async function tintImage(img, colorHex) {
   ctx.drawImage(img, 0, 0);
   return canvas.toDataURL();
 }
-
 // Update the tab icon color
 async function updateTabIcon(btn, state) {
   if (!btn.dataset.icon) return;
@@ -86,13 +80,11 @@ async function updateTabIcon(btn, state) {
     }
   `;
 }
-
 // Initialize all buttons
 document.querySelectorAll('.btn').forEach(async btn => {
   const type = btn.dataset.type;
   const [offSrc, onSrc] = imagePaths[type];
   if (!offSrc || !onSrc) return;
-
   const offImage = await preloadImage(offSrc);
   btn.style.width = `${offImage.width}px`;
   btn.style.height = `${offImage.height}px`;
@@ -101,7 +93,6 @@ document.querySelectorAll('.btn').forEach(async btn => {
   btn.style.backgroundImage = `url('${offSrc}')`;
   btn.style.backgroundSize = 'contain';
   btn.style.backgroundRepeat = 'no-repeat';
-
   // Handle icons
   if (btn.dataset.icon) {
     const className = `btn-icon-${Math.random().toString(36).substring(2, 8)}`;
@@ -112,7 +103,6 @@ document.querySelectorAll('.btn').forEach(async btn => {
     btn.dataset.className = className;
     await updateTabIcon(btn, 'off');
   }
-
   // Color buttons
   if (type === 'color') {
     const colorHex = btn.dataset.color || '#FFFFFF';
@@ -122,7 +112,6 @@ document.querySelectorAll('.btn').forEach(async btn => {
     if (!tintedImagesCache[offKey]) tintedImagesCache[offKey] = await tintImage(offImage, colorHex);
     if (!tintedImagesCache[onKey]) tintedImagesCache[onKey] = await tintImage(onImage, colorHex);
     btn.style.backgroundImage = `url('${tintedImagesCache[offKey]}')`;
-
     btn.addEventListener('click', () => {
       const container = btn.closest('.button-container');
       if (container) {
@@ -138,12 +127,10 @@ document.querySelectorAll('.btn').forEach(async btn => {
       btn.dataset.state = 'on';
       btn.style.backgroundImage = `url('${tintedImagesCache[onKey]}')`;
     });
-
   } else {
     // Section, Tab, Button
     btn.addEventListener('click', async () => {
       const container = btn.closest('.button-container');
-
       if (['button', 'section', 'tab'].includes(type)) {
         if (container) {
           container.querySelectorAll(`.btn[data-type="${type}"]`).forEach(async otherBtn => {
@@ -156,18 +143,15 @@ document.querySelectorAll('.btn').forEach(async btn => {
             }
           });
         }
-
         btn.dataset.state = 'on';
         btn.style.backgroundImage = `url('${onSrc}')`;
         if (type === 'tab') await updateTabIcon(btn, 'on');
-
         // Handle tab content display
         const tabName = btn.dataset.tab;
         if (tabName) {
           document.querySelectorAll('[data-tab-content]').forEach(el => el.style.display = 'none');
           document.querySelectorAll(`[data-tab-content="${tabName}"]`).forEach(el => el.style.display = '');
         }
-
       } else {
         // Temporary toggle for other buttons
         btn.style.backgroundImage = `url('${onSrc}')`;
@@ -176,8 +160,6 @@ document.querySelectorAll('.btn').forEach(async btn => {
     });
   }
 });
-
 // Initialize default tab content
 document.querySelectorAll('[data-tab-content]').forEach(el => el.style.display = 'none');
 document.querySelectorAll(`[data-tab-content="head"]`).forEach(el => el.style.display = '');
-
