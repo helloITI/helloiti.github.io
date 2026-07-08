@@ -59,7 +59,6 @@ color: #A45364;
 filter: drop-shadow(3px 3px 1px rgba(210,120,120,0.4));
 }
 
-
 .menu {
   width: 30px;
   height: 30px;
@@ -69,7 +68,6 @@ filter: drop-shadow(3px 3px 1px rgba(210,120,120,0.4));
   right: 10px;
   top: 10px;
 }
-
 
 .text-container {
 color: #A45364;
@@ -141,12 +139,8 @@ color: #A45364;
   transform: translate(-50%, -50%);
   outline: 5px solid rgba(255, 255, 255, 0.1);
 }
-
 </style>
-
-
   </head>
-
 <body>
       <div class="fade-overlay"></div>
 <div class="DS-Display">
@@ -160,17 +154,18 @@ color: #A45364;
     <p>BASED ON THE UNRELEASED PROTOTYPE 'OTONA NO ONNA NO URANAI TECHOU'</p>
     <p> </p>
     <p>DEV TEAM</p>
-    <p>REALSTINKBABY - 3D MODELING, TEXTURING, CODING, ANIMATING</p>
+    <p>STINK BABY - 3D MODELING, TEXTURING, CODING, ANIMATING</p>
     <p>ROTTENMEMSYT - SOUND EFFECTS, MUSIC, CONCEPT ART</p>
     <p>GABRIELS.1301 - TEXTURING, FONT CREATOR, MUSIC</p>
     <p>RFGUY - UI GRAPHICS</p>
-    <p>TYLERBLU - UI GRAPHICS</p>
+    <p>TYLERBLU2103 - UI GRAPHICS</p>
     <p> </p>
     <p>SPECIAL THANKS TO</p>
     <p>MIIWIKI.ORG - FOR THE DOCUMENTATION</p>
     <p>TCRF.NET - TOMODACHI COLLECTION UNUSED CONTENT</p>
     <p>TINKE - ASSET RIPPING HELP</p>
     <p>APICULA - ANIMATION RIPPING HELP</p>
+    <p>CHATGPT - FOR ALL OF THE CODE </p>
     <p>AND YOU FOR PLAYING!</p>
     <p> </p>
     <p>THIS PROJECT IS NOT AFFILIATED WITH NINTENDO</p>
@@ -1505,12 +1500,10 @@ renderFace(randomFace);
 bodyMesh.rotation.y = rotationY;
 renderFace(0);
   await playAnimation(walkAnimURL, THREE.LoopRepeat, "Pose.06");
-
   await moveTo(exitPos, 2);
   if (currentAction) currentAction.fadeOut(0.2);
 
 }
-
 </script>
 </body>
 </html>
