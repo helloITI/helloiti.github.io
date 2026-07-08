@@ -1850,9 +1850,6 @@ const turnGray = (model) => {
   });
 };
 
-
-
-
   turnGray(bodyMesh);
   turnGray(headGroup);
   renderFace(2);
@@ -2099,8 +2096,6 @@ proceduralBite();
   }
     }
   }
-
-
   step();
 }
 let selectedFood;
@@ -2158,7 +2153,6 @@ loader.load('model/anim/walk_in_room.glb', (gltf) => {
   walkInClip = gltf.animations[0];
 });
 
-
 function playDoorOpenAnimation(npc, doorOpenAction, walkInClip, idleClip) {
     const audio = new Audio('sound/gamesfx/door%20sounds.wav');
     audio.play();
@@ -2186,8 +2180,6 @@ function playDoorOpenAnimation(npc, doorOpenAction, walkInClip, idleClip) {
     walkInAction.clampWhenFinished = true;
     walkInAction.play();
 }
-
-
 </script>
 </body>
 </html>
