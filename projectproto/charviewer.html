@@ -8,7 +8,6 @@
   <script src="https://cdn.jsdelivr.net/npm/three/examples/js/exporters/GLTFExporter.js"></script>
 </head>
 <body>
-    
 <canvas id="miiCanvas" width="500" height="500"></canvas>
 <input type="file" id="importBtn"/>
 <div id="sliders">
@@ -153,8 +152,6 @@ const frustumSize = 3;
 
 const camera = new THREE.PerspectiveCamera(15, 500 / 500, 0.1, 300);
 
-
-
 camera.position.set(0, 0,5);
 
   const light = new THREE.AmbientLight(0xffffff, 0.5);
@@ -201,9 +198,7 @@ const selected = e.target.value;
 Expression(selected);
 });
 
-
 //Mii section
-
   async function loadGLBFromZip(path) {
     const file = zip.file(path);
     if (file) {
@@ -247,9 +242,7 @@ async function loadAnimationsFromGLB(url) {
 }
 
   async function buildMiiHead(faceIndex, hairIndex, gender,haircolora) {
-     
      npc = null;
-     
     const facePath = `proto_facelib/mdl/face${faceIndex}.glb`;
     const wrapPath = `proto_facelib/mdl/wrap${faceIndex}.glb`;
     const hairPath = `proto_facelib/mdl/hair${hairIndex}.glb`;
