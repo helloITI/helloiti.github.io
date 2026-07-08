@@ -20,11 +20,19 @@
 <script src="https://cdn.jsdelivr.net/npm/lz-string@1.4.4/libs/lz-string.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.2.0/crypto-js.min.js"></script>
 <style>
-body{
-      background-image: url('graphics/backgrounbd.png');
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-position: center;
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-image: url('graphics/backgrounbd.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed; /* keeps it filling the viewport on scroll */
+  min-height: 100vh;
 }
 @font-face {
   font-family: 'ArcadeClassic';
