@@ -43,13 +43,10 @@ body{
   filter: drop-shadow(6px 6px 1px rgba(210,120,120,0.4));
   transition: transform 0.2s ease, filter 0.2s ease;
 }
-
 .card:hover {
   transform: translateY(-10px);
   filter: drop-shadow(6px 16px 1px rgba(210,120,120,0.1));
 }
-
-
 .scrolling-list {
   list-style: none;
   margin: 0;
@@ -62,7 +59,6 @@ height: 360px;
   overflow-y: auto;
   overflow-x: hidden;
 }
-
 .scrolling-list li {
 color: #A45364;
   font: 12px 'ArcadeClassic', sans-serif;
@@ -74,7 +70,6 @@ color: #A45364;
   width: 500px;
   height: 105px;
 }
-
 .face {
   width: 100px;
   height: 100px;
@@ -82,8 +77,6 @@ color: #A45364;
   margin-right: 10px;
 filter: drop-shadow(3px 3px 1px rgba(210,120,120,0.4));
 }
-
-
 .menu {
   width: 30px;
   height: 30px;
@@ -93,8 +86,6 @@ filter: drop-shadow(3px 3px 1px rgba(210,120,120,0.4));
   right: 10px;
   top: 10px;
 }
-
-
 .text-container {
 color: #A45364;
   display: flex;
@@ -105,7 +96,6 @@ color: #A45364;
 .scrolling-list::-webkit-scrollbar {
   width: 8px;
 }
-
 .scrolling-list::-webkit-scrollbar-thumb {
   background-color: rgba(226,144,156,1);
   border-radius: 2px;
@@ -113,7 +103,6 @@ color: #A45364;
 .mii-menu.hidden {
   display: none;
 }
-
 .mii-menu {
   position: absolute;
   right: 0;
@@ -127,9 +116,6 @@ color: #A45364;
   width: 190px;
   height: 100px;
 }
-
-
-
 .mii-menu-btn {
   font-family: 'ArcadeClassic', sans-serif;
   background-color: rgba(255, 222, 209, 0);
@@ -138,7 +124,6 @@ color: #A45364;
   margin: 10px 0;
   cursor: pointer;
 }
-
 .card-container {
   display: flex;
   gap: 10px;
@@ -174,24 +159,16 @@ text-align: center;
 }
 </style>
   </head>
-
 <body>
 <div class="DS-Display">
 <div style="position: relative; width: 510px; height: 380px;">
   <canvas id="miiCanvas" width="510" height="380" style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
   <canvas id="uiCanvas" width="510" height="380" style="position: absolute; left: 0; top: 0; z-index: 1; pointer-events: none;"></canvas>
 </div>
-
 <div class="tab-wrapper">
-
 </div>
-
 </div>
-
-
-
-
-
+  
 <script>
 const canvasmii = document.getElementById("uiCanvas");
 const ctx = canvasmii.getContext("2d");
@@ -248,8 +225,8 @@ drawTime();
       document.addEventListener('click', startLoop);
       document.addEventListener('keydown', startLoop);
     });
-
 </script>
+  
 <script>
 const clicksfx = new Audio('sound/tap.wav');
   //mii data
@@ -341,10 +318,9 @@ const hatColors = [
   let EX_LIB_Brow_PosY = 0;
   let EX_LIB_Brow_Rot = 0;
   let EX_LIB_Mouth_PosY = 0;
-
-
+  
 let idleGLB = null;
-
+  
 const emoteExpressions = {
   dance: 0,
   think: 4,
@@ -366,7 +342,6 @@ function UpdateMiiInfo(firstName, lastName, birthdate) {
   birthdateSpan.textContent = birthdate;
 }
 
-
   const canvas = document.getElementById('miiCanvas');
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
 
@@ -376,18 +351,11 @@ function clamp(value, min, max) {
   
 const scene = new THREE.Scene();
 scene.background = null;
-
 const aspect = 510 / 380;
 const camera = new THREE.PerspectiveCamera(19, aspect, 0.1, 1000);
-
 camera.position.set(0, 1.4, 6);
-
-
-
-
   const light = new THREE.AmbientLight(0xffffff, 0.5);
   scene.add(new THREE.AmbientLight(0xffffff, 0.5), light);
-
 const BeardZOffsetMap = {
   1: 0,
   2: 0.1,
@@ -408,21 +376,15 @@ const BeardYOffsetMap = {
   7: 0.01,
   8: 0.01,
 };
-
 let headBone = null;
-
   const loader = new THREE.GLTFLoader();
-
-
 let roomMixer;
 let doorOpenAction; 
-
 loader.load('model/game/desk.glb', (gltf) => {
       console.log('gltf:', gltf);
   console.log('Animations count:', gltf.animations.length);
   console.log('Animations:', gltf.animations);
   room = gltf.scene;
-
   // Traverse and set materials (your existing code)
 room.traverse((child) => {
   if (child.isMesh) {
@@ -468,9 +430,7 @@ importMiiData();
 }, 500);  
 
 });
-
 //Mii section
-
   async function loadGLBFromZip(path) {
     const file = zip.file(path);
     if (file) {
@@ -1362,25 +1322,25 @@ function importMiiData() {
       LIB_Eye_PosY    = data.LIB_Eye_PosY;
       LIB_Eye_Scale   = data.LIB_Eye_Scale;
       LIB_Eye_Rot     = data.LIB_Eye_Rot;
-
+      
       LIB_Brow_PosX   = data.LIB_Brow_PosX;
       LIB_Brow_PosY   = data.LIB_Brow_PosY;
       LIB_Brow_Scale  = data.LIB_Brow_Scale;
       LIB_Brow_Rot    = data.LIB_Brow_Rot;
-
+      
       LIB_Mouth_PosY  = data.LIB_Mouth_PosY;
       LIB_Mouth_Scale = data.LIB_Mouth_Scale;
-
+      
       LIB_Nose_PosY   = data.LIB_Nose_PosY;
       LIB_Nose_Scale  = data.LIB_Nose_Scale;
-
+      
       LIB_Glass_PosY  = data.LIB_Glass_PosY;
       LIB_Glass_Scale = data.LIB_Glass_Scale;
-
+      
       LIB_Mole_PosX   = data.LIB_Mole_PosX;
       LIB_Mole_PosY   = data.LIB_Mole_PosY;
       LIB_Mole_Scale  = data.LIB_Mole_Scale;
-
+      
       LIB_Stache_PosX   = data.LIB_Stache_PosX;
       LIB_Stache_PosY   = data.LIB_Stache_PosY;
       LIB_Stache_Scale  = data.LIB_Stache_Scale;
@@ -1392,17 +1352,14 @@ function importMiiData() {
         height = 1;
         weight = 1;
       }
-
       firstName = data.firstName;
       lastName  = data.lastName;
       birthdate = data.birthdate;
-
       buildMiiHead(
         faceline, hairstyle, gender, haircolor, skintone,
         eyebrowstyle, eyestyle, mouthstyle, nosestyle, detailstyle,
         molestyle, musstyle, firstName, lastName, birthdate
       );
-
       console.log(`Random Mii loaded (${label})`);
       return true;
     } catch (err) {
@@ -1410,22 +1367,18 @@ function importMiiData() {
       return false;
     }
   }
-
   // 1. Collect all PRPMII_ keys
   const keys = [];
   for (let i = 0; i < localStorage.length; i++) {
     const k = localStorage.key(i);
     if (k && k.startsWith(prefix)) keys.push(k);
   }
-
   if (!keys.length) {
     console.warn(`No localStorage entries found starting with ${prefix}`);
     return;
   }
-
   // 2. Pick one at random
   const key = keys[Math.floor(Math.random() * keys.length)];
-
   // 3. Load it
   try {
     const raw = localStorage.getItem(key);
@@ -1435,8 +1388,6 @@ function importMiiData() {
     console.error("Failed to parse localStorage Mii:", key, err);
   }
 }
-
-
 </script>
 </body>
 </html>
