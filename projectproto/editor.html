@@ -7,6 +7,7 @@
 <link rel="icon" href="favicon.png" type="image/png">
 
   <meta property="og:title" content="3D Portrait tool | Project Proto" />
+  <!-- well it's an ai generated recreation soo yeah (i think the javascript comments are obvious) -->
   <meta property="og:description" content="Project Proto is an recreation of Otona no Onna no Uranai Techō with it's full potential." />
   <meta property="og:url" content="editor.html" />
   <meta property="og:image" content="graphics/prp_logo.png" />
@@ -28,8 +29,6 @@ body{
 .btn[data-type="ok"].show {
   display: inline-block;
 }
-
-
 .btn {
   display: inline-block;
   background-repeat: no-repeat;
@@ -100,8 +99,6 @@ body{
   background-size: contain;
   image-rendering: pixelated;
 }
-
-      
 .background-scroll {
 background-image: url('graphics/bgslide_flower.png');
 background-repeat: repeat-x;
@@ -248,7 +245,6 @@ position: absolute;
   transform: scale(1.2);
 }
 
-
 .color-row .btn {
   transform: scale(1.8);
 }
@@ -330,7 +326,6 @@ position: absolute;
   font: 15px 'ArcadeClassic', sans-serif;
 }
 
-
 #genderPopup button {
   background-image: url("graphics/btn_none.png");
   background-size: contain;
@@ -348,7 +343,6 @@ position: absolute;
   height: 120px;
 }
 
-
 #creationPopup button {
   border: 20px solid transparent; /* Adjust to match the edge thickness in your image */
   border-image: url("graphics/btn_none.png") 8 fill stretch;
@@ -360,7 +354,6 @@ position: absolute;
   width: 380px;
   height: 80px;
 }
-
 
   .slider-wrapper {
     width: 300px;
@@ -459,12 +452,9 @@ position: absolute;
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three/examples/js/exporters/GLTFExporter.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.152.0/examples/js/controls/PointerLockControls.js"></script>
-
 </head>
 <body>
-
 <div id="loading-screen"></div>
-
 <div class="DS-Display">
 <div id="miiWrapper">
   <canvas id="miiCanvas" width="510" height="380"></canvas>
@@ -499,7 +489,6 @@ position: absolute;
   <div id="controls">
     <div id="faceControls">
         
-
     <div id="face-buttons" class="button-container heads-row" data-tab-content="head" data-section>
 
     <div class="btn" data-type="button" data-icon="graphics%2Ficon%2Ficon/head0.png" onclick="changehead(1)"></div>
