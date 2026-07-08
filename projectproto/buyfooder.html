@@ -17,11 +17,19 @@
   font-family: 'ArcadeClassic';
   src: url('graphics/monday.ttf') format('truetype');
 }
-body{
-      background-image: url('graphics/backgrounbd.png');
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-position: center;
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-image: url('graphics/backgrounbd.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed; /* keeps it filling the viewport on scroll */
+  min-height: 100vh;
 }
 .tab-wrapper {
   background: url('graphics/bottomscreen.png') no-repeat left center;
