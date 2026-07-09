@@ -106,15 +106,30 @@ if(!confirm("Are you sure you want to generate a link for this drawing?")) retur
 try{
 await authReady;
 const user = auth.currentUser; if (!user) { alert('Still connecting, please try again in a second!'); return; }
-const data = cv.toDataURL();const id = Date.now().toString(36) + Math.random().toString(36).substring(2,8);const authorId = user.uid;
+const authorId = user.uid;
+// UTC
+const td = Math.floor(Date.now() / 86400000);
+const us = await db.ref('users/' + authorId).once('value');
+const uv = us.val() || {};
+const ut = uv.uploadDay === td ? (uv.uploadsToday || 0) : 0;
+if (ut >= 30) {
+alert("You've hit your limit of 30 drawings for today! Come back tomorrow to make more. :)");
+return;
+}
+const data = cv.toDataURL();const id = Date.now().toString(36) + Math.random().toString(36).substring(2,8);
 await db.ref('drawings/' + id).set({image: data,created: firebase.database.ServerValue.TIMESTAMP,authorId: authorId});
-await db.ref('users/' + authorId + '/lastUpload').set(firebase.database.ServerValue.TIMESTAMP); await db.ref('users/' + authorId + '/drawingCount').set(firebase.database.ServerValue.increment(1))
+await db.ref('users/' + authorId).update({
+lastUpload: firebase.database.ServerValue.TIMESTAMP,
+drawingCount: firebase.database.ServerValue.increment(1),
+uploadDay: td,
+uploadsToday: ut + 1
+});
 const url = `${location.origin}${location.pathname}#id=${id}`;
 shl.value = url; history.replaceState(null, '', `#id=${id}`);
 alert('Done! Go to https://helloiti.github.io/paint/gallery to publish your drawing there!\n(You need to have an account in order to publish your drawings to the gallery.)');
 }catch(e){
 if (e.message && e.message.includes('PERMISSION_DENIED')) {
-alert('You are posting too fast or have reached the drawing limit. Please wait a moment!');
+alert('You are posting too fast, or have hit your 30-drawings-per-day limit. Please wait a bit / try again tomorrow!');
 } else {
 alert('I couldnt generate your link... error: ' + e.message); }
 }
@@ -122,8 +137,7 @@ alert('I couldnt generate your link... error: ' + e.message); }
 async function lfh(){
 const hash = location.hash;if(!hash) return;const match = hash.match(/id=([^&]+)/);
 if(match){
-const id = match[1];
-const snap = await db.ref('drawings/' + id).get();
+const id = match[1];const snap = await db.ref('drawings/' + id).get();
 if(snap.exists()){
 const {image} = snap.val();await rdu(image);
 }else{
