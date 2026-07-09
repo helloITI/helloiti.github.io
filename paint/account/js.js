@@ -62,7 +62,7 @@ manualAuthInProgress = false;
 showLoggedInUI(snap.val().username);
 } else {
 // https://google.com
-lCD.style.display = "none"; sCD.style.display = "none"; sSUP.parentElement.style.display = "none"; sLG.style.display = "none"; btnGL.style.display = "none";
+lCD.style.display = "none"; sCD.style.display = "none"; sSUP.parentElement.style.display = "none"; sLG.style.display = "none"; btnGL.style.display = "none";orb.style.display = "none";
 document.querySelector("h2").textContent = "※ One more step! ※";
 gUS.value = ""; gMsg.textContent = ""; gUD.style.display = "flex";
 }
