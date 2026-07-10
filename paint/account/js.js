@@ -15,8 +15,7 @@ if (window.grecaptcha && window.grecaptcha.render) {
 lCid = grecaptcha.render("liCaptcha", { sitekey: rk });sCid = grecaptcha.render("sCaptcha", { sitekey: rk });
 } else { setTimeout(rCap, 300); } }
 rCap();
-function usernameToEmail(username) { return username.trim().toLowerCase() + "@app.local"; }
-function emailKey(email) { return email.trim().toLowerCase().replace(/\./g, ","); } // '.' isn't allowed in a firebase key.. ok?
+function emailKey(email) { return email.trim().toLowerCase().replace(/\./g, ","); }
 function isValidEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
 let manualAuthInProgress = false;
 sSP.onchange = () => { sPA.type = sSP.checked ? "text" : "password"; sCOPA.type = sSP.checked ? "text" : "password"; }; liSP.onchange = () => { liPA.type = liSP.checked ? "text" : "password"; };
@@ -34,7 +33,7 @@ manualAuthInProgress = true;
 let cred;
 try {
 if (auth.currentUser && auth.currentUser.isAnonymous) await signOut(auth);
-cred = await createUserWithEmailAndPassword(auth, usernameToEmail(username), password);
+cred = await createUserWithEmailAndPassword(auth, email, password);
 await update(ref(db), { ["usernames/" + username]: { uid: cred.user.uid }, ["emails/" + emailKey(email)]: { uid: cred.user.uid }, ["users/" + cred.user.uid]: { username, email, drawingCount: 0 } });
 showLoggedInUI(username);
 } catch (err) {
@@ -47,7 +46,15 @@ const username = liUS.value.trim().toLowerCase();const password = liPA.value;lMs
 if (!grecaptcha.getResponse(lCid)) { lMsg.textContent = "Please complete the reCAPTCHA, ok?"; return; }
 manualAuthInProgress = true;
 try {
-await signInWithEmailAndPassword(auth, usernameToEmail(username), password);showLoggedInUI(username);
+// https://gmail.com
+const unameSnap = await get(child(ref(db), "usernames/" + username));
+if (!unameSnap.exists()) throw new Error("No account found for that username.");
+const uid = unameSnap.val().uid;
+const userSnap = await get(child(ref(db), "users/" + uid));
+if (!userSnap.exists()) throw new Error("User data missing.");
+const realEmail = userSnap.val().email;
+await signInWithEmailAndPassword(auth, realEmail, password);
+showLoggedInUI(username);
 } catch (err) { lMsg.textContent = "※ Error: " + err.message + " ※"; } finally { manualAuthInProgress = false; grecaptcha.reset(lCid); } };
 btnGL.onclick = async () => {
 lMsg.textContent = ""; sMsg.textContent = "";
