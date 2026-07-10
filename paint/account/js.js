@@ -1,6 +1,6 @@
 // hi skibibi!!! 🤣🤣🤣
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-import { getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,onAuthStateChanged,GoogleAuthProvider,signInWithPopup,updateEmail,updatePassword,EmailAuthProvider,reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+import { getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,onAuthStateChanged,GoogleAuthProvider,signInWithPopup,updatePassword,EmailAuthProvider,reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 import { getDatabase, ref, set, get, child, update, remove } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";const [_a,_b,_c,_d,_e,_f,_g,_h] = ["QUl6YVN5Qmx6WG45YnlnZU5fMEF5RFFIWURmMlQydk82NldBemZ3","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZWFwcC5jb20","aHR0cHM6Ly9wYWludC1wcm9qZWN0LWUzZWNkLWRlZmF1bHQtcnRkYi5ldXJvcGUtd2VzdDEuZmlyZWJhc2VkYXRhYmFzZS5hcHA","cGFpbnQtcHJvamVjdC1lM2VjZA","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZXN0b3JhZ2UuYXBw","MTQxMTE0MTc3MzE3","MToxNDExMTQxNzczMTc6d2ViOmQ2Yzc4MTU1ZjI4MzdlN2I0YTBjY2M","Ry0yNTNDMUhaQjFW"].map(atob);
 const firebaseConfig = {apiKey:_a,authDomain:_b,databaseURL:_c,projectId:_d,storageBucket:_e,messagingSenderId:_f,appId:_g,measurementId:_h};const app = initializeApp(firebaseConfig);const auth = getAuth(app);const db = getDatabase(app);
 const rk = atob("NkxkS1Zpd3RBQUFBQUw2TW1TWVFXOGE3M0phTHhmX2kxMGxNTWxrRQ");const sUS = document.getElementById("sUS");const sEM = document.getElementById("sEM");const sPA = document.getElementById("sPA");const sCOPA = document.getElementById("sCOPA");const sSP = document.getElementById("sSP");const sMsg = document.getElementById("sMsg");
@@ -23,6 +23,10 @@ lCid = grecaptcha.render("liCaptcha", { sitekey: rk });sCid = grecaptcha.render(
 rCap();
 function emailKey(email) { return email.trim().toLowerCase().replace(/\./g, ","); }
 function isValidEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
+// Firebase Auth needs an email to sign in with, but we log in by username, and the real
+// email is private (can't be read before auth). So we derive a synthetic auth email
+// straight from the username - no DB read required to log in.
+function usernameAuthEmail(username) { return username + "@login.paint-project-e3ecd.firebaseapp.com"; }
 let manualAuthInProgress = false;let currentUsername = null;
 sSP.onchange = () => { sPA.type = sSP.checked ? "text" : "password"; sCOPA.type = sSP.checked ? "text" : "password"; }; liSP.onchange = () => { liPA.type = liSP.checked ? "text" : "password"; };
 sSUP.onclick = () => { lCD.style.display = "none"; sCD.style.display = "flex"; sSUP.parentElement.style.display = "none"; sLG.style.display = "block"; document.querySelector("h2").textContent = "※ Register your very own Paint Account! ※"; };
@@ -62,14 +66,13 @@ const cred = EmailAuthProvider.credential(user.email, curPA);
 await reauthenticateWithCredential(user, cred);
 const snap = await get(child(ref(db), "users/" + user.uid));
 const oldEmail = snap.exists() ? snap.val().email : null;
-await updateEmail(user, newEM);
 const dbUp = { ["emails/" + emailKey(newEM)]: { uid: user.uid }, ["users/" + user.uid + "/email"]: newEM };
 if (oldEmail) dbUp["emails/" + emailKey(oldEmail)] = null;
 await update(ref(db), dbUp);
 stEMMsg.textContent = "※ Email updated! ※";stNewEM.value = "";stCurPAem.value = "";
 } catch (err) {
 if (err.code === "auth/wrong-password") { stEMMsg.textContent = "※ Wrong password. ※"; }
-else if (err.code === "auth/email-already-in-use") { stEMMsg.textContent = "※ That email is already in use. ※"; }
+else if (err.message && err.message.includes("PERMISSION_DENIED")) { stEMMsg.textContent = "※ That email is already in use. ※"; }
 else { stEMMsg.textContent = "※ Error: " + err.message + " ※"; } } };
 // change password
 btnStPA.onclick = async () => {
@@ -96,7 +99,7 @@ manualAuthInProgress = true;
 let cred;
 try {
 if (auth.currentUser && auth.currentUser.isAnonymous) await signOut(auth);
-cred = await createUserWithEmailAndPassword(auth, email, password);
+cred = await createUserWithEmailAndPassword(auth, usernameAuthEmail(username), password);
 await update(ref(db), { ["usernames/" + username]: { uid: cred.user.uid }, ["emails/" + emailKey(email)]: { uid: cred.user.uid }, ["users/" + cred.user.uid]: { username, email, drawingCount: 0 } });
 showLoggedInUI(username, false);
 } catch (err) {
@@ -111,11 +114,7 @@ manualAuthInProgress = true;
 try {
 const unameSnap = await get(child(ref(db), "usernames/" + username));
 if (!unameSnap.exists()) throw new Error("No account found for that username.");
-const uid = unameSnap.val().uid;
-const userSnap = await get(child(ref(db), "users/" + uid));
-if (!userSnap.exists()) throw new Error("User data missing.");
-const realEmail = userSnap.val().email;
-await signInWithEmailAndPassword(auth, realEmail, password);
+await signInWithEmailAndPassword(auth, usernameAuthEmail(username), password);
 showLoggedInUI(username, false);
 } catch (err) { lMsg.textContent = "※ Error: " + err.message + " ※"; } finally { manualAuthInProgress = false; grecaptcha.reset(lCid); } };
 btnGL.onclick = async () => {
