@@ -86,6 +86,11 @@ User-agent: GoogleOther
 User-agent: GoogleOther-Image
 User-agent: GoogleOther-Video
 User-agent: Googlebot
+User-agent: GoogleAgent
+User-agent: Google-Read-Aloud
+User-agent: Google-InspectionTool
+User-agent: Google-CloudVertexBot
+User-agent: GoogleOther
 User-agent: GPTBot
 User-agent: HenkBot
 User-agent: iAskBot
