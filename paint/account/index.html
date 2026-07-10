@@ -6,6 +6,28 @@
 <div class="ps" id="lCD"><input id="liUS" placeholder="username"><input id="liPA" type="password" placeholder="password"><label><input type="checkbox" id="liSP">Show password</label><div id="liCaptcha"></div><button id="btnLG">Login</button><div id="lMsg"></div></div>
 <p>※ Don't have an account yet? Click <span class="fk" id="sSUP">here</span> to make one! :D ※</p>
 <div class="ps" id="sCD" style="display:none;"><input id="sUS" placeholder="username"><input id="sEM" type="email" placeholder="email"><input id="sPA" type="password" placeholder="password"><input id="sCOPA" type="password" placeholder="confirm password"><label><input type="checkbox" id="sSP">Show password</label><div id="sCaptcha"></div><button id="btnSUP">Register</button><div id="sMsg"></div></div>
-<p id="sLG" style="display:none;">※ Already have an account? click <span class="fk" id="sLGL">here</span> to log in! :D ※</p> <!-- yea -->
+<p id="sLG" style="display:none;">※ Already have an account? click <span class="fk" id="sLGL">here</span> to log in! :D ※</p>
 <div class="ps" id="gUD" style="display:none;"><p>Pick an username to finish setting up your account!</p><input id="gUS" placeholder="username"><button id="btnGUS">Finish Signing Up</button><div id="gMsg"></div></div>
-<div class="ps" id="actC" style="display:none;"><p id="actI"></p><button id="btnLT">Logout</button></div><audio id="bgm" loop><source src="https://helloiti.github.io/assets/psvita.mp3" type="audio/mpeg"></audio></body></html>
+<div class="ps" id="actC" style="display:none;"><p id="actI"></p><button id="btnStOpen">Account Settings</button><button id="btnLT">Logout</button></div>
+<div class="ps" id="stPanel" style="display:none;">
+<h3>※ Account Settings ※</h3>
+<div class="st-sec">
+<p class="st-label">Change Username</p>
+<input id="stNewUN" placeholder="new username">
+<button id="btnStUN">Update Username</button>
+<div id="stUNMsg"></div>
+</div>
+<div class="st-sec" id="stEmailSec">
+<p class="st-label">Change Email</p>
+<input id="stNewEM" type="email" placeholder="new email">
+<input id="stCurPAem" type="password" placeholder="current password (to confirm)">
+<button id="btnStEM">Update Email</button>
+<div id="stEMMsg"></div>
+</div>
+<div class="st-sec" id="stPassSec">
+<p class="st-label">Change Password</p>
+<input id="stCurPA" type="password" placeholder="current password">
+<input id="stNewPA" type="password" placeholder="new password">
+<input id="stCOPA" type="password" placeholder="confirm new password">
+<button id="btnStPA">Update Password</button>
+<div id="stPAMsg"></div></div><button id="btnStClose">← Back</button></div><audio id="bgm" loop><source src="https://helloiti.github.io/assets/psvita.mp3" type="audio/mpeg"></audio></body></html>
