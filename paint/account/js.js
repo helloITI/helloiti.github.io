@@ -107,17 +107,10 @@ const username = liUS.value.trim().toLowerCase();const password = liPA.value;lMs
 if (!grecaptcha.getResponse(lCid)) { lMsg.textContent = "Please complete the reCAPTCHA, ok?"; return; }
 manualAuthInProgress = true;
 try {
-if (!auth.currentUser) await signInAnonymously(auth);
-const unameSnap = await get(child(ref(db), "usernames/" + username));
-if (!unameSnap.exists()) throw new Error("No account found for that username.");
-const uid = unameSnap.val().uid;
-const userSnap = await get(child(ref(db), "users/" + uid));
-if (!userSnap.exists()) throw new Error("User data missing.");
-const realEmail = userSnap.val().email;
-if (auth.currentUser) await signOut(auth);
-await signInWithEmailAndPassword(auth, realEmail, password);
-showLoggedInUI(username, false);
-} catch (err) { lMsg.textContent = "※ Error: " + err.message + " ※"; } finally { manualAuthInProgress = false; grecaptcha.reset(lCid); } };
+const snap = await get(child(ref(db), "usernames/" + username));if (!snap.exists()) throw new Error("No account found for that username.");const uid = snap.val().uid;
+const userSnap = await get(child(ref(db), "users/" + uid));if (!userSnap.exists()) throw new Error("User data missing.");const realEmail = userSnap.val().email;
+await signInWithEmailAndPassword(auth, realEmail, password);showLoggedInUI(username); } catch (err) { lMsg.textContent = "※ Error: " + err.message + " ※"; }
+finally { manualAuthInProgress = false; grecaptcha.reset(lCid); } };
 btnGL.onclick = async () => {
 lMsg.textContent = ""; sMsg.textContent = "";
 manualAuthInProgress = true;
