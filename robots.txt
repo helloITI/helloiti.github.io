@@ -6,6 +6,10 @@ Content-Signal: search=yes,ai-train=no,ai-input=no
 Allow: /
 
 # If you do not want AI bots to crawl your site, remove the # from the following lines:
+User-agent: Grok
+User-agent: GrokBot
+User-agent: xAI-Grok
+User-agent: Grok-DeepSearch
 User-agent: AddSearchBot
 User-agent: AgentTimes
 User-agent: AI2Bot
