@@ -16,7 +16,7 @@ h2 { margin: 25px 0 12px; }
 .input-container { margin-bottom: 20px; }
 #dLI { width: 300px; max-width: 65%; padding: 8px 12px; border-radius: 6px; border: none; }
 #aDB { padding: 8px 14px; border: none; border-radius: 6px; background: #222; color: white; cursor: pointer; }
-#gal, #fG {display: grid;grid-template-columns: repeat(auto-fill, 150px);gap: 12px;justify-content: center;}
+#gal, #fG {display: grid;grid-template-columns: repeat(auto-fill, 150px);gap: 12px;justify-content: center;width: 100%;}
 .g-i { display: flex; flex-direction: column; align-items: center; gap: 6px; }
 .g-i img {width: 150px; height: 100px; object-fit: cover;cursor: pointer; background: white;border: 2px solid #333; border-radius: 6px;transition: transform .2s;}
 .g-i img:hover { transform: scale(1.06); }
