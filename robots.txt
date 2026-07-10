@@ -182,6 +182,12 @@ User-agent: YandexAdditional
 User-agent: YandexAdditionalBot
 User-agent: YouBot
 User-agent: ZanistaBot
+User-agent: Twitterbot
+User-agent: AdsBot-Google
+User-agent: Yandex
+User-agent: Discordbot
+User-agent: nsa
+User-agent: Googlebot,Bingbot,Slurp,DuckDuckBot,Baiduspider,Yandex,Sogou,Exabot,facebot,facebookexternalhit,Twitterbot,Applebot,AhrefsBot,SemrushBot,MJ12bot
 User-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.2 Safari/605.1.15
 Content-Signal: search=yes,ai-train=no,ai-input=no
 Disallow: /
