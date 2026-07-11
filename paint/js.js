@@ -6,11 +6,15 @@ if (!checkedInitialAuth) {
 checkedInitialAuth = true;if (user) { resolveAuthReady(); } else { auth.signInAnonymously().catch(err => console.log("anon auth error:", err)); }
 } else if (user) { resolveAuthReady(); } });
 const cv = document.getElementById('cv');const ctx = cv.getContext('2d');const ci = document.getElementById('col');const si = document.getElementById('sz');const eb = document.getElementById('er');const fb = document.getElementById('fl');const slb = document.getElementById('sl');const ub = document.getElementById('un');const rb = document.getElementById('re');const cb = document.getElementById('clr');const dbtn = document.getElementById('dl');const pb = document.getElementById('pub');const shl = document.getElementById('shl');const cob = document.getElementById('cpy');const po = document.getElementById('po');const pm = document.getElementById('pm');const cp = document.getElementById('cp');
+const ov = document.createElement('canvas');ov.width=cv.width;ov.height=cv.height;ov.style.position='absolute';ov.style.pointerEvents='none';ov.style.top='0';ov.style.left='0';ov.style.width='100%';ov.style.height='100%';cv.style.position='relative';cv.parentNode.insertBefore(ov,cv.nextSibling);const wrap=cv.parentNode;if(getComputedStyle(wrap).position==='static')wrap.style.position='relative';ov.style.position='absolute';
+const ox = ov.getContext('2d');
 let dr = false;let bc = ci.value;let bs = Number(si.value);let m = 'draw';let lst = {x:0,y:0};const mu = 30;const us = [];const rs = [];
 let sel = null;let selDrag = null;let selScale = null;let selStart = null;let baseSnapshot = null;const HS = 8;
 function setMode(newM) {
 if (m === 'select' && newM !== 'select' && sel) commitSel();
-m = newM;eb.textContent = m === 'erase' ? 'Brush' : 'Eraser';fb.textContent = m === 'fill' ? 'Brush' : 'Fill';slb.textContent = m === 'select' ? 'Cancel Select' : 'Select'; }
+m = newM;eb.textContent = m === 'erase' ? 'Brush' : 'Eraser';fb.textContent = m === 'fill' ? 'Brush' : 'Fill';slb.textContent = m === 'select' ? 'Cancel Select' : 'Select';
+if (m !== 'select') clearOv(); }
+function clearOv() { ox.clearRect(0,0,ov.width,ov.height); }
 function ps() { if(us.length >= mu) us.shift();us.push(cv.toDataURL());rs.length = 0; }
 function rdu(dataUrl) {
 return new Promise(res=>{
@@ -28,23 +32,25 @@ const handles = getHandles(s);const names = ['tl','tm','tr','ml','mr','bl','bm',
 for (let i=0;i<handles.length;i++) { const [hx,hy]=handles[i];if(Math.abs(pos.x-hx)<=HS&&Math.abs(pos.y-hy)<=HS) return names[i]; }
 return null; }
 function insideSel(pos,s) { return pos.x>=s.x&&pos.x<=s.x+s.w&&pos.y>=s.y&&pos.y<=s.y+s.h; }
-function redrawBase() {
-if (!baseSnapshot) return;ctx.clearRect(0,0,cv.width,cv.height);ctx.drawImage(baseSnapshot,0,0);ctx.setLineDash([]); }
 function drawSelUI(s) {
-ctx.save();ctx.strokeStyle='#00aaff';ctx.lineWidth=1;ctx.setLineDash([5,3]);ctx.strokeRect(s.x,s.y,s.w,s.h);ctx.setLineDash([]);
+clearOv();
+ox.save();ox.strokeStyle='#00aaff';ox.lineWidth=1;ox.setLineDash([5,3]);ox.strokeRect(s.x,s.y,s.w,s.h);ox.setLineDash([]);
 for (const [hx,hy] of getHandles(s)) {
-ctx.fillStyle='white';ctx.strokeStyle='#00aaff';ctx.lineWidth=1;
-ctx.fillRect(hx-HS/2,hy-HS/2,HS,HS);ctx.strokeRect(hx-HS/2,hy-HS/2,HS,HS); }
-ctx.restore(); }
+ox.fillStyle='white';ox.strokeStyle='#00aaff';ox.lineWidth=1;
+ox.fillRect(hx-HS/2,hy-HS/2,HS,HS);ox.strokeRect(hx-HS/2,hy-HS/2,HS,HS); }
+ox.restore(); }
 function drawSel() {
 if (!sel) return;
-redrawBase();
+ctx.clearRect(0,0,cv.width,cv.height);
+if (baseSnapshot) ctx.drawImage(baseSnapshot,0,0);
 ctx.drawImage(sel.img,sel.x,sel.y,sel.w,sel.h);
 drawSelUI(sel); }
 function commitSel() {
 if (!sel) return;
-redrawBase();ctx.drawImage(sel.img,sel.x,sel.y,sel.w,sel.h);
-sel=null;selDrag=null;selScale=null;selStart=null;baseSnapshot=null; }
+ctx.clearRect(0,0,cv.width,cv.height);
+if (baseSnapshot) ctx.drawImage(baseSnapshot,0,0);
+ctx.drawImage(sel.img,sel.x,sel.y,sel.w,sel.h);
+sel=null;selDrag=null;selScale=null;selStart=null;baseSnapshot=null;clearOv(); }
 function st(e) {
 e.preventDefault();const pos = gp(e);
 if (m==='select') {
@@ -69,9 +75,10 @@ if(h.includes('b')){ht=Math.max(10,s.h+dy);}if(h.includes('t')){y=s.y+dy;ht=Math
 sel={x,y,w,h:ht,img:sel.img};drawSel();return; }
 if (selDrag) {
 sel.x=selDrag.origX+(pos.x-selDrag.startX);sel.y=selDrag.origY+(pos.y-selDrag.startY);drawSel();return; }
-if (!dr||!selStart) return;redrawBase();
+if (!dr||!selStart) return;
+clearOv();
 const rx=Math.min(selStart.x,pos.x);const ry=Math.min(selStart.y,pos.y);const rw=Math.abs(pos.x-selStart.x);const rh=Math.abs(pos.y-selStart.y);
-ctx.save();ctx.strokeStyle='#00aaff';ctx.lineWidth=1;ctx.setLineDash([5,3]);ctx.strokeRect(rx,ry,rw,rh);ctx.restore();return; }
+ox.save();ox.strokeStyle='#00aaff';ox.lineWidth=1;ox.setLineDash([5,3]);ox.strokeRect(rx,ry,rw,rh);ox.restore();return; }
 if(!dr) return;
 ctx.lineCap='round';ctx.lineJoin='round';ctx.lineWidth=bs;
 if(m==='erase'){ctx.globalCompositeOperation='source-over';ctx.strokeStyle='white';}
@@ -81,14 +88,13 @@ function sp(e) {
 if (m==='select') {
 if (selScale){selScale=null;drawSel();return;}if(selDrag){selDrag=null;drawSel();return;}
 if (!dr||!selStart) return;
-if (e.type==='mouseout'||e.type==='touchcancel'){dr=false;redrawBase();baseSnapshot=null;selStart=null;return;}
+if (e.type==='mouseout'||e.type==='touchcancel'){dr=false;clearOv();baseSnapshot=null;selStart=null;return;}
 dr=false;
 const pos=gp(e);
 const rx=Math.min(selStart.x,pos.x);const ry=Math.min(selStart.y,pos.y);
 const rw=Math.abs(pos.x-selStart.x);const rh=Math.abs(pos.y-selStart.y);
 selStart=null;
-if(rw<2||rh<2){redrawBase();baseSnapshot=null;return;}
-redrawBase();
+if(rw<2||rh<2){clearOv();baseSnapshot=null;return;}
 const imgData=ctx.getImageData(rx,ry,rw,rh);ctx.fillStyle='white';ctx.fillRect(rx,ry,rw,rh);
 ps();
 baseSnapshot=document.createElement('canvas');baseSnapshot.width=cv.width;baseSnapshot.height=cv.height;baseSnapshot.getContext('2d').drawImage(cv,0,0);
@@ -104,9 +110,9 @@ eb.addEventListener('click',()=>{setMode(m==='erase'?'draw':'erase');});
 fb.addEventListener('click',()=>{setMode(m==='fill'?'draw':'fill');});
 slb.addEventListener('click',()=>{setMode(m==='select'?'draw':'select');});
 ub.addEventListener('click',async()=>{
-if(sel)commitSel();if(!us.length)return;const ls=us.pop();rs.push(cv.toDataURL());await rdu(ls);sel=null;baseSnapshot=null; });
+if(sel)commitSel();if(!us.length)return;const ls=us.pop();rs.push(cv.toDataURL());await rdu(ls);sel=null;baseSnapshot=null;clearOv(); });
 rb.addEventListener('click',async()=>{
-if(!rs.length)return;const s=rs.pop();us.push(cv.toDataURL());await rdu(s);sel=null;baseSnapshot=null; });
+if(!rs.length)return;const s=rs.pop();us.push(cv.toDataURL());await rdu(s);sel=null;baseSnapshot=null;clearOv(); });
 cb.addEventListener('click',()=>{
 if(sel)commitSel();ps();ctx.fillStyle='white';ctx.fillRect(0,0,cv.width,cv.height); });
 dbtn.addEventListener('click',()=>{
@@ -156,5 +162,4 @@ if(match){const id=match[1];const snap=await db.ref('drawings/'+id).get();
 if(snap.exists()){const{image}=snap.val();await rdu(image);}
 else{alert('The drawing was not found.');}}}
 document.addEventListener("click",function playMusic(){const audio=document.getElementById("bgm");audio.play().catch(err=>console.log(err));document.removeEventListener("click",playMusic);});
-ctx.fillStyle='white';ctx.fillRect(0,0,cv.width,cv.height);
-ps();lfh();
+ctx.fillStyle='white';ctx.fillRect(0,0,cv.width,cv.height);ps();lfh();
