@@ -39,7 +39,10 @@ ctx.restore(); }
 function drawSel() {
 if (!sel) return;
 redrawBase();
+ctx.save();
+if (selDrag || selScale) ctx.globalAlpha = 0.5;
 ctx.drawImage(sel.img,sel.x,sel.y,sel.w,sel.h);
+ctx.restore();
 drawSelUI(sel); }
 function commitSel() {
 if (!sel) return;
@@ -83,9 +86,14 @@ if (selScale){selScale=null;drawSel();return;}if(selDrag){selDrag=null;drawSel()
 if (!dr||!selStart) return;
 if (e.type==='mouseout'||e.type==='touchcancel'){dr=false;redrawBase();baseSnapshot=null;selStart=null;return;}
 dr=false;
-const pos=gp(e);const rx=Math.min(selStart.x,pos.x);const ry=Math.min(selStart.y,pos.y);const rw=Math.abs(pos.x-selStart.x);const rh=Math.abs(pos.y-selStart.y);selStart=null;
-if(rw<2||rh<2){redrawBase();baseSnapshot=null;return;}redrawBase();
-const imgData=ctx.getImageData(rx,ry,rw,rh);ctx.clearRect(rx,ry,rw,rh);ps();
+const pos=gp(e);
+const rx=Math.min(selStart.x,pos.x);const ry=Math.min(selStart.y,pos.y);
+const rw=Math.abs(pos.x-selStart.x);const rh=Math.abs(pos.y-selStart.y);
+selStart=null;
+if(rw<2||rh<2){redrawBase();baseSnapshot=null;return;}
+redrawBase();
+const imgData=ctx.getImageData(rx,ry,rw,rh);ctx.clearRect(rx,ry,rw,rh);
+ps();
 baseSnapshot=document.createElement('canvas');baseSnapshot.width=cv.width;baseSnapshot.height=cv.height;baseSnapshot.getContext('2d').drawImage(cv,0,0);
 const oc=document.createElement('canvas');oc.width=rw;oc.height=rh;
 oc.getContext('2d').putImageData(imgData,0,0);sel={x:rx,y:ry,w:rw,h:rh,img:oc};
