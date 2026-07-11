@@ -70,7 +70,6 @@ sel={x,y,w,h:ht,img:sel.img};drawSel();return; }
 if (selDrag) {
 sel.x=selDrag.origX+(pos.x-selDrag.startX);sel.y=selDrag.origY+(pos.y-selDrag.startY);drawSel();return; }
 if (!dr||!selStart) return;
-// rubber-band rect goes on overlay only
 clearOv();
 const rx=Math.min(selStart.x,pos.x);const ry=Math.min(selStart.y,pos.y);const rw=Math.abs(pos.x-selStart.x);const rh=Math.abs(pos.y-selStart.y);
 octx.save();octx.strokeStyle='#00aaff';octx.lineWidth=1;octx.setLineDash([5,3]);octx.strokeRect(rx,ry,rw,rh);octx.restore();return; }
