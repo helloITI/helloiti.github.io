@@ -51,7 +51,9 @@ const h = hitHandle(pos,sel);
 if (h) { selScale={handle:h,startX:pos.x,startY:pos.y,origSel:{x:sel.x,y:sel.y,w:sel.w,h:sel.h,img:sel.img}};return; }
 if (insideSel(pos,sel)) { selDrag={startX:pos.x,startY:pos.y,origX:sel.x,origY:sel.y};return; }
 commitSel(); }
-selStart=pos;dr=true;return; }
+selStart=pos;dr=true;
+baseSnapshot=document.createElement('canvas');baseSnapshot.width=cv.width;baseSnapshot.height=cv.height;baseSnapshot.getContext('2d').drawImage(cv,0,0);
+return; }
 if(m==='fill'){ps();ff(Math.floor(pos.x),Math.floor(pos.y),bc);return;}
 dr=true;lst=pos;ctx.beginPath();ctx.moveTo(pos.x,pos.y);ps(); }
 function dw(e) {
@@ -78,13 +80,13 @@ function sp(e) {
 if (m==='select') {
 if (selScale){selScale=null;return;}if(selDrag){selDrag=null;return;}
 if (!dr||!selStart) return;
-if (e.type==='mouseout'||e.type==='touchcancel'){dr=false;redrawBase();selStart=null;return;}
+if (e.type==='mouseout'||e.type==='touchcancel'){dr=false;redrawBase();baseSnapshot=null;selStart=null;return;}
 dr=false;
 const pos=gp(e);
 const rx=Math.min(selStart.x,pos.x);const ry=Math.min(selStart.y,pos.y);
 const rw=Math.abs(pos.x-selStart.x);const rh=Math.abs(pos.y-selStart.y);
 selStart=null;
-if(rw<2||rh<2){redrawBase();return;}
+if(rw<2||rh<2){redrawBase();baseSnapshot=null;return;}
 ps();
 const imgData=ctx.getImageData(rx,ry,rw,rh);
 ctx.fillStyle='white';ctx.fillRect(rx,ry,rw,rh);
