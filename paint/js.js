@@ -31,9 +31,16 @@ const handles = getHandles(s);const names = ['tl','tm','tr','ml','mr','bl','bm',
 for (let i=0;i<handles.length;i++) { const [hx,hy]=handles[i];if(Math.abs(pos.x-hx)<=HS&&Math.abs(pos.y-hy)<=HS) return names[i]; }
 return null; }
 function insideSel(pos,s) { return pos.x>=s.x&&pos.x<=s.x+s.w&&pos.y>=s.y&&pos.y<=s.y+s.h; }
+function makeSnapshot() {
+const c=document.createElement('canvas');c.width=cv.width;c.height=cv.height;c.getContext('2d').drawImage(cv,0,0);return c; }
 function restoreBase() {
 ctx.clearRect(0,0,cv.width,cv.height);
 if (baseSnapshot) ctx.drawImage(baseSnapshot,0,0); }
+function restoreBaseWithHole() {
+ctx.clearRect(0,0,cv.width,cv.height);
+if (!baseSnapshot) return;
+ctx.drawImage(baseSnapshot,0,0);
+if (sel) { ctx.clearRect(sel.origX,sel.origY,sel.origW,sel.origH); } }
 function drawSelUI(s, offset) {
 ctx.save();
 ctx.strokeStyle='#00aaff';ctx.lineWidth=1;ctx.setLineDash([5,3]);ctx.lineDashOffset=-(offset||0);
@@ -47,20 +54,15 @@ function startRaf() {
 stopRaf();
 function tick() {
 dashOffset = (dashOffset + 0.3) % 8;
-restoreBase();
+restoreBaseWithHole();
 if (sel) ctx.drawImage(sel.img,sel.x,sel.y,sel.w,sel.h);
 if (sel) drawSelUI(sel, dashOffset);
 rafId = requestAnimationFrame(tick); }
 rafId = requestAnimationFrame(tick); }
-function drawSel() {
-if (!sel) return;
-restoreBase();
-ctx.drawImage(sel.img,sel.x,sel.y,sel.w,sel.h);
-drawSelUI(sel, dashOffset); }
 function commitSel() {
 if (!sel) return;
 stopRaf();
-restoreBase();
+restoreBaseWithHole();
 ctx.drawImage(sel.img,sel.x,sel.y,sel.w,sel.h);
 sel=null;selDrag=null;selScale=null;selStart=null;baseSnapshot=null; }
 function st(e) {
@@ -72,7 +74,7 @@ if (h) { selScale={handle:h,startX:pos.x,startY:pos.y,origSel:{x:sel.x,y:sel.y,w
 if (insideSel(pos,sel)) { selDrag={startX:pos.x,startY:pos.y,origX:sel.x,origY:sel.y};return; }
 commitSel(); }
 selStart=pos;dr=true;
-baseSnapshot=document.createElement('canvas');baseSnapshot.width=cv.width;baseSnapshot.height=cv.height;baseSnapshot.getContext('2d').drawImage(cv,0,0);
+baseSnapshot=makeSnapshot();
 return; }
 if(m==='fill'){ps();ff(Math.floor(pos.x),Math.floor(pos.y),bc);return;}
 dr=true;lst=pos;ctx.beginPath();ctx.moveTo(pos.x,pos.y);ps(); }
@@ -84,7 +86,7 @@ const s=selScale.origSel;const dx=pos.x-selScale.startX;const dy=pos.y-selScale.
 let x=s.x,y=s.y,w=s.w,ht=s.h;
 if(h.includes('r')){w=Math.max(10,s.w+dx);}if(h.includes('l')){x=s.x+dx;w=Math.max(10,s.w-dx);}
 if(h.includes('b')){ht=Math.max(10,s.h+dy);}if(h.includes('t')){y=s.y+dy;ht=Math.max(10,s.h-dy);}
-sel={x,y,w,h:ht,img:sel.img};return; }
+sel={x,y,w,h:ht,img:sel.img,origX:sel.origX,origY:sel.origY,origW:sel.origW,origH:sel.origH};return; }
 if (selDrag) {
 sel.x=selDrag.origX+(pos.x-selDrag.startX);sel.y=selDrag.origY+(pos.y-selDrag.startY);return; }
 if (!dr||!selStart) return;
@@ -109,11 +111,10 @@ const rw=Math.abs(pos.x-selStart.x);const rh=Math.abs(pos.y-selStart.y);
 selStart=null;
 if(rw<2||rh<2){restoreBase();baseSnapshot=null;stopRaf();return;}
 const imgData=ctx.getImageData(rx,ry,rw,rh);
-ctx.globalCompositeOperation='destination-out';ctx.fillStyle='rgba(0,0,0,1)';ctx.fillRect(rx,ry,rw,rh);ctx.globalCompositeOperation='source-over';
 ps();
-baseSnapshot=document.createElement('canvas');baseSnapshot.width=cv.width;baseSnapshot.height=cv.height;baseSnapshot.getContext('2d').drawImage(cv,0,0);
 const oc=document.createElement('canvas');oc.width=rw;oc.height=rh;
-oc.getContext('2d').putImageData(imgData,0,0);sel={x:rx,y:ry,w:rw,h:rh,img:oc};
+oc.getContext('2d').putImageData(imgData,0,0);
+sel={x:rx,y:ry,w:rw,h:rh,img:oc,origX:rx,origY:ry,origW:rw,origH:rh};
 startRaf();return; }
 if(dr){e.preventDefault();dr=false;} }
 cv.addEventListener('mousedown',st);cv.addEventListener('mousemove',dw);cv.addEventListener('mouseup',sp);cv.addEventListener('mouseout',sp);
