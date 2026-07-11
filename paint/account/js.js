@@ -41,7 +41,7 @@ btnStOpen.onclick = () => {
 actC.style.display = "none";stPanel.style.display = "flex";
 stUNMsg.textContent = "";stEMMsg.textContent = "";stPAMsg.textContent = "";
 stNewUN.value = "";stNewEM.value = "";stCurPAem.value = "";stCurPA.value = "";stNewPA.value = "";stCOPA.value = "";
-// google
+// hide email+password sections for google users
 stEmailSec.style.display = currentIsGoogle ? "none" : "block";
 stPassSec.style.display = currentIsGoogle ? "none" : "block"; };
 btnStClose.onclick = () => { stPanel.style.display = "none"; actC.style.display = "block"; };
