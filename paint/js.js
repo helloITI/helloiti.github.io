@@ -11,8 +11,8 @@ let sel = null;let selDrag = null;let selScale = null;let selStart = null;let ba
 let rafId = null;let dashOffset = 0;
 function setMode(newM) {
 if (m === 'select' && newM !== 'select' && sel) commitSel();
-m = newM;eb.textContent = m === 'erase' ? 'Brush' : 'Eraser';fb.textContent = m === 'fill' ? 'Brush' : 'Fill';slb.textContent = m === 'select' ? 'Cancel Select' : 'Select';
-if (m !== 'select') stopRaf(); }
+if (m === 'select' && newM !== 'select') cancelSel();
+m = newM;eb.textContent = m === 'erase' ? 'Brush' : 'Eraser';fb.textContent = m === 'fill' ? 'Brush' : 'Fill';slb.textContent = m === 'select' ? 'Cancel Select' : 'Select'; }
 function stopRaf() { if (rafId) { cancelAnimationFrame(rafId); rafId = null; } }
 function ps() { if(us.length >= mu) us.shift();us.push(cv.toDataURL());rs.length = 0; }
 function rdu(dataUrl) {
@@ -33,14 +33,13 @@ return null; }
 function insideSel(pos,s) { return pos.x>=s.x&&pos.x<=s.x+s.w&&pos.y>=s.y&&pos.y<=s.y+s.h; }
 function makeSnapshot() {
 const c=document.createElement('canvas');c.width=cv.width;c.height=cv.height;c.getContext('2d').drawImage(cv,0,0);return c; }
-function restoreBase() {
+function drawClean() {
 ctx.clearRect(0,0,cv.width,cv.height);
 if (baseSnapshot) ctx.drawImage(baseSnapshot,0,0); }
-function restoreBaseWithHole() {
+function drawWithHole() {
 ctx.clearRect(0,0,cv.width,cv.height);
-if (!baseSnapshot) return;
-ctx.drawImage(baseSnapshot,0,0);
-if (sel) { ctx.clearRect(sel.origX,sel.origY,sel.origW,sel.origH); } }
+if (baseSnapshot) ctx.drawImage(baseSnapshot,0,0);
+if (sel) ctx.clearRect(sel.origX,sel.origY,sel.origW,sel.origH); }
 function drawSelUI(s, offset) {
 ctx.save();
 ctx.strokeStyle='#00aaff';ctx.lineWidth=1;ctx.setLineDash([5,3]);ctx.lineDashOffset=-(offset||0);
@@ -54,16 +53,20 @@ function startRaf() {
 stopRaf();
 function tick() {
 dashOffset = (dashOffset + 0.3) % 8;
-restoreBaseWithHole();
-if (sel) ctx.drawImage(sel.img,sel.x,sel.y,sel.w,sel.h);
-if (sel) drawSelUI(sel, dashOffset);
+drawWithHole();
+if (sel) { ctx.drawImage(sel.img,sel.x,sel.y,sel.w,sel.h); drawSelUI(sel, dashOffset); }
 rafId = requestAnimationFrame(tick); }
 rafId = requestAnimationFrame(tick); }
+function cancelSel() {
+stopRaf();
+if (baseSnapshot) { drawClean(); } else { ctx.setLineDash([]); }
+sel=null;selDrag=null;selScale=null;selStart=null;baseSnapshot=null; }
 function commitSel() {
 if (!sel) return;
 stopRaf();
-restoreBaseWithHole();
+drawWithHole();
 ctx.drawImage(sel.img,sel.x,sel.y,sel.w,sel.h);
+ctx.setLineDash([]);
 sel=null;selDrag=null;selScale=null;selStart=null;baseSnapshot=null; }
 function st(e) {
 e.preventDefault();const pos = gp(e);
@@ -90,7 +93,7 @@ sel={x,y,w,h:ht,img:sel.img,origX:sel.origX,origY:sel.origY,origW:sel.origW,orig
 if (selDrag) {
 sel.x=selDrag.origX+(pos.x-selDrag.startX);sel.y=selDrag.origY+(pos.y-selDrag.startY);return; }
 if (!dr||!selStart) return;
-restoreBase();
+drawClean();
 const rx=Math.min(selStart.x,pos.x);const ry=Math.min(selStart.y,pos.y);const rw=Math.abs(pos.x-selStart.x);const rh=Math.abs(pos.y-selStart.y);
 ctx.save();ctx.strokeStyle='#00aaff';ctx.lineWidth=1;ctx.setLineDash([5,3]);ctx.lineDashOffset=-dashOffset;ctx.strokeRect(rx+0.5,ry+0.5,rw,rh);ctx.setLineDash([]);ctx.lineDashOffset=0;ctx.restore();
 return; }
@@ -103,13 +106,13 @@ function sp(e) {
 if (m==='select') {
 if (selScale){selScale=null;startRaf();return;}if(selDrag){selDrag=null;startRaf();return;}
 if (!dr||!selStart) return;
-if (e.type==='mouseout'||e.type==='touchcancel'){dr=false;restoreBase();baseSnapshot=null;selStart=null;stopRaf();return;}
+if (e.type==='mouseout'||e.type==='touchcancel'){dr=false;drawClean();baseSnapshot=null;selStart=null;stopRaf();return;}
 dr=false;
 const pos=gp(e);
 const rx=Math.min(selStart.x,pos.x);const ry=Math.min(selStart.y,pos.y);
 const rw=Math.abs(pos.x-selStart.x);const rh=Math.abs(pos.y-selStart.y);
 selStart=null;
-if(rw<2||rh<2){restoreBase();baseSnapshot=null;stopRaf();return;}
+if(rw<2||rh<2){drawClean();baseSnapshot=null;stopRaf();return;}
 const imgData=ctx.getImageData(rx,ry,rw,rh);
 ps();
 const oc=document.createElement('canvas');oc.width=rw;oc.height=rh;
@@ -125,9 +128,9 @@ eb.addEventListener('click',()=>{setMode(m==='erase'?'draw':'erase');});
 fb.addEventListener('click',()=>{setMode(m==='fill'?'draw':'fill');});
 slb.addEventListener('click',()=>{setMode(m==='select'?'draw':'select');});
 ub.addEventListener('click',async()=>{
-if(sel)commitSel();if(!us.length)return;const ls=us.pop();rs.push(cv.toDataURL());await rdu(ls);sel=null;baseSnapshot=null;stopRaf(); });
+stopRaf();if(sel)commitSel();if(!us.length)return;const ls=us.pop();rs.push(cv.toDataURL());await rdu(ls);sel=null;baseSnapshot=null; });
 rb.addEventListener('click',async()=>{
-if(!rs.length)return;const s=rs.pop();us.push(cv.toDataURL());await rdu(s);sel=null;baseSnapshot=null;stopRaf(); });
+stopRaf();if(!rs.length)return;const s=rs.pop();us.push(cv.toDataURL());await rdu(s);sel=null;baseSnapshot=null; });
 cb.addEventListener('click',()=>{
 if(sel)commitSel();ps();ctx.fillStyle='white';ctx.fillRect(0,0,cv.width,cv.height); });
 dbtn.addEventListener('click',()=>{
