@@ -8,10 +8,9 @@ checkedInitialAuth = true;if (user) { resolveAuthReady(); } else { auth.signInAn
 const cv = document.getElementById('cv');const ctx = cv.getContext('2d');const ci = document.getElementById('col');const si = document.getElementById('sz');const eb = document.getElementById('er');const fb = document.getElementById('fl');const slb = document.getElementById('sl');const ub = document.getElementById('un');const rb = document.getElementById('re');const cb = document.getElementById('clr');const dbtn = document.getElementById('dl');const pb = document.getElementById('pub');const shl = document.getElementById('shl');const cob = document.getElementById('cpy');const po = document.getElementById('po');const pm = document.getElementById('pm');const cp = document.getElementById('cp');
 const ov = document.createElement('canvas');ov.width=cv.width;ov.height=cv.height;
 ov.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;';
-cv.style.position='relative';
+cv.style.position='relative';cv.style.pointerEvents='all';
 const wrap = document.createElement('div');
-wrap.style.cssText='position:relative;display:inline-block;';cv.parentNode.insertBefore(wrap,cv);wrap.appendChild(cv);wrap.appendChild(ov);
-const octx = ov.getContext('2d');function clearOv(){octx.clearRect(0,0,ov.width,ov.height);}
+wrap.style.cssText='position:relative;display:inline-block;pointer-events:none;';cv.parentNode.insertBefore(wrap,cv);wrap.appendChild(cv);wrap.appendChild(ov);const octx = ov.getContext('2d');function clearOv(){octx.clearRect(0,0,ov.width,ov.height);}
 let dr = false;let bc = ci.value;let bs = Number(si.value);let m = 'draw';let lst = {x:0,y:0};const mu = 30;const us = [];const rs = [];
 let sel = null;let selDrag = null;let selScale = null;let selStart = null;let baseSnapshot = null;const HS = 8;
 function setMode(newM) {
@@ -23,7 +22,9 @@ return new Promise(res=>{
 const img = new Image();img.onload = ()=>{ ctx.clearRect(0,0,cv.width,cv.height);ctx.drawImage(img,0,0,cv.width,cv.height);res(); };img.src = dataUrl; }); }
 function gp(e) {
 const rect = cv.getBoundingClientRect();const scaleX = cv.width/rect.width;const scaleY = cv.height/rect.height;
-const x = ((e.touches ? e.touches[0].clientX : e.clientX) - rect.left) * scaleX;const y = ((e.touches ? e.touches[0].clientY : e.clientY) - rect.top) * scaleY;return {x,y}; }
+const x = ((e.touches ? e.touches[0].clientX : e.clientX) - rect.left) * scaleX;
+const y = ((e.touches ? e.touches[0].clientY : e.clientY) - rect.top) * scaleY;
+return {x,y}; }
 function getHandles(s) {
 const {x,y,w,h} = s;
 return [[x,y],[x+w/2,y],[x+w,y],[x,y+h/2],[x+w,y+h/2],[x,y+h],[x+w/2,y+h],[x+w,y+h]]; }
@@ -35,17 +36,14 @@ function insideSel(pos,s) { return pos.x>=s.x&&pos.x<=s.x+s.w&&pos.y>=s.y&&pos.y
 function redrawBase() {
 if (!baseSnapshot) return;ctx.clearRect(0,0,cv.width,cv.height);ctx.drawImage(baseSnapshot,0,0); }
 function drawSel() {
-if (!sel) return;redrawBase();
-ctx.drawImage(sel.img,sel.x,sel.y,sel.w,sel.h);clearOv();
+if (!sel) return;redrawBase();ctx.drawImage(sel.img,sel.x,sel.y,sel.w,sel.h);clearOv();
 octx.save();octx.strokeStyle='#00aaff';octx.lineWidth=1;octx.setLineDash([5,3]);octx.strokeRect(sel.x,sel.y,sel.w,sel.h);octx.setLineDash([]);
 for (const [hx,hy] of getHandles(sel)) {
 octx.fillStyle='white';octx.strokeStyle='#00aaff';octx.lineWidth=1;
 octx.fillRect(hx-HS/2,hy-HS/2,HS,HS);octx.strokeRect(hx-HS/2,hy-HS/2,HS,HS); }
 octx.restore(); }
 function commitSel() {
-if (!sel) return;
-redrawBase();ctx.drawImage(sel.img,sel.x,sel.y,sel.w,sel.h);
-clearOv();
+if (!sel) return;redrawBase();ctx.drawImage(sel.img,sel.x,sel.y,sel.w,sel.h);clearOv();
 sel=null;selDrag=null;selScale=null;selStart=null;baseSnapshot=null; }
 function st(e) {
 e.preventDefault();const pos = gp(e);
@@ -71,7 +69,9 @@ if(h.includes('b')){ht=Math.max(10,s.h+dy);}if(h.includes('t')){y=s.y+dy;ht=Math
 sel={x,y,w,h:ht,img:sel.img};drawSel();return; }
 if (selDrag) {
 sel.x=selDrag.origX+(pos.x-selDrag.startX);sel.y=selDrag.origY+(pos.y-selDrag.startY);drawSel();return; }
-if (!dr||!selStart) return;clearOv();
+if (!dr||!selStart) return;
+// rubber-band rect goes on overlay only
+clearOv();
 const rx=Math.min(selStart.x,pos.x);const ry=Math.min(selStart.y,pos.y);const rw=Math.abs(pos.x-selStart.x);const rh=Math.abs(pos.y-selStart.y);
 octx.save();octx.strokeStyle='#00aaff';octx.lineWidth=1;octx.setLineDash([5,3]);octx.strokeRect(rx,ry,rw,rh);octx.restore();return; }
 if(!dr) return;
