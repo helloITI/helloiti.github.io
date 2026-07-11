@@ -18,3 +18,4 @@ input[type="text"] { width: 400px; }
 #cp:hover { background:#777; }
 .cv-wrap{position:relative;display:inline-block;}
 #ov{position:absolute;top:0;left:0;pointer-events:none;}
+#cv {background: white;}
