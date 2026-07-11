@@ -58,7 +58,7 @@ const oldUN = currentUsername;
 await update(ref(db), { ["usernames/" + newUN]: { uid: user.uid }, ["usernames/" + oldUN]: null, ["users/" + user.uid + "/username"]: newUN });
 currentUsername = newUN;actI.textContent = "※ Welcome, " + newUN + "! ※";
 stUNMsg.textContent = "※ Username updated! ※";stNewUN.value = "";
-} catch (err) { stUNMsg.textContent = "※ Error: " + err.message + " ※"; } };
+} catch (err) { console.error(err); lMsg.textContent = "※ Error: " + err.message + " ※"; } };
 btnStEM.onclick = async () => {
 const newEM = stNewEM.value.trim().toLowerCase();const curPA = stCurPAem.value;stEMMsg.textContent = "";
 if (!newEM || !curPA) { stEMMsg.textContent = "Please fill out all fields."; return; }
