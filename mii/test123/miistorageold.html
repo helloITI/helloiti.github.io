@@ -6,13 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="https://helloiti.github.io/assets/miiST.png">
-    
     <meta property="og:title" content="※⁜ mii storage ⁜※" />
     <meta property="og:description" content="※⁜ mii storage is a mii tool that let's you upload .charinfo or .ffsd mii's and saves it in your browser! ⁜※" />
     <meta property="og:url" content="https://helloiti.github.io/mii/" />
     <meta property="og:image" content="https://helloiti.github.io/assets/miiST.png" />
     <meta property="og:type" content="website" />
-    
+	
     <style>
         @font-face {
             font-family: 'NintendoNTLG';
@@ -248,7 +247,7 @@ button:active {
     
     <button id="themeToggle">※⁜ dark mode ⁜※</button>
     
-    <audio id="bgm" loop><source src="https://helloiti.github.io/aassets/0.mp3" type="audio/mpeg"></audio>
+    <audio id="bgm" loop><source src="https://helloiti.github.io/assets/0.mp3" type="audio/mpeg"></audio>
     <script>
  const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
@@ -418,10 +417,10 @@ button:active {
                 const div = document.createElement("div");
                 div.className = "card";
                 const pantsParam = (m.ext === "charinfo" && info["※⁜ pants ⁜※"] === "⁜ special ⁜") ? "gold" : "gray";
-                const charFace = `https://mii-unsecure.ariankordi.net/miis/image.png?data=${m.dataHex}&shaderType=switch&type=face&width=270&pantsColor=${pantsParam}&bodyType=switch`;
-                const charFull = `https://mii-unsecure.ariankordi.net/miis/image.png?data=${m.dataHex}&shaderType=switch&type=all_body_sugar&width=270&pantsColor=${pantsParam}&bodyType=switch`;
-                const ffsdFace = `https://mii-unsecure.ariankordi.net/miis/image.png?data=${m.dataHex}&type=face&width=270&pantsColor=gray&bodyType=wiiu`;
-                const ffsdFull = `https://mii-unsecure.ariankordi.net/miis/image.png?data=${m.dataHex}&type=all_body_sugar&width=270&pantsColor=gray&bodyType=wiiu`;
+                const charFace = `https://mii-unsecure.ariankordi.net/miis/image.png?data=${m.dataHex}&shaderType=switch&type=face&width=270&pantsColor=${pantsParam}&bodyType=switch&verifyCRC16=0&verifyCharInfo=0`;
+                const charFull = `https://mii-unsecure.ariankordi.net/miis/image.png?data=${m.dataHex}&shaderType=switch&type=all_body_sugar&width=270&pantsColor=${pantsParam}&bodyType=switch&verifyCRC16=0&verifyCharInfo=0`;
+                const ffsdFace = `https://mii-unsecure.ariankordi.net/miis/image.png?data=${m.dataHex}&type=face&width=270&pantsColor=gray&bodyType=wiiu&verifyCRC16=0&verifyCharInfo=0`;
+                const ffsdFull = `https://mii-unsecure.ariankordi.net/miis/image.png?data=${m.dataHex}&type=all_body_sugar&width=270&pantsColor=gray&bodyType=wiiu&verifyCRC16=0&verifyCharInfo=0`;
                 const faceURL = (m.ext === "charinfo") ? charFace : ffsdFace;
                 const fullBodyURL = (m.ext === "charinfo") ? charFull : ffsdFull;
                 
@@ -476,5 +475,4 @@ button:active {
         
         render();
 		// hi there
-    </script>
-</body></html>
+    </script></body></html>
