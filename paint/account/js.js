@@ -41,7 +41,7 @@ btnStOpen.onclick = () => {
 actC.style.display = "none";stPanel.style.display = "flex";
 stUNMsg.textContent = "";stEMMsg.textContent = "";stPAMsg.textContent = "";
 stNewUN.value = "";stNewEM.value = "";stCurPAem.value = "";stCurPA.value = "";stNewPA.value = "";stCOPA.value = "";
-// hide email+password sections for google users
+// google
 stEmailSec.style.display = currentIsGoogle ? "none" : "block";
 stPassSec.style.display = currentIsGoogle ? "none" : "block"; };
 btnStClose.onclick = () => { stPanel.style.display = "none"; actC.style.display = "block"; };
@@ -58,7 +58,7 @@ const oldUN = currentUsername;
 await update(ref(db), { ["usernames/" + newUN]: { uid: user.uid }, ["usernames/" + oldUN]: null, ["users/" + user.uid + "/username"]: newUN });
 currentUsername = newUN;actI.textContent = "※ Welcome, " + newUN + "! ※";
 stUNMsg.textContent = "※ Username updated! ※";stNewUN.value = "";
-} catch (err) { console.error(err); lMsg.textContent = "※ Error: " + err.message + " ※"; } };
+} catch (err) { stUNMsg.textContent = "※ Error: " + err.message + " ※"; } };
 btnStEM.onclick = async () => {
 const newEM = stNewEM.value.trim().toLowerCase();const curPA = stCurPAem.value;stEMMsg.textContent = "";
 if (!newEM || !curPA) { stEMMsg.textContent = "Please fill out all fields."; return; }
@@ -116,14 +116,8 @@ if (!username || !email) { lMsg.textContent = "Please enter both username and em
 if (!grecaptcha.getResponse(lCid)) { lMsg.textContent = "Please complete the reCAPTCHA, ok?"; return; }
 manualAuthInProgress = true;
 try {
-if (!auth.currentUser) await signInAnonymously(auth);
-const snap = await get(child(ref(db), "usernames/" + username));
-if (!snap.exists()) throw new Error("No account found for that username.");
-const uid = snap.val().uid;const userSnap = await get(child(ref(db), "users/" + uid));
-if (!userSnap.exists() || userSnap.val().email !== email) throw new Error("Username and email do not match.");
-await signOut(auth);
 await signInWithEmailAndPassword(auth, email, password);showLoggedInUI(username, false);
-} catch (err) { lMsg.textContent = "※ Error: " + err.message + " ※";
+} catch (err) { console.error("[login error]", err.code, err); lMsg.textContent = "※ Error: " + err.message + " ※";
 } finally { manualAuthInProgress = false;grecaptcha.reset(lCid); } };
 btnGL.onclick = async () => {
 lMsg.textContent = ""; sMsg.textContent = "";manualAuthInProgress = true;
