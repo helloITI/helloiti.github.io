@@ -73,7 +73,7 @@ sel={x,y,w,h:ht,img:sel.img};drawSel();return; }
 if (selDrag) {
 sel.x=selDrag.origX+(pos.x-selDrag.startX);sel.y=selDrag.origY+(pos.y-selDrag.startY);drawSel();return; }
 if (!dr||!selStart) return;redrawBase();
-const rx=Math.min(selStart.x,pos.x);const ry=Math.min(selStart.y,pos.y);const rw=Math.abs(pos.x-selStart.x);const rh=Math.abs(pos.y-selStart.y);
+const rx=Math.round(Math.min(selStart.x,pos.x));const ry=Math.round(Math.min(selStart.y,pos.y));const rw=Math.round(Math.abs(pos.x-selStart.x));const rh=Math.round(Math.abs(pos.y-selStart.y));
 ctx.save();ctx.strokeStyle='#00aaff';ctx.lineWidth=1;ctx.setLineDash([5,3]);ctx.strokeRect(rx,ry,rw,rh);ctx.restore();return; }
 if(!dr) return;
 ctx.lineCap='round';ctx.lineJoin='round';ctx.lineWidth=bs;
@@ -87,8 +87,8 @@ if (!dr||!selStart) return;
 if (e.type==='mouseout'||e.type==='touchcancel'){dr=false;redrawBase();baseSnapshot=null;selStart=null;return;}
 dr=false;
 const pos=gp(e);
-const rx=Math.min(selStart.x,pos.x);const ry=Math.min(selStart.y,pos.y);
-const rw=Math.abs(pos.x-selStart.x);const rh=Math.abs(pos.y-selStart.y);
+const rx=Math.round(Math.min(selStart.x,pos.x));const ry=Math.round(Math.min(selStart.y,pos.y));
+const rw=Math.round(Math.abs(pos.x-selStart.x));const rh=Math.round(Math.abs(pos.y-selStart.y));
 selStart=null;
 if(rw<2||rh<2){redrawBase();baseSnapshot=null;return;}
 redrawBase();
