@@ -6,11 +6,10 @@ if (!checkedInitialAuth) {
 checkedInitialAuth = true;if (user) { resolveAuthReady(); } else { auth.signInAnonymously().catch(err => console.log("anon auth error:", err)); }
 } else if (user) { resolveAuthReady(); } });
 const cv = document.getElementById('cv');const ctx = cv.getContext('2d');const ci = document.getElementById('col');const si = document.getElementById('sz');const eb = document.getElementById('er');const fb = document.getElementById('fl');const slb = document.getElementById('sl');const ub = document.getElementById('un');const rb = document.getElementById('re');const cb = document.getElementById('clr');const dbtn = document.getElementById('dl');const pb = document.getElementById('pub');const shl = document.getElementById('shl');const cob = document.getElementById('cpy');const po = document.getElementById('po');const pm = document.getElementById('pm');const cp = document.getElementById('cp');
-const ov = document.createElement('canvas');ov.width=cv.width;ov.height=cv.height;
-ov.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;';
-cv.style.position='relative';cv.style.pointerEvents='all';
-const wrap = document.createElement('div');
-wrap.style.cssText='position:relative;display:inline-block;pointer-events:none;';cv.parentNode.insertBefore(wrap,cv);wrap.appendChild(cv);wrap.appendChild(ov);const octx = ov.getContext('2d');function clearOv(){octx.clearRect(0,0,ov.width,ov.height);}
+const ov = document.createElement('canvas');ov.width=cv.width;ov.height=cv.height;ov.style.cssText='position:absolute;pointer-events:none;';cv.parentNode.insertBefore(ov,cv.nextSibling);
+function posOv(){const r=cv.getBoundingClientRect();const pr=cv.parentNode.getBoundingClientRect();ov.style.left=(r.left-pr.left+cv.parentNode.scrollLeft)+'px';ov.style.top=(r.top-pr.top+cv.parentNode.scrollTop)+'px';ov.style.width=r.width+'px';ov.style.height=r.height+'px';}
+cv.parentNode.style.position='relative';window.addEventListener('resize',posOv);posOv();const octx = ov.getContext('2d');
+function clearOv(){octx.clearRect(0,0,ov.width,ov.height);}
 let dr = false;let bc = ci.value;let bs = Number(si.value);let m = 'draw';let lst = {x:0,y:0};const mu = 30;const us = [];const rs = [];
 let sel = null;let selDrag = null;let selScale = null;let selStart = null;let baseSnapshot = null;const HS = 8;
 function setMode(newM) {
@@ -39,11 +38,11 @@ function drawSel() {
 if (!sel) return;redrawBase();ctx.drawImage(sel.img,sel.x,sel.y,sel.w,sel.h);clearOv();
 octx.save();octx.strokeStyle='#00aaff';octx.lineWidth=1;octx.setLineDash([5,3]);octx.strokeRect(sel.x,sel.y,sel.w,sel.h);octx.setLineDash([]);
 for (const [hx,hy] of getHandles(sel)) {
-octx.fillStyle='white';octx.strokeStyle='#00aaff';octx.lineWidth=1;
-octx.fillRect(hx-HS/2,hy-HS/2,HS,HS);octx.strokeRect(hx-HS/2,hy-HS/2,HS,HS); }
-octx.restore(); }
+octx.fillStyle='white';octx.strokeStyle='#00aaff';octx.lineWidth=1;octx.fillRect(hx-HS/2,hy-HS/2,HS,HS);octx.strokeRect(hx-HS/2,hy-HS/2,HS,HS); }octx.restore(); }
 function commitSel() {
-if (!sel) return;redrawBase();ctx.drawImage(sel.img,sel.x,sel.y,sel.w,sel.h);clearOv();
+if (!sel) return;
+redrawBase();ctx.drawImage(sel.img,sel.x,sel.y,sel.w,sel.h);
+clearOv();
 sel=null;selDrag=null;selScale=null;selStart=null;baseSnapshot=null; }
 function st(e) {
 e.preventDefault();const pos = gp(e);
@@ -69,8 +68,7 @@ if(h.includes('b')){ht=Math.max(10,s.h+dy);}if(h.includes('t')){y=s.y+dy;ht=Math
 sel={x,y,w,h:ht,img:sel.img};drawSel();return; }
 if (selDrag) {
 sel.x=selDrag.origX+(pos.x-selDrag.startX);sel.y=selDrag.origY+(pos.y-selDrag.startY);drawSel();return; }
-if (!dr||!selStart) return;
-clearOv();
+if (!dr||!selStart) return;clearOv();
 const rx=Math.min(selStart.x,pos.x);const ry=Math.min(selStart.y,pos.y);const rw=Math.abs(pos.x-selStart.x);const rh=Math.abs(pos.y-selStart.y);
 octx.save();octx.strokeStyle='#00aaff';octx.lineWidth=1;octx.setLineDash([5,3]);octx.strokeRect(rx,ry,rw,rh);octx.restore();return; }
 if(!dr) return;
@@ -83,14 +81,9 @@ if (m==='select') {
 if (selScale){selScale=null;return;}if(selDrag){selDrag=null;return;}
 if (!dr||!selStart) return;
 if (e.type==='mouseout'||e.type==='touchcancel'){dr=false;clearOv();baseSnapshot=null;selStart=null;return;}
-dr=false;
-const pos=gp(e);
-const rx=Math.min(selStart.x,pos.x);const ry=Math.min(selStart.y,pos.y);
-const rw=Math.abs(pos.x-selStart.x);const rh=Math.abs(pos.y-selStart.y);
-selStart=null;
-if(rw<2||rh<2){clearOv();baseSnapshot=null;return;}
-ps();
-const imgData=ctx.getImageData(rx,ry,rw,rh);
+dr=false;const pos=gp(e);
+const rx=Math.min(selStart.x,pos.x);const ry=Math.min(selStart.y,pos.y);const rw=Math.abs(pos.x-selStart.x);const rh=Math.abs(pos.y-selStart.y);
+selStart=null;if(rw<2||rh<2){clearOv();baseSnapshot=null;return;}ps();const imgData=ctx.getImageData(rx,ry,rw,rh);
 ctx.fillStyle='white';ctx.fillRect(rx,ry,rw,rh);
 baseSnapshot=document.createElement('canvas');baseSnapshot.width=cv.width;baseSnapshot.height=cv.height;
 baseSnapshot.getContext('2d').drawImage(cv,0,0);
@@ -137,8 +130,7 @@ ctx.putImageData(id,0,0);}
 pb.addEventListener('click',async()=>{
 if(!confirm("Are you sure you want to generate a link for this drawing?"))return;
 if(sel)commitSel();
-try{
-await authReady;const user=auth.currentUser;if(!user){alert('Still connecting, please try again in a second!');return;}
+try{await authReady;const user=auth.currentUser;if(!user){alert('Still connecting, please try again in a second!');return;}
 const authorId=user.uid;const td=Math.floor(Date.now()/86400000);
 const us=await db.ref('users/'+authorId).once('value');const uv=us.val()||{};
 const ut=uv.uploadDay===td?(uv.uploadsToday||0):0;
@@ -148,7 +140,7 @@ await db.ref('drawings/'+id).set({image:data,created:firebase.database.ServerVal
 await db.ref('users/'+authorId).update({lastUpload:firebase.database.ServerValue.TIMESTAMP,drawingCount:firebase.database.ServerValue.increment(1),uploadDay:td,uploadsToday:ut+1});
 const url=`${location.origin}${location.pathname}#id=${id}`;
 shl.value=url;history.replaceState(null,'',`#id=${id}`);
-alert('Done! Go to https://helloiti.github.io/paint/gallery to publish your drawing there!\n(You need to have an account in order to publish your drawings to the gallery.)');
+alert('Done, go to https://helloiti.github.io/paint/gallery to publish your drawing there!\n(You need to have an account in order to publish your drawings to the gallery.)');
 }catch(e){
 if(e.message&&e.message.includes('PERMISSION_DENIED')){alert('You are posting too fast, or have hit your limit from posting drawings.\nPlease wait a bit or try again tomorrow!');}
 else{alert('I could not generate your link... Error: '+e.message);}}});
