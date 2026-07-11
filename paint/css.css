@@ -16,3 +16,5 @@ input[type="text"] { width: 400px; }
 #pb p { margin:0 0 15px; font-size: 18px; }
 #cp { padding:5px 10px;background:#555;border:none;color:white;cursor:pointer;border-radius:5px; }
 #cp:hover { background:#777; }
+.cv-wrap{position:relative;display:inline-block;}
+#ov{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;}
