@@ -30,10 +30,9 @@ return null; }
 function insideSel(pos,s) { return pos.x>=s.x&&pos.x<=s.x+s.w&&pos.y>=s.y&&pos.y<=s.y+s.h; }
 function redrawBase() {
 if (!baseSnapshot) return;ctx.clearRect(0,0,cv.width,cv.height);ctx.drawImage(baseSnapshot,0,0); }
-function drawSelUI() {
-if (!sel) return;
-ctx.save();ctx.strokeStyle='#00aaff';ctx.lineWidth=1;ctx.setLineDash([5,3]);ctx.strokeRect(sel.x,sel.y,sel.w,sel.h);ctx.setLineDash([]);
-for (const [hx,hy] of getHandles(sel)) {
+function drawSelUI(s) {
+ctx.save();ctx.strokeStyle='#00aaff';ctx.lineWidth=1;ctx.setLineDash([5,3]);ctx.strokeRect(s.x,s.y,s.w,s.h);ctx.setLineDash([]);
+for (const [hx,hy] of getHandles(s)) {
 ctx.fillStyle='white';ctx.strokeStyle='#00aaff';ctx.lineWidth=1;
 ctx.fillRect(hx-HS/2,hy-HS/2,HS,HS);ctx.strokeRect(hx-HS/2,hy-HS/2,HS,HS); }
 ctx.restore(); }
@@ -41,7 +40,7 @@ function drawSel() {
 if (!sel) return;
 redrawBase();
 ctx.drawImage(sel.img,sel.x,sel.y,sel.w,sel.h);
-drawSelUI(); }
+drawSelUI(sel); }
 function commitSel() {
 if (!sel) return;
 redrawBase();ctx.drawImage(sel.img,sel.x,sel.y,sel.w,sel.h);
@@ -70,9 +69,7 @@ if(h.includes('b')){ht=Math.max(10,s.h+dy);}if(h.includes('t')){y=s.y+dy;ht=Math
 sel={x,y,w,h:ht,img:sel.img};drawSel();return; }
 if (selDrag) {
 sel.x=selDrag.origX+(pos.x-selDrag.startX);sel.y=selDrag.origY+(pos.y-selDrag.startY);drawSel();return; }
-if (!dr||!selStart) return;
-// restore base then draw rubber-band — never permanently baked
-redrawBase();
+if (!dr||!selStart) return;redrawBase();
 const rx=Math.min(selStart.x,pos.x);const ry=Math.min(selStart.y,pos.y);const rw=Math.abs(pos.x-selStart.x);const rh=Math.abs(pos.y-selStart.y);
 ctx.save();ctx.strokeStyle='#00aaff';ctx.lineWidth=1;ctx.setLineDash([5,3]);ctx.strokeRect(rx,ry,rw,rh);ctx.restore();return; }
 if(!dr) return;
@@ -92,13 +89,11 @@ const rw=Math.abs(pos.x-selStart.x);const rh=Math.abs(pos.y-selStart.y);
 selStart=null;
 if(rw<2||rh<2){redrawBase();baseSnapshot=null;return;}
 ps();
-const imgData=ctx.getImageData(rx,ry,rw,rh);
-ctx.fillStyle='white';ctx.fillRect(rx,ry,rw,rh);
-baseSnapshot=document.createElement('canvas');baseSnapshot.width=cv.width;baseSnapshot.height=cv.height;
-baseSnapshot.getContext('2d').drawImage(cv,0,0);
+const imgData=ctx.getImageData(rx,ry,rw,rh);ctx.fillStyle='white';ctx.fillRect(rx,ry,rw,rh);
+baseSnapshot=document.createElement('canvas');baseSnapshot.width=cv.width;baseSnapshot.height=cv.height;baseSnapshot.getContext('2d').drawImage(cv,0,0);
 const oc=document.createElement('canvas');oc.width=rw;oc.height=rh;
-oc.getContext('2d').putImageData(imgData,0,0);
-sel={x:rx,y:ry,w:rw,h:rh,img:oc};drawSel();return; }
+oc.getContext('2d').putImageData(imgData,0,0);sel={x:rx,y:ry,w:rw,h:rh,img:oc};
+drawSel();return; }
 if(dr){e.preventDefault();dr=false;} }
 cv.addEventListener('mousedown',st);cv.addEventListener('mousemove',dw);cv.addEventListener('mouseup',sp);cv.addEventListener('mouseout',sp);
 cv.addEventListener('touchstart',st);cv.addEventListener('touchmove',dw);cv.addEventListener('touchend',sp);cv.addEventListener('touchcancel',sp);
