@@ -1,6 +1,6 @@
 // hi skibibi!!! 🤣🤣🤣
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, updateEmail, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInAnonymously, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, updateEmail, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 import { getDatabase, ref, set, get, child, update, remove } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
 const [_a,_b,_c,_d,_e,_f,_g,_h] = ["QUl6YVN5Qmx6WG45YnlnZU5fMEF5RFFIWURmMlQydk82NldBemZ3","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZWFwcC5jb20","aHR0cHM6Ly9wYWludC1wcm9qZWN0LWUzZWNkLWRlZmF1bHQtcnRkYi5ldXJvcGUtd2VzdDEuZmlyZWJhc2VkYXRhYmFzZS5hcHA","cGFpbnQtcHJvamVjdC1lM2VjZA","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZXN0b3JhZ2UuYXBw","MTQxMTE0MTc3MzE3","MToxNDExMTQxNzczMTc6d2ViOmQ2Yzc4MTU1ZjI4MzdlN2I0YTBjY2M","Ry0yNTNDMUhaQjFW"].map(atob);
 const firebaseConfig = {apiKey:_a,authDomain:_b,databaseURL:_c,projectId:_d,storageBucket:_e,messagingSenderId:_f,appId:_g,measurementId:_h};const app = initializeApp(firebaseConfig);const auth = getAuth(app);const db = getDatabase(app);const rk = atob("NkxkS1Zpd3RBQUFBQUw2TW1TWVFXOGE3M0phTHhmX2kxMGxNTWxrRQ");
@@ -19,6 +19,7 @@ const stNewEM = document.getElementById("stNewEM");const stCurPAem = document.ge
 const stCurPA = document.getElementById("stCurPA");const stNewPA = document.getElementById("stNewPA");const stCOPA = document.getElementById("stCOPA");const btnStPA = document.getElementById("btnStPA");const stPAMsg = document.getElementById("stPAMsg");
 const stEmailSec = document.getElementById("stEmailSec");const stPassSec = document.getElementById("stPassSec");
 let currentUsername = null;let currentIsGoogle = false;
+signInAnonymously(auth).catch(()=>{});
 function rCap() {
 if (window.grecaptcha && window.grecaptcha.render) {
 lCid = grecaptcha.render("liCaptcha", { sitekey: rk });sCid = grecaptcha.render("sCaptcha", { sitekey: rk });
@@ -32,13 +33,15 @@ sLGL.onclick = () => { sCD.style.display = "none"; lCD.style.display = "flex"; s
 const orb = document.getElementById("orb");
 function showLoggedInUI(uname, isGoogle) {
 currentUsername = uname;currentIsGoogle = !!isGoogle;
-actI.textContent = "※ Welcome, " + uname + "! ※";actC.style.display = "block";lCD.style.display = "none";sCD.style.display = "none";orb.style.display = "none";sSUP.parentElement.style.display = "none";sLG.style.display = "none";btnGL.style.display = "none";gUD.style.display = "none";document.querySelector("h2").style.display = "none";stPanel.style.display = "none"; }
+actI.textContent = "※ Welcome, " + uname + "! ※";actC.style.display = "block";lCD.style.display = "none";sCD.style.display = "none";orb.style.display = "none";sSUP.parentElement.style.display = "none";sLG.style.display = "none";btnGL.style.display = "none";gUD.style.display = "none";document.querySelector("h2").style.display = "none";stPanel.style.display = "none";
+stEmailSec.style.display = isGoogle ? "none" : "block";
+stPassSec.style.display = isGoogle ? "none" : "block"; }
 function showLoggedOutUI() { currentUsername = null;stPanel.style.display = "none";actC.style.display = "none";lCD.style.display = "flex";sCD.style.display = "none";orb.style.display = "block";sSUP.parentElement.style.display = "block";sLG.style.display = "none";btnGL.style.display = "block";gUD.style.display = "none";const h = document.querySelector("h2");h.style.display = "block";h.textContent = "※ Log in your Paint Account! ※"; }
 btnStOpen.onclick = () => {
 actC.style.display = "none";stPanel.style.display = "flex";
 stUNMsg.textContent = "";stEMMsg.textContent = "";stPAMsg.textContent = "";
 stNewUN.value = "";stNewEM.value = "";stCurPAem.value = "";stCurPA.value = "";stNewPA.value = "";stCOPA.value = "";
-// hide email+password sections for google users
+// google
 stEmailSec.style.display = currentIsGoogle ? "none" : "block";
 stPassSec.style.display = currentIsGoogle ? "none" : "block"; };
 btnStClose.onclick = () => { stPanel.style.display = "none"; actC.style.display = "block"; };
@@ -51,8 +54,8 @@ const user = auth.currentUser;if (!user) return;
 try {
 const taken = await get(child(ref(db), "usernames/" + newUN));
 if (taken.exists()) { stUNMsg.textContent = "※ That username is already taken. ※"; return; }
-await update(ref(db), { ["usernames/" + newUN]: { uid: user.uid }, ["users/" + user.uid + "/username"]: newUN });
-await remove(ref(db, "usernames/" + currentUsername));
+const oldUN = currentUsername;
+await update(ref(db), { ["usernames/" + newUN]: { uid: user.uid }, ["usernames/" + oldUN]: null, ["users/" + user.uid + "/username"]: newUN });
 currentUsername = newUN;actI.textContent = "※ Welcome, " + newUN + "! ※";
 stUNMsg.textContent = "※ Username updated! ※";stNewUN.value = "";
 } catch (err) { stUNMsg.textContent = "※ Error: " + err.message + " ※"; } };
@@ -113,10 +116,12 @@ if (!username || !email) { lMsg.textContent = "Please enter both username and em
 if (!grecaptcha.getResponse(lCid)) { lMsg.textContent = "Please complete the reCAPTCHA, ok?"; return; }
 manualAuthInProgress = true;
 try {
+if (!auth.currentUser) await signInAnonymously(auth);
 const snap = await get(child(ref(db), "usernames/" + username));
 if (!snap.exists()) throw new Error("No account found for that username.");
 const uid = snap.val().uid;const userSnap = await get(child(ref(db), "users/" + uid));
 if (!userSnap.exists() || userSnap.val().email !== email) throw new Error("Username and email do not match.");
+await signOut(auth);
 await signInWithEmailAndPassword(auth, email, password);showLoggedInUI(username, false);
 } catch (err) { lMsg.textContent = "※ Error: " + err.message + " ※";
 } finally { manualAuthInProgress = false;grecaptcha.reset(lCid); } };
@@ -148,10 +153,10 @@ manualAuthInProgress = false; showLoggedInUI(username, true);
 } catch (err) {
 if (err.message && err.message.includes("PERMISSION_DENIED")) { gMsg.textContent = "※ That username is taken, or this Google account's email is already linked to another account. ※"; }
 else { gMsg.textContent = "※ Error: " + err.message + " ※"; } } };
-btnLT.onclick = async () => { await signOut(auth); };
+btnLT.onclick = async () => { await signOut(auth); signInAnonymously(auth).catch(()=>{}); };
 onAuthStateChanged(auth, async (user) => {
 if (manualAuthInProgress) return;
-if (user) {
+if (user && !user.isAnonymous) {
 console.log("[auth] restored user:", user.uid, user.email);
 let snap;try { snap = await get(child(ref(db), "users/" + user.uid));
 } catch (err) {
