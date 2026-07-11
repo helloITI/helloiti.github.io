@@ -29,7 +29,7 @@ for (let i=0;i<handles.length;i++) { const [hx,hy]=handles[i];if(Math.abs(pos.x-
 return null; }
 function insideSel(pos,s) { return pos.x>=s.x&&pos.x<=s.x+s.w&&pos.y>=s.y&&pos.y<=s.y+s.h; }
 function redrawBase() {
-if (!baseSnapshot) return;ctx.clearRect(0,0,cv.width,cv.height);ctx.drawImage(baseSnapshot,0,0); }
+if (!baseSnapshot) return;ctx.clearRect(0,0,cv.width,cv.height);ctx.drawImage(baseSnapshot,0,0);ctx.setLineDash([]); }
 function drawSelUI(s) {
 ctx.save();ctx.strokeStyle='#00aaff';ctx.lineWidth=1;ctx.setLineDash([5,3]);ctx.strokeRect(s.x,s.y,s.w,s.h);ctx.setLineDash([]);
 for (const [hx,hy] of getHandles(s)) {
@@ -88,8 +88,9 @@ const rx=Math.min(selStart.x,pos.x);const ry=Math.min(selStart.y,pos.y);
 const rw=Math.abs(pos.x-selStart.x);const rh=Math.abs(pos.y-selStart.y);
 selStart=null;
 if(rw<2||rh<2){redrawBase();baseSnapshot=null;return;}
-ps();
+redrawBase();
 const imgData=ctx.getImageData(rx,ry,rw,rh);ctx.fillStyle='white';ctx.fillRect(rx,ry,rw,rh);
+ps();
 baseSnapshot=document.createElement('canvas');baseSnapshot.width=cv.width;baseSnapshot.height=cv.height;baseSnapshot.getContext('2d').drawImage(cv,0,0);
 const oc=document.createElement('canvas');oc.width=rw;oc.height=rh;
 oc.getContext('2d').putImageData(imgData,0,0);sel={x:rx,y:ry,w:rw,h:rh,img:oc};
@@ -157,4 +158,3 @@ else{alert('The drawing was not found.');}}}
 document.addEventListener("click",function playMusic(){const audio=document.getElementById("bgm");audio.play().catch(err=>console.log(err));document.removeEventListener("click",playMusic);});
 ctx.fillStyle='white';ctx.fillRect(0,0,cv.width,cv.height);
 ps();lfh();
-// ok
