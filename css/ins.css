@@ -1,75 +1,40 @@
-    @font-face {
-      font-family: 'NintendoNTLG';
-      src: url('https://helloiti.github.io/assets/nintendo_NTLG-DB_002.ttf') format('truetype');
-      font-weight: normal;
-      font-style: normal;
-    }
-
-    body {
-      font-family: 'NintendoNTLG', sans-serif;
-      margin: 0;
-      padding: 20px;
-      background-image: url('https://hellot.nekoweb.org/assets/background2.png');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      color: #000;
-      cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, auto;
-    }
-
-a {
-cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, pointer;
-}
-
-    h1 {
-      text-align: center;
-      font-size: 2.5rem;
-    }
-
-    p {
-      font-size: 1.2rem;
-      line-height: 1.6;
-    }
-    
-        .corner-link {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      color: black !important;
-      font-size: 12px;
-      text-decoration: none;
-      background: none !important;
-      -webkit-text-fill-color: black !important;
-    }
-    .corner-link:hover {
-      text-decoration: underline;
-    }
-
+@font-face {
+font-family: 'wiiu';
+src: url('https://helloiti.github.io/assets/nintendo_NTLG-DB_002.ttf') format('truetype');
+font-weight: normal;
+font-style: normal;}
 body {
-  overflow-y: scroll;
-}
-
-
-body::-webkit-scrollbar {
-  display: none;
-}
-
-    /* credits to RFGuy (https://rfguy.nekoweb.org) for this code! */
+font-family: 'wiiu', sans-serif;
+margin: 0;
+padding: 20px;
+background-image: url('https://helloiti.github.io/assets/background2.png');
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
+background-attachment: fixed;
+color: #000;
+cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, auto; }
+a {cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, pointer;}
+h1 {text-align: center;font-size: 2.5rem;}
+p {font-size: 1.2rem;line-height: 1.6;}
+body {overflow-y: scroll;}
+body::-webkit-scrollbar {display: none;}
+.cl {position: absolute;top: 10px;right: 10px;color: black !important;font-size: 12px;text-decoration: none;background: none !important;-webkit-text-fill-color: black !important;}
+.cl:hover {text-decoration: underline;}
+/* credits to RFGuy (https://rfguy.nekoweb.org) for this code! */
 .nv-br {
-  background-color: rgb(209 79 79);
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: auto; /* important */
-  max-width: 95%; /* prevents overflow */
-  padding: 12px 20px; /* smaller so it fits */
-  border-radius: 0 0 12px 12px;
-  outline: 4px solid #9e2222;
-  display: flex;
-  flex-wrap: wrap; /* allows wrapping */
-  justify-content: center;
-  gap: 8px;
-  z-index: 11;
-}
+background-color: rgb(209 79 79);
+position: absolute;
+top: 0;
+left: 50%;
+transform: translateX(-50%);
+width: auto;
+max-width: 95%;
+padding: 12px 20px;
+border-radius: 0 0 12px 12px;
+outline: 4px solid #9e2222;
+display: flex;
+flex-wrap: wrap;
+justify-content: center;
+gap: 8px;
+z-index: 11;}
