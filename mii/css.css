@@ -7,7 +7,7 @@
 }
 body {
     font-family: 'NintendoNTLG', 'Noto Sans', 'Segoe UI', Arial, sans-serif;
-    background: url('https://hellot.nekoweb.org/assets/background1.png') center/cover no-repeat fixed; /* lt */
+    background: url('https://helloiti.github.io/assets/background1.png') center/cover no-repeat fixed; /* lt */
     color: #000;
     padding: 20px;
     margin: 0;
@@ -15,11 +15,11 @@ body {
     position: relative;
     transition: background .4s ease;
     overflow-y: scroll;
-    cursor: url('https://hellot.nekoweb.org/assets/Wii.png') 0 0, auto;
+    cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, auto;
 }
-a, button, .cd img { cursor: url('https://hellot.nekoweb.org/assets/Wii.png') 0 0, pointer !important; }
+a, button, .cd img { cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, pointer !important; }
 body.dk {
-    background: url('https://hellot.nekoweb.org/assets/background.png') center/cover no-repeat fixed; /* dt */
+    background: url('https://helloiti.github.io/assets/background.png') center/cover no-repeat fixed; /* dt */
     color: #eee;
 }
 body::-webkit-scrollbar { display: none; } /* hs */
@@ -129,3 +129,4 @@ body.dk #gi {
 }
 #mw { color: black; }
 body.dk #mw { color: white; }
+.or {opacity: 0.75;margin: 8px 0;}
