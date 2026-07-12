@@ -1,19 +1,16 @@
     @font-face {
       font-family: 'NintendoNTLG';
-      src: url('https://helloiti.github.io/assets/nintendo_NTLG-DB_002.ttf') format('truetype'); /* ttf file name too long so i pasted it 🤣🤣🤣 me is funny */
-      /* normal weight... i think? */
+      src: url('https://helloiti.github.io/assets/nintendo_NTLG-DB_002.ttf') format('truetype');
       font-weight: normal;
       font-style: normal;
     }
     body {
       font-family: 'NintendoNTLG', sans-serif;
-       /* bg */
       background-image: url('https://helloiti.github.io/assets/background1.png');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
       background-attachment: fixed;
-      /* cursor */
       cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, auto;
       overflow-y: scroll;
 display: flex;
@@ -21,7 +18,6 @@ flex-direction: column;
 align-items: center;
     }
     a {
-      /* cursor, again */
       cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, pointer;
     }
 #container {
@@ -95,16 +91,12 @@ button {
 	height: auto;
 	position: absolute;
 	font-size: 2em;
-     font-family: 'NintendoNTLG', sans-serif;
+	font-family: 'Open Sans', sans-serif;
 }
 
 * {
 	margin: 0;
 	padding: 0;
-	box-sizing: border-box;
-}
-
-html, body {
 	height: 100%;
 }
 
@@ -112,7 +104,7 @@ html, body {
 	opacity: 0%;
 	transition: opacity 0.5s ease;
 	font-size: large;
-     font-family: 'NintendoNTLG', sans-serif;
+	font-family: 'Open Sans', sans-serif;
 }
 
 iframe {
@@ -126,7 +118,7 @@ iframe {
 #copyText {
 	width: 80%;
 	height: auto;
-     font-family: 'NintendoNTLG', sans-serif;
+	font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 	transition: opacity 0.5s ease;
 	opacity: 0%;
 }
