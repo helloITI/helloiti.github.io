@@ -1,3 +1,4 @@
+// translations.js
 const translations = {
       en: {
         title: "seal of HelloT", h1: "Each click updates a global counter!", button: "Yap Yoo!",
