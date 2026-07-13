@@ -1,4 +1,5 @@
-    html, body, #nekoweb-root {
+/* css.css */
+html, body, #nekoweb-root {
       height: 100%;
       margin: 0;
       background: linear-gradient(180deg, #525252 45%, #575757 50%, #363636 55%, #141414 80%);
