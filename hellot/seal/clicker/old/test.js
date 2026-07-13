@@ -1,3 +1,4 @@
+// test.js
 const visitorListDiv = document.getElementById("visitor-list");
     const visitorsRef = firebase.database().ref("onlineUsers");
     const userClicksRef = firebase.database().ref("userClicks");
