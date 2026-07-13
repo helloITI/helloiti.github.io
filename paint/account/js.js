@@ -34,7 +34,7 @@ sLGL.onclick = () => { sCD.style.display = "none"; lCD.style.display = "flex"; s
 const orb = document.getElementById("orb");
 function showLoggedInUI(uname, isGoogle) {
 currentUsername = uname;currentIsGoogle = !!isGoogle;
-actI.textContent = "※ Welcome, " + uname + "! ※";actC.style.display = "block";lCD.style.display = "none";sCD.style.display = "none";orb.style.display = "none";sSUP.parentElement.style.display = "none";sLG.style.display = "none";btnGL.style.display = "none";gUD.style.display = "none";document.querySelector("h2").style.display = "none";stPanel.style.display = "none";
+actI.textContent = "※ Welcome, @" + uname + "! ※";actC.style.display = "block";lCD.style.display = "none";sCD.style.display = "none";orb.style.display = "none";sSUP.parentElement.style.display = "none";sLG.style.display = "none";btnGL.style.display = "none";gUD.style.display = "none";document.querySelector("h2").style.display = "none";stPanel.style.display = "none";
 stEmailSec.style.display = isGoogle ? "none" : "block";
 stPassSec.style.display = isGoogle ? "none" : "block"; }
 function showLoggedOutUI() { currentUsername = null;stPanel.style.display = "none";actC.style.display = "none";lCD.style.display = "flex";sCD.style.display = "none";orb.style.display = "block";sSUP.parentElement.style.display = "block";sLG.style.display = "none";btnGL.style.display = "block";gUD.style.display = "none";const h = document.querySelector("h2");h.style.display = "block";h.textContent = "※ Log in your Paint Account! ※"; }
@@ -48,7 +48,7 @@ btnStClose.onclick = () => { stPanel.style.display = "none"; actC.style.display 
 btnStUN.onclick = async () => {
 const newUN = stNewUN.value.trim().toLowerCase();stUNMsg.textContent = "";
 if (!newUN) { stUNMsg.textContent = "Please enter a new username."; return; }
-if (newUN === currentUsername) { stUNMsg.textContent = "That's already your username lol"; return; }
+if (newUN === currentUsername) { stUNMsg.textContent = "That's already your username 😭✌️"; return; }
 if (newUN.length < 3 || newUN.length > 20 || !/^[a-z0-9_]+$/.test(newUN)) { stUNMsg.textContent = "Usernames must be 3-20 characters: letters, numbers, underscores only."; return; }
 const user = auth.currentUser;if (!user) return;
 try {
@@ -56,7 +56,7 @@ const taken = await get(child(ref(db), "usernames/" + newUN));
 if (taken.exists()) { stUNMsg.textContent = "※ That username is already taken. ※"; return; }
 const oldUN = currentUsername;
 await update(ref(db), { ["usernames/" + newUN]: { uid: user.uid }, ["usernames/" + oldUN]: null, ["users/" + user.uid + "/username"]: newUN });
-currentUsername = newUN;actI.textContent = "※ Welcome, " + newUN + "! ※";
+currentUsername = newUN;actI.textContent = "※ Welcome, @" + newUN + "! ※";
 stUNMsg.textContent = "※ Username updated! ※";stNewUN.value = "";
 } catch (err) { stUNMsg.textContent = "※ Error: " + err.message + " ※"; } };
 btnStEM.onclick = async () => {
@@ -110,14 +110,17 @@ if (err.message && err.message.includes("PERMISSION_DENIED")) { sMsg.textContent
 else { sMsg.textContent = "※ Error: " + err.message + " ※"; }
 } finally { manualAuthInProgress = false; grecaptcha.reset(sCid); } };
 btnLG.onclick = async () => {
-const username = liUS.value.trim().toLowerCase();const email = liEM.value.trim().toLowerCase();const password = liPA.value;const confirmPassword = liCOPA.value;
+const email = liEM.value.trim().toLowerCase();const password = liPA.value;const confirmPassword = liCOPA.value;
 lMsg.textContent = "";
-if (!username || !email || !password || !confirmPassword) { lMsg.textContent = "Please fill out all fields."; return; }
+if (!email || !password || !confirmPassword) { lMsg.textContent = "Please fill out all fields."; return; }
 if (password !== confirmPassword) { lMsg.textContent = "Passwords don't match."; return; }
-if (!grecaptcha.getResponse(lCid)) { lMsg.textContent = "Please complete the reCAPTCHA, ok?"; return; }
+if (!grecaptcha.getResponse(lCid)) { lMsg.textContent = "Complete the reCAPTCHA first. 🫩"; return; }
 manualAuthInProgress = true;
 try {
-await signInWithEmailAndPassword(auth, email, password);showLoggedInUI(username, false);
+const cred = await signInWithEmailAndPassword(auth, email, password);
+const snap = await get(child(ref(db), "users/" + cred.user.uid));
+const username = snap.exists() ? snap.val().username : email.split("@")[0];
+showLoggedInUI(username, false);
 } catch (err) { console.error("[login error]", err.code, err); lMsg.textContent = "※ Error: " + err.message + " ※";
 } finally { manualAuthInProgress = false;grecaptcha.reset(lCid); } };
 btnGL.onclick = async () => {
