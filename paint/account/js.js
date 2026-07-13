@@ -5,7 +5,7 @@ import { getDatabase, ref, set, get, child, update, remove } from "https://www.g
 const [_a,_b,_c,_d,_e,_f,_g,_h] = ["QUl6YVN5Qmx6WG45YnlnZU5fMEF5RFFIWURmMlQydk82NldBemZ3","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZWFwcC5jb20","aHR0cHM6Ly9wYWludC1wcm9qZWN0LWUzZWNkLWRlZmF1bHQtcnRkYi5ldXJvcGUtd2VzdDEuZmlyZWJhc2VkYXRhYmFzZS5hcHA","cGFpbnQtcHJvamVjdC1lM2VjZA","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZXN0b3JhZ2UuYXBw","MTQxMTE0MTc3MzE3","MToxNDExMTQxNzczMTc6d2ViOmQ2Yzc4MTU1ZjI4MzdlN2I0YTBjY2M","Ry0yNTNDMUhaQjFW"].map(atob);
 const firebaseConfig = {apiKey:_a,authDomain:_b,databaseURL:_c,projectId:_d,storageBucket:_e,messagingSenderId:_f,appId:_g,measurementId:_h};const app = initializeApp(firebaseConfig);const auth = getAuth(app);const db = getDatabase(app);const rk = atob("NkxkS1Zpd3RBQUFBQUw2TW1TWVFXOGE3M0phTHhmX2kxMGxNTWxrRQ");
 const sUS = document.getElementById("sUS");const sEM = document.getElementById("sEM");const sPA = document.getElementById("sPA");const sCOPA = document.getElementById("sCOPA");const sSP = document.getElementById("sSP");const sMsg = document.getElementById("sMsg");
-const liUS = document.getElementById("liUS");const liEM = document.getElementById("liEM");const liPA = document.getElementById("liPA");const liSP = document.getElementById("liSP");const lMsg = document.getElementById("lMsg");
+const liUS = document.getElementById("liUS");const liEM = document.getElementById("liEM");const liPA = document.getElementById("liPA");const liCOPA = document.getElementById("liCOPA");const liSP = document.getElementById("liSP");const lMsg = document.getElementById("lMsg");
 const btnSUP = document.getElementById("btnSUP");const btnLG = document.getElementById("btnLG");const btnLT = document.getElementById("btnLT");const btnGL = document.getElementById("btnGL");
 const actC = document.getElementById("actC");const actI = document.getElementById("actI");
 const lCD = document.getElementById("lCD");const sCD = document.getElementById("sCD");
@@ -27,7 +27,8 @@ lCid = grecaptcha.render("liCaptcha", { sitekey: rk });sCid = grecaptcha.render(
 function emailKey(email) { return email.trim().toLowerCase().replace(/\./g, ","); }
 function isValidEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
 let manualAuthInProgress = false;
-sSP.onchange = () => { sPA.type = sSP.checked ? "text" : "password"; sCOPA.type = sSP.checked ? "text" : "password"; }; liSP.onchange = () => { liPA.type = liSP.checked ? "text" : "password"; };
+sSP.onchange = () => { sPA.type = sSP.checked ? "text" : "password"; sCOPA.type = sSP.checked ? "text" : "password"; };
+liSP.onchange = () => { liPA.type = liSP.checked ? "text" : "password"; liCOPA.type = liSP.checked ? "text" : "password"; };
 sSUP.onclick = () => { lCD.style.display = "none"; sCD.style.display = "flex"; sSUP.parentElement.style.display = "none"; sLG.style.display = "block"; document.querySelector("h2").textContent = "※ Register your very own Paint Account! ※"; };
 sLGL.onclick = () => { sCD.style.display = "none"; lCD.style.display = "flex"; sSUP.parentElement.style.display = "block"; sLG.style.display = "none"; document.querySelector("h2").textContent = "※ Log in your Paint Account! ※"; };
 const orb = document.getElementById("orb");
@@ -41,7 +42,6 @@ btnStOpen.onclick = () => {
 actC.style.display = "none";stPanel.style.display = "flex";
 stUNMsg.textContent = "";stEMMsg.textContent = "";stPAMsg.textContent = "";
 stNewUN.value = "";stNewEM.value = "";stCurPAem.value = "";stCurPA.value = "";stNewPA.value = "";stCOPA.value = "";
-// google
 stEmailSec.style.display = currentIsGoogle ? "none" : "block";
 stPassSec.style.display = currentIsGoogle ? "none" : "block"; };
 btnStClose.onclick = () => { stPanel.style.display = "none"; actC.style.display = "block"; };
@@ -110,9 +110,10 @@ if (err.message && err.message.includes("PERMISSION_DENIED")) { sMsg.textContent
 else { sMsg.textContent = "※ Error: " + err.message + " ※"; }
 } finally { manualAuthInProgress = false; grecaptcha.reset(sCid); } };
 btnLG.onclick = async () => {
-const username = liUS.value.trim().toLowerCase();const email = liEM.value.trim().toLowerCase();const password = liPA.value;
+const username = liUS.value.trim().toLowerCase();const email = liEM.value.trim().toLowerCase();const password = liPA.value;const confirmPassword = liCOPA.value;
 lMsg.textContent = "";
-if (!username || !email) { lMsg.textContent = "Please enter both username and email."; return; }
+if (!username || !email || !password || !confirmPassword) { lMsg.textContent = "Please fill out all fields."; return; }
+if (password !== confirmPassword) { lMsg.textContent = "Passwords don't match."; return; }
 if (!grecaptcha.getResponse(lCid)) { lMsg.textContent = "Please complete the reCAPTCHA, ok?"; return; }
 manualAuthInProgress = true;
 try {
