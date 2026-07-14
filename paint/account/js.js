@@ -20,7 +20,8 @@ const stCurPA = document.getElementById("stCurPA");const stNewPA = document.getE
 const stEmailSec = document.getElementById("stEmailSec");const stPassSec = document.getElementById("stPassSec");
 const cp = document.getElementById("cp");const po = document.getElementById("po");
 let currentUsername = null;let currentIsGoogle = false;
-signInAnonymously(auth).catch(()=>{});
+// FIX: track whether the first onAuthStateChanged has fired so we don't race signInAnonymously against session restore on old browsers
+let initialAuthResolved = false;let manualAuthInProgress = false;
 function isOldBrowser() {
   const m = navigator.userAgent.match(/Chrom(?:e|ium)\/(\d+)/);
   return m ? parseInt(m[1]) < 80 : false;
@@ -34,7 +35,6 @@ function rCap() {
 } rCap();
 function emailKey(email) { return email.trim().toLowerCase().replace(/\./g, ","); }
 function isValidEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
-let manualAuthInProgress = false;
 sSP.onchange = () => { sPA.type = sSP.checked ? "text" : "password"; sCOPA.type = sSP.checked ? "text" : "password"; };
 liSP.onchange = () => { liPA.type = liSP.checked ? "text" : "password"; liCOPA.type = liSP.checked ? "text" : "password"; };
 sSUP.onclick = () => { lCD.style.display = "none"; sCD.style.display = "flex"; sSUP.parentElement.style.display = "none"; sLG.style.display = "block"; document.querySelector("h2").textContent = "※ Register your very own Paint Account! ※"; };
@@ -159,8 +159,9 @@ manualAuthInProgress = false; showLoggedInUI(username, true);
 } catch (err) {
 if (err.message && err.message.includes("PERMISSION_DENIED")) { gMsg.textContent = "※ That username is taken, or this Google account's email is already linked to another account. ※"; }
 else { gMsg.textContent = "※ Error: " + err.message + " ※"; } } };
-btnLT.onclick = async () => { await signOut(auth); signInAnonymously(auth).catch(()=>{}); };
+btnLT.onclick = async () => { await signOut(auth); };
 onAuthStateChanged(auth, async (user) => {
+if (!initialAuthResolved) { initialAuthResolved = true; if (!user) { signInAnonymously(auth).catch(()=>{}); return; } }
 if (manualAuthInProgress) return;
 if (user && !user.isAnonymous) {
 console.log("[auth] restored user:", user.uid, user.email);
