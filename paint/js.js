@@ -47,7 +47,9 @@ ctx.restore();
 drawSelUI(sel); }
 function commitSel() {
 if (!sel) return;
-redrawBase();ctx.drawImage(sel.img,sel.x,sel.y,sel.w,sel.h);
+redrawBase();
+ctx.fillStyle='white';ctx.fillRect(sel.x,sel.y,sel.w,sel.h);
+ctx.drawImage(sel.img,sel.x,sel.y,sel.w,sel.h);
 sel=null;selDrag=null;selScale=null;selStart=null;baseSnapshot=null; }
 function st(e) {
 e.preventDefault();const pos = gp(e);
@@ -94,6 +96,7 @@ selStart=null;
 if(rw<2||rh<2){redrawBase();baseSnapshot=null;return;}
 redrawBase();
 const imgData=ctx.getImageData(rx,ry,rw,rh);ctx.clearRect(rx,ry,rw,rh);
+ctx.fillStyle='white';ctx.fillRect(rx,ry,rw,rh);
 ps();
 baseSnapshot=document.createElement('canvas');baseSnapshot.width=cv.width;baseSnapshot.height=cv.height;baseSnapshot.getContext('2d').drawImage(cv,0,0);
 const oc=document.createElement('canvas');oc.width=rw;oc.height=rh;
