@@ -21,18 +21,19 @@ const stEmailSec = document.getElementById("stEmailSec");const stPassSec = docum
 const cp = document.getElementById("cp");const po = document.getElementById("po");
 let currentUsername = null;let currentIsGoogle = false;
 signInAnonymously(auth).catch(()=>{});
+function isOldBrowser() {
+  const m = navigator.userAgent.match(/Chrom(?:e|ium)\/(\d+)/);
+  return m ? parseInt(m[1]) < 80 : false;
+}
 function rCap() {
-if (window.grecaptcha && window.grecaptcha.render) {
-lCid = grecaptcha.render("liCaptcha", { sitekey: rk });sCid = grecaptcha.render("sCaptcha", { sitekey: rk });
-} else { setTimeout(rCap, 300); } } rCap();
+  if (isOldBrowser()) return;
+  if (window.grecaptcha && window.grecaptcha.render) {
+    lCid = grecaptcha.render("liCaptcha", { sitekey: rk });
+    sCid = grecaptcha.render("sCaptcha", { sitekey: rk });
+  } else { setTimeout(rCap, 300); }
+} rCap();
 function emailKey(email) { return email.trim().toLowerCase().replace(/\./g, ","); }
 function isValidEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
-function isCaptchaRequired(cid, containerId) {
-if (!window.grecaptcha) return false;
-const container = document.getElementById(containerId);
-if (!container || !container.querySelector("iframe")) return false;
-return grecaptcha.getResponse(cid) === "";
-}
 let manualAuthInProgress = false;
 sSP.onchange = () => { sPA.type = sSP.checked ? "text" : "password"; sCOPA.type = sSP.checked ? "text" : "password"; };
 liSP.onchange = () => { liPA.type = liSP.checked ? "text" : "password"; liCOPA.type = liSP.checked ? "text" : "password"; };
@@ -105,7 +106,7 @@ if (!username || !email || !password || !confirmPassword) { sMsg.textContent = "
 if (username.length < 3 || username.length > 20 || !/^[a-z0-9_]+$/.test(username)) { sMsg.textContent = "Usernames must be 3-20 characters: letters, numbers, underscores only."; return; }
 if (!isValidEmail(email)) { sMsg.textContent = "Please enter a valid email address."; return; }
 if (password !== confirmPassword) { sMsg.textContent = "Passwords don't match."; return; }
-if (isCaptchaRequired(sCid, "sCaptcha")) { sMsg.textContent = "Complete the reCAPTCHA first. 🫩"; return; } manualAuthInProgress = true;let cred;
+if (sCid !== null && !grecaptcha.getResponse(sCid)) { sMsg.textContent = "Complete the reCAPTCHA first. 🫩"; return; } manualAuthInProgress = true;let cred;
 try {
 if (auth.currentUser && auth.currentUser.isAnonymous) await signOut(auth);
 cred = await createUserWithEmailAndPassword(auth, email, password);
@@ -115,13 +116,13 @@ showLoggedInUI(username, false);
 if (cred && cred.user) { try { await cred.user.delete(); } catch {} }
 if (err.message && err.message.includes("PERMISSION_DENIED")) { sMsg.textContent = "※ That username or email is already taken. ※"; }
 else { sMsg.textContent = "※ Error: " + err.message + " ※"; }
-} finally { manualAuthInProgress = false; if (window.grecaptcha && sCid !== null) grecaptcha.reset(sCid); } };
+} finally { manualAuthInProgress = false; if (sCid !== null) grecaptcha.reset(sCid); } };
 btnLG.onclick = async () => {
 const email = liEM.value.trim().toLowerCase();const password = liPA.value;const confirmPassword = liCOPA.value;
 lMsg.textContent = "";
 if (!email || !password || !confirmPassword) { lMsg.textContent = "Please fill out all fields."; return; }
 if (password !== confirmPassword) { lMsg.textContent = "Passwords don't match."; return; }
-if (isCaptchaRequired(lCid, "liCaptcha")) { lMsg.textContent = "Complete the reCAPTCHA first. 🫩"; return; }
+if (lCid !== null && !grecaptcha.getResponse(lCid)) { lMsg.textContent = "Complete the reCAPTCHA first. 🫩"; return; }
 manualAuthInProgress = true;
 try {
 const cred = await signInWithEmailAndPassword(auth, email, password);
@@ -129,7 +130,7 @@ const snap = await get(child(ref(db), "users/" + cred.user.uid));
 const username = snap.exists() ? snap.val().username : email.split("@")[0];
 showLoggedInUI(username, false);
 } catch (err) { console.error("[login error]", err.code, err); lMsg.textContent = "※ Error: " + err.message + " ※";
-} finally { manualAuthInProgress = false; if (window.grecaptcha && lCid !== null) grecaptcha.reset(lCid); } };
+} finally { manualAuthInProgress = false; if (lCid !== null) grecaptcha.reset(lCid); } };
 btnGL.onclick = async () => {
 lMsg.textContent = ""; sMsg.textContent = "";manualAuthInProgress = true;
 try {
