@@ -20,19 +20,10 @@ const stCurPA = document.getElementById("stCurPA");const stNewPA = document.getE
 const stEmailSec = document.getElementById("stEmailSec");const stPassSec = document.getElementById("stPassSec");
 const cp = document.getElementById("cp");const po = document.getElementById("po");
 let currentUsername = null;let currentIsGoogle = false;
-// FIX: track whether the first onAuthStateChanged has fired so we don't race signInAnonymously against session restore on old browsers
 let initialAuthResolved = false;let manualAuthInProgress = false;
-function isOldBrowser() {
-  const m = navigator.userAgent.match(/Chrom(?:e|ium)\/(\d+)/);
-  return m ? parseInt(m[1]) < 80 : false;
-}
+function isOldBrowser() {const m = navigator.userAgent.match(/Chrom(?:e|ium)\/(\d+)/);return m ? parseInt(m[1]) < 80 : false;}
 function rCap() {
-  if (isOldBrowser()) return;
-  if (window.grecaptcha && window.grecaptcha.render) {
-    lCid = grecaptcha.render("liCaptcha", { sitekey: rk });
-    sCid = grecaptcha.render("sCaptcha", { sitekey: rk });
-  } else { setTimeout(rCap, 300); }
-} rCap();
+if (isOldBrowser()) return;if (window.grecaptcha && window.grecaptcha.render) {lCid = grecaptcha.render("liCaptcha", { sitekey: rk });sCid = grecaptcha.render("sCaptcha", { sitekey: rk });} else { setTimeout(rCap, 300); }} rCap();
 function emailKey(email) { return email.trim().toLowerCase().replace(/\./g, ","); }
 function isValidEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
 sSP.onchange = () => { sPA.type = sSP.checked ? "text" : "password"; sCOPA.type = sSP.checked ? "text" : "password"; };
