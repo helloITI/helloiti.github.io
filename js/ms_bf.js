@@ -4,4 +4,4 @@ if (bf.includes('mii')) { mu.src = 'https://helloiti.github.io/assets/mk.mp3'; m
 }if (bf.includes('armin')) { window.location.href = "https://helloiti.github.io/assets/How_Did_You_Found_This.mp4";
 }if (bf.includes('a')) { mu.src = 'https://helloiti.github.io/assets/mii.mp3'; mu.loop = true; mu.play().catch(() => {}); bf = '';
 }if (bf.includes('w')) { mu.src = 'https://helloiti.github.io/assets/PEAK.mp3'; mu.loop = true; mu.play().catch(() => {}); bf = ''; } });
-document.addEventListener("click", function pm() { if (mu.src) mu.play().catch(err => {}); document.removeEventListener("click", pm); });
+document.addEventListener("click", function pm() {if (mu && mu.src) {mu.play().catch(() => {});}document.removeEventListener("click", pm);});
