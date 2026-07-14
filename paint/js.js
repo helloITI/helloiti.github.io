@@ -15,7 +15,7 @@ m = newM;eb.textContent = m === 'erase' ? 'Brush' : 'Eraser';fb.textContent = m 
 function ps() { if(us.length >= mu) us.shift();us.push(toWhitePNG());rs.length = 0; }
 function rdu(dataUrl) {
 return new Promise(res=>{
-const img = new Image();img.onload = ()=>{ ctx.clearRect(0,0,cv.width,cv.height);ctx.drawImage(img,0,0,cv.width,cv.height);res(); };img.src = dataUrl; }); }
+const img = new Image();img.onload = ()=>{ ctx.fillStyle='white';ctx.fillRect(0,0,cv.width,cv.height);ctx.drawImage(img,0,0,cv.width,cv.height);res(); };img.src = dataUrl; }); }
 function gp(e) {
 const rect = cv.getBoundingClientRect();const scaleX = cv.width/rect.width;const scaleY = cv.height/rect.height;
 const x = ((e.touches ? e.touches[0].clientX : e.clientX) - rect.left) * scaleX;
@@ -30,7 +30,9 @@ for (let i=0;i<handles.length;i++) { const [hx,hy]=handles[i];if(Math.abs(pos.x-
 return null; }
 function insideSel(pos,s) { return pos.x>=s.x&&pos.x<=s.x+s.w&&pos.y>=s.y&&pos.y<=s.y+s.h; }
 function redrawBase() {
-if (!baseSnapshot) return;ctx.clearRect(0,0,cv.width,cv.height);ctx.drawImage(baseSnapshot,0,0);ctx.setLineDash([]); }
+if (!baseSnapshot) return;
+ctx.fillStyle='white';ctx.fillRect(0,0,cv.width,cv.height);
+ctx.drawImage(baseSnapshot,0,0);ctx.setLineDash([]); }
 function drawSelUI(s) {
 ctx.save();ctx.strokeStyle='#00aaff';ctx.lineWidth=1;ctx.setLineDash([5,3]);ctx.strokeRect(s.x,s.y,s.w,s.h);ctx.setLineDash([]);
 for (const [hx,hy] of getHandles(s)) {
@@ -47,7 +49,6 @@ ctx.restore();
 drawSelUI(sel); }
 function commitSel() {
 if (!sel) return;
-redrawBase();
 ctx.fillStyle='white';ctx.fillRect(sel.x,sel.y,sel.w,sel.h);
 ctx.drawImage(sel.img,sel.x,sel.y,sel.w,sel.h);
 sel=null;selDrag=null;selScale=null;selStart=null;baseSnapshot=null; }
@@ -95,8 +96,7 @@ const rw=Math.round(Math.abs(pos.x-selStart.x));const rh=Math.round(Math.abs(pos
 selStart=null;
 if(rw<2||rh<2){redrawBase();baseSnapshot=null;return;}
 redrawBase();
-const imgData=ctx.getImageData(rx,ry,rw,rh);ctx.clearRect(rx,ry,rw,rh);
-ctx.fillStyle='white';ctx.fillRect(rx,ry,rw,rh);
+const imgData=ctx.getImageData(rx,ry,rw,rh);ctx.fillStyle='white';ctx.fillRect(rx,ry,rw,rh);
 ps();
 baseSnapshot=document.createElement('canvas');baseSnapshot.width=cv.width;baseSnapshot.height=cv.height;baseSnapshot.getContext('2d').drawImage(cv,0,0);
 const oc=document.createElement('canvas');oc.width=rw;oc.height=rh;
