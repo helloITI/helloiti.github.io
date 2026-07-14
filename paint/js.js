@@ -8,13 +8,14 @@ checkedInitialAuth = true;if (user) { resolveAuthReady(); } else { auth.signInAn
 const cv = document.getElementById('cv');const ctx = cv.getContext('2d');const ci = document.getElementById('col');const si = document.getElementById('sz');const eb = document.getElementById('er');const fb = document.getElementById('fl');const slb = document.getElementById('sl');const ub = document.getElementById('un');const rb = document.getElementById('re');const cb = document.getElementById('clr');const dbtn = document.getElementById('dl');const pb = document.getElementById('pub');const shl = document.getElementById('shl');const cob = document.getElementById('cpy');const po = document.getElementById('po');const pm = document.getElementById('pm');const cp = document.getElementById('cp');
 let dr = false;let bc = ci.value;let bs = Number(si.value);let m = 'draw';let lst = {x:0,y:0};const mu = 30;const us = [];const rs = [];
 let sel = null;let selDrag = null;let selScale = null;let selStart = null;let baseSnapshot = null;const HS = 8;
+function toWhitePNG() { const tmp = document.createElement('canvas');tmp.width = cv.width; tmp.height = cv.height;const t = tmp.getContext('2d');t.fillStyle = 'white';t.fillRect(0, 0, tmp.width, tmp.height);t.drawImage(cv, 0, 0);return tmp.toDataURL(); }
 function setMode(newM) {
 if (m === 'select' && newM !== 'select' && sel) commitSel();
 m = newM;eb.textContent = m === 'erase' ? 'Brush' : 'Eraser';fb.textContent = m === 'fill' ? 'Brush' : 'Fill';slb.textContent = m === 'select' ? 'Cancel Select' : 'Select'; }
-function ps() { if(us.length >= mu) us.shift();us.push(cv.toDataURL());rs.length = 0; }
+function ps() { if(us.length >= mu) us.shift();us.push(toWhitePNG());rs.length = 0; }
 function rdu(dataUrl) {
 return new Promise(res=>{
-const img = new Image();img.onload = ()=>{ ctx.fillStyle='white';ctx.fillRect(0,0,cv.width,cv.height);ctx.drawImage(img,0,0,cv.width,cv.height);res(); };img.src = dataUrl; }); }
+const img = new Image();img.onload = ()=>{ ctx.clearRect(0,0,cv.width,cv.height);ctx.drawImage(img,0,0,cv.width,cv.height);res(); };img.src = dataUrl; }); }
 function gp(e) {
 const rect = cv.getBoundingClientRect();const scaleX = cv.width/rect.width;const scaleY = cv.height/rect.height;
 const x = ((e.touches ? e.touches[0].clientX : e.clientX) - rect.left) * scaleX;
@@ -29,9 +30,7 @@ for (let i=0;i<handles.length;i++) { const [hx,hy]=handles[i];if(Math.abs(pos.x-
 return null; }
 function insideSel(pos,s) { return pos.x>=s.x&&pos.x<=s.x+s.w&&pos.y>=s.y&&pos.y<=s.y+s.h; }
 function redrawBase() {
-if (!baseSnapshot) return;
-ctx.fillStyle='white';ctx.fillRect(0,0,cv.width,cv.height);
-ctx.drawImage(baseSnapshot,0,0);ctx.setLineDash([]); }
+if (!baseSnapshot) return;ctx.clearRect(0,0,cv.width,cv.height);ctx.drawImage(baseSnapshot,0,0);ctx.setLineDash([]); }
 function drawSelUI(s) {
 ctx.save();ctx.strokeStyle='#00aaff';ctx.lineWidth=1;ctx.setLineDash([5,3]);ctx.strokeRect(s.x,s.y,s.w,s.h);ctx.setLineDash([]);
 for (const [hx,hy] of getHandles(s)) {
@@ -48,8 +47,7 @@ ctx.restore();
 drawSelUI(sel); }
 function commitSel() {
 if (!sel) return;
-ctx.fillStyle='white';ctx.fillRect(0,0,cv.width,cv.height);
-ctx.drawImage(sel.img,sel.x,sel.y,sel.w,sel.h);
+redrawBase();ctx.drawImage(sel.img,sel.x,sel.y,sel.w,sel.h);
 sel=null;selDrag=null;selScale=null;selStart=null;baseSnapshot=null; }
 function st(e) {
 e.preventDefault();const pos = gp(e);
@@ -85,17 +83,17 @@ else{ctx.globalCompositeOperation='source-over';ctx.strokeStyle=bc;}
 ctx.lineTo(pos.x,pos.y);ctx.stroke();lst=pos; }
 function sp(e) {
 if (m==='select') {
-if (selScale){selScale=null;drawSel();return;}if (selDrag){selDrag=null;drawSel();return;}
+if (selScale){selScale=null;drawSel();return;}if(selDrag){selDrag=null;drawSel();return;}
 if (!dr||!selStart) return;
 if (e.type==='mouseout'||e.type==='touchcancel'){dr=false;redrawBase();baseSnapshot=null;selStart=null;return;}
 dr=false;
 const pos=gp(e);
 const rx=Math.round(Math.min(selStart.x,pos.x));const ry=Math.round(Math.min(selStart.y,pos.y));
-const rw=Math.round(Math.abs(pos.x-selStart.x));const rh=Math.round(Math.abs(pos.y-selStart.y));
+const rw=Math.round(Math.abs(pos.x-selStart.x));const rh=Math.round(Math.abs(pos.y-selStart.h));
 selStart=null;
 if(rw<2||rh<2){redrawBase();baseSnapshot=null;return;}
 redrawBase();
-const imgData=ctx.getImageData(rx,ry,rw,rh);ctx.fillStyle='white';ctx.fillRect(rx,ry,rw,rh);
+const imgData=ctx.getImageData(rx,ry,rw,rh);ctx.clearRect(rx,ry,rw,rh);
 ps();
 baseSnapshot=document.createElement('canvas');baseSnapshot.width=cv.width;baseSnapshot.height=cv.height;baseSnapshot.getContext('2d').drawImage(cv,0,0);
 const oc=document.createElement('canvas');oc.width=rw;oc.height=rh;
@@ -110,13 +108,13 @@ eb.addEventListener('click',()=>{setMode(m==='erase'?'draw':'erase');});
 fb.addEventListener('click',()=>{setMode(m==='fill'?'draw':'fill');});
 slb.addEventListener('click',()=>{setMode(m==='select'?'draw':'select');});
 ub.addEventListener('click',async()=>{
-if(sel)commitSel();if(!us.length)return;const ls=us.pop();rs.push(cv.toDataURL());await rdu(ls);sel=null;baseSnapshot=null; });
+if(sel)commitSel();if(!us.length)return;const ls=us.pop();rs.push(toWhitePNG());await rdu(ls);sel=null;baseSnapshot=null; });
 rb.addEventListener('click',async()=>{
-if(!rs.length)return;const s=rs.pop();us.push(cv.toDataURL());await rdu(s);sel=null;baseSnapshot=null; });
+if(!rs.length)return;const s=rs.pop();us.push(toWhitePNG());await rdu(s);sel=null;baseSnapshot=null; });
 cb.addEventListener('click',()=>{
 if(sel)commitSel();ps();ctx.fillStyle='white';ctx.fillRect(0,0,cv.width,cv.height); });
 dbtn.addEventListener('click',()=>{
-if(sel)commitSel();const a=document.createElement('a');a.href=cv.toDataURL();a.download='painting.png';a.click(); });
+if(sel)commitSel();const a=document.createElement('a');a.href=toWhitePNG();a.download='painting.png';a.click(); });
 cp.addEventListener('click',()=>{po.classList.remove('visible');});
 cob.addEventListener('click',async()=>{
 if(shl.value){await navigator.clipboard.writeText(shl.value);cob.textContent='※ Copied Link! ※';setTimeout(()=>cob.textContent='※ Copy Link ※',1000);} });
@@ -139,15 +137,14 @@ if(y>0){const up=pk(nx,y-1);if(cm({r:data[up],g:data[up+1],b:data[up+2],a:data[u
 if(y<h-1){const dn=pk(nx,y+1);if(cm({r:data[dn],g:data[dn+1],b:data[dn+2],a:data[dn+3]},sc)){if(!rd){stk.push({x:nx,y:y+1});rd=true;}}else if(rd){rd=false;}}}}
 ctx.putImageData(id,0,0);}
 pb.addEventListener('click',async()=>{
-if(!confirm("Are you sure you want to generate a link for this drawing?"))return;
-if(sel)commitSel();
+if(!confirm("Are you sure you want to generate a link for this drawing?"))return;if(sel)commitSel();
 try{
 await authReady;const user=auth.currentUser;if(!user){alert('Still connecting, please try again in a second!');return;}
 const authorId=user.uid;const td=Math.floor(Date.now()/86400000);
 const us=await db.ref('users/'+authorId).once('value');const uv=us.val()||{};
 const ut=uv.uploadDay===td?(uv.uploadsToday||0):0;
 if(ut>=30){alert("You've hit your limit of 30 drawings for today! Come back tomorrow to make more. :)");return;}
-const data=cv.toDataURL();const id=Date.now().toString(36)+Math.random().toString(36).substring(2,8);
+const data=toWhitePNG();const id=Date.now().toString(36)+Math.random().toString(36).substring(2,8);
 await db.ref('drawings/'+id).set({image:data,created:firebase.database.ServerValue.TIMESTAMP,authorId:authorId});
 await db.ref('users/'+authorId).update({lastUpload:firebase.database.ServerValue.TIMESTAMP,drawingCount:firebase.database.ServerValue.increment(1),uploadDay:td,uploadsToday:ut+1});
 const url=`${location.origin}${location.pathname}#id=${id}`;
@@ -161,6 +158,5 @@ const hash=location.hash;if(!hash)return;const match=hash.match(/id=([^&]+)/);
 if(match){const id=match[1];const snap=await db.ref('drawings/'+id).get();
 if(snap.exists()){const{image}=snap.val();await rdu(image);}
 else{alert('The drawing was not found.');}}}
-document.addEventListener("click",function playMusic(){const audio=document.getElementById("bgm");audio.play().catch(err=>console.log(err));document.removeEventListener("click",playMusic);});
-ctx.fillStyle='white';ctx.fillRect(0,0,cv.width,cv.height);
-ps();lfh();
+document.addEventListener("mousedown",function playMusic(){const audio=document.getElementById("bgm");audio.play().catch(err=>console.log(err));document.removeEventListener("mousedown",playMusic);},true);
+ctx.fillStyle='white';ctx.fillRect(0,0,cv.width,cv.height);ps();lfh();
