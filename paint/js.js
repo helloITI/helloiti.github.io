@@ -89,7 +89,7 @@ if (e.type==='mouseout'||e.type==='touchcancel'){dr=false;redrawBase();baseSnaps
 dr=false;
 const pos=gp(e);
 const rx=Math.round(Math.min(selStart.x,pos.x));const ry=Math.round(Math.min(selStart.y,pos.y));
-const rw=Math.round(Math.abs(pos.x-selStart.x));const rh=Math.round(Math.abs(pos.y-selStart.h));
+const rw=Math.round(Math.abs(pos.x-selStart.x));const rh=Math.round(Math.abs(pos.y-selStart.y));
 selStart=null;
 if(rw<2||rh<2){redrawBase();baseSnapshot=null;return;}
 redrawBase();
