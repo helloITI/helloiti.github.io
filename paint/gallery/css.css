@@ -25,3 +25,4 @@ h2 { margin: 25px 0 12px; }
 #dB { background: #a44; }
 #pImg { width: 100%; max-width: 480px; border-radius: 8px; display: block; margin: 0 auto 12px; background: white; }
 #gal,#fG {display: grid;grid-template-columns: repeat(auto-fill, 150px);gap: 12px;justify-content: center; width: 100%;}
+.divisor {display: block;width: 700px;max-width: 100%;margin: 20px auto;image-rendering: pixelated;}
