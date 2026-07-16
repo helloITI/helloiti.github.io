@@ -162,5 +162,4 @@ const hash=location.hash;if(!hash)return;const match=hash.match(/id=([^&]+)/);
 if(match){const id=match[1];const snap=await db.ref('drawings/'+id).get();
 if(snap.exists()){const{image}=snap.val();await rdu(image);}
 else{alert('The drawing was not found.');}}}
-document.addEventListener("mousedown",function playMusic(){const audio=document.getElementById("ps5");audio.play().catch(err=>console.log(err));document.removeEventListener("mousedown",playMusic);},true);
-ctx.fillStyle='white';ctx.fillRect(0,0,cv.width,cv.height);ps();lfh();
+document.addEventListener("mousedown",function playMusic(){const audio=document.getElementById("ps5");audio.play().catch(err=>console.log(err));document.removeEventListener("mousedown",playMusic);},true);ctx.fillStyle='white';ctx.fillRect(0,0,cv.width,cv.height);ps();lfh();
