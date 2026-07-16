@@ -1,15 +1,6 @@
-@font-face {
-  font-family: 'NintendoNTLG';
-  src: url('https://helloiti.github.io/assets/nintendo_NTLG-DB_002.ttf') format('truetype');
-}
+@font-face {font-family: 'wiiu';src: url('https://helloiti.github.io/assets/nintendo_NTLG-DB_002.ttf') format('truetype');}
 body {
-  margin: 0; padding: 20px;
-  font-family: 'NintendoNTLG', sans-serif;
-  background: url('https://helloiti.github.io/assets/background.png') fixed center/cover;
-  text-align: center;
-  color: white;
-  cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, auto;overflow-y: scroll;display: flex;flex-direction: column;align-items: center;
-}
+margin: 0; padding: 20px;font-family: 'wiiu', sans-serif;background: url('https://helloiti.github.io/assets/background.png') fixed center/cover;text-align: center;color: white;cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, auto;overflow-y: scroll;display: flex;flex-direction: column;align-items: center;}
 a, button { cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, pointer }
 h1 { margin: 10px 0 20px; }
 h2 { margin: 25px 0 12px; }
@@ -33,3 +24,4 @@ h2 { margin: 25px 0 12px; }
 @media (max-width: 520px) {#gal, #fG { grid-template-columns: repeat(auto-fill, 120px); }.g-i img { width: 120px; height: 90px; }}
 #dB { background: #a44; }
 #pImg { width: 100%; max-width: 480px; border-radius: 8px; display: block; margin: 0 auto 12px; background: white; }
+#fG {display: flex;}
