@@ -19,7 +19,6 @@ const stNewEM = document.getElementById("stNewEM");const stCurPAem = document.ge
 const stCurPA = document.getElementById("stCurPA");const stNewPA = document.getElementById("stNewPA");const stCOPA = document.getElementById("stCOPA");const btnStPA = document.getElementById("btnStPA");const stPAMsg = document.getElementById("stPAMsg");
 const stEmailSec = document.getElementById("stEmailSec");const stPassSec = document.getElementById("stPassSec");
 let currentUsername = null;let currentIsGoogle = false;
-signInAnonymously(auth).catch(()=>{});
 function rCap() {
 if (window.grecaptcha && window.grecaptcha.render) {
 lCid = grecaptcha.render("liCaptcha", { sitekey: rk });sCid = grecaptcha.render("sCaptcha", { sitekey: rk });
@@ -152,8 +151,13 @@ manualAuthInProgress = false; showLoggedInUI(username, true);
 if (err.message && err.message.includes("PERMISSION_DENIED")) { gMsg.textContent = "※ That username is taken, or this Google account's email is already linked to another account. ※"; }
 else { gMsg.textContent = "※ Error: " + err.message + " ※"; } } };
 btnLT.onclick = async () => { await signOut(auth); signInAnonymously(auth).catch(()=>{}); };
+let checkedInitialAuth = false;
 onAuthStateChanged(auth, async (user) => {
 if (manualAuthInProgress) return;
+if (!checkedInitialAuth) {
+checkedInitialAuth = true;
+if (!user) {
+signInAnonymously(auth).catch(()=>{});return;} }
 if (user && !user.isAnonymous) {
 console.log("[auth] restored user:", user.uid, user.email);
 let snap;try { snap = await get(child(ref(db), "users/" + user.uid));
