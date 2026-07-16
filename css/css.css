@@ -7,12 +7,10 @@ font-family: 'wiiu', sans-serif;margin: 0;padding: 10px;
 background-image: url('https://helloiti.github.io/assets/background.png');background-size: cover;background-position: center;background-repeat: no-repeat;background-attachment: fixed;color: white;
 /* cursor */
 cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, auto;overflow-y: scroll;display: flex;flex-direction: column;align-items: center;
-overflow-x: hidden; width: 100%; /* Safety net to prevent side-scrolling */
-}
+overflow-x: hidden; width: 100%;}
 /* credits to RFGuy (https://rfguy.nekoweb.org) for this code! */
 .nv-br {
-background-color: rgb(209 79 79);position: absolute;top: 0;left: 50%;transform: translateX(-50%);width: auto; /* important */max-width: 95%; /* prevents overflow */padding: 12px 20px; /* smaller so it fits */border-radius: 0 0 12px 12px;outline: 4px solid #9e2222;display: flex; flex-wrap: wrap; /* allows wrapping */justify-content: center;gap: 8px;z-index: 11;
-}
+background-color: rgb(209 79 79);position: absolute;top: 0;left: 50%;transform: translateX(-50%);width: auto;/* important */max-width: 95%;padding: 12px 20px;border-radius: 0 0 12px 12px;outline: 4px solid #9e2222;display: flex; flex-wrap: wrap;justify-content: center;gap: 8px;z-index: 11;}
 h1, h2, h3 {
 margin: 10px 0;padding: 0; }
 h1 > div {
@@ -36,14 +34,14 @@ width: 32px;height: 32px;image-rendering: pixelated !important;}
 .lb:hover { background: rgba(255,255,255,0.2);transform: scale(1.02); }
 .br { display: flex;flex-wrap: wrap;gap: 15px;justify-content: center;margin: 10px 0;padding: 0;list-style: none;width: 100%;max-width: 550px; }
 .br a img { width: 100px;height: auto;image-rendering: pixelated; }
-pre, code { /* dih */
+pre, code {
 color: white;background: none;padding: 10px;border-radius: 8px;overflow-x: auto;font-family: monospace;margin: 10px 0; }
 .ls { position: fixed; left: 10px; bottom: 10px !important; top: auto !important; display: flex; flex-direction: row; gap: 4.5px; z-index: 150; }
 .lsm { /* +*º */ width: 67px;height: auto;image-rendering: smooth !important; }
 .hs { width: 150px;height: auto;image-rendering: pixelated !important; }
 .sr {
 position: fixed;right: 10px;bottom: 10px !important;top: auto !important;width: 150px;z-index: 200; }
-.bp { /* 67 */ position: fixed;bottom: 10px;left: 160px;display: flex;align-items: flex-end;}
+.bp { position: fixed;bottom: 10px;left: 160px;display: flex;align-items: flex-end;}
 .sp { /* woahhh */position: fixed;bottom: 10px;right: 100px;display: flex;align-items: flex-end; }
 .dt { position: absolute;top: 35px;right: 10px;background: none !important; }
 .s1 { position: absolute; }
@@ -54,3 +52,5 @@ position: fixed;right: 10px;bottom: 10px !important;top: auto !important;width: 
 pre { text-align: center; }
 .nav { display: flex;justify-content: center;gap: 20px;margin: 10px 0; }
 @media (max-width: 900px) { .sd, .pt, .ph, .sr, .sp, .bp { display: none !important;}
+.cb {width: fit-content;max-width: 100%;background: white;color: black;border: 2px inset;padding: 6px 8px;font-family: Consolas, monospace;font-size: 14px;overflow-x: auto;white-space: pre;text-align: left;}
+pre,pre code {color: black !important;}
