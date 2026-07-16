@@ -5,7 +5,7 @@ auth.onAuthStateChanged((user) => {
 if (!checkedInitialAuth) {
 checkedInitialAuth = true;if (user) { resolveAuthReady(); } else { auth.signInAnonymously().catch(err => console.log("anon auth error:", err)); }
 } else if (user) { resolveAuthReady(); } });
-const cv = document.getElementById('cv');const ctx = cv.getContext('2d');const ci = document.getElementById('col');const si = document.getElementById('sz');const eb = document.getElementById('er');const fb = document.getElementById('fl');const slb = document.getElementById('sl');const ub = document.getElementById('un');const rb = document.getElementById('re');const cb = document.getElementById('clr');const dbtn = document.getElementById('dl');const pb = document.getElementById('pub');const shl = document.getElementById('shl');const cob = document.getElementById('cpy');const po = document.getElementById('po');const pm = document.getElementById('pm');const cp = document.getElementById('cp');
+const cv = document.getElementById('cv');const ctx = cv.getContext('2d');const ci = document.getElementById('col');const si = document.getElementById('sz');const eb = document.getElementById('er');const fb = document.getElementById('fl');const slb = document.getElementById('sl');const ub = document.getElementById('un');const rb = document.getElementById('re');const cb = document.getElementById('clr');const dbtn = document.getElementById('dl');const pb = document.getElementById('pub');const shl = document.getElementById('shl');const cob = document.getElementById('cpy');
 let dr = false;let bc = ci.value;let bs = Number(si.value);let m = 'draw';let lst = {x:0,y:0};const mu = 30;const us = [];const rs = [];
 let sel = null;let selDrag = null;let selScale = null;let selStart = null;let baseSnapshot = null;const HS = 8;
 function toWhitePNG() { const tmp = document.createElement('canvas');tmp.width = cv.width; tmp.height = cv.height;const t = tmp.getContext('2d');t.fillStyle = 'white';t.fillRect(0, 0, tmp.width, tmp.height);t.drawImage(cv, 0, 0);return tmp.toDataURL(); }
@@ -115,7 +115,6 @@ cb.addEventListener('click',()=>{
 if(sel)commitSel();ps();ctx.fillStyle='white';ctx.fillRect(0,0,cv.width,cv.height); });
 dbtn.addEventListener('click',()=>{
 if(sel)commitSel();const a=document.createElement('a');a.href=toWhitePNG();a.download='painting.png';a.click(); });
-cp.addEventListener('click',()=>{po.classList.remove('visible');});
 cob.addEventListener('click',async()=>{
 if(shl.value){await navigator.clipboard.writeText(shl.value);cob.textContent='※ Copied Link! ※';setTimeout(()=>cob.textContent='※ Copy Link ※',1000);} });
 function htr(hex){
@@ -141,7 +140,7 @@ if(!confirm("Are you sure you want to generate a link for this drawing?"))return
 try{
 await authReady;const user=auth.currentUser;if(!user){alert('Still connecting, please try again in a second!');return;}
 const authorId=user.uid;const td=Math.floor(Date.now()/86400000);
-const us=await db.ref('users/'+authorId).once('value');const uv=us.val()||{};
+const usnap=await db.ref('users/'+authorId).once('value');const uv=usnap.val()||{};
 const ut=uv.uploadDay===td?(uv.uploadsToday||0):0;
 if(ut>=30){alert("You've hit your limit of 30 drawings for today! Come back tomorrow to make more. :)");return;}
 const data=toWhitePNG();const id=Date.now().toString(36)+Math.random().toString(36).substring(2,8);
@@ -158,5 +157,5 @@ const hash=location.hash;if(!hash)return;const match=hash.match(/id=([^&]+)/);
 if(match){const id=match[1];const snap=await db.ref('drawings/'+id).get();
 if(snap.exists()){const{image}=snap.val();await rdu(image);}
 else{alert('The drawing was not found.');}}}
-document.addEventListener("mousedown",function playMusic(){const audio=document.getElementById("bgm");audio.play().catch(err=>console.log(err));document.removeEventListener("mousedown",playMusic);},true);
+document.addEventListener("mousedown",function playMusic(){const audio=document.getElementById("ps5");audio.play().catch(err=>console.log(err));document.removeEventListener("mousedown",playMusic);},true);
 ctx.fillStyle='white';ctx.fillRect(0,0,cv.width,cv.height);ps();lfh();
