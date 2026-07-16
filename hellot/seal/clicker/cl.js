@@ -140,7 +140,7 @@ subtitle: " Each click updates the <b>global</b> counter! ",
     ]
   }
 };
-window.currentLang = 'en';window.flyRegex = /seal will fly/i;const randomTextEl = document.getElementById("okcool");
+window.currentLang = localStorage.getItem('sealLang') || 'en';window.flyRegex = /seal will fly/i;const randomTextEl = document.getElementById("okcool");
 function setRandomText() {const lang = window.currentLang || 'en';const randomTexts = window.translations[lang].randomTexts;const i = Math.floor(Math.random() * randomTexts.length);const chosen = randomTexts[i];randomTextEl.textContent = chosen;window.chosenText = chosen;return chosen; }
 window.chosenText = setRandomText();const bgm = document.getElementById("bgm");bgm.src = songs[Math.floor(Math.random() * songs.length)];
 document.addEventListener("click", function startMusic() {bgm.play().catch(()=>{}); document.removeEventListener("click", startMusic);}, { once: true });
@@ -158,4 +158,4 @@ window.flyRegex = /yap yap yap yoo/i;
 }window.chosenText = setRandomText();
 if (window.updateCounterText) {window.updateCounterText();
 }}
-const langSelect = document.getElementById('boring');langSelect.addEventListener('change', (e) => {updateLanguage(e.target.value);});
+const langSelect = document.getElementById('boring');langSelect.value = window.currentLang;updateLanguage(window.currentLang);langSelect.addEventListener('change', (e) => {localStorage.setItem('sealLang', e.target.value);updateLanguage(e.target.value);});
