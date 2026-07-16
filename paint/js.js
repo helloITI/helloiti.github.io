@@ -5,6 +5,7 @@ auth.onAuthStateChanged((user) => {
 if (!checkedInitialAuth) {
 checkedInitialAuth = true;if (user) { resolveAuthReady(); } else { auth.signInAnonymously().catch(err => console.log("anon auth error:", err)); }
 } else if (user) { resolveAuthReady(); } });
+function getDeviceId() {let id = localStorage.getItem('pdid');if (!id) {id = (crypto.randomUUID ? crypto.randomUUID() : (Date.now().toString(36) + Math.random().toString(36).slice(2)));localStorage.setItem('pdid', id);}return id;}const deviceId = getDeviceId();
 const cv = document.getElementById('cv');const ctx = cv.getContext('2d');const ci = document.getElementById('col');const si = document.getElementById('sz');const eb = document.getElementById('er');const fb = document.getElementById('fl');const slb = document.getElementById('sl');const ub = document.getElementById('un');const rb = document.getElementById('re');const cb = document.getElementById('clr');const dbtn = document.getElementById('dl');const pb = document.getElementById('pub');const shl = document.getElementById('shl');const cob = document.getElementById('cpy');
 let dr = false;let bc = ci.value;let bs = Number(si.value);let m = 'draw';let lst = {x:0,y:0};const mu = 30;const us = [];const rs = [];
 let sel = null;let selDrag = null;let selScale = null;let selStart = null;let baseSnapshot = null;const HS = 8;
@@ -140,12 +141,16 @@ if(!confirm("Are you sure you want to generate a link for this drawing?"))return
 try{
 await authReady;const user=auth.currentUser;if(!user){alert('Still connecting, please try again in a second!');return;}
 const authorId=user.uid;const td=Math.floor(Date.now()/86400000);
-const usnap=await db.ref('users/'+authorId).once('value');const uv=usnap.val()||{};
+const [usnap,devBanSnap]=await Promise.all([db.ref('users/'+authorId).once('value'),db.ref('deviceBans/'+deviceId).once('value')]);
+const uv=usnap.val()||{};
+if(uv.banned===true){alert('※ Your account has been banned from publishing drawings. ※');return;}
+if(devBanSnap.exists()&&devBanSnap.val()===true){alert('※ This device has been banned from publishing drawings. ※');return;}
 const ut=uv.uploadDay===td?(uv.uploadsToday||0):0;
 if(ut>=30){alert("You've hit your limit of 30 drawings for today! Come back tomorrow to make more. :)");return;}
 const data=toWhitePNG();const id=Date.now().toString(36)+Math.random().toString(36).substring(2,8);
 await db.ref('drawings/'+id).set({image:data,created:firebase.database.ServerValue.TIMESTAMP,authorId:authorId});
-await db.ref('users/'+authorId).update({lastUpload:firebase.database.ServerValue.TIMESTAMP,drawingCount:firebase.database.ServerValue.increment(1),uploadDay:td,uploadsToday:ut+1});
+await db.ref('users/'+authorId).update({lastUpload:firebase.database.ServerValue.TIMESTAMP,drawingCount:firebase.database.ServerValue.increment(1),uploadDay:td,uploadsToday:ut+1,deviceId:deviceId});
+await db.ref('devices/'+deviceId+'/uids/'+authorId).set(true);
 const url=`${location.origin}${location.pathname}#id=${id}`;
 shl.value=url;history.replaceState(null,'',`#id=${id}`);
 alert('Done! Go to https://helloiti.github.io/paint/gallery to publish your drawing there!\n(You need to have an account in order to publish your drawings to the gallery.)');
