@@ -24,4 +24,4 @@ h2 { margin: 25px 0 12px; }
 @media (max-width: 520px) {#gal, #fG { grid-template-columns: repeat(auto-fill, 120px); }.g-i img { width: 120px; height: 90px; }}
 #dB { background: #a44; }
 #pImg { width: 100%; max-width: 480px; border-radius: 8px; display: block; margin: 0 auto 12px; background: white; }
-#fG {display: flex;}
+#fG {display: flex;flex-wrap: wrap;justify-content: flex-start;gap: 12px;width: 100%;align-self: stretch;}
