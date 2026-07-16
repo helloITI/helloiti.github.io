@@ -143,8 +143,8 @@ await authReady;const user=auth.currentUser;if(!user){alert('Still connecting, p
 const authorId=user.uid;const td=Math.floor(Date.now()/86400000);
 const [usnap,devBanSnap]=await Promise.all([db.ref('users/'+authorId).once('value'),db.ref('deviceBans/'+deviceId).once('value')]);
 const uv=usnap.val()||{};
-if(uv.banned===true){alert('※ Your account has been banned from publishing drawings. ※');return;}
-if(devBanSnap.exists()&&devBanSnap.val()===true){alert('※ This device has been banned from publishing drawings. ※');return;}
+if(uv.banned===true){alert('Your account has been banned from publishing drawings.');return;}
+if(devBanSnap.exists()&&devBanSnap.val()===true){alert('This device has been banned from publishing drawings.');return;}
 const ut=uv.uploadDay===td?(uv.uploadsToday||0):0;
 if(ut>=30){alert("You've hit your limit of 30 drawings for today! Come back tomorrow to make more. :)");return;}
 const data=toWhitePNG();const id=Date.now().toString(36)+Math.random().toString(36).substring(2,8);
