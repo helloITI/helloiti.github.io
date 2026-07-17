@@ -94,7 +94,9 @@ const rw=Math.round(Math.abs(pos.x-selStart.x));const rh=Math.round(Math.abs(pos
 selStart=null;
 if(rw<2||rh<2){redrawBase();baseSnapshot=null;return;}
 redrawBase();
-const imgData=ctx.getImageData(rx,ry,rw,rh);ctx.clearRect(rx,ry,rw,rh);
+const imgData=ctx.getImageData(rx,ry,rw,rh);
+// FIXED: Replaced clearRect with fillStyle white + fillRect to fix transparency issue
+ctx.fillStyle='white';ctx.fillRect(rx,ry,rw,rh);
 ps();
 baseSnapshot=document.createElement('canvas');baseSnapshot.width=cv.width;baseSnapshot.height=cv.height;baseSnapshot.getContext('2d').drawImage(cv,0,0);
 const oc=document.createElement('canvas');oc.width=rw;oc.height=rh;
