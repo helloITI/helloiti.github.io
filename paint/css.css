@@ -2,7 +2,7 @@
 body { margin: 0;font-family: 'wiiu', sans-serif;background: url('https://helloiti.github.io/assets/background.png') center/cover no-repeat fixed;padding: 20px;color: white;text-align: center;display: flex;flex-direction: column;align-items: center;cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, auto; }
 h1 { margin: 10px; }
 canvas { border: 1px solid #444;background: white;touch-action: none;-webkit-user-select: none;user-select: none; }
-a, button, input, label, div { cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, pointer; }
+a, button, input, label, div, body, html { cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, pointer; }
 canvas { cursor: url('https://helloiti.github.io/assets/pen.png') 0 0, pointer; }
 .ct { margin: 10px;display: flex;flex-wrap: wrap;gap: 10px;align-items: center; }
 button,
