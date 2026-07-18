@@ -52,4 +52,4 @@ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=
 rB.addEventListener('click',()=>{rC();proc();});
 function eS(){
 if(!mu)return;mu.currentTime=0;mu.play().catch(()=>{});window.removeEventListener('click',eS);}
-window.addEventListener('click',eS);rC();
+window.addEventListener('click',eS);rC();//
