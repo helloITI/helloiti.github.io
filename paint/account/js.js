@@ -1,7 +1,7 @@
 // hi skibibi!!! 🤣🤣🤣
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInAnonymously, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, updateEmail, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-import { getDatabase, ref, set, get, child, update, remove, onValue } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+import { getDatabase, ref, set, get, child, update, remove, onValue, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
 const [_a,_b,_c,_d,_e,_f,_g,_h] = ["QUl6YVN5Qmx6WG45YnlnZU5fMEF5RFFIWURmMlQydk82NldBemZ3","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZWFwcC5jb20","aHR0cHM6Ly9wYWludC1wcm9qZWN0LWUzZWNkLWRlZmF1bHQtcnRkYi5ldXJvcGUtd2VzdDEuZmlyZWJhc2VkYXRhYmFzZS5hcHA","cGFpbnQtcHJvamVjdC1lM2VjZA","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZXN0b3JhZ2UuYXBw","MTQxMTE0MTc3MzE3","MToxNDExMTQxNzczMTc6d2ViOmQ2Yzc4MTU1ZjI4MzdlN2I0YTBjY2M","Ry0yNTNDMUhaQjFW"].map(atob);
 const firebaseConfig = {apiKey:_a,authDomain:_b,databaseURL:_c,projectId:_d,storageBucket:_e,messagingSenderId:_f,appId:_g,measurementId:_h};const app = initializeApp(firebaseConfig);const auth = getAuth(app);const db = getDatabase(app);const rk = atob("NkxkS1Zpd3RBQUFBQUw2TW1TWVFXOGE3M0phTHhmX2kxMGxNTWxrRQ");
 function getDeviceId(){let id=localStorage.getItem('pdid');if(!id){id=(crypto.randomUUID?crypto.randomUUID():(Date.now().toString(36)+Math.random().toString(36).slice(2)));localStorage.setItem('pdid',id);}return id;}const deviceId=getDeviceId();
@@ -54,28 +54,19 @@ await signOut(auth);signInAnonymously(auth).catch(()=>{});showLoggedOutUI();}}el
 document.addEventListener("click",function playMusic(){const audio=document.getElementById("psv");if(audio)audio.play().catch(console.error);document.removeEventListener("click",playMusic);},{once:true});
 const btnDelAcc1=document.getElementById("btnDelAcc1");const delStep1=document.getElementById("delStep1");const delStep2=document.getElementById("delStep2");const delStep3=document.getElementById("delStep3");const btnDelYes1=document.getElementById("btnDelYes1");const btnDelNo1=document.getElementById("btnDelNo1");const btnDelYes2=document.getElementById("btnDelYes2");const btnDelNo2=document.getElementById("btnDelNo2");const btnDelFinal=document.getElementById("btnDelFinal");const btnDelNo3=document.getElementById("btnDelNo3");const delEM=document.getElementById("delEM");const delPA=document.getElementById("delPA");const delMsg=document.getElementById("delMsg");
 function resetDelSteps(){delStep1.style.display="none";delStep2.style.display="none";delStep3.style.display="none";if(delEM)delEM.value="";if(delPA)delPA.value="";delMsg.textContent="";}
-btnDelAcc1.onclick=()=>{resetDelSteps();delStep1.style.display="block";};
-btnDelNo1.onclick=()=>{resetDelSteps();};
-btnDelYes1.onclick=()=>{delStep1.style.display="none";delStep2.style.display="block";};
-btnDelNo2.onclick=()=>{resetDelSteps();};
-btnDelYes2.onclick=()=>{delStep2.style.display="none";delStep3.style.display="block";};
-btnDelNo3.onclick=()=>{resetDelSteps();};
+btnDelAcc1.onclick=()=>{resetDelSteps();delStep1.style.display="block";};btnDelNo1.onclick=()=>{resetDelSteps();};btnDelYes1.onclick=()=>{delStep1.style.display="none";delStep2.style.display="block";};btnDelNo2.onclick=()=>{resetDelSteps();};btnDelYes2.onclick=()=>{delStep2.style.display="none";delStep3.style.display="block";};btnDelNo3.onclick=()=>{resetDelSteps();};
 btnDelFinal.onclick=async()=>{
 delMsg.textContent="";
 const user=auth.currentUser;
-if(!user){delMsg.textContent="※ Something went wrong. ※";return;}
-try{let cred;if(currentIsGoogle){
+if(!user){delMsg.textContent="※ Something went wrong. ※";return;}try{let cred;if(currentIsGoogle){
 manualAuthInProgress=true;const result=await signInWithPopup(auth,new GoogleAuthProvider());cred=GoogleAuthProvider.credentialFromResult(result);manualAuthInProgress=false;
-}else{const email=delEM.value.trim().toLowerCase();const password=delPA.value;if(!email||!password){delMsg.textContent="Please fill out all fields.";return;}cred=EmailAuthProvider.credential(email,password);}
-if(!cred){delMsg.textContent="※ Authentication failed. ※";return;}
-await reauthenticateWithCredential(user,cred);
+}else{const email=delEM.value.trim().toLowerCase();const password=delPA.value;if(!email||!password){delMsg.textContent="Please fill out all fields.";return;}cred=EmailAuthProvider.credential(email,password);}if(!cred){delMsg.textContent="※ Authentication failed. ※";return;}await reauthenticateWithCredential(user,cred);
 const uid=user.uid;const snap=await get(child(ref(db),"users/"+uid));const uv=snap.exists()?snap.val():null;const username=uv?uv.username:null;const userEmail=uv?uv.email:(user.email||"");
 const updates={};updates["users/"+uid]=null;
-if(username)updates["usernames/"+username]=null;
-if(userEmail)updates["emails/"+emailKey(userEmail)]=null;
-await update(ref(db),updates);
-await user.delete();
-showLoggedOutUI();
-}catch(err){
-manualAuthInProgress=false;
+if(username)updates["usernames/"+username]=null;if(userEmail)updates["emails/"+emailKey(userEmail)]=null;
+const drawingsQuery = query(ref(db, "drawings"), orderByChild("authorId"), equalTo(uid));const drawingsSnap = await get(drawingsQuery);
+if (drawingsSnap.exists()) {
+drawingsSnap.forEach((childSnap) => {updates["drawings/" + childSnap.key] = null;
+});}const galleryQuery = query(ref(db, "galleryDrawings"), orderByChild("authorId"), equalTo(uid));const gallerySnap = await get(galleryQuery);if (gallerySnap.exists()) {gallerySnap.forEach((childSnap) => {
+updates["galleryDrawings/" + childSnap.key] = null;});}await update(ref(db),updates);await user.delete();showLoggedOutUI();}catch(err){manualAuthInProgress=false;
 if(err.code==="auth/wrong-password"||err.code==="auth/invalid-credential"){delMsg.textContent="※ Wrong email or password. ※";}else if(err.code==="auth/popup-closed-by-user"){delMsg.textContent="Re-authentication canceled.";}else{delMsg.textContent="※ Error: "+err.message+" ※";}}};
