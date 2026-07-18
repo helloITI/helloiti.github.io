@@ -95,7 +95,6 @@ selStart=null;
 if(rw<2||rh<2){redrawBase();baseSnapshot=null;return;}
 redrawBase();
 const imgData=ctx.getImageData(rx,ry,rw,rh);
-// FIXED: Replaced clearRect with fillStyle white + fillRect to fix transparency issue
 ctx.fillStyle='white';ctx.fillRect(rx,ry,rw,rh);
 ps();
 baseSnapshot=document.createElement('canvas');baseSnapshot.width=cv.width;baseSnapshot.height=cv.height;baseSnapshot.getContext('2d').drawImage(cv,0,0);
@@ -161,7 +160,9 @@ if(e.message&&e.message.includes('PERMISSION_DENIED')){alert('You are posting to
 else{alert('I could not generate your link... Error: '+e.message);}}});
 async function lfh(){
 const hash=location.hash;if(!hash)return;const match=hash.match(/id=([^&]+)/);
-if(match){const id=match[1];const snap=await db.ref('drawings/'+id).get();
-if(snap.exists()){const{image}=snap.val();await rdu(image);}
-else{alert('The drawing was not found.');}}}
-document.addEventListener("mousedown",function playMusic(){const audio=document.getElementById("ps5");audio.play().catch(err=>console.log(err));document.removeEventListener("mousedown",playMusic);},true);ctx.fillStyle='white';ctx.fillRect(0,0,cv.width,cv.height);ps();lfh();
+if(match){const id=match[1];
+const snap=await db.ref('drawings').orderByKey().equalTo(id).limitToFirst(1).once('value');
+if(snap.exists()){
+let drawingData=null;snap.forEach(child=>{drawingData=child.val();});
+if(drawingData&&drawingData.image){await rdu(drawingData.image);}}
+else{alert('The drawing was not found.');}}}}document.addEventListener("mousedown",function playMusic(){const audio=document.getElementById("ps5");audio.play().catch(err=>console.log(err));document.removeEventListener("mousedown",playMusic);},true);ctx.fillStyle='white';ctx.fillRect(0,0,cv.width,cv.height);ps();lfh();
