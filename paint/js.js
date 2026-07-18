@@ -165,4 +165,4 @@ const snap=await db.ref('drawings').orderByKey().equalTo(id).limitToFirst(1).onc
 if(snap.exists()){
 let drawingData=null;snap.forEach(child=>{drawingData=child.val();});
 if(drawingData&&drawingData.image){await rdu(drawingData.image);}}
-else{alert('The drawing was not found.');}}}}document.addEventListener("mousedown",function playMusic(){const audio=document.getElementById("ps5");audio.play().catch(err=>console.log(err));document.removeEventListener("mousedown",playMusic);},true);ctx.fillStyle='white';ctx.fillRect(0,0,cv.width,cv.height);ps();lfh();
+else{alert('The drawing was not found.');}}}document.addEventListener("mousedown",function playMusic(){const audio=document.getElementById("ps5");audio.play().catch(err=>console.log(err));document.removeEventListener("mousedown",playMusic);},true);ctx.fillStyle='white';ctx.fillRect(0,0,cv.width,cv.height);ps();lfh();
