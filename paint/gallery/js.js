@@ -43,13 +43,15 @@ if (err.message && err.message.includes('PERMISSION_DENIED')) { alert('※ You c
 else { console.error(err); } } };
 async function loadDrawings() {
 try {
-const gSnap = await db.ref('galleryDrawings').get();
+const gSnap = await db.ref('galleryDrawings').limitToLast(50).once('value');
 if (!gSnap.exists()) {
 gallery.innerHTML = '<p style="color:white;font-size:20px;">There are no drawings yet, maybe try uploading one?</p>';return; }
 drawingIds = Object.keys(gSnap.val());drawings = [];
 for (const id of drawingIds) {
-const dSnap = await db.ref('drawings/' + id).get();
-drawings.push(dSnap.exists() ? dSnap.val() : null); }
+const dSnap = await db.ref('drawings').orderByKey().equalTo(id).limitToFirst(1).once('value');
+let drawingData = null;
+dSnap.forEach(child => { drawingData = child.val(); });
+drawings.push(drawingData); }
 displayGallery();displayFavorites();
 } catch (err) { console.error(err); } }
 function displayGallery() {
@@ -99,7 +101,4 @@ if (err.message && err.message.includes('PERMISSION_DENIED')) { alert('You can o
 else { console.error(err); } } });
 togFavB.addEventListener('click', () => {
 const hidden = favG.style.display === 'none';favG.style.display = hidden ? 'grid' : 'none';togFavB.textContent = hidden ? 'Hide' : 'Show'; });
-let firstAuthFired = false;
-auth.onAuthStateChanged((user) => {
-if (!firstAuthFired) { firstAuthFired = true;resolveAuthReady(); }
-loadDrawings(); });
+let firstAuthFired = false;auth.onAuthStateChanged((user) => {if (!firstAuthFired) { firstAuthFired = true;resolveAuthReady(); }loadDrawings(); });
