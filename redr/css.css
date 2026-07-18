@@ -17,4 +17,4 @@ footer { font-size: 13px;color: #333;background: rgba(255,255,255,0.9);border-ra
 @media (max-width: 560px) { .controls { grid-template-columns: 1fr; } }
 html { scroll-behavior: smooth;scrollbar-width: none; }
 body { overflow-y: scroll; }
-body::-webkit-scrollbar { display: none; }
+body::-webkit-scrollbar { display: none; }/**/
