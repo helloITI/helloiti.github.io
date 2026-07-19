@@ -152,19 +152,22 @@ try{
 await db.ref('drawings/'+id).set({image:data,created:firebase.database.ServerValue.TIMESTAMP,authorId:authorId});
 console.log("[publish] step 1 OK");
 }catch(e1){
-console.error("[publish] step 1 failed (drawings/"+id+"):",e1.code,e1.message);throw e1;}
-const metaUpdate = usnap.exists()
-? db.ref('users/'+authorId).update({lastUpload:firebase.database.ServerValue.TIMESTAMP,drawingCount:firebase.database.ServerValue.increment(1),uploadDay:td,uploadsToday:ut+1,deviceId:deviceId})
-: db.ref('users/'+authorId).set({lastUpload:firebase.database.ServerValue.TIMESTAMP,drawingCount:1,uploadDay:td,uploadsToday:1,deviceId:deviceId});
+console.error("[publish] step 1 FAILED (drawings/"+id+"):",e1.code,e1.message);throw e1;
+const userRef=db.ref('users/'+authorId);
+const existingCount=usnap.exists()&&usnap.val().drawingCount!=null?usnap.val().drawingCount:0;
 Promise.all([
-metaUpdate,
+userRef.child('lastUpload').set(firebase.database.ServerValue.TIMESTAMP),
+userRef.child('drawingCount').set(existingCount+1),
+userRef.child('uploadDay').set(td),
+userRef.child('uploadsToday').set(ut+1),
+userRef.child('deviceId').set(deviceId),
 db.ref('devices/'+deviceId+'/uids/'+authorId).set(true)
 ]).catch(e=>console.warn("[publish] metadata update failed (non-fatal):",e.code,e.message));
 const url=`${location.origin}${location.pathname}#id=${id}`;
 shl.value=url;history.replaceState(null,'',`#id=${id}`);
 alert('Done! Go to https://helloiti.github.io/paint/gallery to publish your drawing there!\n(You need to have an account in order to publish your drawings to the gallery.)');
 }catch(e){
-console.error("[publish] final catch:",e.code,e.message,e);
+console.error("[publish] FINAL CATCH:",e.code,e.message,e);
 if(e.message&&e.message.includes('PERMISSION_DENIED')){alert('You are posting too fast, or have hit your limit from posting drawings.\nPlease wait a bit or try again tomorrow!');}
 else{alert('I could not generate your link... Error: '+e.message);}}});
 async function lfh(){
