@@ -39,8 +39,7 @@ ctx.fillStyle='white';ctx.strokeStyle='#00aaff';ctx.lineWidth=1;
 ctx.fillRect(hx-HS/2,hy-HS/2,HS,HS);ctx.strokeRect(hx-HS/2,hy-HS/2,HS,HS); }
 ctx.restore(); }
 function drawSel() {
-if (!sel) return;
-redrawBase();
+if (!sel) return;redrawBase();
 ctx.save();
 if (selDrag || selScale) ctx.globalAlpha = 0.5;
 ctx.drawImage(sel.img,sel.x,sel.y,sel.w,sel.h);
@@ -56,8 +55,7 @@ if (m==='select') {
 if (sel) {
 const h = hitHandle(pos,sel);
 if (h) { selScale={handle:h,startX:pos.x,startY:pos.y,origSel:{x:sel.x,y:sel.y,w:sel.w,h:sel.h,img:sel.img}};return; }
-if (insideSel(pos,sel)) { selDrag={startX:pos.x,startY:pos.y,origX:sel.x,origY:sel.y};return; }
-commitSel(); }
+if (insideSel(pos,sel)) { selDrag={startX:pos.x,startY:pos.y,origX:sel.x,origY:sel.y};return; }commitSel(); }
 selStart=pos;dr=true;
 baseSnapshot=document.createElement('canvas');baseSnapshot.width=cv.width;baseSnapshot.height=cv.height;baseSnapshot.getContext('2d').drawImage(cv,0,0);
 return; }
@@ -92,11 +90,9 @@ const pos=gp(e);
 const rx=Math.round(Math.min(selStart.x,pos.x));const ry=Math.round(Math.min(selStart.y,pos.y));
 const rw=Math.round(Math.abs(pos.x-selStart.x));const rh=Math.round(Math.abs(pos.y-selStart.y));
 selStart=null;
-if(rw<2||rh<2){redrawBase();baseSnapshot=null;return;}
-redrawBase();
+if(rw<2||rh<2){redrawBase();baseSnapshot=null;return;}redrawBase();
 const imgData=ctx.getImageData(rx,ry,rw,rh);
-ctx.fillStyle='white';ctx.fillRect(rx,ry,rw,rh);
-ps();
+ctx.fillStyle='white';ctx.fillRect(rx,ry,rw,rh);ps();
 baseSnapshot=document.createElement('canvas');baseSnapshot.width=cv.width;baseSnapshot.height=cv.height;baseSnapshot.getContext('2d').drawImage(cv,0,0);
 const oc=document.createElement('canvas');oc.width=rw;oc.height=rh;
 oc.getContext('2d').putImageData(imgData,0,0);sel={x:rx,y:ry,w:rw,h:rh,img:oc};
@@ -142,20 +138,44 @@ if(!confirm("Are you sure you want to generate a link for this drawing?"))return
 try{
 await authReady;const user=auth.currentUser;if(!user){alert('Still connecting, please try again in a second!');return;}
 const authorId=user.uid;const td=Math.floor(Date.now()/86400000);
+console.log("[publish] uid:",authorId,"isAnonymous:",user.isAnonymous,"provider:",user.providerData.map(p=>p.providerId));
 const [usnap,devBanSnap]=await Promise.all([db.ref('users/'+authorId).once('value'),db.ref('deviceBans/'+deviceId).once('value')]);
 const uv=usnap.val()||{};
+console.log("[publish] current user profile:",uv);
 if(uv.banned===true){alert('Your account has been banned from publishing drawings.');return;}
 if(devBanSnap.exists()&&devBanSnap.val()===true){alert('This device has been banned from publishing drawings.');return;}
 const ut=uv.uploadDay===td?(uv.uploadsToday||0):0;
 if(ut>=30){alert("You've hit your limit of 30 drawings for today! Come back tomorrow to make more. :)");return;}
 const data=toWhitePNG();const id=Date.now().toString(36)+Math.random().toString(36).substring(2,8);
+console.log("[publish] step 1: writing drawings/"+id);
+try{
 await db.ref('drawings/'+id).set({image:data,created:firebase.database.ServerValue.TIMESTAMP,authorId:authorId});
+console.log("[publish] step 1 OK");
+}catch(e1){
+console.error("[publish] step 1 FAILED (drawings/"+id+"):",e1.code,e1.message);
+throw e1;
+}
+console.log("[publish] step 2: writing users/"+authorId,{lastUpload:'SERVER',drawingCount:'increment(1)',uploadDay:td,uploadsToday:ut+1,deviceId});
+try{
 await db.ref('users/'+authorId).update({lastUpload:firebase.database.ServerValue.TIMESTAMP,drawingCount:firebase.database.ServerValue.increment(1),uploadDay:td,uploadsToday:ut+1,deviceId:deviceId});
+console.log("[publish] step 2 OK");
+}catch(e2){
+console.error("[publish] step 2 FAILED (users/"+authorId+"):",e2.code,e2.message);
+throw e2;
+}
+console.log("[publish] step 3: writing devices/"+deviceId+"/uids/"+authorId);
+try{
 await db.ref('devices/'+deviceId+'/uids/'+authorId).set(true);
+console.log("[publish] step 3 OK");
+}catch(e3){
+console.error("[publish] step 3 failed (devices/"+deviceId+"/uids/"+authorId+"):",e3.code,e3.message);
+throw e3;
+}
 const url=`${location.origin}${location.pathname}#id=${id}`;
 shl.value=url;history.replaceState(null,'',`#id=${id}`);
 alert('Done! Go to https://helloiti.github.io/paint/gallery to publish your drawing there!\n(You need to have an account in order to publish your drawings to the gallery.)');
 }catch(e){
+console.error("[publish] FINAL CATCH:",e.code,e.message,e);
 if(e.message&&e.message.includes('PERMISSION_DENIED')){alert('You are posting too fast, or have hit your limit from posting drawings.\nPlease wait a bit or try again tomorrow!');}
 else{alert('I could not generate your link... Error: '+e.message);}}});
 async function lfh(){
