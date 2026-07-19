@@ -1,4 +1,4 @@
-// hi skibibi!!! 🤣🤣¾
+// hi skibibi!!! 🤣🤣🤣
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInAnonymously, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, updateEmail, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 import { getDatabase, ref, set, get, child, update, remove, onValue, query, orderByChild, equalTo, limitToFirst } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
