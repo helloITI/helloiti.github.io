@@ -134,27 +134,25 @@ if(y>0){const up=pk(nx,y-1);if(cm({r:data[up],g:data[up+1],b:data[up+2],a:data[u
 if(y<h-1){const dn=pk(nx,y+1);if(cm({r:data[dn],g:data[dn+1],b:data[dn+2],a:data[dn+3]},sc)){if(!rd){stk.push({x:nx,y:y+1});rd=true;}}else if(rd){rd=false;}}}}
 ctx.putImageData(id,0,0);}
 pb.addEventListener('click',async()=>{
-if(!confirm("Are you sure you want to generate a link for this drawing?"))return;if(sel)commitSel();
+if(!confirm("Are you sure you want to generate a link for this drawing?"))return;
+if(sel)commitSel();
 try{
-await authReady;const user=auth.currentUser;if(!user){alert('Still connecting, please try again in a second!');return;}
-const authorId=user.uid;const td=Math.floor(Date.now()/86400000);
-console.log("[publish] uid:",authorId,"isAnonymous:",user.isAnonymous,"provider:",user.providerData.map(p=>p.providerId));
+await authReady;
+const user=auth.currentUser;
+if(!user){alert('Still connecting, please try again in a second!');return;}
+const authorId=user.uid;
+const td=Math.floor(Date.now()/86400000);
 const [usnap,devBanSnap]=await Promise.all([db.ref('users/'+authorId).once('value'),db.ref('deviceBans/'+deviceId).once('value')]);
 const uv=usnap.val()||{};
-console.log("[publish] current user profile:",uv);
 if(uv.banned===true){alert('Your account has been banned from publishing drawings.');return;}
 if(devBanSnap.exists()&&devBanSnap.val()===true){alert('This device has been banned from publishing drawings.');return;}
 const ut=uv.uploadDay===td?(uv.uploadsToday||0):0;
 if(ut>=30){alert("You've hit your limit of 30 drawings for today! Come back tomorrow to make more. :)");return;}
-const data=toWhitePNG();const id=Date.now().toString(36)+Math.random().toString(36).substring(2,8);
-console.log("[publish] step 1: writing drawings/"+id);
-try{
-await db.ref('drawings/'+id).set({image:data,created:firebase.database.ServerValue.TIMESTAMP,authorId:authorId});
-console.log("[publish] step 1 OK");
-}catch(e1){
-console.error("[publish] step 1 FAILED (drawings/"+id+"):",e1.code,e1.message);throw e1;
+const imgData=toWhitePNG();
+const id=Date.now().toString(36)+Math.random().toString(36).substring(2,8);
+await db.ref('drawings/'+id).set({image:imgData,created:firebase.database.ServerValue.TIMESTAMP,authorId:authorId});
+const existingCount=(usnap.exists()&&usnap.val().drawingCount!=null)?usnap.val().drawingCount:0;
 const userRef=db.ref('users/'+authorId);
-const existingCount=usnap.exists()&&usnap.val().drawingCount!=null?usnap.val().drawingCount:0;
 Promise.all([
 userRef.child('lastUpload').set(firebase.database.ServerValue.TIMESTAMP),
 userRef.child('drawingCount').set(existingCount+1),
@@ -162,12 +160,12 @@ userRef.child('uploadDay').set(td),
 userRef.child('uploadsToday').set(ut+1),
 userRef.child('deviceId').set(deviceId),
 db.ref('devices/'+deviceId+'/uids/'+authorId).set(true)
-]).catch(e=>console.warn("[publish] metadata update failed (non-fatal):",e.code,e.message));
-const url=`${location.origin}${location.pathname}#id=${id}`;
-shl.value=url;history.replaceState(null,'',`#id=${id}`);
+]).catch(function(err){console.warn("[publish] metadata update failed (non-fatal):",err.code,err.message);});
+const url=location.origin+location.pathname+'#id='+id;
+shl.value=url;
+history.replaceState(null,'',url);
 alert('Done! Go to https://helloiti.github.io/paint/gallery to publish your drawing there!\n(You need to have an account in order to publish your drawings to the gallery.)');
 }catch(e){
-console.error("[publish] FINAL CATCH:",e.code,e.message,e);
 if(e.message&&e.message.includes('PERMISSION_DENIED')){alert('You are posting too fast, or have hit your limit from posting drawings.\nPlease wait a bit or try again tomorrow!');}
 else{alert('I could not generate your link... Error: '+e.message);}}});
 async function lfh(){
