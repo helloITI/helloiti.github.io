@@ -148,7 +148,11 @@ if(uv.banned===true){alert('Your account has been banned from publishing drawing
 if(devBanSnap.exists()&&devBanSnap.val()===true){alert('This device has been banned from publishing drawings.');return;}
 const ut=uv.uploadDay===td?(uv.uploadsToday||0):0;
 if(ut>=30){alert("You've hit your limit of 30 drawings for today! Come back tomorrow to make more. :)");return;}
+const timeSinceLast=Date.now()-(uv.lastUpload||0);
+if(uv.lastUpload&&timeSinceLast<62000){alert('Please wait '+Math.ceil((62000-timeSinceLast)/1000)+' more seconds before publishing again!');return;}
 const imgData=toWhitePNG();
+console.log("[publish] image size:",imgData.length,"timeSinceLast:",timeSinceLast);
+if(imgData.length>=295000){alert('Your drawing is too large to publish ('+Math.round(imgData.length/1024)+'KB). Try drawing less or using simpler colors!');return;}
 const id=Date.now().toString(36)+Math.random().toString(36).substring(2,8);
 await db.ref('drawings/'+id).set({image:imgData,created:firebase.database.ServerValue.TIMESTAMP,authorId:authorId});
 const existingCount=(usnap.exists()&&usnap.val().drawingCount!=null)?usnap.val().drawingCount:0;
