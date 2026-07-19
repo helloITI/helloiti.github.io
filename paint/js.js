@@ -143,20 +143,25 @@ if(!user){alert('Still connecting, please try again in a second!');return;}
 const authorId=user.uid;
 const td=Math.floor(Date.now()/86400000);
 const [usnap,devBanSnap]=await Promise.all([db.ref('users/'+authorId).once('value'),db.ref('deviceBans/'+deviceId).once('value')]);
+const serverNow=(await db.ref('.info/serverTimeOffset').once('value')).val()+Date.now();
 const uv=usnap.val()||{};
 if(uv.banned===true){alert('Your account has been banned from publishing drawings.');return;}
 if(devBanSnap.exists()&&devBanSnap.val()===true){alert('This device has been banned from publishing drawings.');return;}
 const ut=uv.uploadDay===td?(uv.uploadsToday||0):0;
 if(ut>=30){alert("You've hit your limit of 30 drawings for today! Come back tomorrow to make more. :)");return;}
-const timeSinceLast=Date.now()-(uv.lastUpload||0);
+const timeSinceLast=serverNow-(uv.lastUpload||0);
+console.log('[publish] serverNow:',serverNow,'lastUpload:',uv.lastUpload,'timeSinceLast:',timeSinceLast,'uploadDay:',uv.uploadDay,'td:',td,'uploadsToday:',uv.uploadsToday);
 if(uv.lastUpload&&timeSinceLast<62000){alert('Please wait '+Math.ceil((62000-timeSinceLast)/1000)+' more seconds before publishing again!');return;}
 const imgData=toWhitePNG();
-console.log("[publish] image size:",imgData.length,"timeSinceLast:",timeSinceLast);
+console.log("[publish] image size:",imgData.length);
 if(imgData.length>=295000){alert('Your drawing is too large to publish ('+Math.round(imgData.length/1024)+'KB). Try drawing less or using simpler colors!');return;}
-const id=Date.now().toString(36)+Math.random().toString(36).substring(2,8);
-await db.ref('drawings/'+id).set({image:imgData,created:firebase.database.ServerValue.TIMESTAMP,authorId:authorId});
 const existingCount=(usnap.exists()&&usnap.val().drawingCount!=null)?usnap.val().drawingCount:0;
 const userRef=db.ref('users/'+authorId);
+const dayChanged=uv.uploadDay!==td;
+if(dayChanged&&usnap.exists()){
+try{await Promise.all([userRef.child('uploadDay').set(td),userRef.child('uploadsToday').set(0)]);}catch(er){console.warn('[publish] day reset failed:',er.message);}}
+const id=Date.now().toString(36)+Math.random().toString(36).substring(2,8);
+await db.ref('drawings/'+id).set({image:imgData,created:firebase.database.ServerValue.TIMESTAMP,authorId:authorId});
 Promise.all([
 userRef.child('lastUpload').set(firebase.database.ServerValue.TIMESTAMP),
 userRef.child('drawingCount').set(existingCount+1),
