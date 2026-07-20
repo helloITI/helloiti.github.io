@@ -133,13 +133,15 @@ data[pos]=tc.r;data[pos+1]=tc.g;data[pos+2]=tc.b;data[pos+3]=tc.a;
 if(y>0){const up=pk(nx,y-1);if(cm({r:data[up],g:data[up+1],b:data[up+2],a:data[up+3]},sc)){if(!ru){stk.push({x:nx,y:y-1});ru=true;}}else if(ru){ru=false;}}
 if(y<h-1){const dn=pk(nx,y+1);if(cm({r:data[dn],g:data[dn+1],b:data[dn+2],a:data[dn+3]},sc)){if(!rd){stk.push({x:nx,y:y+1});rd=true;}}else if(rd){rd=false;}}}}
 ctx.putImageData(id,0,0);}
-pb.addEventListener('click',async()=>{
+let _pbBusy=false;pb.addEventListener('click',async()=>{if(_pbBusy)return;_pbBusy=true;setTimeout(()=>_pbBusy=false,5000);
+try{await authReady;const user=auth.currentUser;if(user&&user.isAnonymous){alert('Sorry, but you need an account in order to publish your drawings.');return;}}catch(e){console.log("Auth catch:",e);}
 if(!confirm("Are you sure you want to generate a link for this drawing?"))return;
 if(sel)commitSel();
 try{
 await authReady;
 const user=auth.currentUser;
 if(!user){alert('Still connecting, please try again in a second!');return;}
+if(user.isAnonymous){alert('Sorry, but you need an account in order to publish your drawings.\nGo to https://helloiti.github.io/paint/account/ to do so.');return;}
 const authorId=user.uid;
 const td=Math.floor(Date.now()/86400000);
 const [usnap,devBanSnap]=await Promise.all([db.ref('users/'+authorId).once('value'),db.ref('deviceBans/'+deviceId).once('value')]);
@@ -148,10 +150,10 @@ const uv=usnap.val()||{};
 if(uv.banned===true){alert('Your account has been banned from publishing drawings.');return;}
 if(devBanSnap.exists()&&devBanSnap.val()===true){alert('This device has been banned from publishing drawings.');return;}
 const ut=uv.uploadDay===td?(uv.uploadsToday||0):0;
-if(ut>=30){alert("You've hit your limit of 30 drawings for today! Come back tomorrow to make more. :)");return;}
+if(ut>=30){alert("You've hit your limit of 30 drawings for today!\nCome back tomorrow to make more. :)");return;}
 const timeSinceLast=serverNow-(uv.lastUpload||0);
 console.log('[publish] serverNow:',serverNow,'lastUpload:',uv.lastUpload,'timeSinceLast:',timeSinceLast,'uploadDay:',uv.uploadDay,'td:',td,'uploadsToday:',uv.uploadsToday);
-if(uv.lastUpload&&timeSinceLast<62000){alert('Please wait '+Math.ceil((62000-timeSinceLast)/1000)+' more seconds before publishing again!');return;}
+if(uv.lastUpload&&timeSinceLast<65000){alert('Please wait '+Math.ceil((62000-timeSinceLast)/1000)+' more seconds before publishing again!');return;}
 const imgData=toWhitePNG();
 console.log("[publish] image size:",imgData.length);
 if(imgData.length>=295000){alert('Your drawing is too large to publish ('+Math.round(imgData.length/1024)+'KB). Try drawing less or using simpler colors!');return;}
@@ -173,7 +175,7 @@ db.ref('devices/'+deviceId+'/uids/'+authorId).set(true)
 const url=location.origin+location.pathname+'#id='+id;
 shl.value=url;
 history.replaceState(null,'',url);
-alert('Done! Go to https://helloiti.github.io/paint/gallery to publish your drawing there!\n(You need to have an account in order to publish your drawings to the gallery.)');
+alert('Done! Go to https://helloiti.github.io/paint/gallery to publish your drawing there!\n:D');
 }catch(e){
 if(e.message&&e.message.includes('PERMISSION_DENIED')){alert('You are posting too fast, or have hit your limit from posting drawings.\nPlease wait a bit or try again tomorrow!');}
 else{alert('I could not generate your link... Error: '+e.message);}}});
