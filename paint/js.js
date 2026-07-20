@@ -115,6 +115,10 @@ dbtn.addEventListener('click',()=>{
 if(sel)commitSel();const a=document.createElement('a');a.href=toWhitePNG();a.download='painting.png';a.click(); });
 cob.addEventListener('click',async()=>{
 if(shl.value){await navigator.clipboard.writeText(shl.value);cob.textContent='※ Copied Link! ※';setTimeout(()=>cob.textContent='※ Copy Link ※',1000);} });
+// ctrl + z for undo
+// ctrl + y for redo
+document.addEventListener('keydown', (e) => {if (e.ctrlKey) {if (e.key.toLowerCase() === 'z') {
+e.preventDefault();ub.click();} else if (e.key.toLowerCase() === 'y') {e.preventDefault();rb.click();}}});
 function htr(hex){
 let c;if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
 c=hex.substring(1).split('');if(c.length===3)c=[c[0],c[0],c[1],c[1],c[2],c[2]];
@@ -137,8 +141,7 @@ let _pbBusy=false;pb.addEventListener('click',async()=>{if(_pbBusy)return;_pbBus
 try{await authReady;const user=auth.currentUser;if(user&&user.isAnonymous){alert('Sorry, but you need an account in order to publish your drawings.');return;}}catch(e){console.log("Auth catch:",e);}
 if(!confirm("Are you sure you want to generate a link for this drawing?"))return;
 if(sel)commitSel();
-try{
-await authReady;
+try{await authReady;
 const user=auth.currentUser;
 if(!user){alert('Still connecting, please try again in a second!');return;}
 if(user.isAnonymous){alert('Sorry, but you need an account in order to publish your drawings.\nGo to https://helloiti.github.io/paint/account/ to do so.');return;}
