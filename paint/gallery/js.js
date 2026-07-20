@@ -5,9 +5,7 @@ firebase.initializeApp(firebaseConfig);const db = firebase.database();const auth
 auth.onAuthStateChanged((user) => {
 if (!checkedInitialAuth) {
 checkedInitialAuth = true;
-if (!user) {
-auth.signInAnonymously().catch(err => console.log("anon auth error:", err));
-}} });
+if (!user) {auth.signInAnonymously().catch(err => console.log("anon auth error:", err));}} });
 let resolveAuthReady;const authReady = new Promise(res => { resolveAuthReady = res; });
 const gallery = $('gal');const favG = $('fG');const input = $('dLI');const addBtn = $('aDB');const pOvr = $('pO');const pMsg = $('pM');const pImg = $('pImg');const delBtn = $('dB');const clPo = $('ok');const togFavB = $('tF');
 clPo.addEventListener('click', () => pOvr.style.display = 'none');
@@ -25,8 +23,7 @@ if (snap.exists()) {
 const val = snap.val();
 authorUsernames[uid] = "@" + (typeof val === 'string' ? val : val.username || "Anonymous");
 return authorUsernames[uid]; }
-} catch {}
-return "Anonymous"; }
+} catch {}return "Anonymous"; }
 async function sPFD(d, id) {
 drawID = id;drawAuthorId = d.authorId;const user = auth.currentUser;const username = await fetchUsername(d.authorId);
 pMsg.textContent = `Drawing by: ${username}`;
@@ -39,7 +36,7 @@ if (!confirm('Remove this drawing from the gallery?')) return;
 try {
 await db.ref('galleryDrawings/' + drawID).remove();pOvr.style.display = 'none';loadDrawings();
 } catch (err) {
-if (err.message && err.message.includes('PERMISSION_DENIED')) { alert('※ You can only remove your own drawings! ※'); }
+if (err.message && err.message.includes('PERMISSION_DENIED')) { alert('You can only remove your own drawings!'); }
 else { console.error(err); } } };
 async function loadDrawings() {
 try {
@@ -52,8 +49,7 @@ const dSnap = await db.ref('drawings').orderByKey().equalTo(id).limitToFirst(1).
 let drawingData = null;
 dSnap.forEach(child => { drawingData = child.val(); });
 drawings.push(drawingData); }
-displayGallery();displayFavorites();
-} catch (err) { console.error(err); } }
+displayGallery();displayFavorites();} catch (err) { console.error(err); } }
 function displayGallery() {
 gallery.innerHTML = '';const user = auth.currentUser;
 drawings.forEach((d, i) => {
@@ -67,16 +63,15 @@ btn.addEventListener('click', async e => {
 e.stopPropagation();
 if (btn._busy) return;btn._busy = true;await authReady;const user = auth.currentUser;
 if (!user) { alert('Could not connect to the server, please refresh the page!');btn._busy = false;return; }
+if (user.isAnonymous) { alert('You need a Paint Account to like drawings!\nGo to https://helloiti.github.io to do so.');btn._busy = false;return; }
 const likeRef = db.ref(`drawings/${id}/likes/${user.uid}`);
 const map = JSON.parse(localStorage.getItem('lD') || '{}');
 const wasLiked = !!map[id];
-try {
-if (wasLiked) {
+try {if (wasLiked) {
 await likeRef.remove();delete map[id];
 const newCount = d.likes ? Math.max(0, Object.keys(d.likes).length - 1) : 0;
 btn.textContent = `💔 ${newCount}`;setTimeout(() => btn.textContent = `❤️ ${newCount}`, 600);
-} else {
-await likeRef.set(true);map[id] = true;
+} else {await likeRef.set(true);map[id] = true;
 const newCount = d.likes ? Object.keys(d.likes).length + 1 : 1;
 btn.textContent = `💖 ${newCount}`; }
 localStorage.setItem('lD', JSON.stringify(map));displayFavorites();
@@ -92,13 +87,9 @@ const img = cSI(drawings[i].image);img.addEventListener('click', () => sPFD(draw
 div.appendChild(img);favG.appendChild(div); }); }
 addBtn.addEventListener('click', async () => {
 await authReady;const user = auth.currentUser;
-if (!user || user.isAnonymous) { alert('You need to be logged in to a Paint Account to publish drawings in the gallery!');return; }
+if (!user || user.isAnonymous) { alert('You need to be logged in to a Paint Account to publish drawings in the gallery!\nGo to https://helloiti.github.io to do so.');return; }
 const url = input.value.trim();const match = url.match(/#id=([A-Za-z0-9_-]+)/);if (!match) return;
-try {
-await db.ref('galleryDrawings/' + match[1]).set(true);input.value = '';loadDrawings();
-} catch (err) {
-if (err.message && err.message.includes('PERMISSION_DENIED')) { alert('You can only publish your own drawings to the gallery!'); }
-else { console.error(err); } } });
-togFavB.addEventListener('click', () => {
-const hidden = favG.style.display === 'none';favG.style.display = hidden ? 'grid' : 'none';togFavB.textContent = hidden ? 'Hide' : 'Show'; });
+try {await db.ref('galleryDrawings/' + match[1]).set(true);input.value = '';loadDrawings();} catch (err) {
+if (err.message && err.message.includes('PERMISSION_DENIED')) { alert('You can only publish your own drawings to the gallery!'); }else { console.error(err); } } });
+togFavB.addEventListener('click', () => {const hidden = favG.style.display === 'none';favG.style.display = hidden ? 'grid' : 'none';togFavB.textContent = hidden ? 'Hide' : 'Show'; });
 let firstAuthFired = false;auth.onAuthStateChanged((user) => {if (!firstAuthFired) { firstAuthFired = true;resolveAuthReady(); }loadDrawings(); });
