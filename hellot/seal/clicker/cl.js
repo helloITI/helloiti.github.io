@@ -29,7 +29,13 @@ if (falling) {velocity.y += gravity * delta;sealModel.position.addScaledVector(v
 if (sealModel.position.y <= origTransform.position.y) {sealModel.position.y = origTransform.position.y;angularVelocity.multiplyScalar(0.18);landAndWaitThenReset();
 } } }renderer.render(scene, camera);}
 animate(); window.addEventListener('resize', () => { camera.aspect = window.innerWidth / window.innerHeight;camera.updateProjectionMatrix();renderer.setSize(window.innerWidth, window.innerHeight); });
-const songs = ["https://helloiti.github.io/assets/13._Exhibition.mp3","https://helloiti.github.io/assets/07main.mp3","https://helloiti.github.io/assets/3ds.mp3","https://helloiti.github.io/assets/dsi.mp3","https://helloiti.github.io/assets/mk.mp3","https://helloiti.github.io/assets/mii.mp3","https://helloiti.github.io/assets/SEQ_CIRCUIT2.mp3" ];
+const songs = 
+["https://helloiti.github.io/assets/13._Exhibition.mp3",
+"https://helloiti.github.io/assets/07main.mp3",
+"https://helloiti.github.io/assets/3ds.mp3",
+"https://helloiti.github.io/assets/dsi.mp3",
+"https://helloiti.github.io/assets/mk.mp3",
+"https://helloiti.github.io/assets/mii.mp3"];
 window.translations = {
 en: {
 title: "※ helloT seal clicker ※",
@@ -158,4 +164,4 @@ window.flyRegex = /yap yap yap yoo/i;
 }window.chosenText = setRandomText();
 if (window.updateCounterText) {window.updateCounterText();
 }}
-const langSelect = document.getElementById('boring');langSelect.value = window.currentLang;updateLanguage(window.currentLang);langSelect.addEventListener('change', (e) => {localStorage.setItem('sealLang', e.target.value);updateLanguage(e.target.value);});
+const langSelect = document.getElementById('boring');langSelect.value = window.currentLang;updateLanguage(window.currentLang);langSelect.addEventListener('change', (e) => {localStorage.setItem('sealLang', e.target.value);updateLanguage(e.target.value);})
