@@ -1,6 +1,6 @@
 function idgaf() {
     const params = new URLSearchParams(window.location.search);
-	// New Nintendo 3DS XL
+	// ?avatar= ?mii= ?wii=
     return params.get("mii") || params.get("avatar") || params.get("wii");
 }
 window.addEventListener("DOMContentLoaded", () => {
