@@ -9,11 +9,20 @@ function getDeviceId() {let id = localStorage.getItem('pdid');if (!id) {id = (cr
 const cv = document.getElementById('cv');const ctx = cv.getContext('2d');const ci = document.getElementById('col');const si = document.getElementById('sz');const eb = document.getElementById('er');const fb = document.getElementById('fl');const slb = document.getElementById('sl');const ub = document.getElementById('un');const rb = document.getElementById('re');const cb = document.getElementById('clr');const dbtn = document.getElementById('dl');const pb = document.getElementById('pub');const shl = document.getElementById('shl');const cob = document.getElementById('cpy');
 let dr = false;let bc = ci.value;let bs = Number(si.value);let m = 'draw';let lst = {x:0,y:0};const mu = 30;const us = [];const rs = [];
 let sel = null;let selDrag = null;let selScale = null;let selStart = null;let baseSnapshot = null;const HS = 8;
-function toWhitePNG() { const tmp = document.createElement('canvas');tmp.width = cv.width; tmp.height = cv.height;const t = tmp.getContext('2d');t.fillStyle = 'white';t.fillRect(0, 0, tmp.width, tmp.height);t.drawImage(cv, 0, 0);return tmp.toDataURL(); }
+function toWhitePNG() {
+const tmp = document.createElement('canvas');tmp.width = cv.width;tmp.height = cv.height;
+const t = tmp.getContext('2d');t.fillStyle = 'white';t.fillRect(0, 0, tmp.width, tmp.height);t.drawImage(cv, 0, 0);
+return tmp.toDataURL('image/png');}
+function toWhiteWebP(quality) {
+const tmp = document.createElement('canvas');tmp.width = cv.width;tmp.height = cv.height;
+const t = tmp.getContext('2d');t.fillStyle = 'white';t.fillRect(0, 0, tmp.width, tmp.height);t.drawImage(cv, 0, 0);
+const webp = tmp.toDataURL('image/webp', quality != null ? quality : 0.85);
+if (webp.startsWith('data:image/webp')) return webp;
+return tmp.toDataURL('image/png');}
 function setMode(newM) {
 if (m === 'select' && newM !== 'select' && sel) commitSel();
 m = newM;eb.textContent = m === 'erase' ? 'Brush' : 'Eraser';fb.textContent = m === 'fill' ? 'Brush' : 'Fill';slb.textContent = m === 'select' ? 'Cancel Select' : 'Select'; }
-function ps() { if(us.length >= mu) us.shift();us.push(toWhitePNG());rs.length = 0; }
+function ps() { if(us.length >= mu) us.shift();us.push(toWhiteWebP(0.7));rs.length = 0; }
 function rdu(dataUrl) {
 return new Promise(res=>{
 const img = new Image();img.onload = ()=>{ ctx.clearRect(0,0,cv.width,cv.height);ctx.drawImage(img,0,0,cv.width,cv.height);res(); };img.src = dataUrl; }); }
@@ -106,17 +115,16 @@ eb.addEventListener('click',()=>{setMode(m==='erase'?'draw':'erase');});
 fb.addEventListener('click',()=>{setMode(m==='fill'?'draw':'fill');});
 slb.addEventListener('click',()=>{setMode(m==='select'?'draw':'select');});
 ub.addEventListener('click',async()=>{
-if(sel)commitSel();if(!us.length)return;const ls=us.pop();rs.push(toWhitePNG());await rdu(ls);sel=null;baseSnapshot=null; });
+if(sel)commitSel();if(!us.length)return;const ls=us.pop();rs.push(toWhiteWebP(0.7));await rdu(ls);sel=null;baseSnapshot=null; });
 rb.addEventListener('click',async()=>{
-if(!rs.length)return;const s=rs.pop();us.push(toWhitePNG());await rdu(s);sel=null;baseSnapshot=null; });
+if(!rs.length)return;const s=rs.pop();us.push(toWhiteWebP(0.7));await rdu(s);sel=null;baseSnapshot=null; });
 cb.addEventListener('click',()=>{
 if(sel)commitSel();ps();ctx.fillStyle='white';ctx.fillRect(0,0,cv.width,cv.height); });
 dbtn.addEventListener('click',()=>{
 if(sel)commitSel();const a=document.createElement('a');a.href=toWhitePNG();a.download='painting.png';a.click(); });
 cob.addEventListener('click',async()=>{
 if(shl.value){await navigator.clipboard.writeText(shl.value);cob.textContent='※ Copied Link! ※';setTimeout(()=>cob.textContent='※ Copy Link ※',1000);} });
-// ctrl + z for undo
-// ctrl + y for redo
+// ctrl z for undo, ctrl y for redo
 document.addEventListener('keydown', (e) => {if (e.ctrlKey) {if (e.key.toLowerCase() === 'z') {
 e.preventDefault();ub.click();} else if (e.key.toLowerCase() === 'y') {e.preventDefault();rb.click();}}});
 function htr(hex){
@@ -157,7 +165,7 @@ if(ut>=30){alert("You've hit your limit of 30 drawings for today!\nCome back tom
 const timeSinceLast=serverNow-(uv.lastUpload||0);
 console.log('[publish] serverNow:',serverNow,'lastUpload:',uv.lastUpload,'timeSinceLast:',timeSinceLast,'uploadDay:',uv.uploadDay,'td:',td,'uploadsToday:',uv.uploadsToday);
 if(uv.lastUpload&&timeSinceLast<65000){alert('Please wait '+Math.ceil((62000-timeSinceLast)/1000)+' more seconds before publishing again!');return;}
-const imgData=toWhitePNG();
+const imgData=toWhiteWebP(0.85);
 console.log("[publish] image size:",imgData.length);
 if(imgData.length>=295000){alert('Your drawing is too large to publish ('+Math.round(imgData.length/1024)+'KB). Try drawing less or using simpler colors!');return;}
 const existingCount=(usnap.exists()&&usnap.val().drawingCount!=null)?usnap.val().drawingCount:0;
@@ -189,4 +197,6 @@ const snap=await db.ref('drawings').orderByKey().equalTo(id).limitToFirst(1).onc
 if(snap.exists()){
 let drawingData=null;snap.forEach(child=>{drawingData=child.val();});
 if(drawingData&&drawingData.image){await rdu(drawingData.image);}}
-else{alert('The drawing was not found.');}}}document.addEventListener("mousedown",function playMusic(){const audio=document.getElementById("ps5");audio.play().catch(err=>console.log(err));document.removeEventListener("mousedown",playMusic);},true);ctx.fillStyle='white';ctx.fillRect(0,0,cv.width,cv.height);ps();lfh();
+else{alert('The drawing was not found.');}}}
+document.addEventListener("mousedown",function playMusic(){const audio=document.getElementById("ps5");audio.play().catch(err=>console.log(err));document.removeEventListener("mousedown",playMusic);},true);
+ctx.fillStyle='white';ctx.fillRect(0,0,cv.width,cv.height);ps();lfh();
