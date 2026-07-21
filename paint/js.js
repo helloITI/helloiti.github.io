@@ -138,7 +138,7 @@ if(y>0){const up=pk(nx,y-1);if(cm({r:data[up],g:data[up+1],b:data[up+2],a:data[u
 if(y<h-1){const dn=pk(nx,y+1);if(cm({r:data[dn],g:data[dn+1],b:data[dn+2],a:data[dn+3]},sc)){if(!rd){stk.push({x:nx,y:y+1});rd=true;}}else if(rd){rd=false;}}}}
 ctx.putImageData(id,0,0);}
 let _pbBusy=false;pb.addEventListener('click',async()=>{if(_pbBusy)return;_pbBusy=true;setTimeout(()=>_pbBusy=false,5000);
-try{await authReady;const user=auth.currentUser;if(user&&user.isAnonymous){alert('Sorry, but you need an account in order to publish your drawings.');return;}}catch(e){console.log("Auth catch:",e);}
+try{await authReady;const user=auth.currentUser;if(user&&user.isAnonymous){alert('Sorry, but you need an account in order to publish your drawings.\nGo to https://helloiti.github.io/paint/account/ to do so.');return;}}catch(e){console.log("Auth catch:",e);}
 if(!confirm("Are you sure you want to generate a link for this drawing?"))return;
 if(sel)commitSel();
 try{await authReady;
