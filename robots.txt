@@ -1,11 +1,4 @@
-# This file tells search engines and bots what they are allowed to see on your site.
-
-# This is the default rule, which allows search engines to crawl your site (recommended).
 User-agent: *
-Content-Signal: search=yes,ai-train=no,ai-input=no
-Allow: /
-
-# If you do not want AI bots to crawl your site, remove the # from the following lines:
 User-agent: Grok
 User-agent: GrokBot
 User-agent: xAI-Grok
@@ -31,6 +24,7 @@ User-agent: ApifyBot
 User-agent: ApifyWebsiteContentCrawler
 User-agent: Applebot
 User-agent: Applebot-Extended
+User-agent: AppleNewsBot
 User-agent: Aranet-SearchBot
 User-agent: atlassian-bot
 User-agent: Awario
@@ -43,6 +37,9 @@ User-agent: Brightbot 1.0
 User-agent: BuddyBot
 User-agent: Bytespider
 User-agent: Bingbot
+User-agent: bingbot
+User-agent: BingPreview
+User-agent: BublupBot
 User-agent: CCBot
 User-agent: Channel3Bot
 User-agent: ChatGLM-Spider
@@ -53,11 +50,15 @@ User-agent: Claude-SearchBot
 User-agent: Claude-User
 User-agent: Claude-Web
 User-agent: ClaudeBot
+User-agent: Cliqzbot
 User-agent: Cloudflare-AutoRAG
 User-agent: CloudVertexBot
 User-agent: Code
 User-agent: cohere-ai
 User-agent: cohere-training-data-crawler
+User-agent: coccoc
+User-agent: coccocbot-image
+User-agent: coccocbot-web
 User-agent: Cotoyogi
 User-agent: CragCrawler
 User-agent: Crawl4AI
@@ -65,48 +66,65 @@ User-agent: Crawlspace
 User-agent: Cursor
 User-agent: Copilot
 User-agent: Datenbank Crawler
+User-agent: Daumoa
+User-agent: Dazoobot
 User-agent: DeepSeekBot
+User-agent: DeuSu
 User-agent: Devin
 User-agent: Diffbot
 User-agent: DuckAssistBot
+User-agent: DuckDuckBot
+User-agent: DuckDuckGo-Favicons-Bot
 User-agent: Echobot Bot
 User-agent: EchoboxBot
+User-agent: EuripBot
 User-agent: ExaBot
+User-agent: Exploratodo
+User-agent: Facebot
 User-agent: FacebookBot
 User-agent: facebookexternalhit
 User-agent: Factset_spyderbot
+User-agent: Feedly
+User-agent: Findxbot
 User-agent: FirecrawlAgent
 User-agent: FriendlyCrawler
 User-agent: GeistHaus-PageFetcher
 User-agent: Gemini-Deep-Research
+User-agent: gooblog
 User-agent: Google-Agent
 User-agent: Google-CloudVertexBot
 User-agent: Google-Extended
 User-agent: Google-Firebase
 User-agent: Google-Gemini-CLI
 User-agent: Google-NotebookLM
+User-agent: Google-Read-Aloud
+User-agent: Google-InspectionTool
+User-agent: GoogleAgent
 User-agent: GoogleAgent-Mariner
 User-agent: GoogleAgent-URLContext
+User-agent: Googlebot
+User-agent: Googlebot-Image
+User-agent: Googlebot-Mobile
+User-agent: Googlebot-News
+User-agent: Googlebot-Video
 User-agent: GoogleOther
 User-agent: GoogleOther-Image
 User-agent: GoogleOther-Video
-User-agent: Googlebot
-User-agent: GoogleAgent
-User-agent: Google-Read-Aloud
-User-agent: Google-InspectionTool
-User-agent: Google-CloudVertexBot
-User-agent: GoogleOther
 User-agent: GPTBot
+User-agent: HaoSouSpider
 User-agent: HenkBot
 User-agent: iAskBot
 User-agent: iaskspider
 User-agent: iaskspider/2.0
 User-agent: IbouBot
 User-agent: ICC-Crawler
+User-agent: ichiro
 User-agent: ImagesiftBot
 User-agent: imageSpider
 User-agent: img2dataset
 User-agent: ISSCyberRiskCrawler
+User-agent: istellabot
+User-agent: JikeSpider
 User-agent: kagi-fetcher
 User-agent: Kangaroo Bot
 User-agent: Kimi-User
@@ -118,7 +136,14 @@ User-agent: LCC
 User-agent: LinerBot
 User-agent: Linguee Bot
 User-agent: LinkupBot
+User-agent: Lycos
+User-agent: Mail.Ru
 User-agent: Manus-User
+User-agent: Mediapartners-Google
+User-agent: AdsBot-Google
+User-agent: AdsBot-Google-Mobile
+User-agent: AdsBot-Google-Mobile-Apps
+User-agent: adidxbot
 User-agent: meta-externalagent
 User-agent: Meta-ExternalAgent
 User-agent: meta-externalfetcher
@@ -126,13 +151,15 @@ User-agent: Meta-ExternalFetcher
 User-agent: meta-webindexer
 User-agent: MistralAI-User
 User-agent: MistralAI-User/1.0
+User-agent: MojeekBot
+User-agent: msnbot
+User-agent: msnbot-media
 User-agent: MyCentralAIScraperBot
 User-agent: NagetBot
 User-agent: netEstate Imprint Crawler
 User-agent: newsai
 User-agent: NotebookLM
 User-agent: NovaAct
-User-agent: msnbot
 User-agent: OAI-SearchBot
 User-agent: OAI-AdsBot
 User-agent: omgili
@@ -140,6 +167,7 @@ User-agent: omgilibot
 User-agent: OpenAI
 User-agent: opencode
 User-agent: Operator
+User-agent: OrangeBot
 User-agent: PanguBot
 User-agent: Panscient
 User-agent: panscient.com
@@ -147,6 +175,8 @@ User-agent: Perplexity-User
 User-agent: PerplexityBot
 User-agent: PetalBot
 User-agent: PhindBot
+User-agent: Pinterest
+User-agent: Plukkie
 User-agent: Poggio-Citations
 User-agent: Poseidon Research Crawler
 User-agent: QualifiedBot
@@ -154,41 +184,64 @@ User-agent: Querit-SearchBot
 User-agent: QueritBot
 User-agent: QuillBot
 User-agent: quillbot.com
+User-agent: Qwantify
+User-agent: Rambler
 User-agent: SBIntuitionsBot
 User-agent: Scrapy
 User-agent: SemrushBot-OCOB
 User-agent: SemrushBot-SWA
+User-agent: SeznamBot
 User-agent: Shap-User
 User-agent: ShapBot
 User-agent: Sidetrade indexer bot
+User-agent: Slurp
+User-agent: Sogou blog
+User-agent: Sogou inst spider
+User-agent: Sogou News Spider
+User-agent: Sogou Orion spider
+User-agent: Sogou spider2
+User-agent: Sogou web spider
+User-agent: Sosospider
 User-agent: Spider
+User-agent: SputnikBot
 User-agent: TavilyBot
+User-agent: Teoma
 User-agent: Terra Cotta
 User-agent: TerraCotta
 User-agent: Thinkbot
 User-agent: TikTokSpider
 User-agent: Timpibot
 User-agent: Trae
+User-agent: Twitterbot
 User-agent: TwinAgent
 User-agent: UseAI
 User-agent: VelenPublicWebCrawler
 User-agent: WARDBot
 User-agent: Webzio-Extended
 User-agent: webzio-extended
+User-agent: wotbox
 User-agent: wpbot
 User-agent: WRTNBot
 User-agent: YaK
+User-agent: yacybot
+User-agent: Yandex
 User-agent: YandexAdditional
 User-agent: YandexAdditionalBot
+User-agent: YandexMobileBot
+User-agent: Yeti
+User-agent: YioopBot
 User-agent: YouBot
+User-agent: yoozBot
+User-agent: YoudaoBot
 User-agent: ZanistaBot
-User-agent: Twitterbot
-User-agent: AdsBot-Google
-User-agent: Yandex
+User-agent: 360Spider
+User-agent: 360Spider-Image
+User-agent: 360Spider-Video
+User-agent: Baiduspider
+User-agent: Baiduspider-image
+User-agent: Baiduspider-news
+User-agent: Baiduspider-video
 User-agent: Discordbot
-User-agent: nsa
-User-agent: Googlebot,Bingbot,Slurp,DuckDuckBot,Baiduspider,Yandex,Sogou,Exabot,facebot,facebookexternalhit,Twitterbot,Applebot,AhrefsBot,SemrushBot,MJ12bot
 User-agent: Fiddler
 User-agent: Fiddler-Everywhere
-Content-Signal: search=yes,ai-train=no,ai-input=no
 Disallow: /
