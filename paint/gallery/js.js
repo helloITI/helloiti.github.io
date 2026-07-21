@@ -9,7 +9,7 @@ if (!user) {auth.signInAnonymously().catch(err => console.log("anon auth error:"
 let resolveAuthReady;const authReady = new Promise(res => { resolveAuthReady = res; });
 const gallery = $('gal');const favG = $('fG');const input = $('dLI');const addBtn = $('aDB');const pOvr = $('pO');const pMsg = $('pM');const pImg = $('pImg');const delBtn = $('dB');const clPo = $('ok');const togFavB = $('tF');
 clPo.addEventListener('click', () => pOvr.style.display = 'none');
-let drawings = [];let drawingIds = [];let authorUsernames = {};let drawID = null;let drawAuthorId = null;
+let drawings = [];let drawingIds = [];let authorUsernames = {};let drawID = null;let drawAuthorId = null;let userLikes = {};
 function cSI(src) {
 const img = document.createElement('img');
 img.src = src || '';
@@ -17,13 +17,17 @@ img.onerror = () => img.src = 'https://helloiti.github.io/assets/paint.png';retu
 async function fetchUsername(uid) {
 if (!uid) return "Anonymous";
 if (authorUsernames[uid]) return authorUsernames[uid];
-try {
-const snap = await db.ref(`users/${uid}/username`).get();
+try {const snap = await db.ref(`users/${uid}/username`).get();
 if (snap.exists()) {
 const val = snap.val();
 authorUsernames[uid] = "@" + (typeof val === 'string' ? val : val.username || "Anonymous");
-return authorUsernames[uid]; }
-} catch {}return "Anonymous"; }
+return authorUsernames[uid]; }} catch {}return "Anonymous"; }
+async function fetchUserLikes() {
+const user = auth.currentUser;
+if (!user || user.isAnonymous) { userLikes = {};return; }try {
+const snap = await db.ref(`users/${user.uid}/likes`).get();
+userLikes = snap.exists() ? (snap.val() || {}) : {};
+} catch { userLikes = {}; } }
 async function sPFD(d, id) {
 drawID = id;drawAuthorId = d.authorId;const user = auth.currentUser;const username = await fetchUsername(d.authorId);
 pMsg.textContent = `Drawing by: ${username}`;
@@ -33,13 +37,12 @@ pOvr.style.display = 'flex'; }
 delBtn.onclick = async () => {
 if (!drawID) return;
 if (!confirm('Remove this drawing from the gallery?')) return;
-try {
-await db.ref('galleryDrawings/' + drawID).remove();pOvr.style.display = 'none';loadDrawings();
-} catch (err) {
+try {await db.ref('galleryDrawings/' + drawID).remove();pOvr.style.display = 'none';loadDrawings();} catch (err) {
 if (err.message && err.message.includes('PERMISSION_DENIED')) { alert('You can only remove your own drawings!'); }
 else { console.error(err); } } };
 async function loadDrawings() {
 try {
+await fetchUserLikes();
 const gSnap = await db.ref('galleryDrawings').limitToLast(50).once('value');
 if (!gSnap.exists()) {
 gallery.innerHTML = '<p style="color:white;font-size:20px;">There are no drawings yet, maybe try uploading one?</p>';return; }
@@ -58,30 +61,30 @@ const id = drawingIds[i];
 const div = document.createElement('div');
 div.className = 'g-i';
 if (user && !user.isAnonymous && d.authorId === user.uid) { div.classList.add('g-i-o'); }
-const img = cSI(d.image);img.addEventListener('click', () => sPFD(d, id));const btn = document.createElement('button');btn.className = 'l-b';const liked = JSON.parse(localStorage.getItem('lD') || '{}');const likeCount = d.likes ? Object.keys(d.likes).length : 0;btn.textContent = liked[id] ? `💖 ${likeCount}` : `❤️ ${likeCount}`;
+const img = cSI(d.image);img.addEventListener('click', () => sPFD(d, id));const btn = document.createElement('button');btn.className = 'l-b';const likeCount = d.likes ? Object.keys(d.likes).length : 0;const isLiked = !!userLikes[id];btn.textContent = isLiked ? `💖 ${likeCount}` : `❤️ ${likeCount}`;
 btn.addEventListener('click', async e => {
 e.stopPropagation();
 if (btn._busy) return;btn._busy = true;await authReady;const user = auth.currentUser;
 if (!user) { alert('Could not connect to the server, please refresh the page!');btn._busy = false;return; }
 if (user.isAnonymous) { alert('You need a Paint Account to like drawings!\nGo to https://helloiti.github.io to do so.');btn._busy = false;return; }
 const likeRef = db.ref(`drawings/${id}/likes/${user.uid}`);
-const map = JSON.parse(localStorage.getItem('lD') || '{}');
-const wasLiked = !!map[id];
+const userLikeRef = db.ref(`users/${user.uid}/likes/${id}`);
+const wasLiked = !!userLikes[id];
 try {if (wasLiked) {
-await likeRef.remove();delete map[id];
+await likeRef.remove();await userLikeRef.remove();delete userLikes[id];
 const newCount = d.likes ? Math.max(0, Object.keys(d.likes).length - 1) : 0;
 btn.textContent = `💔 ${newCount}`;setTimeout(() => btn.textContent = `❤️ ${newCount}`, 600);
-} else {await likeRef.set(true);map[id] = true;
+} else {await likeRef.set(true);await userLikeRef.set(true);userLikes[id] = true;
 const newCount = d.likes ? Object.keys(d.likes).length + 1 : 1;
 btn.textContent = `💖 ${newCount}`; }
-localStorage.setItem('lD', JSON.stringify(map));displayFavorites();
+displayFavorites();
 } catch (err) { console.error(err); }
 btn._busy = false; });
 div.append(img, btn);gallery.appendChild(div); }); }
 function displayFavorites() {
-favG.innerHTML = '';const liked = JSON.parse(localStorage.getItem('lD') || '{}');
+favG.innerHTML = '';
 drawingIds.forEach((id, i) => {
-if (!liked[id] || !drawings[i]) return;
+if (!userLikes[id] || !drawings[i]) return;
 const div = document.createElement('div');div.className = 'g-i';
 const img = cSI(drawings[i].image);img.addEventListener('click', () => sPFD(drawings[i], id));
 div.appendChild(img);favG.appendChild(div); }); }
