@@ -24,3 +24,5 @@ input[type="text"] { width: 400px; cursor: url('https://helloiti.github.io/asset
 .tos:hover { text-decoration: underline; }
 .pr { position: absolute;top: 30px;left: 10px;color: white !important;font-size: 12px;text-decoration: none;-webkit-text-fill-color: white !important; }
 .pr:hover { text-decoration: underline; }
+.gl { position: absolute;top: 30px;right: 10px;color: white !important;font-size: 12px;text-decoration: none;-webkit-text-fill-color: white !important; }
+.gl:hover { text-decoration: underline; }
