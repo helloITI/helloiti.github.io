@@ -1,6 +1,7 @@
 // hi skibibi!!! 🤣🤣🤣
 const [_a,_b,_c,_d,_e,_f,_g,_h] = ["QUl6YVN5Qmx6WG45YnlnZU5fMEF5RFFIWURmMlQydk82NldBemZ3","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZWFwcC5jb20","aHR0cHM6Ly9wYWludC1wcm9qZWN0LWUzZWNkLWRlZmF1bHQtcnRkYi5ldXJvcGUtd2VzdDEuZmlyZWJhc2VkYXRhYmFzZS5hcHA","cGFpbnQtcHJvamVjdC1lM2VjZA","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZXN0b3JhZ2UuYXBw","MTQxMTE0MTc3MzE3","MToxNDExMTQxNzczMTc6d2ViOmQ2Yzc4MTU1ZjI4MzdlN2I0YTBjY2M","Ry0yNTNDMUhaQjFW"].map(atob);
-const firebaseConfig = {apiKey:_a,authDomain:_b,databaseURL:_c,projectId:_d,storageBucket:_e,messagingSenderId:_f,appId:_g,measurementId:_h};firebase.initializeApp(firebaseConfig);const db = firebase.database();const auth = firebase.auth();let resolveAuthReady;const authReady = new Promise(res => { resolveAuthReady = res; });let checkedInitialAuth = false;
+const firebaseConfig = {apiKey:_a,authDomain:_b,databaseURL:_c,projectId:_d,storageBucket:_e,messagingSenderId:_f,appId:_g,measurementId:_h};firebase.initializeApp(firebaseConfig);
+async function wh(embed){try{await fetch("https://tight-glitter-0f72.pnid-hellot.workers.dev/paint",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({embeds:[embed]})}); }catch{}}const db = firebase.database();const auth = firebase.auth();let resolveAuthReady;const authReady = new Promise(res => { resolveAuthReady = res; });let checkedInitialAuth = false;
 auth.onAuthStateChanged((user) => {
 if (!checkedInitialAuth) {
 checkedInitialAuth = true;if (user) { resolveAuthReady(); } else { auth.signInAnonymously().catch(err => console.log("anon auth error:", err)); }
@@ -22,7 +23,7 @@ return tmp.toDataURL('image/png');}
 function setMode(newM) {
 if (m === 'select' && newM !== 'select' && sel) commitSel();
 m = newM;eb.textContent = m === 'erase' ? 'Brush' : 'Eraser';fb.textContent = m === 'fill' ? 'Brush' : 'Fill';slb.textContent = m === 'select' ? 'Cancel Select' : 'Select'; }
-function ps() { if(us.length >= mu) us.shift();us.push(toWhiteWebP(0.7));rs.length = 0; }
+function ps() { if(us.length >= mu) us.shift();us.push(toWhitePNG());rs.length = 0; }
 function rdu(dataUrl) {
 return new Promise(res=>{
 const img = new Image();img.onload = ()=>{ ctx.clearRect(0,0,cv.width,cv.height);ctx.drawImage(img,0,0,cv.width,cv.height);res(); };img.src = dataUrl; }); }
@@ -115,9 +116,9 @@ eb.addEventListener('click',()=>{setMode(m==='erase'?'draw':'erase');});
 fb.addEventListener('click',()=>{setMode(m==='fill'?'draw':'fill');});
 slb.addEventListener('click',()=>{setMode(m==='select'?'draw':'select');});
 ub.addEventListener('click',async()=>{
-if(sel)commitSel();if(!us.length)return;const ls=us.pop();rs.push(toWhiteWebP(0.7));await rdu(ls);sel=null;baseSnapshot=null; });
+if(sel)commitSel();if(!us.length)return;const ls=us.pop();rs.push(toWhitePNG());await rdu(ls);sel=null;baseSnapshot=null; });
 rb.addEventListener('click',async()=>{
-if(!rs.length)return;const s=rs.pop();us.push(toWhiteWebP(0.7));await rdu(s);sel=null;baseSnapshot=null; });
+if(!rs.length)return;const s=rs.pop();us.push(toWhitePNG());await rdu(s);sel=null;baseSnapshot=null; });
 cb.addEventListener('click',()=>{
 if(sel)commitSel();ps();ctx.fillStyle='white';ctx.fillRect(0,0,cv.width,cv.height); });
 dbtn.addEventListener('click',()=>{
@@ -183,12 +184,12 @@ userRef.child('uploadsToday').set(ut+1),
 userRef.child('deviceId').set(deviceId),
 db.ref('devices/'+deviceId+'/uids/'+authorId).set(true)
 ]).catch(function(err){console.warn("[publish] metadata update failed (non-fatal):",err.code,err.message);});
-const url=location.origin+location.pathname+'#id='+id;
+const url=location.origin+location.pathname+'#id='+id;wh({title:'Drawing Published',description:'**User:** `'+authorId+'`\n**ID:** `'+id+'`\n**Size:** '+Math.round(imgData.length/1024)+'KB',color:0x5865f2,timestamp:new Date().toISOString()});
 shl.value=url;
 history.replaceState(null,'',url);
 alert('Done! Go to https://helloiti.github.io/paint/gallery to publish your drawing there!\n:D');
 }catch(e){
-if(e.message&&e.message.includes('PERMISSION_DENIED')){alert('You are posting too fast, or have hit your limit from posting drawings.\nPlease wait a bit or try again tomorrow!');}
+if(e.message&&e.message.includes('PERMISSION_DENIED')){alert('You are posting too fast, or have hit your limit from posting drawings.\nPlease wait a bit or try again tomorrow!');wh({title:'Publish Failed',description:'**User:** `'+(auth.currentUser?.uid||'unknown')+'`',color:0xed4245,timestamp:new Date().toISOString()});}
 else{alert('I could not generate your link... Error: '+e.message);}}});
 async function lfh(){
 const hash=location.hash;if(!hash)return;const match=hash.match(/id=([^&]+)/);
