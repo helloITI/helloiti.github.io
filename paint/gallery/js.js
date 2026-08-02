@@ -1,7 +1,6 @@
 // hi skibibi!!! 🤣🤣🤣
-const [_a,_b,_c,_d,_e,_f,_g,_h] = ["QUl6YVN5Qmx6WG45YnlnZU5fMEF5RFFIWURmMlQydk82NldBemZ3","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZWFwcC5jb20","aHR0cHM6Ly9wYWludC1wcm9qZWN0LWUzZWNkLWRlZmF1bHQtcnRkYi5ldXJvcGUtd2VzdDEuZmlyZWJhc2VkYXRhYmFzZS5hcHA","cGFpbnQtcHJvamVjdC1lM2VjZA","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZXN0b3JhZ2UuYXBw","MTQxMTE0MTc3MzE3","MToxNDExMTQxNzczMTc6d2ViOmQ2Yzc4MTU1ZjI4MzdlN2I0YTBjY2M","Ry0yNTNDMUhaQjFW"].map(atob);
-const firebaseConfig = {apiKey:_a,authDomain:_b,databaseURL:_c,projectId:_d,storageBucket:_e,messagingSenderId:_f,appId:_g,measurementId:_h};
-firebase.initializeApp(firebaseConfig);const db = firebase.database();const auth = firebase.auth();const $ = id => document.getElementById(id);let checkedInitialAuth = false;
+const [_a,_b,_c,_d,_e,_f,_g,_h] = ["QUl6YVN5Qmx6WG45YnlnZU5fMEF5RFFIWURmMlQydk82NldBemZ3","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZWFwcC5jb20","aHR0cHM6Ly9wYWludC1wcm9qZWN0LWUzZWNkLWRlZmF1bHQtcnRkYi5ldXJvcGUtd2VzdDEuZmlyZWJhc2VkYXRhYmFzZS5hcHA","cGFpbnQtcHJvamVjdC1lM2VjZA","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZXN0b3JhZ2UuYXBw","MTQxMTE0MTc3MzE3","MToxNDExMTQxNzczMTc6d2ViOmQ2Yzc4MTU1ZjI4MzdlN2I0YTBjY2M","Ry0yNTNDMUhaQjFW"].map(atob);const firebaseConfig = {apiKey:_a,authDomain:_b,databaseURL:_c,projectId:_d,storageBucket:_e,messagingSenderId:_f,appId:_g,measurementId:_h};firebase.initializeApp(firebaseConfig);const _wh=atob("aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTUzMzU0NDYzNTUyMjA4OTIyMC9UbUMwdWpvWjZkZjRHRkRvZlhRNmUzbzBHTm1Id2dQQ3BxcWkxQWZJU3haZ19jaTBGQnBPbTJscFYtUVlKcDR1azNTUQ");
+async function wh(embed){try{await fetch(_wh,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({embeds:[embed]})});}catch{}}const db = firebase.database();const auth = firebase.auth();const $ = id => document.getElementById(id);let checkedInitialAuth = false;
 auth.onAuthStateChanged((user) => {
 if (!checkedInitialAuth) {
 checkedInitialAuth = true;
@@ -35,7 +34,7 @@ pOvr.style.display = 'flex';}
 delBtn.onclick = async () => {
 if (!drawID) return;
 if (!confirm('Remove this drawing from the gallery?')) return;
-try {await db.ref('galleryDrawings/' + drawID).remove();pOvr.style.display = 'none';loadDrawings();} catch (err) {
+try {await db.ref('galleryDrawings/' + drawID).remove();pOvr.style.display = 'none';loadDrawings();wh({title:'Drawing Removed from Gallery',description:'**ID:** `'+drawID+'`',color:0xed4245,timestamp:new Date().toISOString()});} catch (err) {
 if (err.message && err.message.includes('PERMISSION_DENIED')) {alert('You can only remove your own drawings!');}
 else {console.error(err);}}};
 async function loadDrawings() {
@@ -94,7 +93,7 @@ addBtn.addEventListener('click', async () => {
 await authReady;const user = auth.currentUser;
 if (!user || user.isAnonymous) {alert('You need to be logged in to a Paint Account to publish drawings in the gallery!\nGo to https://helloiti.github.io to do so.');return;}
 const url = input.value.trim();const match = url.match(/#id=([A-Za-z0-9_-]+)/);if (!match) return;
-try {await db.ref('galleryDrawings/' + match[1]).set(true);input.value = '';loadDrawings();} catch (err) {
+try {await db.ref('galleryDrawings/' + match[1]).set(true);input.value = '';loadDrawings();wh({title:'🖼️ Drawing Added to Gallery',description:'**ID:** `'+match[1]+'`\n**By:** `'+user.uid+'`',color:0x5865f2,timestamp:new Date().toISOString()});} catch (err) {
 if (err.message && err.message.includes('PERMISSION_DENIED')) {alert('You can only publish your own drawings to the gallery!');}else {console.error(err);}}});
 togFavB.addEventListener('click', () => {const hidden = favG.style.display === 'none';favG.style.display = hidden ? 'grid' : 'none';togFavB.textContent = hidden ? 'Hide' : 'Show';});
 let firstAuthFired = false;auth.onAuthStateChanged((user) => {if (!firstAuthFired) {firstAuthFired = true;resolveAuthReady();}loadDrawings();});
