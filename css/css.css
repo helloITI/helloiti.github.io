@@ -54,8 +54,7 @@ pre,code {color:white;background:none;padding:10px;border-radius:8px;overflow-x:
 pre {text-align:center;}
 .nav {display:flex;justify-content:center;gap:20px;margin:10px 0;}
 
-.cb {display:block;width:fit-content;max-width:100%;margin:15px auto;background:white;color:black!important;border:2px inset #c0c0c0;padding:8px 10px;border-radius:4px;font-family:Consolas,"Courier New",monospace;font-size:14px;overflow-x:auto;white-space:pre;text-align:left;cursor:text;}
+.cb {display:block;width:fit-content;max-width:100%;margin:15px auto;background:white;color:black!important;border:2px inset #c0c0c0;padding:8px 10px;border-radius:4px;font-family:Consolas,"Courier New",monospace;font-size:14px;overflow-x:auto;white-space:pre;text-align:left;cursor:url('https://helloiti.github.io/assets/Wii.png') 0 0,pointer;}
 .cb code {display:block;color:black!important;background:none!important;padding:0;margin:0;font-family:inherit;white-space:inherit;}
 
-@media (max-width:900px){
-.sd,.pt,.ph,.sr,.sp,.bp{display:none!important;}}
+@media (max-width:900px){.sd,.pt,.ph,.sr,.sp,.bp{display:none!important;}}
