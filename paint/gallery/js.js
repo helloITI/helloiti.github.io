@@ -9,6 +9,7 @@ checkedInitialAuth = true;
 if (!user) {auth.signInAnonymously().catch(err => console.log("anon auth error:", err));}}});
 let resolveAuthReady;const authReady = new Promise(res => {resolveAuthReady = res;});
 const gallery = $('gal');const favG = $('fG');const input = $('dLI');const addBtn = $('aDB');const pOvr = $('pO');const pMsg = $('pM');const pImg = $('pImg');const delBtn = $('dB');const clPo = $('ok');const togFavB = $('tF');
+const rptBtn = $('rB');const rO = $('rO');const rReasons = $('rReasons');const rCancel = $('rCancel');
 clPo.addEventListener('click', () => pOvr.style.display = 'none');
 let drawings = [];let drawingIds = [];let authorUsernames = {};let drawID = null;let drawAuthorId = null;let userLikes = {};
 function cSI(src) {
@@ -32,6 +33,7 @@ drawID = id;drawAuthorId = d.authorId;const user = auth.currentUser;const userna
 pMsg.textContent = `Drawing by: ${username}`;
 pImg.src = d.image || '';pImg.onerror = () => pImg.src = 'https://helloiti.github.io/assets/paint.png';
 delBtn.style.display = (user && !user.isAnonymous && d.authorId === user.uid) ? 'inline-block' : 'none';
+rptBtn.style.display = (user && !user.isAnonymous && d.authorId !== user.uid) ? 'inline-block' : 'none';
 pOvr.style.display = 'flex';}
 delBtn.onclick = async () => {
 if (!drawID) return;
@@ -39,6 +41,33 @@ if (!confirm('Remove this drawing from the gallery?')) return;
 try {await db.ref('galleryDrawings/' + drawID).remove();pOvr.style.display = 'none';loadDrawings();wh("gallery",{title:'Drawing Removed from Gallery',description:'**ID:** `'+drawID+'`',color:0xed4245,timestamp:new Date().toISOString()});} catch (err) {
 if (err.message && err.message.includes('PERMISSION_DENIED')) {alert('You can only remove your own drawings!');}
 else {console.error(err);}}};
+const REPORT_REASONS = [
+"NSFW or sexually explicit content",
+"Gore, graphic violence, or disturbing imagery",
+"Hate speech, slurs, or targeting protected characteristics",
+"Harassment or threats",
+"Doxxing / private information",
+"Spam or repeated drawings"];
+REPORT_REASONS.forEach(reason => {
+const b = document.createElement('button');
+b.className = 'r-reason';
+b.textContent = reason;
+b.addEventListener('click', () => submitReport(reason));
+rReasons.appendChild(b);});
+rCancel.addEventListener('click', () => rO.style.display = 'none');
+rptBtn.addEventListener('click', () => { rO.style.display = 'flex'; });
+async function submitReport(reason) {
+if (!drawID) return;
+const user = auth.currentUser;
+if (!user || user.isAnonymous) {alert('You need a Paint Account to report drawings!\nGo to https://helloiti.github.io to do so.');return;}
+try {
+await db.ref(`reports/${drawID}/${user.uid}`).set({reason: reason, timestamp: firebase.database.ServerValue.TIMESTAMP});
+rO.style.display = 'none';pOvr.style.display = 'none';
+alert('Thanks, your report has been submitted for review.');
+wh("reports",{title:'Drawing Reported',description:'**Drawing ID:** `'+drawID+'`\n**Reported by:** `'+user.uid+'`\n**Reason:** '+reason,color:0xe67e22,timestamp:new Date().toISOString()});
+} catch (err) {
+if (err.message && err.message.includes('PERMISSION_DENIED')) {alert('You\'ve already reported this drawing.');}
+else {console.error(err);}}}
 async function loadDrawings() {
 try {await fetchUserLikes();const gSnap = await db.ref('galleryDrawings').limitToLast(50).once('value');
 if (!gSnap.exists()) {
@@ -95,7 +124,7 @@ addBtn.addEventListener('click', async () => {
 await authReady;const user = auth.currentUser;
 if (!user || user.isAnonymous) {alert('You need to be logged in to a Paint Account to publish drawings in the gallery!\nGo to https://helloiti.github.io to do so.');return;}
 const url = input.value.trim();const match = url.match(/#id=([A-Za-z0-9_-]+)/);if (!match) return;
-try {await db.ref('galleryDrawings/' + match[1]).set(true);input.value = '';loadDrawings();wh("gallery",{title:'🖼️ Drawing Added to Gallery',description:'**ID:** `'+match[1]+'`\n**By:** `'+user.uid+'`',color:0x5865f2,timestamp:new Date().toISOString()});} catch (err) {
+try {await db.ref('galleryDrawings/' + match[1]).set(true);input.value = '';loadDrawings();wh("gallery",{title:'Drawing Added to Gallery',description:'**ID:** `'+match[1]+'`\n**By:** `'+user.uid+'`',color:0x5865f2,timestamp:new Date().toISOString()});} catch (err) {
 if (err.message && err.message.includes('PERMISSION_DENIED')) {alert('You can only publish your own drawings to the gallery!');}else {console.error(err);}}});
 togFavB.addEventListener('click', () => {const hidden = favG.style.display === 'none';favG.style.display = hidden ? 'grid' : 'none';togFavB.textContent = hidden ? 'Hide' : 'Show';});
 let firstAuthFired = false;auth.onAuthStateChanged((user) => {if (!firstAuthFired) {firstAuthFired = true;resolveAuthReady();}loadDrawings();});
