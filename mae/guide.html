@@ -19,12 +19,12 @@
 		//]]>
 	</script>
 	<script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
-	<script>
+	<script type="text/javascript>
   window.RufflePlayer = window.RufflePlayer || {};
   window.RufflePlayer.config = {
-    "autoplay": "on", // Sets autoplay to on
-    "unmuteOverlay": "hidden", // Hides the unmute button
-    "wmode": "transparent" // Optional: for transparency
+    "autoplay": "on",
+    "unmuteOverlay": "hidden",
+    "wmode": "transparent"
   };
 </script>
 </head>
@@ -105,7 +105,12 @@
 		<ul>
 			<li>Nintendo's Wii  <span class="note">(only supports up to Flash Player 9)</span></li>
 			<li>Sony's PlayStation 3 <span class="note">(only supports up to Flash Player 9)</span></li>
-			<li>Mobile devices</li>
+			<!-- <li>Mobile devices</li> -->
+			<!-- custom -->
+			<!-- added these because why not? -->
+			<li>Nintendo's 3DS <span class="note">(doesn't support Flash Player nor Ruffle)</span></li>
+			<li>Nintendo's Wii U <span class="note">(doesn't support Flash Player nor Ruffle)</span></li>
+			<li>Nintendo's Switch <span class="note">(doesn't support Flash Player nor Ruffle)</span></li>
 		</ul>
 		<p>As a result, currently, use of My Avatar Editor is limited to desktop computers.</p>
 		<h3 id="miicompatibility">Mii™ Compatibility</h3>
@@ -133,6 +138,7 @@
 			<li><a href="http://www.flickr.com/">flickr.com</a></li>
 			<li><a href="http://www.photobucket.com/">photobucket.com</a></li>
 			<li><a href="http://www.tinypic.com/">tinypic.com</a></li>
+			<!-- custom -->
 			<li><a href="https://file.garden/">file.garden</a> (Some ISPs may block this website)</li>
 			<li><a href="https://catbox.moe/">catbox.moe</a> (Some ISPs may block this website)</li>
 		</ul>
@@ -213,6 +219,4 @@ document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.
 try {
 var pageTracker = _gat._getTracker("UA-7459471-1");
 pageTracker._trackPageview();
-} catch(err) {}</script>
-</body>
-</html>
+} catch(err) {}</script></body></html>
