@@ -5,7 +5,14 @@ const modeEl = document.getElementById('mode');const hueRangeEl = document.getEl
 const satMinEl = document.getElementById('satMin');const valMinEl = document.getElementById('valMin');
 const softEl = document.getElementById('soft');const redBoostEl = document.getElementById('redBoost');
 const downloadBtn = document.getElementById('download');const resetBtn = document.getElementById('reset');
-const music = document.getElementById('mk');let img = new Image();
+
+let music = document.getElementById('mk');
+if (!music) {
+  music = new Audio('https://helloiti.github.io/assets/mk.mp3');
+  music.loop = true;
+}
+
+let img = new Image();
 
 function resetControls() {hueRangeEl.value = 18;satMinEl.value = 30;valMinEl.value = 20;softEl.value = 12;redBoostEl.value = 1.5;modeEl.value = 'hue';}
 function fitCanvasToImage(c, image) {c.width = image.naturalWidth || image.width;c.height = image.naturalHeight || image.height;}
@@ -60,5 +67,5 @@ function enableSound() {
 if (music) {
 music.play().then(() => {
 window.removeEventListener('click', enableSound);
-}).catch(()=>{}); } } 
+}).catch((err)=>{ console.log("autoplay failed: ", err); });}} 
 window.addEventListener('click', enableSound);resetControls();
