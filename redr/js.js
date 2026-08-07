@@ -56,7 +56,9 @@ URL.revokeObjectURL(a.href);}); });
 
 resetBtn.addEventListener('click', () => { resetControls(); process(); });
 
-function enableSound() {
+function enableSound() { 
+if (music) {
 music.play().then(() => {
-window.removeEventListener('click', enableSound);}).catch(() => {}); }
+window.removeEventListener('click', enableSound);
+}).catch(()=>{}); } } 
 window.addEventListener('click', enableSound);resetControls();
