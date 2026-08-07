@@ -35,7 +35,8 @@ const songs =
 "https://helloiti.github.io/assets/3ds.mp3",
 "https://helloiti.github.io/assets/dsi.mp3",
 "https://helloiti.github.io/assets/mk.mp3",
-"https://helloiti.github.io/assets/mii.mp3"];
+"https://helloiti.github.io/assets/mii.mp3",
+"https://helloiti.github.io/assets/STRM_BGM_Shop.48.dspadpcm.mp3"];
 window.translations = {
 en: {
 title: "※ helloT seal clicker ※",
@@ -144,8 +145,7 @@ subtitle: " Each click updates the <b>global</b> counter! ",
       "1 yap yoo = +1 helloT yap yoo yap yap yoo yap yap yoo /j",
       "1 yap yoo = 1 yap yoo"
     ]
-  }
-};
+ } };
 window.currentLang = localStorage.getItem('sealLang') || 'en';window.flyRegex = /seal will fly/i;const randomTextEl = document.getElementById("okcool");
 function setRandomText() {const lang = window.currentLang || 'en';const randomTexts = window.translations[lang].randomTexts;const i = Math.floor(Math.random() * randomTexts.length);const chosen = randomTexts[i];randomTextEl.textContent = chosen;window.chosenText = chosen;return chosen; }
 window.chosenText = setRandomText();const bgm = document.getElementById("bgm");bgm.src = songs[Math.floor(Math.random() * songs.length)];
