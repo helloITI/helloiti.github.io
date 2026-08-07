@@ -4,7 +4,7 @@ renderer.setSize(window.innerWidth, window.innerHeight);renderer.setPixelRatio(M
 const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 100);camera.position.set(0, 0.5, 5);scene.add(new THREE.AmbientLight(0xffffff, 2.5));const dirLight = new THREE.DirectionalLight(0xffffff, 2.0);dirLight.position.set(5, 5, 5);
 scene.add(dirLight);const spinGroup = new THREE.Group();scene.add(spinGroup);let sealModel = null;const targetScale = new THREE.Vector3(1, 1, 1);const currentScale = new THREE.Vector3(1, 1, 1);let danceIntensity = 0;
 const loader = new THREE.GLTFLoader();
-loader.load("https://helloiti.github.io/assets/models/seal/seal.gltf", (gltf) => {
+loader.load("https://helloiti.github.io/assets/models/seal/seal1.glb", (gltf) => {
 sealModel = gltf.scene;
 sealModel.traverse(child => {
 if (child.isMesh) {
@@ -163,5 +163,4 @@ window.flyRegex = /phoque volera/i;
 window.flyRegex = /yap yap yap yoo/i;
 }window.chosenText = setRandomText();
 if (window.updateCounterText) {window.updateCounterText();
-}}
-const langSelect = document.getElementById('boring');langSelect.value = window.currentLang;updateLanguage(window.currentLang);langSelect.addEventListener('change', (e) => {localStorage.setItem('sealLang', e.target.value);updateLanguage(e.target.value);})
+}}const langSelect = document.getElementById('boring');langSelect.value = window.currentLang;updateLanguage(window.currentLang);langSelect.addEventListener('change', (e) => {localStorage.setItem('sealLang', e.target.value);updateLanguage(e.target.value);})
