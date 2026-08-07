@@ -38,7 +38,7 @@ pOvr.style.display = 'flex';}
 delBtn.onclick = async () => {
 if (!drawID) return;
 if (!confirm('Remove this drawing from the gallery?')) return;
-try {await db.ref('galleryDrawings/' + drawID).remove();pOvr.style.display = 'none';loadDrawings();wh("gallery",{title:'Drawing Removed from Gallery',description:'**ID:** `'+drawID+'`',color:0xed4245,timestamp:new Date().toISOString()});} catch (err) {
+try {await db.ref('galleryDrawings/' + drawID).remove();pOvr.style.display = 'none';loadDrawings();wh("gallery",{title:'🗑️ Drawing Removed from Gallery',description:'**ID:** `'+drawID+'`',color:0xed4245,timestamp:new Date().toISOString()});} catch (err) {
 if (err.message && err.message.includes('PERMISSION_DENIED')) {alert('You can only remove your own drawings!');}
 else {console.error(err);}}};
 const REPORT_REASONS = [
@@ -61,12 +61,15 @@ if (!drawID) return;
 const user = auth.currentUser;
 if (!user || user.isAnonymous) {alert('You need a Paint Account to report drawings!\nGo to https://helloiti.github.io to do so.');return;}
 try {
-await db.ref(`reports/${drawID}/${user.uid}`).set({reason: reason, timestamp: firebase.database.ServerValue.TIMESTAMP});
+await Promise.all([
+  db.ref(`reports/${drawID}/${user.uid}`).set({reason: reason, timestamp: firebase.database.ServerValue.TIMESTAMP}),
+  db.ref(`users/${user.uid}/lastReport`).set(firebase.database.ServerValue.TIMESTAMP)
+]);
 rO.style.display = 'none';pOvr.style.display = 'none';
 alert('Thanks, your report has been submitted for review.');
-wh("reports",{title:'Drawing Reported',description:'**Drawing ID:** `'+drawID+'`\n**Reported by:** `'+user.uid+'`\n**Reason:** '+reason,color:0xe67e22,timestamp:new Date().toISOString()});
+wh("reports",{title:'🚨 Drawing Reported',description:'**Drawing ID:** `'+drawID+'`\n**Reported by:** `'+user.uid+'`\n**Reason:** '+reason+'\n**Link:** https://helloiti.github.io/paint/#id='+drawID,color:0xe67e22,timestamp:new Date().toISOString()});
 } catch (err) {
-if (err.message && err.message.includes('PERMISSION_DENIED')) {alert('You\'ve already reported this drawing.');}
+if (err.message && err.message.includes('PERMISSION_DENIED')) {alert('You\'ve already reported this drawing, or you need to wait before reporting again.');}
 else {console.error(err);}}}
 async function loadDrawings() {
 try {await fetchUserLikes();const gSnap = await db.ref('galleryDrawings').limitToLast(50).once('value');
@@ -124,7 +127,7 @@ addBtn.addEventListener('click', async () => {
 await authReady;const user = auth.currentUser;
 if (!user || user.isAnonymous) {alert('You need to be logged in to a Paint Account to publish drawings in the gallery!\nGo to https://helloiti.github.io to do so.');return;}
 const url = input.value.trim();const match = url.match(/#id=([A-Za-z0-9_-]+)/);if (!match) return;
-try {await db.ref('galleryDrawings/' + match[1]).set(true);input.value = '';loadDrawings();wh("gallery",{title:'Drawing Added to Gallery',description:'**ID:** `'+match[1]+'`\n**By:** `'+user.uid+'`',color:0x5865f2,timestamp:new Date().toISOString()});} catch (err) {
+try {await db.ref('galleryDrawings/' + match[1]).set(true);input.value = '';loadDrawings();wh("gallery",{title:'🖼️ Drawing Added to Gallery',description:'**ID:** `'+match[1]+'`\n**By:** `'+user.uid+'`',color:0x5865f2,timestamp:new Date().toISOString()});} catch (err) {
 if (err.message && err.message.includes('PERMISSION_DENIED')) {alert('You can only publish your own drawings to the gallery!');}else {console.error(err);}}});
 togFavB.addEventListener('click', () => {const hidden = favG.style.display === 'none';favG.style.display = hidden ? 'grid' : 'none';togFavB.textContent = hidden ? 'Hide' : 'Show';});
 let firstAuthFired = false;auth.onAuthStateChanged((user) => {if (!firstAuthFired) {firstAuthFired = true;resolveAuthReady();}loadDrawings();});
