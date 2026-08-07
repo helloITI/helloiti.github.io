@@ -1,6 +1,4 @@
-import * as THREE from "three";
-import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-
+import * as THREE from "three";import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 const canvas = document.getElementById('canvas');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -20,38 +18,31 @@ const targetScale = new THREE.Vector3(1, 1, 1);
 const currentScale = new THREE.Vector3(1, 1, 1);
 let danceIntensity = 0;
 const loader = new GLTFLoader();
-loader.load("https://helloiti.github.io/assets/models/seal/seal.gltf", (gltf) => {
-  sealModel = gltf.scene;
-  sealModel.traverse(child => {
-    if (child.isMesh) {
-      child.material = new THREE.MeshStandardMaterial({
-        map: child.material.map,
-        transparent: true,
-        alphaTest: 0.5,
-        side: THREE.DoubleSide
-      });
-    }
-  });
-  sealModel.rotation.y = -Math.PI / 2;
-  spinGroup.add(sealModel);
-});
+loader.load("https://helloiti.github.io/assets/models/seal/seal1.glb", (gltf) => {
+sealModel = gltf.scene;
+sealModel.traverse(child => {
+if (child.isMesh) {
+child.material = new THREE.MeshStandardMaterial({
+map: child.material.map,
+transparent: true,
+alphaTest: 0.5,
+side: THREE.DoubleSide }); } });
+sealModel.rotation.y = -Math.PI / 2;
+spinGroup.add(sealModel);});
 let time = 0;
 function animate() {
-  requestAnimationFrame(animate);
-  time += 0.05;
-  spinGroup.rotation.y += 0.04;
-  if (sealModel) {
-    sealModel.rotation.z = Math.sin(time * 6) * (0.6 * danceIntensity);
-    danceIntensity *= 0.95;
-    currentScale.lerp(targetScale, 0.2);
-    targetScale.lerp(new THREE.Vector3(1, 1, 1), 0.1);
-    sealModel.scale.copy(currentScale);
-  }
-  renderer.render(scene, camera);
-}
+requestAnimationFrame(animate);
+time += 0.05;
+spinGroup.rotation.y += 0.04;
+if (sealModel) {
+sealModel.rotation.z = Math.sin(time * 6) * (0.6 * danceIntensity);
+danceIntensity *= 0.95;
+currentScale.lerp(targetScale, 0.2);
+targetScale.lerp(new THREE.Vector3(1, 1, 1), 0.1);
+sealModel.scale.copy(currentScale);}
+renderer.render(scene, camera);}
 animate();
 window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-});
+camera.aspect = window.innerWidth / window.innerHeight;
+camera.updateProjectionMatrix();
+renderer.setSize(window.innerWidth, window.innerHeight);});
