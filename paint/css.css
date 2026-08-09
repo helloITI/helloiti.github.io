@@ -9,7 +9,7 @@ button,
 input[type="color"] { cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, pointer; }
 input[type="range"] { cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, pointer; }
 input[type="text"] { width: 400px; cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, pointer; }
-.cl { position: absolute;top: 10px;right: 10px;color: white !important;font-size: 12px;text-decoration: none;-webkit-text-fill-color: white !important; }
+.cl { position: absolute;top: 10px;right: 10px;color: white !important;font-size: 13px;text-decoration: none;-webkit-text-fill-color: white !important; }
 .cl:hover { text-decoration: underline; }
 #po { display: none;position: fixed;top:0; left:0;width: 100%; height: 100%;background: rgba(0,0,0,0.7);justify-content: center;align-items: center;z-index: 999; }
 #po.visible { display: flex; }
@@ -20,13 +20,13 @@ input[type="text"] { width: 400px; cursor: url('https://helloiti.github.io/asset
 .cv-wrap{position:relative;display:inline-block;}
 #ov{position:absolute;top:0;left:0;pointer-events:none;}
 #cv {background: white;}
-.tos { position: absolute;top: 10px;left: 10px;color: white !important;font-size: 12px;text-decoration: none;-webkit-text-fill-color: white !important; }
+.tos { position: absolute;top: 10px;left: 10px;color: white !important;font-size: 13px;text-decoration: none;-webkit-text-fill-color: white !important; }
 .tos:hover { text-decoration: underline; }
-.pr { position: absolute;top: 30px;left: 10px;color: white !important;font-size: 12px;text-decoration: none;-webkit-text-fill-color: white !important; }
+.pr { position: absolute;top: 30px;left: 10px;color: white !important;font-size: 13px;text-decoration: none;-webkit-text-fill-color: white !important; }
 .pr:hover { text-decoration: underline; }
-.gl { position: absolute;top: 30px;right: 10px;color: white !important;font-size: 12px;text-decoration: none;-webkit-text-fill-color: white !important; }
+.gl { position: absolute;top: 30px;right: 10px;color: white !important;font-size: 13px;text-decoration: none;-webkit-text-fill-color: white !important; }
 .gl:hover { text-decoration: underline; }
-.dc { position: absolute;top: 50px;left: 10px;color: white !important;font-size: 12px;text-decoration: none;-webkit-text-fill-color: white !important; }
+.dc { position: absolute;top: 50px;left: 10px;color: white !important;font-size: 13px;text-decoration: none;-webkit-text-fill-color: white !important; }
 .dc:hover { text-decoration: underline; }
-.act { position: absolute;top: 50px;right: 10px;color: white !important;font-size: 12px;text-decoration: none;-webkit-text-fill-color: white !important; }
+.act { position: absolute;top: 50px;right: 10px;color: white !important;font-size: 13px;text-decoration: none;-webkit-text-fill-color: white !important; }
 .act:hover { text-decoration: underline; }
