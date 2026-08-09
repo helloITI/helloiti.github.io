@@ -57,15 +57,14 @@ try {await db.ref('galleryDrawings/' + drawID).remove();pOvr.style.display = 'no
 if (err.message && err.message.includes('PERMISSION_DENIED')) {alert('You can only remove your own drawings!');}
 else {console.error(err);}}};
 
-const REPORT_REASONS = [
-"NSFW or sexually explicit content",
+const RRS = ["NSFW or sexually explicit content",
 "Gore, graphic violence, or disturbing imagery",
 "Hate speech, slurs, or targeting protected characteristics",
 "Harassment or threats",
 "Doxxing / private information",
 "Spam or repeated drawings"];
 
-REPORT_REASONS.forEach(reason => {
+RRS.forEach(reason => {
 const b = document.createElement('button');
 b.className = 'r-reason';
 b.textContent = reason;
