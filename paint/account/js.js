@@ -1,4 +1,3 @@
-// hi skibibi!!! 🤣🤣🤣
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInAnonymously, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, updateEmail, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 import { getDatabase, ref, set, get, child, update, remove, onValue, query, orderByChild, equalTo, limitToFirst } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
@@ -6,7 +5,10 @@ const [_a,_b,_c,_d,_e,_f,_g,_h] = ["QUl6YVN5Qmx6WG45YnlnZU5fMEF5RFFIWURmMlQydk82
 const firebaseConfig = {apiKey:_a,authDomain:_b,databaseURL:_c,projectId:_d,storageBucket:_e,messagingSenderId:_f,appId:_g,measurementId:_h};const app = initializeApp(firebaseConfig);const auth = getAuth(app);const db = getDatabase(app);function getDeviceId(){let id=localStorage.getItem('pdid');if(!id){id=(crypto.randomUUID?crypto.randomUUID():(Date.now().toString(36)+Math.random().toString(36).slice(2)));localStorage.setItem('pdid',id);}return id;}const deviceId=getDeviceId();
 let isBanned=false;let unsubBan=null;
 function checkBanData(u){if(!u)return false;if(u.bannedUntil&&u.bannedUntil>0&&Date.now()<u.bannedUntil)return true;if(u.banned===true&&(!u.bannedUntil||u.bannedUntil===0))return true;return false;}
-function getBanMessage(uv){if(uv.bannedUntil&&uv.bannedUntil>0&&Date.now()<uv.bannedUntil){return"※ Your account has been banned until: "+new Date(uv.bannedUntil).toLocaleString()+" ※";}return"※ Your account has been banned. ※";}
+function getBanMessage(uv){
+const reason = uv.banReason || uv.reason;
+const reasonStr = reason ? " Reason: " + reason : "";
+if(uv.bannedUntil && uv.bannedUntil > 0 && Date.now() < uv.bannedUntil){return "※ Your account has been banned until: " + new Date(uv.bannedUntil).toLocaleString() + "." + reasonStr + " ※";}return "※ Your account has been banned." + reasonStr + " ※";}
 const banMsg=document.createElement("p");banMsg.style.cssText="color:#ff6b6b;font-size:14px;margin-top:20px;display:none;";document.body.appendChild(banMsg);
 const sUS=document.getElementById("sUS");const sEM=document.getElementById("sEM");const sPA=document.getElementById("sPA");const sCOPA=document.getElementById("sCOPA");const sSP=document.getElementById("sSP");const sMsg=document.getElementById("sMsg");
 const liUS=document.getElementById("liUS");const liEM=document.getElementById("liEM");const liPA=document.getElementById("liPA");const liCOPA=document.getElementById("liCOPA");const liSP=document.getElementById("liSP");let lMsg=document.getElementById("lMsg");
