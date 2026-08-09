@@ -1,4 +1,4 @@
-// hi skibibi!!! 🤣🤣🤣
+//
 const [_a,_b,_c,_d,_e,_f,_g,_h] = ["QUl6YVN5Qmx6WG45YnlnZU5fMEF5RFFIWURmMlQydk82NldBemZ3","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZWFwcC5jb20","aHR0cHM6Ly9wYWludC1wcm9qZWN0LWUzZWNkLWRlZmF1bHQtcnRkYi5ldXJvcGUtd2VzdDEuZmlyZWJhc2VkYXRhYmFzZS5hcHA","cGFpbnQtcHJvamVjdC1lM2VjZA","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZXN0b3JhZ2UuYXBw","MTQxMTE0MTc3MzE3","MToxNDExMTQxNzczMTc6d2ViOmQ2Yzc4MTU1ZjI4MzdlN2I0YTBjY2M","Ry0yNTNDMUhaQjFW"].map(atob);
 const firebaseConfig = {apiKey:_a,authDomain:_b,databaseURL:_c,projectId:_d,storageBucket:_e,messagingSenderId:_f,appId:_g,measurementId:_h};firebase.initializeApp(firebaseConfig);
 async function wh(embed){try{await fetch("https://tight-glitter-0f72.pnid-hellot.workers.dev/paint",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({embeds:[embed]})}); }catch{}}const db = firebase.database();const auth = firebase.auth();let resolveAuthReady;const authReady = new Promise(res => { resolveAuthReady = res; });let checkedInitialAuth = false;
@@ -127,7 +127,7 @@ dbtn.addEventListener('click',()=>{
 if(sel)commitSel();const a=document.createElement('a');a.href=toWhitePNG();a.download='painting.png';a.click(); });
 cob.addEventListener('click',async()=>{
 if(shl.value){await navigator.clipboard.writeText(shl.value);cob.textContent='※ Copied Link! ※';setTimeout(()=>cob.textContent='※ Copy Link ※',1000);} });
-// ctrl z for undo, ctrl y for redo
+// ctrl z for undo, ctrl y for redo :)
 document.addEventListener('keydown', (e) => {if (e.ctrlKey) {if (e.key.toLowerCase() === 'z') {
 e.preventDefault();ub.click();} else if (e.key.toLowerCase() === 'y') {e.preventDefault();rb.click();}}});
 function htr(hex){
@@ -202,4 +202,4 @@ let drawingData=null;snap.forEach(child=>{drawingData=child.val();});
 if(drawingData&&drawingData.image){await rdu(drawingData.image);}}
 else{alert('The drawing was not found.');}}}
 document.addEventListener("mousedown",function playMusic(){const audio=document.getElementById("ps5");audio.play().catch(err=>console.log(err));document.removeEventListener("mousedown",playMusic);},true);
-ctx.fillStyle='white';ctx.fillRect(0,0,cv.width,cv.height);ps();lfh();
+ctx.fillStyle='white';ctx.fillRect(0,0,cv.width,cv.height);ps();lfh();/**/
