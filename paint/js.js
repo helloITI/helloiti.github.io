@@ -1,5 +1,4 @@
-//
-const [_a,_b,_c,_d,_e,_f,_g,_h] = ["QUl6YVN5Qmx6WG45YnlnZU5fMEF5RFFIWURmMlQydk82NldBemZ3","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZWFwcC5jb20","aHR0cHM6Ly9wYWludC1wcm9qZWN0LWUzZWNkLWRlZmF1bHQtcnRkYi5ldXJvcGUtd2VzdDEuZmlyZWJhc2VkYXRhYmFzZS5hcHA","cGFpbnQtcHJvamVjdC1lM2VjZA","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZXN0b3JhZ2UuYXBw","MTQxMTE0MTc3MzE3","MToxNDExMTQxNzczMTc6d2ViOmQ2Yzc4MTU1ZjI4MzdlN2I0YTBjY2M","Ry0yNTNDMUhaQjFW"].map(atob);
+const [_a,_b,_c,_d,_e,_f,_g,_h] = ["QUl6YVN5Qmx6WG45YnlnZU5fMEF5RFFIWURmMlQydk82NldBemZ3","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZWFwcC5jb20","aHR0cHM6Ly9wYWludC1wcm9qZWN0LWUzZecdLWRlZmF1bHQtcnRkYi5ldXJvcGUtd2VzdDEuZmlyZWJhc2VkYXRhYmFzZS5hcHA","cGFpbnQtcHJvamVjdC1lM2VjZA","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZXN0b3JhZ2UuYXBw","MTQxMTE0MTc3MzE3","MToxNDExMTQxNzczMTc6d2ViOmQ2Yzc4MTU1ZjI4MzdlN2I0YTBjY2M","Ry0yNTNDMUhaQjFW"].map(atob);
 const firebaseConfig = {apiKey:_a,authDomain:_b,databaseURL:_c,projectId:_d,storageBucket:_e,messagingSenderId:_f,appId:_g,measurementId:_h};firebase.initializeApp(firebaseConfig);
 async function wh(embed){try{await fetch("https://tight-glitter-0f72.pnid-hellot.workers.dev/paint",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({embeds:[embed]})}); }catch{}}const db = firebase.database();const auth = firebase.auth();let resolveAuthReady;const authReady = new Promise(res => { resolveAuthReady = res; });let checkedInitialAuth = false;
 auth.onAuthStateChanged((user) => {
@@ -161,8 +160,11 @@ const td=Math.floor(Date.now()/86400000);
 const [usnap,devBanSnap]=await Promise.all([db.ref('users/'+authorId).once('value'),db.ref('deviceBans/'+deviceId).once('value')]);
 const serverNow=(await db.ref('.info/serverTimeOffset').once('value')).val()+Date.now();
 const uv=usnap.val()||{};
-if(uv.banned===true){alert('Your account has been banned from publishing drawings.');return;}
-if(devBanSnap.exists()&&devBanSnap.val()===true){alert('This device has been banned from publishing drawings.');return;}
+const uExp=uv.banUntil||uv.bannedUntil||uv.banExpires||uv.banExpiry||uv.unbanTime||uv.expires;
+const isUserBanned=(typeof uv.banned==='number')?(serverNow<uv.banned):(uv.banned===true&&(!uExp||serverNow<uExp));
+if(isUserBanned){alert('Your account has been banned from publishing drawings.');return;}
+let isDevBanned=false;if(devBanSnap.exists()){const dv=devBanSnap.val();const dExp=(typeof dv==='object'&&dv!==null)?(dv.until||dv.expires||dv.bannedUntil||dv.banUntil):null;if(typeof dv==='number')isDevBanned=serverNow<dv;else if(dv===true)isDevBanned=true;else if(typeof dv==='object'&&dv!==null)isDevBanned=dv.banned===true&&(!dExp||serverNow<dExp);}
+if(isDevBanned){alert('This device has been banned from publishing drawings.');return;}
 const ut=uv.uploadDay===td?(uv.uploadsToday||0):0;
 if(ut>=30){alert("You've hit your limit of 30 drawings for today!\nCome back tomorrow to make more. :)");return;}
 const timeSinceLast=serverNow-(uv.lastUpload||0);
@@ -202,4 +204,4 @@ let drawingData=null;snap.forEach(child=>{drawingData=child.val();});
 if(drawingData&&drawingData.image){await rdu(drawingData.image);}}
 else{alert('The drawing was not found.');}}}
 document.addEventListener("mousedown",function playMusic(){const audio=document.getElementById("ps5");audio.play().catch(err=>console.log(err));document.removeEventListener("mousedown",playMusic);},true);
-ctx.fillStyle='white';ctx.fillRect(0,0,cv.width,cv.height);ps();lfh();/**/
+ctx.fillStyle='white';ctx.fillRect(0,0,cv.width,cv.height);ps();lfh();
