@@ -12,7 +12,7 @@ const rptBtn = $('rB');const rO = $('rO');const rReasons = $('rReasons');const r
 clPo.addEventListener('click', () => pOvr.style.display = 'none');
 let drawings = [];let drawingIds = [];let authorUsernames = {};let drawID = null;let drawAuthorId = null;let userLikes = {};
 function cSI(src) {
-const img = document.createElement('img');//
+const img = document.createElement('img');
 img.src = src || '';
 img.onerror = () => img.src = 'https://helloiti.github.io/assets/paint.png';return img;}
 async function fetchUsername(uid) {
@@ -29,7 +29,6 @@ if (!user || user.isAnonymous) {userLikes = {};return;}
 try {const snap = await db.ref(`users/${user.uid}/likes`).get();userLikes = snap.exists() ? (snap.val() || {}) : {};} catch {userLikes = {};}}
 
 async function checkIfBanned(user) {try {if (user && !user.isAnonymous) {
-
 const userSnap = await db.ref(`users/${user.uid}/banned`).get();
 if (userSnap.exists() && userSnap.val() === true) return true;}
 const tokenResult = await firebase.app().options;
@@ -156,7 +155,7 @@ if (user.isAnonymous) {alert('You need a Paint Account to like drawings!\nGo to 
 const likeRef = db.ref(`drawings/${id}/likes/${user.uid}`);
 const userLikeRef = db.ref(`users/${user.uid}/likes/${id}`);
 const lastLikeRef = db.ref(`users/${user.uid}/lastLike`);
-const wasLiked = \,.userLikes[id];
+const wasLiked = !!userLikes[id];
 try {
 if (wasLiked) {
 await likeRef.remove();
