@@ -12,7 +12,7 @@ const rptBtn = $('rB');const rO = $('rO');const rReasons = $('rReasons');const r
 clPo.addEventListener('click', () => pOvr.style.display = 'none');
 let drawings = [];let drawingIds = [];let authorUsernames = {};let drawID = null;let drawAuthorId = null;let userLikes = {};
 function cSI(src) {
-const img = document.createElement('img');
+const img = document.createElement('img');//
 img.src = src || '';
 img.onerror = () => img.src = 'https://helloiti.github.io/assets/paint.png';return img;}
 async function fetchUsername(uid) {
