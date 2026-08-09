@@ -13,7 +13,7 @@
 <input type="file" id="importBtn"/>
 
 <script>
-  document.getElementById("importBtn").addEventListener("change", function (event) {
+  document.getElementById("importBtn").addEventListener("change", function (event) { //
     const file = event.target.files[0];
     if (file) {
       importMiiData(file);
