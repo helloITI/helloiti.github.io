@@ -1,3 +1,4 @@
+// hi skibibi!!! 🤣🤣🤣
 const [_a,_b,_c,_d,_e,_f,_g,_h] = ["QUl6YVN5Qmx6WG45YnlnZU5fMEF5RFFIWURmMlQydk82NldBemZ3","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZWFwcC5jb20","aHR0cHM6Ly9wYWludC1wcm9qZWN0LWUzZWNkLWRlZmF1bHQtcnRkYi5ldXJvcGUtd2VzdDEuZmlyZWJhc2VkYXRhYmFzZS5hcHA","cGFpbnQtcHJvamVjdC1lM2VjZA","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZXN0b3JhZ2UuYXBw","MTQxMTE0MTc3MzE3","MToxNDExMTQxNzczMTc6d2ViOmQ2Yzc4MTU1ZjI4MzdlN2I0YTBjY2M","Ry0yNTNDMUhaQjFW"].map(atob);
 const firebaseConfig = {apiKey:_a,authDomain:_b,databaseURL:_c,projectId:_d,storageBucket:_e,messagingSenderId:_f,appId:_g,measurementId:_h};
 firebase.initializeApp(firebaseConfig);
@@ -11,10 +12,12 @@ const gallery = $('gal');const favG = $('fG');const input = $('dLI');const addBt
 const rptBtn = $('rB');const rO = $('rO');const rReasons = $('rReasons');const rCancel = $('rCancel');
 clPo.addEventListener('click', () => pOvr.style.display = 'none');
 let drawings = [];let drawingIds = [];let authorUsernames = {};let drawID = null;let drawAuthorId = null;let userLikes = {};
+
 function cSI(src) {
 const img = document.createElement('img');
 img.src = src || '';
 img.onerror = () => img.src = 'https://helloiti.github.io/assets/paint.png';return img;}
+
 async function fetchUsername(uid) {
 if (!uid) return "Anonymous";
 if (authorUsernames[uid]) return authorUsernames[uid];
@@ -23,30 +26,32 @@ const val = snap.val();
 authorUsernames[uid] = "@" + (typeof val === 'string' ? val : val.username || "Anonymous");
 return authorUsernames[uid];}
 } catch {}return "Anonymous";}
+
 async function fetchUserLikes() {
 const user = auth.currentUser;
 if (!user || user.isAnonymous) {userLikes = {};return;}
 try {const snap = await db.ref(`users/${user.uid}/likes`).get();userLikes = snap.exists() ? (snap.val() || {}) : {};} catch {userLikes = {};}}
 
-async function checkIfBanned(user) {try {if (user && !user.isAnonymous) {
-const userSnap = await db.ref(`users/${user.uid}/banned`).get();
-if (userSnap.exists() && userSnap.val() === true) return true;}
-const tokenResult = await firebase.app().options;
-const deviceBanId = localStorage.getItem('device_id') || (user ? user.uid : null);
-if (deviceBanId) {
-const deviceSnap = await db.ref(`bannedDevices/${deviceBanId}`).get();
-if (deviceSnap.exists() && deviceSnap.val() === true) return true;}
-} catch (e) {console.error("ERROR TEST:", e);}return false;}
+async function checkIfBanned(user) {try {
+if (localStorage.getItem('deviceBanned') === 'true' || localStorage.getItem('banned') === 'true') return true;
+const deviceKeys = ['device_id', 'deviceId', 'device_token', 'fingerprint', 'fp_id'];
+const foundDeviceIds = deviceKeys.map(k => localStorage.getItem(k)).filter(Boolean);
+for (const devId of foundDeviceIds) {
+const [snap1, snap2] = await Promise.all([db.ref(`bannedDevices/${devId}`).get(), db.ref(`banned_devices/${devId}`).get()]);
+if ((snap1.exists() && snap1.val() === true) || (snap2.exists() && snap2.val() === true)) {localStorage.setItem('deviceBanned', 'true');return true;}}
+if (user && !user.isAnonymous) {
+const [userSnap, userDevSnap, userDevTableSnap] = await Promise.all([db.ref(`users/${user.uid}/banned`).get(), db.ref(`users/${user.uid}/deviceBanned`).get(), db.ref(`bannedDevices/${user.uid}`).get()]);
+if (userSnap.exists() && userSnap.val() === true) return true;
+if ((userDevSnap.exists() && userDevSnap.val() === true) || (userDevTableSnap.exists() && userDevTableSnap.val() === true)) {localStorage.setItem('deviceBanned', 'true');return true;}}
+} catch (e) {console.error("Ban check error:", e);}return false;}
 
 async function sPFD(d, id) {
 drawID = id;drawAuthorId = d.authorId;const user = auth.currentUser;const username = await fetchUsername(d.authorId);
 pMsg.textContent = `Drawing by: ${username}`;
 pImg.src = d.image || '';pImg.onerror = () => pImg.src = 'https://helloiti.github.io/assets/paint.png';
 delBtn.style.display = (user && !user.isAnonymous && d.authorId === user.uid) ? 'inline-block' : 'none';
-
 const isBanned = await checkIfBanned(user);
 rptBtn.style.display = (user && !user.isAnonymous && d.authorId !== user.uid && !isBanned) ? 'inline-block' : 'none';
-
 pOvr.style.display = 'flex';}
 
 delBtn.onclick = async () => {
@@ -65,56 +70,38 @@ const RRS = ["NSFW or sexually explicit content",
 
 RRS.forEach(reason => {
 const b = document.createElement('button');
-b.className = 'r-reason';
-b.textContent = reason;
+b.className = 'r-reason';b.textContent = reason;
 b.addEventListener('click', () => submitReport(reason));
 rReasons.appendChild(b);});
 
 const customReasonContainer = document.createElement('div');
 customReasonContainer.style.cssText = "margin-top: 10px; display: flex; flex-direction: column; gap: 5px; width: 100%;";
-
 const customInput = document.createElement('textarea');
-customInput.id = 'rCustomInput';
-customInput.placeholder = 'Type your custom reason here...';
+customInput.id = 'rCustomInput';customInput.placeholder = 'Type your custom reason here...';
 customInput.style.cssText = "width: 100%; height: 60px; padding: 8px; resize: none; background: #222; color: white; border: 1px solid #444; border-radius: 4px; box-sizing: border-box;";
-
 const customSubmitBtn = document.createElement('button');
-customSubmitBtn.className = 'r-reason';
-customSubmitBtn.style.background = '#444';
-customSubmitBtn.textContent = 'Submit Custom Reason ("Other")';
+customSubmitBtn.className = 'r-reason';customSubmitBtn.style.background = '#444';customSubmitBtn.textContent = 'Submit Custom Reason ("Other")';
 customSubmitBtn.addEventListener('click', () => {
 const customText = customInput.value.trim();
-if (!customText) {
-  alert('Please enter a reason before submitting.');
-  return;
-}
-submitReport('Other: ' + customText);
-});
-
-customReasonContainer.appendChild(customInput);
-customReasonContainer.appendChild(customSubmitBtn);
-rReasons.appendChild(customReasonContainer);
+if (!customText) {alert('Please enter a reason before submitting.');return;}
+submitReport('Other: ' + customText);});
+customReasonContainer.append(customInput, customSubmitBtn);rReasons.appendChild(customReasonContainer);
 
 rCancel.addEventListener('click', () => rO.style.display = 'none');
 rptBtn.addEventListener('click', async () => { 
-const user = auth.currentUser;
-const isBanned = await checkIfBanned(user);
-if (isBanned) {alert('Your account or device is banned from submitting reports.');rptBtn.style.display = 'none';return;}
-
+const user = auth.currentUser;const isBanned = await checkIfBanned(user);
+if (isBanned) {alert('Your account or device is banned from submitting reports.');rptBtn.style.display = 'none';rO.style.display = 'none';return;}
 customInput.value = '';rO.style.display = 'flex'; });
 
 async function submitReport(reason) {
 if (!drawID) return;
 const user = auth.currentUser;
 if (!user || user.isAnonymous) {alert('You need a Paint Account to report drawings!\nGo to https://helloiti.github.io to do so.');return;}
-
 const isBanned = await checkIfBanned(user);
-if (isBanned) {alert('You are banned from submitting reports.');rO.style.display = 'none';return;}
-
+if (isBanned) {alert('Your account or device is banned from submitting reports.');rO.style.display = 'none';return;}
 try {await Promise.all([
 db.ref(`reports/${drawID}/${user.uid}`).set({reason: reason, timestamp: firebase.database.ServerValue.TIMESTAMP}),
 db.ref(`users/${user.uid}/lastReport`).set(firebase.database.ServerValue.TIMESTAMP)]);
-
 rO.style.display = 'none';pOvr.style.display = 'none';
 alert('Thanks, your report has been submitted for review.');
 wh("reports",{title:'Drawing Reported',description:'**Drawing ID:** `'+drawID+'`\n**Reported by:** `'+user.uid+'`\n**Reason:** '+reason+'\n**Link:** https://helloiti.github.io/paint/#id='+drawID,color:0xe67e22,timestamp:new Date().toISOString()});
