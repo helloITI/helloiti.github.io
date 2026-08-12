@@ -1,15 +1,18 @@
-// hi skibibi!!! 🤣🤣🤣
 const [_a,_b,_c,_d,_e,_f,_g,_h] = ["QUl6YVN5Qmx6WG45YnlnZU5fMEF5RFFIWURmMlQydk82NldBemZ3","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZWFwcC5jb20","aHR0cHM6Ly9wYWludC1wcm9qZWN0LWUzZWNkLWRlZmF1bHQtcnRkYi5ldXJvcGUtd2VzdDEuZmlyZWJhc2VkYXRhYmFzZS5hcHA","cGFpbnQtcHJvamVjdC1lM2VjZA","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZXN0b3JhZ2UuYXBw","MTQxMTE0MTc3MzE3","MToxNDExMTQxNzczMTc6d2ViOmQ2Yzc4MTU1ZjI4MzdlN2I0YTBjY2M","Ry0yNTNDMUhaQjFW"].map(atob);
-const firebaseConfig = {apiKey:_a,authDomain:_b,databaseURL:_c,projectId:_d,storageBucket:_e,messagingSenderId:_f,appId:_g,measurementId:_h};
-firebase.initializeApp(firebaseConfig);
-async function wh(channel,embed){try{await fetch("https://tight-glitter-0f72.pnid-hellot.workers.dev/"+channel,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({embeds:[embed]})}); }catch{}}const db = firebase.database();const auth = firebase.auth();const $ = id => document.getElementById(id);let checkedInitialAuth = false;
+const firebaseConfig = {apiKey:_a,authDomain:_b,databaseURL:_c,projectId:_d,storageBucket:_e,messagingSenderId:_f,appId:_g,measurementId:_h};firebase.initializeApp(firebaseConfig);
+
+async function wh(channel,embed){try{await fetch("https://tight-glitter-0f72.pnid-hellot.workers.dev/"+channel,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({embeds:[embed]})}); }catch{}}
+const db = firebase.database();const auth = firebase.auth();const $ = id => document.getElementById(id);let checkedInitialAuth = false;
+
 auth.onAuthStateChanged((user) => {
 if (!checkedInitialAuth) {
 checkedInitialAuth = true;
 if (!user) {auth.signInAnonymously().catch(err => console.log("anon auth error:", err));}}});
+
 let resolveAuthReady;const authReady = new Promise(res => {resolveAuthReady = res;});
 const gallery = $('gal');const favG = $('fG');const input = $('dLI');const addBtn = $('aDB');const pOvr = $('pO');const pMsg = $('pM');const pImg = $('pImg');const delBtn = $('dB');const clPo = $('ok');const togFavB = $('tF');
 const rptBtn = $('rB');const rO = $('rO');const rReasons = $('rReasons');const rCancel = $('rCancel');
+
 clPo.addEventListener('click', () => pOvr.style.display = 'none');
 let drawings = [];let drawingIds = [];let authorUsernames = {};let drawID = null;let drawAuthorId = null;let userLikes = {};
 
@@ -99,9 +102,11 @@ const user = auth.currentUser;
 if (!user || user.isAnonymous) {alert('You need a Paint Account to report drawings!\nGo to https://helloiti.github.io to do so.');return;}
 const isBanned = await checkIfBanned(user);
 if (isBanned) {alert('Your account or device is banned from submitting reports.');rO.style.display = 'none';return;}
-try {await Promise.all([
-db.ref(`reports/${drawID}/${user.uid}`).set({reason: reason, timestamp: firebase.database.ServerValue.TIMESTAMP}),
-db.ref(`users/${user.uid}/lastReport`).set(firebase.database.ServerValue.TIMESTAMP)]);
+try {
+const updates = {};
+updates[`reports/${drawID}/${user.uid}`] = {reason: reason, timestamp: firebase.database.ServerValue.TIMESTAMP};
+updates[`users/${user.uid}/lastReport`] = firebase.database.ServerValue.TIMESTAMP;
+await db.ref().update(updates);
 rO.style.display = 'none';pOvr.style.display = 'none';
 alert('Thanks, your report has been submitted for review.');
 wh("reports",{title:'Drawing Reported',description:'**Drawing ID:** `'+drawID+'`\n**Reported by:** `'+user.uid+'`\n**Reason:** '+reason+'\n**Link:** https://helloiti.github.io/paint/#id='+drawID,color:0xe67e22,timestamp:new Date().toISOString()});
@@ -139,22 +144,32 @@ e.stopPropagation();
 if (btn._busy) return;btn._busy = true;await authReady;const user = auth.currentUser;
 if (!user) {alert('Could not connect to the server, please refresh the page!');btn._busy = false;return;}
 if (user.isAnonymous) {alert('You need a Paint Account to like drawings!\nGo to https://helloiti.github.io to do so.');btn._busy = false;return;}
-const likeRef = db.ref(`drawings/${id}/likes/${user.uid}`);
-const userLikeRef = db.ref(`users/${user.uid}/likes/${id}`);
-const lastLikeRef = db.ref(`users/${user.uid}/lastLike`);
+if (d.authorId === user.uid) {alert('You cannot like your own drawing!');btn._busy = false;return;}
+
 const wasLiked = !!userLikes[id];
-try {
+const updates = {};
 if (wasLiked) {
-await likeRef.remove();
-await userLikeRef.remove();
-await lastLikeRef.set(firebase.database.ServerValue.TIMESTAMP);delete userLikes[id];
+  updates[`drawings/${id}/likes/${user.uid}`] = null;
+  updates[`users/${user.uid}/likes/${id}`] = null;
+  updates[`users/${user.uid}/lastLike`] = firebase.database.ServerValue.TIMESTAMP;
+} else {
+  updates[`drawings/${id}/likes/${user.uid}`] = true;
+  updates[`users/${user.uid}/likes/${id}`] = true;
+  updates[`users/${user.uid}/lastLike`] = firebase.database.ServerValue.TIMESTAMP;
+}
+
+try {
+await db.ref().update(updates);
+if (wasLiked) {
+delete userLikes[id];
 const newCount = d.likes ? Math.max(0, Object.keys(d.likes).length - 1) : 0;
 btn.textContent = `💔 ${newCount}`;setTimeout(() => btn.textContent = `❤️ ${newCount}`, 600);if (d.likes) delete d.likes[user.uid];
-} else {await likeRef.set(true);await userLikeRef.set(true);await lastLikeRef.set(firebase.database.ServerValue.TIMESTAMP);userLikes[id] = true;
+} else {
+userLikes[id] = true;
 const newCount = d.likes ? Object.keys(d.likes).length + 1 : 1;
 btn.textContent = `💖 ${newCount}`;
 if (!d.likes) d.likes = {};d.likes[user.uid] = true;}displayFavorites();} catch (err) {
-if (err.message && err.message.includes('PERMISSION_DENIED')) {alert('You\'re doing that too fast, slow down!');}else {console.error(err);}}
+if (err.message && err.message.includes('PERMISSION_DENIED')) {alert('You\'re doing that too fast, or you cannot like this drawing!');}else {console.error(err);}}
 btn._busy = false;});div.append(img, btn);gallery.appendChild(div);});}
 
 function displayFavorites() {favG.innerHTML = '';
