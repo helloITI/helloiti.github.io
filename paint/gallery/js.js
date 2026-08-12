@@ -145,7 +145,7 @@ const RRS = [ "NSFW or sexually explicit content",
 
 RRS.forEach(reason => {
     const b = document.createElement('button');
-    b.className = 'r-reason';
+    b.className = 'rsn';
     b.textContent = reason;
     b.addEventListener('click', () => submitReport(reason));
     rRR.appendChild(b); });
