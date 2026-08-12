@@ -3,7 +3,7 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, si
 import { getDatabase, ref, set, get, child, update, remove, onValue, query, orderByChild, equalTo, limitToFirst } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
 const [_a,_b,_c,_d,_e,_f,_g,_h] = ["QUl6YVN5Qmx6WG45YnlnZU5fMEF5RFFIWURmMlQydk82NldBemZ3","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZWFwcC5jb20","aHR0cHM6Ly9wYWludC1wcm9qZWN0LWUzZWNkLWRlZmF1bHQtcnRkYi5ldXJvcGUtd2VzdDEuZmlyZWJhc2VkYXRhYmFzZS5hcHA","cGFpbnQtcHJvamVjdC1lM2VjZA","cGFpbnQtcHJvamVjdC1lM2VjZC5maXJlYmFzZXN0b3JhZ2UuYXBw","MTQxMTE0MTc3MzE3","MToxNDExMTQxNzczMTc6d2ViOmQ2Yzc4MTU1ZjI4MzdlN2I0YTBjY2M","Ry0yNTNDMUhaQjFW"].map(atob);
 const firebaseConfig = {apiKey:_a,authDomain:_b,databaseURL:_c,projectId:_d,storageBucket:_e,messagingSenderId:_f,appId:_g,measurementId:_h};const app = initializeApp(firebaseConfig);const auth = getAuth(app);const db = getDatabase(app);function getDeviceId(){let id=localStorage.getItem('pdid');if(!id){id=(crypto.randomUUID?crypto.randomUUID():(Date.now().toString(36)+Math.random().toString(36).slice(2)));localStorage.setItem('pdid',id);}return id;}const deviceId=getDeviceId();
-let isBanned=false;let unsubBan=null;
+let isBanned=false;let unsubBan=null;//
 function checkBanData(u){if(!u)return false;if(u.bannedUntil&&u.bannedUntil>0&&Date.now()<u.bannedUntil)return true;if(u.banned===true&&(!u.bannedUntil||u.bannedUntil===0))return true;return false;}
 function getBanMessage(uv){const reason = uv.banReason || uv.reason;
 const reasonStr = reason ? " Reason: " + reason : "";
