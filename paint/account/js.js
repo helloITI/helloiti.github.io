@@ -41,61 +41,62 @@ const banMsg = document.createElement("p");
 banMsg.style.cssText = "color:#ff6b6b;font-size:14px;margin-top:20px;display:none;";
 document.body.appendChild(banMsg);
 
-const sUS = document.getElementById("sUS");
-const sEM = document.getElementById("sEM");
-const sPA = document.getElementById("sPA");
-const sCOPA = document.getElementById("sCOPA");
-const sSP = document.getElementById("sSP");
-const sMsg = document.getElementById("sMsg");
+const r_u = document.getElementById("r_u");
+const r_e = document.getElementById("r_e");
+const r_p = document.getElementById("r_p");
+const r_cp = document.getElementById("r_cp");
+const r_sp = document.getElementById("r_sp");
+const r_msg = document.getElementById("r_msg");
 
-const liUS = document.getElementById("liUS");
-const liEM = document.getElementById("liEM");
-const liPA = document.getElementById("liPA");
-const liCOPA = document.getElementById("liCOPA");
-const liSP = document.getElementById("liSP");
-let lMsg = document.getElementById("lMsg");
+const l_u = document.getElementById("l_u");
+const l_e = document.getElementById("l_e");
+const l_p = document.getElementById("l_p");
+const l_cp = document.getElementById("l_cp");
+const l_sp = document.getElementById("l_sp");
+let l_msg = document.getElementById("l_msg");
 
-const btnSUP = document.getElementById("btnSUP");
-const btnLG = document.getElementById("btnLG");
-const btnLT = document.getElementById("btnLT");
-const btnGL = document.getElementById("btnGL");
+const b_sup = document.getElementById("b_sup");
+const b_lg = document.getElementById("b_lg");
+const b_lt = document.getElementById("b_lt");
+const b_gl = document.getElementById("b_gl");
 
-const actC = document.getElementById("actC");
-const actI = document.getElementById("actI");
+const act_c = document.getElementById("act_c");
+const act_i = document.getElementById("act_i");
 
-const lCD = document.getElementById("lCD");
-const sCD = document.getElementById("sCD");
+const l_cd = document.getElementById("l_cd");
+const s_cd = document.getElementById("s_cd");
 
-const gUD = document.getElementById("gUD");
-const gUS = document.getElementById("gUS");
-const btnGUS = document.getElementById("btnGUS");
-const gMsg = document.getElementById("gMsg");
+const g_div = document.getElementById("g_div");
+const g_u = document.getElementById("g_u");
+const b_gus = document.getElementById("b_gus");
+const g_msg = document.getElementById("g_msg");
 
 let pendingGoogleUser = null;
 
-const sSUP = document.getElementById("sSUP");
-const sLG = document.getElementById("sLG");
-const sLGL = document.getElementById("sLGL");
-const stPanel = document.getElementById("stPanel");
-const btnStOpen = document.getElementById("btnStOpen");
-const btnStClose = document.getElementById("btnStClose");
+const b_ssup = document.getElementById("b_ssup");
+const b_slg = document.getElementById("b_slg");
+const b_slgl = document.getElementById("b_slgl");
+const st_p = document.getElementById("st_p");
+const b_sto = document.getElementById("b_sto");
+const b_stc = document.getElementById("b_stc");
 
-const stNewUN = document.getElementById("stNewUN");
-const btnStUN = document.getElementById("btnStUN");
-const stUNMsg = document.getElementById("stUNMsg");
+const st_nu = document.getElementById("st_nu");
+const b_stu = document.getElementById("b_stu");
+const st_um = document.getElementById("st_um");
 
-const stNewEM = document.getElementById("stNewEM");
-const stCurPAem = document.getElementById("stCurPAem");
-const btnStEM = document.getElementById("btnStEM");
-const stEMMsg = document.getElementById("stEMMsg");
+const st_ne = document.getElementById("st_ne");
+const st_cp_e = document.getElementById("st_cp_e");
+const b_ste = document.getElementById("b_ste");
+const st_em = document.getElementById("st_em");
 
-const stCurPA = document.getElementById("stCurPA");
-const stNewPA = document.getElementById("stNewPA");
-const stCOPA = document.getElementById("stCOPA");
-const btnStPA = document.getElementById("btnStPA");
+const st_cp = document.getElementById("st_cp");
+const st_np = document.getElementById("st_np");
+const st_cop = document.getElementById("st_cop");
+const b_stp = document.getElementById("b_stp");
+const st_pm = document.getElementById("st_pm");
 
-const stEmailSec = document.getElementById("stEmailSec");
-const stPassSec = document.getElementById("stPassSec");
+const st_es = document.getElementById("st_es");
+const st_ps = document.getElementById("st_ps");
 
 let currentUsername = null;
 let currentIsGoogle = false;
@@ -103,13 +104,13 @@ let currentIsGoogle = false;
 function enforceBan(msg){
   isBanned = true;
   if(unsubBan){ unsubBan(); unsubBan = null; }
-  stPanel.style.display = "none";
-  actC.style.display = "none";
-  lCD.style.display = "none";
-  sCD.style.display = "none";
-  btnGL.style.display = "none";
+  st_p.style.display = "none";
+  act_c.style.display = "none";
+  l_cd.style.display = "none";
+  s_cd.style.display = "none";
+  b_gl.style.display = "none";
   if(document.getElementById("orb")) document.getElementById("orb").style.display = "none";
-  gUD.style.display = "none";
+  g_div.style.display = "none";
   document.querySelectorAll("p").forEach(p => { if(p !== banMsg) p.style.display = "none"; });
   document.querySelector("h2").style.display = "none";
   banMsg.textContent = msg;
@@ -138,22 +139,22 @@ function isValidEmail(email){
 
 let manualAuthInProgress = false;
 
-if(sSP) sSP.onchange = () => { sPA.type = sSP.checked ? "text" : "password"; sCOPA.type = sSP.checked ? "text" : "password"; };
-if(liSP) liSP.onchange = () => { liPA.type = liSP.checked ? "text" : "password"; liCOPA.type = liSP.checked ? "text" : "password"; };
+if(r_sp) r_sp.onchange = () => { r_p.type = r_sp.checked ? "text" : "password"; r_cp.type = r_sp.checked ? "text" : "password"; };
+if(l_sp) l_sp.onchange = () => { l_p.type = l_sp.checked ? "text" : "password"; l_cp.type = l_sp.checked ? "text" : "password"; };
 
-if(sSUP) sSUP.onclick = () => {
-  lCD.style.display = "none";
-  sCD.style.display = "flex";
-  sSUP.parentElement.style.display = "none";
-  sLG.style.display = "block";
+if(b_ssup) b_ssup.onclick = () => {
+  l_cd.style.display = "none";
+  s_cd.style.display = "flex";
+  b_ssup.parentElement.style.display = "none";
+  b_slg.style.display = "block";
   document.querySelector("h2").textContent = "※ Register your very own Paint Account! ※";
 };
 
-if(sLGL) sLGL.onclick = () => {
-  sCD.style.display = "none";
-  lCD.style.display = "flex";
-  sSUP.parentElement.style.display = "block";
-  sLG.style.display = "none";
+if(b_slgl) b_slgl.onclick = () => {
+  s_cd.style.display = "none";
+  l_cd.style.display = "flex";
+  b_ssup.parentElement.style.display = "block";
+  b_slg.style.display = "none";
   document.querySelector("h2").textContent = "※ Log in your Paint Account! ※";
 };
 
@@ -162,88 +163,88 @@ const orb = document.getElementById("orb");
 function showLoggedInUI(uname, isGoogle, banned){
   currentUsername = uname;
   currentIsGoogle = !!isGoogle;
-  actI.textContent = "※ Welcome, @" + uname + "! ※";
-  actC.style.display = "block";
-  lCD.style.display = "none";
-  sCD.style.display = "none";
+  act_i.textContent = "※ Welcome, @" + uname + "! ※";
+  act_c.style.display = "block";
+  l_cd.style.display = "none";
+  s_cd.style.display = "none";
   if(orb) orb.style.display = "none";
-  if(sSUP) sSUP.parentElement.style.display = "none";
-  if(sLG) sLG.style.display = "none";
-  btnGL.style.display = "none";
-  gUD.style.display = "none";
+  if(b_ssup) b_ssup.parentElement.style.display = "none";
+  if(b_slg) b_slg.style.display = "none";
+  b_gl.style.display = "none";
+  g_div.style.display = "none";
   document.querySelector("h2").style.display = "none";
-  stPanel.style.display = "none";
-  stEmailSec.style.display = isGoogle ? "none" : "block";
-  stPassSec.style.display = isGoogle ? "none" : "block";
-  btnLT.style.display = banned ? "none" : "block";
-  btnStOpen.style.display = banned ? "none" : "block";
+  st_p.style.display = "none";
+  st_es.style.display = isGoogle ? "none" : "block";
+  st_ps.style.display = isGoogle ? "none" : "block";
+  b_lt.style.display = banned ? "none" : "block";
+  b_sto.style.display = banned ? "none" : "block";
 }
 
 function showLoggedOutUI(){
   if(isBanned) return;
   currentUsername = null;
   if(unsubBan){ unsubBan(); unsubBan = null; }
-  stPanel.style.display = "none";
-  actC.style.display = "none";
-  lCD.style.display = "flex";
-  sCD.style.display = "none";
+  st_p.style.display = "none";
+  act_c.style.display = "none";
+  l_cd.style.display = "flex";
+  s_cd.style.display = "none";
   if(orb) orb.style.display = "block";
-  if(sSUP) sSUP.parentElement.style.display = "block";
-  if(sLG) sLG.style.display = "none";
-  btnGL.style.display = "block";
-  gUD.style.display = "none";
+  if(b_ssup) b_ssup.parentElement.style.display = "block";
+  if(b_slg) b_slg.style.display = "none";
+  b_gl.style.display = "block";
+  g_div.style.display = "none";
   const h = document.querySelector("h2");
   h.style.display = "block";
   h.textContent = "※ Log in your Paint Account! ※";
 }
 
-btnStOpen.onclick = () => {
-  actC.style.display = "none";
-  stPanel.style.display = "flex";
-  stUNMsg.textContent = "";
-  stEMMsg.textContent = "";
-  stPAMsg.textContent = "";
-  stNewUN.value = "";
-  stNewEM.value = "";
-  stCurPAem.value = "";
-  stCurPA.value = "";
-  stNewPA.value = "";
-  stCOPA.value = "";
-  stEmailSec.style.display = currentIsGoogle ? "none" : "block";
-  stPassSec.style.display = currentIsGoogle ? "none" : "block";
-  document.getElementById("delStep1").style.display = "none";
-  document.getElementById("delStep2").style.display = "none";
-  document.getElementById("delStep3").style.display = "none";
-  document.getElementById("delEM").value = "";
-  document.getElementById("delPA").value = "";
-  document.getElementById("delMsg").textContent = "";
+b_sto.onclick = () => {
+  act_c.style.display = "none";
+  st_p.style.display = "flex";
+  st_um.textContent = "";
+  st_em.textContent = "";
+  st_pm.textContent = "";
+  st_nu.value = "";
+  st_ne.value = "";
+  st_cp_e.value = "";
+  st_cp.value = "";
+  st_np.value = "";
+  st_cop.value = "";
+  st_es.style.display = currentIsGoogle ? "none" : "block";
+  st_ps.style.display = currentIsGoogle ? "none" : "block";
+  document.getElementById("ds1").style.display = "none";
+  document.getElementById("ds2").style.display = "none";
+  document.getElementById("ds3").style.display = "none";
+  document.getElementById("d_e").value = "";
+  document.getElementById("d_p").value = "";
+  document.getElementById("d_msg").textContent = "";
   if(currentIsGoogle){
-    if(document.getElementById("delEM")) document.getElementById("delEM").style.display = "none";
-    if(document.getElementById("delPA")) document.getElementById("delPA").style.display = "none";
-    btnDelFinal.textContent = "Sign in with Google to Delete";
+    if(document.getElementById("d_e")) document.getElementById("d_e").style.display = "none";
+    if(document.getElementById("d_p")) document.getElementById("d_p").style.display = "none";
+    b_df.textContent = "Sign in with Google to Delete";
   } else {
-    if(document.getElementById("delEM")) document.getElementById("delEM").style.display = "block";
-    if(document.getElementById("delPA")) document.getElementById("delPA").style.display = "block";
-    btnDelFinal.textContent = "※ Permanently Delete Account ※";
+    if(document.getElementById("d_e")) document.getElementById("d_e").style.display = "block";
+    if(document.getElementById("d_p")) document.getElementById("d_p").style.display = "block";
+    b_df.textContent = "※ Permanently Delete Account ※";
   }
 };
 
-btnStClose.onclick = () => { stPanel.style.display = "none"; actC.style.display = "block"; };
+b_stc.onclick = () => { st_p.style.display = "none"; act_c.style.display = "block"; };
 
-btnStUN.onclick = async () => {
-  const newUN = stNewUN.value.trim().toLowerCase();
-  stUNMsg.textContent = "";
-  if(!newUN){ stUNMsg.textContent = "Please enter a new username."; return; }
-  if(newUN === currentUsername){ stUNMsg.textContent = "That's already your username 😭✌️"; return; }
+b_stu.onclick = async () => {
+  const newUN = st_nu.value.trim().toLowerCase();
+  st_um.textContent = "";
+  if(!newUN){ st_um.textContent = "Please enter a new username."; return; }
+  if(newUN === currentUsername){ st_um.textContent = "That's already your username 😭✌️"; return; }
   if(newUN.length < 3 || newUN.length > 20 || !/^[a-z0-9_]+$/.test(newUN)){
-    stUNMsg.textContent = "Usernames must be 3-20 characters: letters, numbers, underscores only.";
+    st_um.textContent = "Usernames must be 3-20 characters: letters, numbers, underscores only.";
     return;
   }
   const user = auth.currentUser;
   if(!user) return;
   try{
     const taken = await get(child(ref(db), "usernames/" + newUN));
-    if(taken.exists()){ stUNMsg.textContent = "※ That username is already taken. ※"; return; }
+    if(taken.exists()){ st_um.textContent = "※ That username is already taken. ※"; return; }
     const oldUN = currentUsername;
     await update(ref(db), {
       ["usernames/" + newUN]: { uid: user.uid },
@@ -251,20 +252,20 @@ btnStUN.onclick = async () => {
       ["users/" + user.uid + "/username"]: newUN
     });
     currentUsername = newUN;
-    actI.textContent = "※ Welcome, @" + newUN + "! ※";
-    stUNMsg.textContent = "※ Username updated! ※";
-    stNewUN.value = "";
+    act_i.textContent = "※ Welcome, @" + newUN + "! ※";
+    st_um.textContent = "※ Username updated! ※";
+    st_nu.value = "";
   } catch(err){
-    stUNMsg.textContent = "※ Error: " + err.message + " ※";
+    st_um.textContent = "※ Error: " + err.message + " ※";
   }
 };
 
-btnStEM.onclick = async () => {
-  const newEM = stNewEM.value.trim().toLowerCase();
-  const curPA = stCurPAem.value;
-  stEMMsg.textContent = "";
-  if(!newEM || !curPA){ stEMMsg.textContent = "Please fill out all fields."; return; }
-  if(!isValidEmail(newEM)){ stEMMsg.textContent = "Please enter a valid email address."; return; }
+b_ste.onclick = async () => {
+  const newEM = st_ne.value.trim().toLowerCase();
+  const curPA = st_cp_e.value;
+  st_em.textContent = "";
+  if(!newEM || !curPA){ st_em.textContent = "Please fill out all fields."; return; }
+  if(!isValidEmail(newEM)){ st_em.textContent = "Please enter a valid email address."; return; }
   const user = auth.currentUser;
   if(!user) return;
   try{
@@ -279,65 +280,65 @@ btnStEM.onclick = async () => {
     };
     if(oldEmail) dbUp["emails/" + emailKey(oldEmail)] = null;
     await update(ref(db), dbUp);
-    stEMMsg.textContent = "※ Email updated! ※";
-    stNewEM.value = "";
-    stCurPAem.value = "";
+    st_em.textContent = "※ Email updated! ※";
+    st_ne.value = "";
+    st_cp_e.value = "";
   } catch(err){
-    if(err.code === "auth/wrong-password"){ stEMMsg.textContent = "※ Wrong password. ※"; }
-    else if(err.code === "auth/email-already-in-use"){ stEMMsg.textContent = "※ That email is already in use. ※"; }
-    else{ stEMMsg.textContent = "※ Error: " + err.message + " ※"; }
+    if(err.code === "auth/wrong-password"){ st_em.textContent = "※ Wrong password. ※"; }
+    else if(err.code === "auth/email-already-in-use"){ st_em.textContent = "※ That email is already in use. ※"; }
+    else{ st_em.textContent = "※ Error: " + err.message + " ※"; }
   }
 };
 
-btnStPA.onclick = async () => {
-  const curPA = stCurPA.value;
-  const newPA = stNewPA.value;
-  const coPA = stCOPA.value;
-  stPAMsg.textContent = "";
-  if(!curPA || !newPA || !coPA){ stPAMsg.textContent = "Please fill out all fields."; return; }
-  if(newPA !== coPA){ stPAMsg.textContent = "New passwords don't match."; return; }
-  if(newPA.length < 6){ stPAMsg.textContent = "Password must be at least 6 characters."; return; }
+b_stp.onclick = async () => {
+  const curPA = st_cp.value;
+  const newPA = st_np.value;
+  const coPA = st_cop.value;
+  st_pm.textContent = "";
+  if(!curPA || !newPA || !coPA){ st_pm.textContent = "Please fill out all fields."; return; }
+  if(newPA !== coPA){ st_pm.textContent = "New passwords don't match."; return; }
+  if(newPA.length < 6){ st_pm.textContent = "Password must be at least 6 characters."; return; }
   const user = auth.currentUser;
   if(!user) return;
   try{
     const cred = EmailAuthProvider.credential(user.email, curPA);
     await reauthenticateWithCredential(user, cred);
     await updatePassword(user, newPA);
-    stPAMsg.textContent = "※ Password updated! ※";
-    stCurPA.value = "";
-    stNewPA.value = "";
-    stCOPA.value = "";
+    st_pm.textContent = "※ Password updated! ※";
+    st_cp.value = "";
+    st_np.value = "";
+    st_cop.value = "";
   } catch(err){
-    if(err.code === "auth/wrong-password"){ stPAMsg.textContent = "※ Wrong password. ※"; }
-    else{ stPAMsg.textContent = "※ Error: " + err.message + " ※"; }
+    if(err.code === "auth/wrong-password"){ st_pm.textContent = "※ Wrong password. ※"; }
+    else{ st_pm.textContent = "※ Error: " + err.message + " ※"; }
   }
 };
 
 let _supBusy = false;
-btnSUP.onclick = async () => {
+b_sup.onclick = async () => {
   if(_supBusy) return;
   _supBusy = true;
   setTimeout(() => _supBusy = false, 5000);
 
   const [devSnap] = await Promise.all([get(child(ref(db), "deviceBans/" + deviceId))]);
   if(devSnap.exists() && devSnap.val() === true){
-    sMsg.textContent = "This device has been banned.";
+    r_msg.textContent = "This device has been banned.";
     return;
   }
 
-  const username = sUS.value.trim().toLowerCase();
-  const email = sEM.value.trim().toLowerCase();
-  const password = sPA.value;
-  const confirmPassword = sCOPA.value;
-  sMsg.textContent = "";
+  const username = r_u.value.trim().toLowerCase();
+  const email = r_e.value.trim().toLowerCase();
+  const password = r_p.value;
+  const confirmPassword = r_cp.value;
+  r_msg.textContent = "";
 
-  if(!username || !email || !password || !confirmPassword){ sMsg.textContent = "Please fill out all fields."; return; }
+  if(!username || !email || !password || !confirmPassword){ r_msg.textContent = "Please fill out all fields."; return; }
   if(username.length < 3 || username.length > 20 || !/^[a-z0-9_]+$/.test(username)){
-    sMsg.textContent = "Usernames must be 3-20 characters: letters, numbers, underscores only.";
+    r_msg.textContent = "Usernames must be 3-20 characters: letters, numbers, underscores only.";
     return;
   }
-  if(!isValidEmail(email)){ sMsg.textContent = "Please enter a valid email address."; return; }
-  if(password !== confirmPassword){ sMsg.textContent = "Passwords don't match."; return; }
+  if(!isValidEmail(email)){ r_msg.textContent = "Please enter a valid email address."; return; }
+  if(password !== confirmPassword){ r_msg.textContent = "Passwords don't match."; return; }
 
   manualAuthInProgress = true;
   let cred;
@@ -358,11 +359,11 @@ btnSUP.onclick = async () => {
   } catch(err){
     if(cred && cred.user){ try{ await cred.user.delete(); } catch{} }
     if(err.code === "auth/email-already-in-use"){
-      sMsg.textContent = "That email is already in use by another account.";
+      r_msg.textContent = "That email is already in use by another account.";
     } else if(err.message && err.message.includes("PERMISSION_DENIED")){
-      sMsg.textContent = "That username or email is already taken.";
+      r_msg.textContent = "That username or email is already taken.";
     } else {
-      sMsg.textContent = "※ Error: " + err.message + " ※";
+      r_msg.textContent = "※ Error: " + err.message + " ※";
     }
   } finally {
     manualAuthInProgress = false;
@@ -370,24 +371,24 @@ btnSUP.onclick = async () => {
 };
 
 let _lgBusy = false;
-btnLG.onclick = async () => {
+b_lg.onclick = async () => {
   if(_lgBusy) return;
   _lgBusy = true;
   setTimeout(() => _lgBusy = false, 5000);
 
   const devSnap = await get(child(ref(db), "deviceBans/" + deviceId)).catch(() => null);
   if(devSnap && devSnap.exists() && devSnap.val() === true){
-    lMsg.textContent = "This device has been banned.";
+    l_msg.textContent = "This device has been banned.";
     return;
   }
 
-  const email = liEM.value.trim().toLowerCase();
-  const password = liPA.value;
-  const confirmPassword = liCOPA.value;
-  lMsg.textContent = "";
+  const email = l_e.value.trim().toLowerCase();
+  const password = l_p.value;
+  const confirmPassword = l_cp.value;
+  l_msg.textContent = "";
 
-  if(!email || !password || !confirmPassword){ lMsg.textContent = "Please fill out all fields."; return; }
-  if(password !== confirmPassword){ lMsg.textContent = "Passwords don't match."; return; }
+  if(!email || !password || !confirmPassword){ l_msg.textContent = "Please fill out all fields."; return; }
+  if(password !== confirmPassword){ l_msg.textContent = "Passwords don't match."; return; }
 
   manualAuthInProgress = true;
   try{
@@ -411,26 +412,26 @@ btnLG.onclick = async () => {
     startBanListener(cred.user.uid);
   } catch(err){
     console.error("[login error]", err.code, err);
-    lMsg.textContent = "※ Error: " + err.message + " ※";
+    l_msg.textContent = "※ Error: " + err.message + " ※";
   } finally {
     manualAuthInProgress = false;
   }
 };
 
 let _glBusy = false;
-btnGL.onclick = async () => {
+b_gl.onclick = async () => {
   if(_glBusy) return;
   _glBusy = true;
   setTimeout(() => _glBusy = false, 5000);
 
   const devSnap = await get(child(ref(db), "deviceBans/" + deviceId)).catch(() => null);
   if(devSnap && devSnap.exists() && devSnap.val() === true){
-    lMsg.textContent = "This device has been banned.";
+    l_msg.textContent = "This device has been banned.";
     return;
   }
 
-  lMsg.textContent = "";
-  sMsg.textContent = "";
+  l_msg.textContent = "";
+  r_msg.textContent = "";
   manualAuthInProgress = true;
   try{
     if(auth.currentUser && auth.currentUser.isAnonymous) await signOut(auth);
@@ -454,47 +455,47 @@ btnGL.onclick = async () => {
       showLoggedInUI(uv.username, true, false);
       startBanListener(cred.user.uid);
     } else {
-      lCD.style.display = "none";
-      sCD.style.display = "none";
-      if(sSUP) sSUP.parentElement.style.display = "none";
-      if(sLG) sLG.style.display = "none";
-      btnGL.style.display = "none";
+      l_cd.style.display = "none";
+      s_cd.style.display = "none";
+      if(b_ssup) b_ssup.parentElement.style.display = "none";
+      if(b_slg) b_slg.style.display = "none";
+      b_gl.style.display = "none";
       if(orb) orb.style.display = "none";
       document.querySelector("h2").textContent = "※ One more step! ※";
-      gUS.value = "";
-      gMsg.textContent = "";
-      gUD.style.display = "flex";
+      g_u.value = "";
+      g_msg.textContent = "";
+      g_div.style.display = "flex";
     }
   } catch(err){
     manualAuthInProgress = false;
     if(err.code !== "auth/popup-closed-by-user" && err.code !== "auth/cancelled-popup-request"){
-      (lCD.style.display !== "none" ? lMsg : sMsg).textContent = "※ Error: " + err.message + " ※";
+      (l_cd.style.display !== "none" ? l_msg : r_msg).textContent = "※ Error: " + err.message + " ※";
     }
   }
 };
 
 let _gusBusy = false;
-btnGUS.onclick = async () => {
+b_gus.onclick = async () => {
   if(_gusBusy) return;
   _gusBusy = true;
   setTimeout(() => _gusBusy = false, 5000);
 
   const devSnap = await get(child(ref(db), "deviceBans/" + deviceId)).catch(() => null);
   if(devSnap && devSnap.exists() && devSnap.val() === true){
-    gMsg.textContent = "This device has been banned.";
+    g_msg.textContent = "This device has been banned.";
     return;
   }
 
-  const username = gUS.value.trim().toLowerCase();
-  gMsg.textContent = "";
-  if(!username){ gMsg.textContent = "Please choose a username."; return; }
+  const username = g_u.value.trim().toLowerCase();
+  g_msg.textContent = "";
+  if(!username){ g_msg.textContent = "Please choose a username."; return; }
   if(username.length < 3 || username.length > 20 || !/^[a-z0-9_]+$/.test(username)){
-    gMsg.textContent = "Usernames must be 3-20 characters: letters, numbers, underscores only.";
+    g_msg.textContent = "Usernames must be 3-20 characters: letters, numbers, underscores only.";
     return;
   }
 
   const user = pendingGoogleUser || auth.currentUser;
-  if(!user){ gMsg.textContent = "※ Something went wrong, please try signing in again. ※"; return; }
+  if(!user){ g_msg.textContent = "※ Something went wrong, please try signing in again. ※"; return; }
   const email = (user.email || `google_${user.uid}@app.local`).trim().toLowerCase();
 
   try{
@@ -512,14 +513,14 @@ btnGUS.onclick = async () => {
   } catch(err){
     manualAuthInProgress = false;
     if(err.message && err.message.includes("PERMISSION_DENIED")){
-      gMsg.textContent = "That username is taken, or this Google account's email is already linked to another account.";
+      g_msg.textContent = "That username is taken, or this Google account's email is already linked to another account.";
     } else {
-      gMsg.textContent = "※ Error: " + err.message + " ※";
+      g_msg.textContent = "※ Error: " + err.message + " ※";
     }
   }
 };
 
-btnLT.onclick = async () => {
+b_lt.onclick = async () => {
   await signOut(auth);
   signInAnonymously(auth).catch(() => {});
 };
@@ -571,40 +572,40 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-const btnDelAcc1 = document.getElementById("btnDelAcc1");
-const delStep1 = document.getElementById("delStep1");
-const delStep2 = document.getElementById("delStep2");
-const delStep3 = document.getElementById("delStep3");
-const btnDelYes1 = document.getElementById("btnDelYes1");
-const btnDelNo1 = document.getElementById("btnDelNo1");
-const btnDelYes2 = document.getElementById("btnDelYes2");
-const btnDelNo2 = document.getElementById("btnDelNo2");
-const btnDelFinal = document.getElementById("btnDelFinal");
-const btnDelNo3 = document.getElementById("btnDelNo3");
-const delEM = document.getElementById("delEM");
-const delPA = document.getElementById("delPA");
-const delMsg = document.getElementById("delMsg");
+const b_da1 = document.getElementById("b_da1");
+const ds1 = document.getElementById("ds1");
+const ds2 = document.getElementById("ds2");
+const ds3 = document.getElementById("ds3");
+const b_dy1 = document.getElementById("b_dy1");
+const b_dn1 = document.getElementById("b_dn1");
+const b_dy2 = document.getElementById("b_dy2");
+const b_dn2 = document.getElementById("b_dn2");
+const b_df = document.getElementById("b_df");
+const b_dn3 = document.getElementById("b_dn3");
+const d_e = document.getElementById("d_e");
+const d_p = document.getElementById("d_p");
+const d_msg = document.getElementById("d_msg");
 
 function resetDelSteps(){
-  delStep1.style.display = "none";
-  delStep2.style.display = "none";
-  delStep3.style.display = "none";
-  if(delEM) delEM.value = "";
-  if(delPA) delPA.value = "";
-  delMsg.textContent = "";
+  ds1.style.display = "none";
+  ds2.style.display = "none";
+  ds3.style.display = "none";
+  if(d_e) d_e.value = "";
+  if(d_p) d_p.value = "";
+  d_msg.textContent = "";
 }
 
-if(btnDelAcc1) btnDelAcc1.onclick = () => { resetDelSteps(); delStep1.style.display = "block"; };
-if(btnDelNo1) btnDelNo1.onclick = () => { resetDelSteps(); };
-if(btnDelYes1) btnDelYes1.onclick = () => { delStep1.style.display = "none"; delStep2.style.display = "block"; };
-if(btnDelNo2) btnDelNo2.onclick = () => { resetDelSteps(); };
-if(btnDelYes2) btnDelYes2.onclick = () => { delStep2.style.display = "none"; delStep3.style.display = "block"; };
-if(btnDelNo3) btnDelNo3.onclick = () => { resetDelSteps(); };
+if(b_da1) b_da1.onclick = () => { resetDelSteps(); ds1.style.display = "block"; };
+if(b_dn1) b_dn1.onclick = () => { resetDelSteps(); };
+if(b_dy1) b_dy1.onclick = () => { ds1.style.display = "none"; ds2.style.display = "block"; };
+if(b_dn2) b_dn2.onclick = () => { resetDelSteps(); };
+if(b_dy2) b_dy2.onclick = () => { ds2.style.display = "none"; ds3.style.display = "block"; };
+if(b_dn3) b_dn3.onclick = () => { resetDelSteps(); };
 
-btnDelFinal.onclick = async () => {
-  delMsg.textContent = "";
+b_df.onclick = async () => {
+  d_msg.textContent = "";
   const user = auth.currentUser;
-  if(!user){ delMsg.textContent = "※ Something went wrong. ※"; return; }
+  if(!user){ d_msg.textContent = "※ Something went wrong. ※"; return; }
   try{
     let cred;
     if(currentIsGoogle){
@@ -612,12 +613,12 @@ btnDelFinal.onclick = async () => {
       const result = await signInWithPopup(auth, new GoogleAuthProvider());
       cred = GoogleAuthProvider.credentialFromResult(result);
     } else {
-      const email = delEM.value.trim().toLowerCase();
-      const password = delPA.value;
-      if(!email || !password){ delMsg.textContent = "Please fill out all fields."; return; }
+      const email = d_e.value.trim().toLowerCase();
+      const password = d_p.value;
+      if(!email || !password){ d_msg.textContent = "Please fill out all fields."; return; }
       cred = EmailAuthProvider.credential(email, password);
     }
-    if(!cred){ delMsg.textContent = "※ Authentication failed. ※"; manualAuthInProgress = false; return; }
+    if(!cred){ d_msg.textContent = "※ Authentication failed. ※"; manualAuthInProgress = false; return; }
     await reauthenticateWithCredential(user, cred);
 
     const uid = user.uid;
@@ -626,7 +627,8 @@ btnDelFinal.onclick = async () => {
     const username = uv ? uv.username : null;
     const userEmail = uv ? uv.email : (user.email || "");
 
-    const contentUpdates = {};const drawingsQuery = query(ref(db, "drawings"), orderByChild("authorId"), equalTo(uid), limitToFirst(50));
+    const contentUpdates = {};
+    const drawingsQuery = query(ref(db, "drawings"), orderByChild("authorId"), equalTo(uid), limitToFirst(50));
     const drawingsSnap = await get(drawingsQuery);
     const galleryQuery = query(ref(db, "galleryDrawings"), orderByChild("authorId"), equalTo(uid), limitToFirst(50));
     const gallerySnap = await get(galleryQuery);
@@ -654,9 +656,11 @@ btnDelFinal.onclick = async () => {
   } catch(err){
     manualAuthInProgress = false;
     if(err.code === "auth/wrong-password" || err.code === "auth/invalid-credential"){
-      delMsg.textContent = "※ Wrong email or password. ※";
+      d_msg.textContent = "※ Wrong email or password. ※";
     } else if(err.code === "auth/popup-closed-by-user"){
-      delMsg.textContent = "Re-authentication canceled.";
+      d_msg.textContent = "Re-authentication canceled.";
     } else {
-      delMsg.textContent = "※ Error: " + err.message + " ※";
-    } } };
+      d_msg.textContent = "※ Error: " + err.message + " ※";
+    }
+  }
+};
