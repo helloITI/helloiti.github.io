@@ -13,120 +13,121 @@
     <a href="https://helloiti.github.io/paint/tos/" style="position: absolute; top: 10px; left: 10px; color: white !important; font-size: 13px; text-decoration: none; background: none !important; -webkit-text-fill-color: white !important;">Terms of Service</a>
     <a href="https://helloiti.github.io/paint/privacy/" style="position: absolute; top: 30px; left: 10px; color: white !important; font-size: 13px; text-decoration: none; background: none !important; -webkit-text-fill-color: white !important;">Privacy Policy</a>
     <a href="https://discord.gg/wyXMRaTwjM" style="position: absolute; top: 50px; left: 10px; color: white !important; font-size: 13px; text-decoration: none; background: none !important; -webkit-text-fill-color: white !important;">Discord Server</a>
+    <!--  -->  <!--  -->  <!--  -->
     
     <h2>※ Log in your Paint Account! ※</h2>
     
-    <button id="btnGL" class="gbtn">Continue with Google</button>
+    <button id="b_gl" class="gbtn">Continue with Google</button>
     <p class="or" id="orb">or...</p>
     
     <!-- login -->
-    <div class="ps" id="lCD">
-        <input id="liUS" placeholder="username">
-        <input type="email" id="liEM" placeholder="email address">
-        <input id="liPA" type="password" placeholder="password">
-        <input id="liCOPA" type="password" placeholder="confirm password">
-        <label><input type="checkbox" id="liSP">Show password</label>
-        <button id="btnLG">Login</button>
-        <div id="lMsg"></div>
+    <div class="ps" id="l_cd">
+        <input id="l_u" placeholder="username">
+        <input type="email" id="l_e" placeholder="email address">
+        <input id="l_p" type="password" placeholder="password">
+        <input id="l_cp" type="password" placeholder="confirm password">
+        <label><input type="checkbox" id="l_sp">Show password</label>
+        <button id="b_lg">Login</button>
+        <div id="l_msg"></div>
     </div>
     
-    <p>※ Don't have an account yet? Click <span class="fk" id="sSUP">here</span> to make one! :D ※</p>
+    <p>※ Don't have an account yet? Click <span class="fk" id="b_ssup">here</span> to make one! :D ※</p>
     
     <!-- register -->
-    <div class="ps" id="sCD" style="display:none;">
-        <input id="sUS" placeholder="username">
-        <input id="sEM" type="email" placeholder="email address">
-        <input id="sPA" type="password" placeholder="password">
-        <input id="sCOPA" type="password" placeholder="confirm password">
-        <label><input type="checkbox" id="sSP">Show password</label>
-        <button id="btnSUP">Register</button>
-        <div id="sMsg"></div>
+    <div class="ps" id="s_cd" style="display:none;">
+        <input id="r_u" placeholder="username">
+        <input id="r_e" type="email" placeholder="email address">
+        <input id="r_p" type="password" placeholder="password">
+        <input id="r_cp" type="password" placeholder="confirm password">
+        <label><input type="checkbox" id="r_sp">Show password</label>
+        <button id="b_sup">Register</button>
+        <div id="r_msg"></div>
     </div>
     
-    <p id="sLG" style="display:none;">※ Already have an account? Click <span class="fk" id="sLGL">here</span> to log in! :D ※</p>
+    <p id="b_slg" style="display:none;">※ Already have an account? Click <span class="fk" id="b_slgl">here</span> to log in! :D ※</p>
     
-    <!-- appears if you created your account with a google account -->
-    <div class="ps" id="gUD" style="display:none;">
+    <!-- username setup for google -->
+    <div class="ps" id="g_div" style="display:none;">
         <p>Pick a username to finish setting up your account!</p>
-        <input id="gUS" placeholder="username">
-        <button id="btnGUS">Finish Signing Up</button>
-        <div id="gMsg"></div>
+        <input id="g_u" placeholder="username">
+        <button id="b_gus">Finish Signing Up</button>
+        <div id="g_msg"></div>
     </div>
     
-    <!-- dash -->
-    <div class="ps" id="actC" style="display:none;">
-        <p id="actI"></p>
+    <!-- dashboard -->
+    <div class="ps" id="act_c" style="display:none;">
+        <p id="act_i"></p>
         <center>
-            <button id="btnStOpen">Account Settings</button><br>
-            <button id="btnLT">Logout</button>
+            <button id="b_sto">Account Settings</button><br>
+            <button id="b_lt">Logout</button>
         </center>
     </div>
     
     <!-- acc settings -->
-    <div class="ps" id="stPanel" style="display:none;">
+    <div class="ps" id="st_p" style="display:none;">
         <p>※ Account Settings ※</p>
         <hr style="width:100%;border-color:rgba(255,255,255,0.2);">
         
         <p>Change Username</p>
-        <input id="stNewUN" placeholder="new username">
-        <button id="btnStUN">Update Username</button>
-        <div id="stUNMsg"></div>
+        <input id="st_nu" placeholder="new username">
+        <button id="b_stu">Update Username</button>
+        <div id="st_um"></div>
         
-        <div id="stEmailSec" style="display:none;width:100%;text-align:center;">
+        <div id="st_es" style="display:none;width:100%;text-align:center;">
             <hr style="width:100%;border-color:rgba(255,255,255,0.2);">
             <p>Change Email</p>
-            <input id="stNewEM" type="email" placeholder="new email">
-            <input id="stCurPAem" type="password" placeholder="current password"><br>
-            <button id="btnStEM">Update Email</button>
-            <div id="stEMMsg"></div>
+            <input id="st_ne" type="email" placeholder="new email">
+            <input id="st_cp_e" type="password" placeholder="current password"><br>
+            <button id="b_ste">Update Email</button>
+            <div id="st_em"></div>
         </div>
         
-        <div id="stPassSec" style="display:none;width:100%;text-align:center;">
+        <div id="st_ps" style="display:none;width:100%;text-align:center;">
             <hr style="width:100%;border-color:rgba(255,255,255,0.2);">
             <p>Change Password</p>
-            <input id="stCurPA" type="password" placeholder="current password">
-            <input id="stNewPA" type="password" placeholder="new password">
-            <input id="stCOPA" type="password" placeholder="confirm new password"><br>
-            <button id="btnStPA">Update Password</button>
-            <div id="stPAMsg"></div>
+            <input id="st_cp" type="password" placeholder="current password">
+            <input id="st_np" type="password" placeholder="new password">
+            <input id="st_cop" type="password" placeholder="confirm new password"><br>
+            <button id="b_stp">Update Password</button>
+            <div id="st_pm"></div>
         </div>
         
         <hr style="width:100%;border-color:rgba(255,255,255,0.2);">
         <p>Danger Zone</p>
-        <button id="btnDelAcc1">Delete Account</button>
+        <button id="b_da1">Delete Account</button>
         
-        <div id="delStep1" style="display:none;width:100%;text-align:center;">
+        <div id="ds1" style="display:none;width:100%;text-align:center;">
             <hr style="width:100%;border-color:rgba(255,255,255,0.2);">
             <p>Are you sure you want to delete your account?<br></p>
             <p>This will permanently delete all your data and drawings.</p>
-            <button id="btnDelYes1">Yes, I want to delete my account</button><br>
-            <button id="btnDelNo1">No, go back</button>
+            <button id="b_dy1">Yes, I want to delete my account</button><br>
+            <button id="b_dn1">No, go back</button>
         </div>
         
-        <div id="delStep2" style="display:none;width:100%;text-align:center;">
+        <div id="ds2" style="display:none;width:100%;text-align:center;">
             <hr style="width:100%;border-color:rgba(255,255,255,0.2);">
             <p>This is your <strong>FINAL warning.</strong><br>Once deleted, your account is gone forever.<br><strong>There is no going back.</strong></p>
-            <button id="btnDelYes2">I understand, delete my account forever</button><br>
-            <button id="btnDelNo2">No, go back</button>
+            <button id="b_dy2">I understand, delete my account forever</button><br>
+            <button id="b_dn2">No, go back</button>
         </div>
         
-        <div id="delStep3" style="display:none;width:100%;text-align:center;">
+        <div id="ds3" style="display:none;width:100%;text-align:center;">
             <hr style="width:100%;border-color:rgba(255,255,255,0.2);">
             <p>Enter your email and password to confirm deletion.<br>
             <i style="font-size: 10px;">(Or sign in with Google if that's how you usually log in)</i></p>
             <center>
-                <input id="delEM" type="email" placeholder="email address">
-                <input id="delPA" type="password" placeholder="password"><br>
+                <input id="d_e" type="email" placeholder="email address">
+                <input id="d_p" type="password" placeholder="password"><br>
             </center>
-            <button id="btnDelNo3">No, go back</button><br>
-            <button id="btnDelFinal">Delete</button>
-            <div id="delMsg"></div>
+            <button id="b_dn3">No, go back</button><br>
+            <button id="b_df">Delete</button>
+            <div id="d_msg"></div>
         </div>
         
-  <hr style="width:100%;border-color:rgba(255,255,255,0.2);">
-<button id="btnStClose">Back</button></div>
+        <hr style="width:100%;border-color:rgba(255,255,255,0.2);">
+        <button id="b_stc">Back</button>
+    </div>
 
 <audio id="psv" loop><source src="https://helloiti.github.io/assets/psvita.mp3" type="audio/mpeg"></audio>
-
 <script>document.addEventListener("click", function playMusic() {document.getElementById("psv").play().catch(()=>{});document.removeEventListener("click", playMusic);});</script>
 </body></html>
