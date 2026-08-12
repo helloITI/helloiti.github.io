@@ -5,7 +5,7 @@ async function wh(channel,embed){try{await fetch("https://tight-glitter-0f72.pni
 const db = firebase.database();const auth = firebase.auth();const $ = id => document.getElementById(id);let checkedInitialAuth = false;
 
 auth.onAuthStateChanged((user) => {
-if (!checkedInitialAuth) {
+if (!checkedInitialAuth) { //
 checkedInitialAuth = true;
 if (!user) {auth.signInAnonymously().catch(err => console.log("anon auth error:", err));}}});
 
