@@ -146,6 +146,7 @@ data[pos]=tc.r;data[pos+1]=tc.g;data[pos+2]=tc.b;data[pos+3]=tc.a;
 if(y>0){const up=pk(nx,y-1);if(cm({r:data[up],g:data[up+1],b:data[up+2],a:data[up+3]},sc)){if(!ru){stk.push({x:nx,y:y-1});ru=true;}}else if(ru){ru=false;}}
 if(y<h-1){const dn=pk(nx,y+1);if(cm({r:data[dn],g:data[dn+1],b:data[dn+2],a:data[dn+3]},sc)){if(!rd){stk.push({x:nx,y:y+1});rd=true;}}else if(rd){rd=false;}}}}
 ctx.putImageData(id,0,0);}
+
 let _pbBusy=false;pb.addEventListener('click',async()=>{if(_pbBusy)return;_pbBusy=true;setTimeout(()=>_pbBusy=false,5000);
 try{await authReady;const user=auth.currentUser;if(user&&user.isAnonymous){alert('Sorry, but you need an account in order to publish your drawings.\nGo to https://helloiti.github.io/paint/account/ to do so.');return;}}catch(e){console.log("Auth catch:",e);}
 if(!confirm("Are you sure you want to generate a link for this drawing?"))return;
@@ -155,38 +156,45 @@ const user=auth.currentUser;
 if(!user){alert('Still connecting, please try again in a second!');return;}
 if(user.isAnonymous){alert('Sorry, but you need an account in order to publish your drawings.\nGo to https://helloiti.github.io/paint/account/ to do so.');return;}
 const authorId=user.uid;
-const td=Math.floor(Date.now()/86400000);
+
 const [usnap,devBanSnap]=await Promise.all([db.ref('users/'+authorId).once('value'),db.ref('deviceBans/'+deviceId).once('value')]);
-const serverNow=(await db.ref('.info/serverTimeOffset').once('value')).val()+Date.now();
+const serverOffset=(await db.ref('.info/serverTimeOffset').once('value')).val()||0;
+const serverNow=serverOffset+Date.now();
+const td=Math.floor(serverNow/86400000);
+
 const uv=usnap.val()||{};
 const uExp=uv.banUntil||uv.bannedUntil||uv.banExpires||uv.banExpiry||uv.unbanTime||uv.expires;
 const isUserBanned=(typeof uv.banned==='number')?(serverNow<uv.banned):(uv.banned===true&&(!uExp||serverNow<uExp));
 if(isUserBanned){alert('Your account has been banned from publishing drawings.');return;}
 let isDevBanned=false;if(devBanSnap.exists()){const dv=devBanSnap.val();const dExp=(typeof dv==='object'&&dv!==null)?(dv.until||dv.expires||dv.bannedUntil||dv.banUntil):null;if(typeof dv==='number')isDevBanned=serverNow<dv;else if(dv===true)isDevBanned=true;else if(typeof dv==='object'&&dv!==null)isDevBanned=dv.banned===true&&(!dExp||serverNow<dExp);}
 if(isDevBanned){alert('This device has been banned from publishing drawings.');return;}
+
 const ut=uv.uploadDay===td?(uv.uploadsToday||0):0;
-if(ut>=30){alert("You've hit your limit of 30 drawings for today!\nCome back tomorrow to make more. :)");return;}
+if(ut>=20){alert("You've hit your limit of 20 drawings for today!\nCome back tomorrow to make more. :)");return;}
 const timeSinceLast=serverNow-(uv.lastUpload||0);
-console.log('[publish] serverNow:',serverNow,'lastUpload:',uv.lastUpload,'timeSinceLast:',timeSinceLast,'uploadDay:',uv.uploadDay,'td:',td,'uploadsToday:',uv.uploadsToday);
-if(uv.lastUpload&&timeSinceLast<65000){alert('Please wait '+Math.ceil((62000-timeSinceLast)/1000)+' more seconds before publishing again!');return;}
+if(uv.lastUpload&&timeSinceLast<60000){alert('Please wait '+Math.ceil((60000-timeSinceLast)/1000)+' more seconds before publishing again!');return;}
+
 const imgData=toWhiteWebP(0.85);
 console.log("[publish] image size:",imgData.length);
-if(imgData.length>=295000){alert('Your drawing is too large to publish ('+Math.round(imgData.length/1024)+'KB). Try drawing less or using simpler colors!');return;}
+if(imgData.length>=150000){alert('Your drawing is too large to publish ('+Math.round(imgData.length/1024)+'KB). Max limit is 146KB. Try drawing less or using simpler details!');return;}
+
 const existingCount=(usnap.exists()&&usnap.val().drawingCount!=null)?usnap.val().drawingCount:0;
-const userRef=db.ref('users/'+authorId);
-const dayChanged=uv.uploadDay!==td;
-if(dayChanged&&usnap.exists()){
-try{await Promise.all([userRef.child('uploadDay').set(td),userRef.child('uploadsToday').set(0)]);}catch(er){console.warn('[publish] day reset failed:',er.message);}}
+const newDrawingCount=usnap.exists()&&usnap.val().drawingCount!=null?existingCount+1:1;
+const newUploadsToday=(uv.uploadDay===td)?ut+1:1;
+
 const id=Date.now().toString(36)+Math.random().toString(36).substring(2,8);
-await db.ref('drawings/'+id).set({image:imgData,created:firebase.database.ServerValue.TIMESTAMP,authorId:authorId});
-Promise.all([
-userRef.child('lastUpload').set(firebase.database.ServerValue.TIMESTAMP),
-userRef.child('drawingCount').set(existingCount+1),
-userRef.child('uploadDay').set(td),
-userRef.child('uploadsToday').set(ut+1),
-userRef.child('deviceId').set(deviceId),
-db.ref('devices/'+deviceId+'/uids/'+authorId).set(true)
-]).catch(function(err){console.warn("[publish] metadata update failed (non-fatal):",err.code,err.message);});
+
+const updates={};
+updates['drawings/'+id]={image:imgData,created:firebase.database.ServerValue.TIMESTAMP,authorId:authorId};
+updates['users/'+authorId+'/lastUpload']=firebase.database.ServerValue.TIMESTAMP;
+updates['users/'+authorId+'/drawingCount']=newDrawingCount;
+updates['users/'+authorId+'/uploadDay']=td;
+updates['users/'+authorId+'/uploadsToday']=newUploadsToday;
+updates['users/'+authorId+'/deviceId']=deviceId;
+updates['devices/'+deviceId+'/uids/'+authorId]=true;
+
+await db.ref().update(updates);
+
 const url=location.origin+location.pathname+'#id='+id;wh({title:'Drawing Published',description:'**User:** `'+authorId+'`\n**ID:** `'+id+'`\n**Size:** '+Math.round(imgData.length/1024)+'KB',color:0x5865f2,timestamp:new Date().toISOString()});
 shl.value=url;
 history.replaceState(null,'',url);
@@ -194,6 +202,7 @@ alert('Done! Go to https://helloiti.github.io/paint/gallery to publish your draw
 }catch(e){
 if(e.message&&e.message.includes('PERMISSION_DENIED')){alert('You are posting too fast, or have hit your limit from posting drawings.\nPlease wait a bit or try again tomorrow!');wh({title:'Publish Failed',description:'**User:** `'+(auth.currentUser?.uid||'unknown')+'`',color:0xed4245,timestamp:new Date().toISOString()});}
 else{alert('I could not generate your link... Error: '+e.message);}}});
+
 async function lfh(){
 const hash=location.hash;if(!hash)return;const match=hash.match(/id=([^&]+)/);
 if(match){const id=match[1];
