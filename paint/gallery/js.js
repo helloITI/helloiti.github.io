@@ -79,23 +79,26 @@ async function checkIfBanned(user) {
         const foundDeviceIds = deviceKeys.map(k => localStorage.getItem(k)).filter(Boolean);
         
         for (const devId of foundDeviceIds) {
-            const [snap1, snap2] = await Promise.all([
-                db.ref(`bannedDevices/${devId}`).get(), 
-                db.ref(`banned_devices/${devId}`).get() ]);
-            if ((snap1.exists() && snap1.val() === true) || (snap2.exists() && snap2.val() === true)) {
-                return true; } }
+            const snap = await db.ref(`deviceBans/${devId}`).get();
+            if (snap.exists() && snap.val() === true) {
+                return true; 
+            } 
+        }
         
         if (user && !user.isAnonymous) {
-            const [userSnap, userDevSnap, userDevTableSnap] = await Promise.all([
+            const [userSnap, userDevSnap] = await Promise.all([
                 db.ref(`users/${user.uid}/banned`).get(), 
-                db.ref(`users/${user.uid}/deviceBanned`).get(), 
-                db.ref(`bannedDevices/${user.uid}`).get() ]);
+                db.ref(`users/${user.uid}/deviceBanned`).get() 
+            ]);
             
             if (userSnap.exists() && userSnap.val() === true) return true;
-            if ((userDevSnap.exists() && userDevSnap.val() === true) || (userDevTableSnap.exists() && userDevTableSnap.val() === true)) {
-            return true; } }
+            if (userDevSnap.exists() && userDevSnap.val() === true) return true; 
+        }
     } catch (e) {
-        console.error("test check error:", e); } return false; }
+        console.error("test check error:", e); 
+    } 
+    return false; 
+}
 
 clPo.addEventListener('click', () => { pOvr.style.display = 'none'; });
 togFavB.addEventListener('click', () => {
