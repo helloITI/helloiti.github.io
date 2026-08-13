@@ -568,7 +568,7 @@ shl.value = url;  history.replaceState(null, '', url);  alert('Done! Go to https
     } catch (e) {
         if (e.message && e.message.includes('PERMISSION_DENIED')) {
 alert('You are posting too fast, or have hit your limit from posting drawings.\nPlease wait a bit or try again tomorrow!');  
-wh({title: 'Publish Failed',description: '**User:** `' + (auth.currentUser?.uid || 'unknown') + '`', color: 0xed4245, timestamp: new Date().toISOString() });
+wh({title: 'Publish Failed',description: '**User:** `' + (auth.currentUser ? auth.currentUser.uid : 'unknown') + '`', color: 0xed4245, timestamp: new Date().toISOString() });
         } else {  alert('I could not generate your link... Error: ' + e.message);  }  }  });
 
 async function lfh() {
