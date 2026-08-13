@@ -64,6 +64,6 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-check-compat.js"></script>
-<script type="module">import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app-check.js";initializeAppCheck(firebase.app(), {provider: new ReCaptchaV3Provider("NkxjU1RDd3RBQUFBQUUyZEZ4VHBzUVI1ZnJTdjRNTEdNd3VyUzhwRQ"),isTokenAutoRefreshEnabled: true});</script>
+<script>const appCheck = firebase.appCheck();appCheck.activate(new firebase.appCheck.ReCaptchaV3Provider("NkxjU1RDd3RBQUFBQUUyZEZ4VHBzUVI1ZnJTdjRNTEdNd3VyUzhwRQ"), true);</script>
 <audio id="ps5" loop preload="auto"><source src="https://helloiti.github.io/assets/bgm_ps.mp3" type="audio/mpeg"></audio><script src="js.js"></script>
 </body> </html>
