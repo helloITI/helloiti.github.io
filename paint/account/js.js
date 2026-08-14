@@ -655,11 +655,11 @@ b_df.onclick = function(){
     manualAuthInProgress = false;
     if(err === "no cred") return;
     if(err.code === "auth/wrong-password" || err.code === "auth/invalid-credential"){
-      d_msg.textContent = "※ Wrong email or password. ※";
+      d_msg.textContent = "Wrong email or password.";
     } else if(err.code === "auth/popup-closed-by-user"){
-      d_msg.textContent = "Re-authentication canceled.";
+      d_msg.textContent = "Popup closed.";
     } else {
       d_msg.textContent = "※ Error: " + err.message + " ※";
     }
-  });
+  });  
 };
