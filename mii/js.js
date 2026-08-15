@@ -164,7 +164,7 @@ function normalizeInput(raw) {
 // 46 bytes
 function parseMnms(bf) {
     const ifo = {};
-    ifo["File Type"] = ".mnms";
+    ifo["File Type"] = ".mnms (Mii Studio)";
     ifo["Gender"] = bf[22] === 0 ? "Male" : "Female";
     ifo["Favorite Color"] = fc[bf[21]] || "Unknown";
     ifo["Height"] = bf[32];
@@ -240,7 +240,7 @@ document.getElementById("ih").onclick = () => {
 
 	const bl = hx.length / 2;
 	if (bl !== 88 && bl !== 96 && bl !== 46)
-		return alert("Mii Storage doesn't support this format.\nOnly CHARINFO (88 bytes), FFSD (96 bytes), or Mii Studio (46 bytes) are supported.");
+		return alert("Mii Storage doesn't support this format.\nOnly CHARINFO (88 bytes), FFSD (96 bytes), or MNMS (46 bytes) are supported.");
 
 	const ex = bl === 88 ? "charinfo" : bl === 96 ? "ffsd" : "mnms";
 	const bf = new Uint8Array(hx.match(/.{2}/g).map((b) => parseInt(b, 16)));
@@ -277,15 +277,15 @@ function rd() {
 
 		if (m.ext === "charinfo") {
 			const pp = ifo["Type"] === "Special" ? "gold" : "gray";
-			fu = `https://mii-unsecure.ariankordi.net/miis/image.png?erri=s4mwu-rs1&data=${m.dataHex}&shaderType=switch&type=face&width=270&pantsColor=${pp}&bodyType=switch&verifyCharInfo=0`;
-			bu = `https://mii-unsecure.ariankordi.net/miis/image.png?erri=s4mwu-rs1&data=${m.dataHex}&shaderType=switch&type=all_body_sugar&width=270&pantsColor=${pp}&bodyType=switch&verifyCharInfo=0`;
+			fu = `https://mii-unsecure.ariankordi.net/miis/image.png?erri=s4mwu-rs1&data=${m.dataHex}&shaderType=switch&type=face&width=270&pantsColor=${pp}&bodyType=switch&verifyCRC16=0&verifyCharInfo=0`;
+			bu = `https://mii-unsecure.ariankordi.net/miis/image.png?erri=s4mwu-rs1&data=${m.dataHex}&shaderType=switch&type=all_body_sugar&width=270&pantsColor=${pp}&bodyType=switch&verifyCRC16=0&verifyCharInfo=0`;
 		} else if (m.ext === "ffsd") {
 			const fp = ifo["Type"] === "Special" ? "gold" : ifo["Type"] === "Favorite" ? "red" : "gray";
-			fu = `https://mii-unsecure.ariankordi.net/miis/image.png?data=${m.dataHex}&type=face&width=270&pantsColor=gray&bodyType=wiiu&verifyCharInfo=0`;
+			fu = `https://mii-unsecure.ariankordi.net/miis/image.png?data=${m.dataHex}&type=face&width=270&pantsColor=gray&bodyType=wiiu&verifyCRC16=0&verifyCharInfo=0`;
 			bu = `https://mii-unsecure.ariankordi.net/miis/image.png?erri=s6s37-r99&data=${m.dataHex}&type=all_body_sugar&width=270&pantsColor=${fp}&verifyCharInfo=0`;
 		} else if (m.ext === "mnms") {
-			fu = `https://mii-unsecure.ariankordi.net/miis/image.png?data=${m.dataHex}&type=face&width=270&shaderType=switch&bodyType=switch&verifyCharInfo=0`;
-			bu = `https://mii-unsecure.ariankordi.net/miis/image.png?data=${m.dataHex}&type=all_body_sugar&width=270&shaderType=switch&bodyType=switch&verifyCharInfo=0`;
+			fu = `https://mii-unsecure.ariankordi.net/miis/image.png?data=${m.dataHex}&type=face&width=270&shaderType=miitomo&bodyType=miitomo&verifyCRC16=0&verifyCharInfo=0`;
+			bu = `https://mii-unsecure.ariankordi.net/miis/image.png?data=${m.dataHex}&type=all_body_sugar&width=270&shaderType=miitomo&bodyType=miitomo&verifyCRC16=0&verifyCharInfo=0`;
 		}
 
 		const im = document.createElement("img");
