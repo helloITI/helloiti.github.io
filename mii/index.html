@@ -17,26 +17,25 @@
 </head>
 <body>
 
-    <a href="https://helloiti.github.io/" id="mw" style="position:absolute; top:10px; right:10px; font-size:12px; text-decoration:none;">Go Back?</a>
+    <a href="https://helloiti.github.io/" id="mw" style="position:absolute; top:10px; right:10px; font-size:13px; text-decoration:none;">Go Back?</a>
 
-    <center>
-        <h1>Welcome to Mii Storage!</h1>
-        <h2>Here, you can save your CHARINFO, FFSD, MNMS Miis just in a website! <br></h2>
-        <h4><i>Isn't that cool?</i></h4>
+ <center>
+<h1>Welcome to Mii Storage!</h1>
+<h3>Here, you can save your CHARINFO, FFSD, and MNMS Miis right in your browser!</h3>
+<p class="or"><i class="or">Isn't that cool?</i></p><br><br>
 
-        <p class="or">Drop a CHARINFO, FFSD, or MNMS file below!</p>
-        <input type="file" id="fl" accept=".charinfo,.ffsd,.mnms">
+        <p class="or" style="font-size:13px;">Drop a CHARINFO, FFSD, or MNMS file below!</p>
+        <input type="file" id="fl" accept=".charinfo,.ffsd,.mnms"><br><br>
         
-        <h4 class="or">Or...</h4><br>
-        <h3>>You can also import your raw Mii HEX data!</h3>
+        <p class="or">Or...</p>
+        <h3>You can also import your raw Mii HEX data!</h3>
         <h4><i></i></h4>
 
-        <textarea id="hx" placeholder="Paste your CHARINFO, FFSD or MNMS' HEX data here..."
-            style="width:500px; height:100px; margin:5px; font-family:monospace; resize:none; user-select:text; pointer-events:auto;"></textarea><br>
+        <textarea id="hx" placeholder="Paste your CHARINFO, FFSD or MNMS' HEX data here..." style="width:500px; height:100px; margin:5px; font-family:monospace; resize:none; user-select:text; pointer-events:auto;"></textarea><br>
 
         <button id="ih" style="max-width:100% !important; height:auto !important; border-radius:8px !important;">Import</button>
     </center>
-
+    
     <center><h2>Saved Miis:</h2></center>
 
     <div id="ls"></div>
