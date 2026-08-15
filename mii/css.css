@@ -25,7 +25,7 @@ body.dk .pp { background: #111; color: #eee; box-shadow: 0 4px 20px rgba(0,0,0,.
 #dl:hover {background: #555;transform: translateY(-1px);cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, pointer !important;}
 body.dk #dl {background: #ccc;color: #000;border: 1px solid #aaa;cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, pointer !important;}
 body.dk #dl:hover { background: #eee; }
-#gi {position: absolute;top: 20px;left: 20px;z-index: 1000;background: #222;color: #fff;border: 1px solid #555; padding: 4px 9px;border-radius: 6px;font-size: 18px;font-weight: bold;cursor: pointer;cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, pointer !important;}
+#gi { position: absolute; top: 20px; left: 20px; z-index: 1000; background: #222; color: #fff; border: 1px solid #555; padding: 4px 9px; border-radius: 6px; font-size: 18px; font-weight: bold; cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, pointer !important; }
 body.dk #gi {background: #ccc;color: #000;border: 1px solid #aaa;cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, pointer !important;}
 #mw { color: black; }
 body.dk #mw { color: white; }
@@ -33,7 +33,7 @@ body.dk #mw { color: white; }
 #mp3 { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.75); justify-content: center; align-items: center; z-index: 9999; cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, pointer !important; }
 #mp3 { pointer-events: none; }
 #mp3 .pp { pointer-events: auto; max-height: 80vh; overflow-y: auto; text-align: left; }
-#fq { position: absolute; top: 20px; left: 70px; z-index: 1000; background: #222; color: #fff; border: 1px solid #555; padding: 4px 9px; border-radius: 6px; font-size: 18px; font-weight: bold; cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, pointer !important; }
+#fq { position: absolute; top: 20px; left: 100px; z-index: 1000; background: #222; color: #fff; border: 1px solid #555; padding: 4px 9px; border-radius: 6px; font-size: 18px; font-weight: bold; cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, pointer !important; }
 body.dk #fq { background: #ccc; color: #000; border: 1px solid #aaa; }
 a { color: black; }
 body.dk a { color: white; }
