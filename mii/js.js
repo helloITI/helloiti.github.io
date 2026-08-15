@@ -121,7 +121,7 @@ const ca = [
 	{ off: 42, name: "Weight", type: "u8" },
 ];
 
-const fc = ["Red","Orange","Yellow","Green","Lime Green","Blue","Light Blue","Pink","Purple","Brown","White","Black"];
+const fc = ["Red","Orange","Yellow","Forest Green","Lime Green","Royal Blue","Sky Blue","Pink","Purple","Brown","White","Black"];
 const pt = { 0: "Normal", 1: "Special" };
 const ft = { charinfo: ".charinfo", ffsd: ".ffsd", mnms: ".mnms" };
 
@@ -167,8 +167,10 @@ function parseMnms(bf) {
     ifo["File Type"] = ".mnms";
     ifo["Gender"] = bf[22] === 0 ? "Male" : "Female";
     ifo["Favorite Color"] = fc[bf[21]] || "Unknown";
-    ifo["Height"] = bf[32];
-    ifo["Weight"] = bf[2];
+	
+    ifo["Height"] = bf[3]; 
+    ifo["Weight"] = bf[2]; 
+	
     ifo["Nickname"] = "Mii";
     ifo["Type"] = "Normal";
     return ifo;
