@@ -164,7 +164,7 @@ function normalizeInput(raw) {
 // 46 bytes
 function parseMnms(bf) {
     const ifo = {};
-    ifo["File Type"] = ".mnms (Mii Studio)";
+    ifo["File Type"] = ".mnms";
     ifo["Gender"] = bf[22] === 0 ? "Male" : "Female";
     ifo["Favorite Color"] = fc[bf[21]] || "Unknown";
     ifo["Height"] = bf[32];
