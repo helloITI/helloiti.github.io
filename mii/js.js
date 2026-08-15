@@ -168,7 +168,7 @@ function parseMnms(bf) {
     ifo["Gender"] = bf[22] === 0 ? "Male" : "Female";
     ifo["Favorite Color"] = fc[bf[21]] || "Unknown";
     ifo["Height"] = bf[30];
-    ifo["Weight"] = bf[45];
+    ifo["Weight"] = bf[46];
     ifo["Nickname"] = "Mii";
     ifo["Type"] = "Normal";
     return ifo;
