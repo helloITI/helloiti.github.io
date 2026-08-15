@@ -167,10 +167,8 @@ function parseMnms(bf) {
     ifo["File Type"] = ".mnms";
     ifo["Gender"] = bf[22] === 0 ? "Male" : "Female";
     ifo["Favorite Color"] = fc[bf[21]] || "Unknown";
-    
-    ifo["Height"] = bf[1]; 
-    ifo["Weight"] = bf[2]; 
-    
+    ifo["Height"] = bf[30];
+    ifo["Weight"] = bf[45];
     ifo["Nickname"] = "Mii";
     ifo["Type"] = "Normal";
     return ifo;
