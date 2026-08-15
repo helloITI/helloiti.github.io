@@ -28,44 +28,34 @@ function sfq() {
         <div style="font-size:14px; padding:8px; max-width:500px;">
             <b>Frequently Asked Questions</b><br><br>
 
-            Q: What formats does Mii Storage support?
-			A: CHARINFO (.charinfo) for Switch games, FFSD (.ffsd) for Wii U/3DS, and Mii Studio hex (MNMS) extracted from <a href="https://accounts.nintendo.com/mii_studio">Nintendo's online Mii Editor</a> using the <a href="https://github.com/HEYimHeroic/MiiStudioMiiLoader">Mii Studio Mii Loader</a> extension.
-			
-			<hr>
-			
-            Q: How do I get a CHARINFO, FFSD or MNMS file/hex data?
-			A: You can get it from <a href="https://mii.nxw.pw">Mii Creator</a> or <a href="https://mii-unsecure.ariankordi.net">Mii Renderer (REAL)</a>.
-
-			<hr>
-
-            Q: Where is my data saved?
-			A: Everything is saved locally in your browser's localStorage. Nothing is uploaded to any server.
-
-			<hr>
-
-            Q: Will my Miis be lost if I clear my browser data?
-			A: Yes! If you clear cookies/site data, your saved Miis will be gone. Use the Download button to back them up as files first.
-			
-			<hr>
-
-            Q: Will my Miis be lost if I clear my browser data?
-			A: Yes! If you clear cookies/site data, your saved Miis will be gone. Use the Download button to back them up as files first.
-			
+            <b>Q: What formats does Mii Storage support?</b><br>
+            A: CHARINFO (.charinfo) for Switch games, FFSD (.ffsd) for Wii U/3DS, and Mii Studio hex (MNMS) extracted from <a href="https://accounts.nintendo.com/mii_studio">Nintendo's online Mii Editor</a> using the <a href="https://github.com/HEYimHeroic/MiiStudioMiiLoader">Mii Studio Mii Loader</a> extension.
             <hr>
 
-            Q: What does the ⭐ mean next to a Mii's name?
-			A: It means the Mii is a Special type, they have gold pants in CHARINFO, or a special flag set in FFSD.
+            <b>Q: How do I get a CHARINFO, FFSD or MNMS file/hex data?</b><br>
+            A: You can get it from <a href="https://mii.nxw.pw">Mii Creator</a> or <a href="https://mii-unsecure.ariankordi.net">Mii Renderer (REAL)</a>.
+            <hr>
 
-			<hr>
+            <b>Q: Where is my data saved?</b><br>
+            A: Everything is saved locally in your browser's localStorage. Nothing is uploaded to any server.
+            <hr>
 
-            Q: What does the ♥️ mean next to a Mii's name?
-			A: It means the Mii is marked as a Favorite in FFSD format.
+            <b>Q: Will my Miis be lost if I clear my browser data?</b><br>
+            A: Yes! If you clear cookies/site data, your saved Miis will be gone. Use the Download button to back them up as files first.
+            <hr>
 
-			<hr>
+            <b>Q: What does the ⭐ mean next to a Mii's name?</b><br>
+            A: It means the Mii is a Special type — they have gold pants in CHARINFO, or a special flag set in FFSD.
+            <hr>
 
-            Q: Why does my Mii's nickname show up as "Mii" with no name?
-			A: Mii Studio (MNMS) format doesn't store a nickname, so it defaults to "Mii".
-			
+            <b>Q: What does the ♥️ mean next to a Mii's name?</b><br>
+            A: It means the Mii is marked as a Favorite in FFSD format.
+            <hr>
+
+            <b>Q: Why does my Mii's nickname show up as "Mii" with no name?</b><br>
+            A: Mii Studio (MNMS) format doesn't store a nickname, so it defaults to "Mii".
+
+            <br><br>
             <button onclick="document.getElementById('mp3').style.display='none'"
                     style="margin-top:10px; padding:6px 14px; background:#222; color:#fff; border:1px solid #444; border-radius:6px; cursor:pointer;">
                 ※ Close ※
