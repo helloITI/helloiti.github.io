@@ -160,17 +160,18 @@ function normalizeInput(raw) {
 	return { hex: null, error: "Invalid CHARINFO/FFSD/Mii Studio HEX or Base64 data!" };
 }
 
-// parse mii studio (MNMS) format - 46 bytes
+// parse mii studio MNMS format
+// 46 bytes
 function parseMnms(bf) {
-	const ifo = {};
-	ifo["File Type"] = ".mnms (Mii Studio)";
-	ifo["Gender"] = (bf[0] & 0x01) ? "Female" : "Male";
-	ifo["Favorite Color"] = fc[bf[1] & 0x0f] || "Unknown";
-	ifo["Height"] = bf[2];
-	ifo["Weight"] = bf[3];
-	ifo["Nickname"] = "Mii";
-	ifo["Type"] = "Normal";
-	return ifo;
+    const ifo = {};
+    ifo["File Type"] = ".mnms";
+    ifo["Gender"] = bf[22] === 0 ? "Male" : "Female";
+    ifo["Favorite Color"] = fc[bf[21]] || "Unknown";
+    ifo["Height"] = bf[32];
+    ifo["Weight"] = bf[2];
+    ifo["Nickname"] = "Mii";
+    ifo["Type"] = "Normal";
+    return ifo;
 }
 
 // parse mii data based on format
