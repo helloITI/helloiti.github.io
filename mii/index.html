@@ -21,15 +21,17 @@
 
     <center>
         <h1>Welcome to Mii Storage!</h1>
-        <h2>Here, you can save your CHARINFO or FFSD Miis just in a website! <br></h2>
+        <h2>Here, you can save your CHARINFO, FFSD, MNMS Miis just in a website! <br></h2>
         <h4><i>Isn't that cool?</i></h4>
 
-        <input type="file" id="fl" accept=".charinfo,.ffsd">
-
-        <h3><p class="or">Or...</p><br>You can also import your raw Mii HEX data!</h3>
+        <p class="or">Drop a CHARINFO, FFSD, or MNMS file below!</p>
+        <input type="file" id="fl" accept=".charinfo,.ffsd,.mnms">
+        
+        <h4 class="or">Or...</h4><br>
+        <h3>>You can also import your raw Mii HEX data!</h3>
         <h4><i></i></h4>
 
-        <textarea id="hx" placeholder="Paste your CHARINFO/FFSD's HEX data here..."
+        <textarea id="hx" placeholder="Paste your CHARINFO, FFSD or MNMS' HEX data here..."
             style="width:500px; height:100px; margin:5px; font-family:monospace; resize:none; user-select:text; pointer-events:auto;"></textarea><br>
 
         <button id="ih" style="max-width:100% !important; height:auto !important; border-radius:8px !important;">Import</button>
@@ -49,7 +51,7 @@
 
     <!-- extra modals -->
     <div id="mp1"><div class="pp" id="pt"></div></div>
-    <div id="mp2"><div class="pp" id="cr"></div></div><br><br>
+    <div id="mp2"><div class="pp" id="cr"></div></div>
     <div id="mp3"><div class="pp" id="fqc"></div></div>
 
     <button id="gi" onclick="sg()">Credits</button>
