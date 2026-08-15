@@ -121,7 +121,7 @@ const ca = [
 	{ off: 42, name: "Weight", type: "u8" },
 ];
 
-const fc = ["Red","Orange","Yellow","Forest Green","Lime Green","Royal Blue","Sky Blue","Pink","Purple","Brown","White","Black"];
+const fc = ["Red","Orange","Yellow","Lime Green","Forest Green","Royal Blue","Sky Blue","Pink","Purple","Brown","White","Black"];
 const pt = { 0: "Normal", 1: "Special" };
 const ft = { charinfo: ".charinfo", ffsd: ".ffsd", mnms: ".mnms" };
 
