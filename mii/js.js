@@ -249,18 +249,18 @@ document.getElementById("ih").onclick = () => {
 	document.getElementById("hx").value = "";
 };
 
-// checks if the user has imported a valid charinfo or ffsd mii file
+// checks if the user has imported a valid charinfo, ffsd or mnms mii file
 document.getElementById("fl").onchange = async (e) => {
-	const f = e.target.files[0];
-	if (!f) return;
-	const ex = f.name.split(".").pop().toLowerCase();
-	if (ex !== "charinfo" && ex !== "ffsd")
-		return alert("Please use .charinfo or .ffsd Mii files only!");
-	const bf = new Uint8Array(await f.arrayBuffer());
-	const hx = Array.from(bf).map((x) => x.toString(16).padStart(2, "0")).join("");
-	ls.push({ id: Date.now(), data: bf, dataHex: hx, ext: ex });
-	sl();
-	rd();
+    const f = e.target.files[0];
+    if (!f) return;
+    const ex = f.name.split(".").pop().toLowerCase();
+    if (ex !== "charinfo" && ex !== "ffsd" && ex !== "mnms")
+        return alert("Please use .charinfo, .ffsd or .mnms Mii files only!");
+    const bf = new Uint8Array(await f.arrayBuffer());
+    const hx = Array.from(bf).map((x) => x.toString(16).padStart(2, "0")).join("");
+    ls.push({ id: Date.now(), data: bf, dataHex: hx, ext: ex });
+    sl();
+    rd();
 };
 
 // the mii renders (credits to ariankordi for the mii renders!!!)
