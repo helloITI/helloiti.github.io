@@ -75,7 +75,7 @@ async function fetchUserLikes() {
 
 async function checkIfBanned(user) {
     try {
-        const deviceKeys = ['device_id', 'deviceId', 'device_token', 'fingerprint', 'fp_id'];
+const deviceKeys = ['pdid', 'device_id', 'deviceId', 'device_token', 'fingerprint', 'fp_id'];
         const foundDeviceIds = deviceKeys.map(k => localStorage.getItem(k)).filter(Boolean);
         
         for (const devId of foundDeviceIds) {
@@ -154,6 +154,7 @@ const crc = document.createElement('div');  crc.style.cssText = "margin-top: 10p
 
 const ci = document.createElement('textarea');
 ci.id = 'rci';
+ci.maxLength = 190;
 ci.placeholder = 'Type your custom reason here...';
 ci.style.cssText = "width: 100%; height: 60px; padding: 8px; resize: none; background: #222; color: white; border: 1px solid #444; border-radius: 4px; box-sizing: border-box;";
 
@@ -320,7 +321,11 @@ addBtn.addEventListener('click', async () => {
     if (!match) return;
     
     try {
-        await db.ref('galleryDrawings/' + match[1]).set(true);
+        const updates = {};
+        updates['galleryDrawings/' + match[1]] = true;
+        updates['users/' + user.uid + '/lastGallery'] = firebase.database.ServerValue.TIMESTAMP;
+        await db.ref().update(updates);
+        
         input.value = '';
 loadDrawings();wh("gallery", {title: 'Drawing Added to Gallery',description: '**ID:** `' + match[1] + '`\n**By:** `' + user.uid + '`', color: 0x5865f2, timestamp: new Date().toISOString()});
     } catch (err) {
