@@ -1,4 +1,4 @@
-// the stupid themes stuff, whatever.
+// the themes stuff
 const dl = document.getElementById("dl");
 const bd = document.body;
 if (localStorage.getItem("tm") === "dk") {
@@ -45,14 +45,14 @@ function sfq() {
             <hr>
 
             <b>Q: What does the ⭐ mean next to a Mii's name?</b><br>
-            A: It means the Mii is a Special type — they have gold pants in CHARINFO, or a special flag set in FFSD.
+            A: It means the Mii is a Special type, they have gold pants in CHARINFO, or a special flag set in FFSD.
             <hr>
 
             <b>Q: What does the ♥️ mean next to a Mii's name?</b><br>
             A: It means the Mii is marked as a Favorite in FFSD format.
             <hr>
 
-            <b>Q: Why does my Mii's nickname show up as "Mii" with no name?</b><br>
+            <b>Q: Why do MNMS Mii's Nicknames always appear as "Mii"?</b><br>
             A: Mii Studio (MNMS) format doesn't store a nickname, so it defaults to "Mii".
 
             <br><br>
@@ -160,17 +160,16 @@ function normalizeInput(raw) {
 	return { hex: null, error: "Invalid CHARINFO/FFSD/Mii Studio HEX or Base64 data!" };
 }
 
-// parse mii studio MNMS format
-// 46 bytes
+// parse mii studio |mnms| format
 function parseMnms(bf) {
     const ifo = {};
     ifo["File Type"] = ".mnms";
+    ifo["Nickname"] = "Mii";
     ifo["Gender"] = bf[22] === 0 ? "Male" : "Female";
     ifo["Favorite Color"] = fc[bf[21]] || "Unknown";
+    ifo["Type"] = "Normal";
     ifo["Height"] = bf[30];
     ifo["Weight"] = bf[2];
-    ifo["Nickname"] = "Mii";
-    ifo["Type"] = "Normal";
     return ifo;
 }
 
@@ -192,17 +191,17 @@ function pm(bf, ex) {
 		ifo["Gender"] = ifo["Gender"] === 0 ? "Male" : "Female";
 		ifo["Type"] = pt[ifo["Type"]] || "Unknown";
 		if (!ifo["Nickname"]) ifo["Nickname"] = "Mii";
-	} else if (ex === "ffsd") {
-		ifo["Nickname"] = dc.decode(bf.slice(0x1a, 0x1a + 20)).replace(/\0/g, "").trim() || "Mii";
-		ifo["Creator's Name"] = dc.decode(bf.slice(0x48, 0x48 + 20)).replace(/\0/g, "").trim() || "Unknown";
-		ifo["Height"] = bf[0x2e];
-		ifo["Weight"] = bf[0x2f];
-		const mb = (bf[0x19] << 8) | bf[0x18];
-		ifo["Gender"] = (mb & 0x01) === 0 ? "Male" : "Female";
-		ifo["Favorite Color"] = fc[(mb >> 10) & 0x0f] || "Unknown";
-		const isSpecial = (bf[0x0c] & 0x80) === 0;
-		const isFavorite = (bf[0x19] & 0x40) !== 0;
-		ifo["Type"] = isSpecial ? "Special" : isFavorite ? "Favorite" : "Normal";
+} else if (ex === "ffsd") {
+    const mb = (bf[0x19] << 8) | bf[0x18];
+    const isSpecial = (bf[0x0c] & 0x80) === 0;
+    const isFavorite = (bf[0x19] & 0x40) !== 0;
+    ifo["Nickname"] = dc.decode(bf.slice(0x1a, 0x1a + 20)).replace(/\0/g, "").trim() || "Mii";
+    ifo["Gender"] = (mb & 0x01) === 0 ? "Male" : "Female";
+    ifo["Favorite Color"] = fc[(mb >> 10) & 0x0f] || "Unknown";
+    ifo["Type"] = isSpecial ? "Special" : isFavorite ? "Favorite" : "Normal";
+    ifo["Height"] = bf[0x2e];
+    ifo["Weight"] = bf[0x2f];
+    ifo["Creator's Name"] = dc.decode(bf.slice(0x48, 0x48 + 20)).replace(/\0/g, "").trim() || "Unknown";
 	} else if (ex === "mnms") {
 		return parseMnms(bf);
 	}
