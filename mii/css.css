@@ -33,7 +33,7 @@ body.dk #mw { color: white; }
 #mp3 { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.75); justify-content: center; align-items: center; z-index: 9999; cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, pointer !important; }
 #mp3 { pointer-events: none; }
 #mp3 .pp { pointer-events: auto; max-height: 80vh; overflow-y: auto; text-align: left; }
-#fq { position: absolute; top: 20px; left: 100px; z-index: 1000; background: #222; color: #fff; border: 1px solid #555; padding: 4px 9px; border-radius: 6px; font-size: 18px; font-weight: bold; cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, pointer !important; }
+#fq { position: absolute; top: 60px; left: 20px; z-index: 1000; background: #222; color: #fff; border: 1px solid #555; padding: 4px 9px; border-radius: 6px; font-size: 18px; font-weight: bold; cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, pointer !important; }
 body.dk #fq { background: #ccc; color: #000; border: 1px solid #aaa; }
 a { color: black; }
 body.dk a { color: white; }
