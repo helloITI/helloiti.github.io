@@ -59,8 +59,9 @@
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script><script type="module">import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app-check.js";initializeAppCheck(firebase.app(), {provider: new ReCaptchaV3Provider("NkxjU1RDd3RBQUFBQUUyZEZ4VHBzUVI1ZnJTdjRNTEdNd3VyUzhwRQ"),isTokenAutoRefreshEnabled: true});</script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-check-compat.js"></script> <script src="js.js"></script>
+<script> const appCheck = firebase.appCheck(); appCheck.activate(new firebase.appCheck.ReCaptchaV3Provider("6LcSTCwtAAAAAE2dFxTpsQR5frSv4MLGMwurS8pE"), true);</script>
 <audio id="ps5" loop><source src="https://helloiti.github.io/assets/bgm_ps.mp3" type="audio/mpeg"></audio>
-<script>document.addEventListener("click", function playMusic() {document.getElementById("ps5").play().catch(()=>{});document.removeEventListener("click", playMusic);});</script><script src="js.js"></script>
-
+<script>document.addEventListener("click", function playMusic() {document.getElementById("ps5").play().catch(()=>{});document.removeEventListener("click", playMusic);});</script>
 </body>  </html>
