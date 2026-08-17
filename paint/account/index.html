@@ -62,7 +62,7 @@
         <div id="g_msg"></div>
     </div>
     
-    <!-- dashboard -->
+    <!-- dash -->
     <div class="ps" id="act_c" style="display:none;">
         <p id="act_i"></p>
         <center>
@@ -122,7 +122,7 @@
         <div id="ds3" style="display:none;width:100%;text-align:center;">
             <hr style="width:100%;border-color:rgba(255,255,255,0.2);">
             <p>Enter your email and password to confirm deletion.<br>
-            <i style="font-size: 10px;">(Or sign in with Google if that's how you usually log in)</i></p>
+            <i style="font-size: 10px;">(Or sign in with Google if your account was created with Google)</i></p>
             <center>
                 <input id="d_e" type="email" placeholder="email address">
                 <input id="d_p" type="password" placeholder="password"><br>
@@ -136,10 +136,9 @@
         <button id="b_stc">Back</button>
     </div>
 
+<script>document.addEventListener("click", function playMusic() {document.getElementById("psv").play().catch(()=>{});document.removeEventListener("click", playMusic);});</script>
 <audio id="psv" loop><source src="https://helloiti.github.io/assets/psvita.mp3" type="audio/mpeg"></audio>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-<script src="js.js"></script>
-<script>document.addEventListener("click", function playMusic() {document.getElementById("psv").play().catch(()=>{});document.removeEventListener("click", playMusic);});</script>
-</body></html>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>  <script src="js.js"></script>
+</body>  </html>
