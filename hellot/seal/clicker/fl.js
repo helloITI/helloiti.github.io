@@ -26,14 +26,15 @@ onValue(counterRef, (snapshot) => {
   window.updateCounterText();
 });
 
+let lCT = 0;
+const CDms = 50;
+
 const YapYoo = document.getElementById("YapYoo");
 const MarioKar = document.getElementById("MarioKar");
 
 YapYoo.addEventListener("click", () => {
   MarioKar.currentTime = 0;
   MarioKar.play().catch(() => {});
-
-  runTransaction(counterRef, (current) => (current || 0) + 1);
 
   if (typeof sealModel !== 'undefined' && sealModel) {
     targetScale.set(1.4, 0.7, 1.4);
@@ -42,4 +43,12 @@ YapYoo.addEventListener("click", () => {
   if (!window.specialTriggered && window.flyRegex.test(window.chosenText)) {
     window.triggerSealFly();
   }
+
+  const now = Date.now();
+  if (now - lCT < CDms) {
+    return;
+  }
+  lCT = now;
+  
+  runTransaction(counterRef, (current) => (current || 0) + 1);
 });
