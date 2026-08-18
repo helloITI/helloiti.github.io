@@ -1,47 +1,206 @@
-// hi
-const canvas = document.getElementById('canvas');const renderer = new THREE.WebGLRenderer({ canvas, antialias: window.innerWidth > 768, alpha: true, powerPreference: "high-performance" });
-renderer.setSize(window.innerWidth, window.innerHeight);renderer.setPixelRatio(Math.min(window.devicePixelRatio, window.innerWidth < 768 ? 1.5 : 2));renderer.outputColorSpace = THREE.SRGBColorSpace;const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 100);camera.position.set(0, 0.5, 5);scene.add(new THREE.AmbientLight(0xffffff, 2.5));const dirLight = new THREE.DirectionalLight(0xffffff, 2.0);dirLight.position.set(5, 5, 5);
-scene.add(dirLight);const spinGroup = new THREE.Group();scene.add(spinGroup);let sealModel = null;const targetScale = new THREE.Vector3(1, 1, 1);const currentScale = new THREE.Vector3(1, 1, 1);let danceIntensity = 0;
+const canvas = document.getElementById('canvas');
+
+const renderer = new THREE.WebGLRenderer({ 
+  canvas, 
+  antialias: window.innerWidth > 768, 
+  alpha: true, 
+  powerPreference: "high-performance" 
+});
+
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, window.innerWidth < 768 ? 1.5 : 2));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+const scene = new THREE.Scene();
+
+const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 100);
+camera.position.set(0, 0.5, 5);
+
+scene.add(new THREE.AmbientLight(0xffffff, 2.5));
+const dirLight = new THREE.DirectionalLight(0xffffff, 2.0);
+dirLight.position.set(5, 5, 5);
+scene.add(dirLight);
+
+const spinGroup = new THREE.Group();
+scene.add(spinGroup);
+
+let sealModel = null;
+const targetScale = new THREE.Vector3(1, 1, 1);
+const currentScale = new THREE.Vector3(1, 1, 1);
+let danceIntensity = 0;
+
+const origTransform = {
+  position: new THREE.Vector3(0, 0, 0),
+  rotation: new THREE.Euler(0, 0, 0),
+  scale: new THREE.Vector3(1, 1, 1)
+};
+
+// hellot seal 3d model loader
 const loader = new THREE.GLTFLoader();
 loader.load("https://helloiti.github.io/assets/models/seal/seal1.glb", (gltf) => {
-sealModel = gltf.scene;
-sealModel.traverse(child => {
-if (child.isMesh) {
-child.material = new THREE.MeshStandardMaterial({ map: child.material.map,transparent: true,alphaTest: 0.5,side: THREE.DoubleSide }); } });
-sealModel.rotation.y = -Math.PI / 2; spinGroup.add(sealModel);origTransform.position = sealModel.position.clone();origTransform.rotation = sealModel.rotation.clone();origTransform.scale = sealModel.scale.clone(); });
-let time = 0;window.specialTriggered = false; let spinPaused = false; let flying = false; let falling = false; let flyStart = 0; const flyDuration = 1.0; const flyPeakY = 5; let waitAtTopTimeout = null; let waitAfterLandTimeout = null;
-const origTransform = {position: new THREE.Vector3(0,0,0),rotation: new THREE.Euler(0,0,0),scale: new THREE.Vector3(1,1,1)};
-const velocity = new THREE.Vector3(0, 0, 0); const angularVelocity = new THREE.Vector3(0, 0, 0); const gravity = -18;
+  sealModel = gltf.scene;
+  
+  sealModel.traverse(child => {
+    if (child.isMesh) {
+      child.material = new THREE.MeshStandardMaterial({ 
+        map: child.material.map,
+        transparent: true,
+        alphaTest: 0.5,
+        side: THREE.DoubleSide 
+      }); 
+    } 
+  });
+
+  sealModel.rotation.y = -Math.PI / 2; 
+  spinGroup.add(sealModel);
+
+  origTransform.position.copy(sealModel.position);
+  origTransform.rotation.copy(sealModel.rotation);
+  origTransform.scale.copy(sealModel.scale); 
+});
+
+let time = 0;
+window.specialTriggered = false; 
+let spinPaused = false; 
+let flying = false; 
+let falling = false; 
+let flyStart = 0; 
+const flyDuration = 1.0; 
+const flyPeakY = 5; 
+let waitAtTopTimeout = null; 
+let waitAfterLandTimeout = null;
+
+const velocity = new THREE.Vector3(0, 0, 0); 
+const angularVelocity = new THREE.Vector3(0, 0, 0); 
+const gravity = -18;
 let prevRAF = performance.now();
+
 window.triggerSealFly = function() {
-if (!sealModel || window.specialTriggered) return;window.specialTriggered = true;flying = true;spinPaused = true;flyStart = performance.now() / 1000;origTransform.position.copy(sealModel.position);origTransform.rotation.copy(sealModel.rotation);origTransform.scale.copy(sealModel.scale); danceIntensity = 0;targetScale.set(1,1,1);if (waitAtTopTimeout) clearTimeout(waitAtTopTimeout);if (waitAfterLandTimeout) clearTimeout(waitAfterLandTimeout);}
-function startFall() { falling = true; velocity.set(0, 0, 0); angularVelocity.set((Math.random() - 0.5) * 6,(Math.random() - 0.5) * 6,(Math.random() - 0.5) * 6);}
-function landAndWaitThenReset() {falling = false;flying = false;
-waitAfterLandTimeout = setTimeout(() => {
-sealModel.position.copy(origTransform.position);sealModel.rotation.copy(origTransform.rotation);sealModel.scale.copy(origTransform.scale);spinPaused = false;waitAfterLandTimeout = null;window.specialTriggered = false; }, 3000); }
-function animate() { requestAnimationFrame(animate); const now = performance.now(); const delta = Math.min((now - prevRAF) / 1000, 0.05);prevRAF = now;time += 0.035;
-if (!spinPaused) {spinGroup.rotation.y += window.innerWidth < 768 ? 0.02 : 0.04;}
-if (sealModel) {currentScale.lerp(targetScale, 0.2);targetScale.lerp(new THREE.Vector3(1, 1, 1), 0.1);sealModel.scale.copy(currentScale);
-if (flying) {const t = (performance.now() / 1000 - flyStart) / flyDuration;const clamped = Math.min(Math.max(t, 0), 1);const ease = 1 - Math.pow(1 - clamped, 3);const startY = origTransform.position.y;sealModel.position.y = THREE.MathUtils.lerp(startY, flyPeakY, ease);sealModel.rotation.x += 0.02;sealModel.rotation.y += 0.06;
-if (t >= 1) {flying = false;waitAtTopTimeout = setTimeout(startFall, 2500);} }
-if (falling) {velocity.y += gravity * delta;sealModel.position.addScaledVector(velocity, delta);sealModel.rotation.x += angularVelocity.x * delta;sealModel.rotation.y += angularVelocity.y * delta;sealModel.rotation.z += angularVelocity.z * delta;
-if (sealModel.position.y <= origTransform.position.y) {sealModel.position.y = origTransform.position.y;angularVelocity.multiplyScalar(0.18);landAndWaitThenReset();
-} } }renderer.render(scene, camera);}
-animate(); window.addEventListener('resize', () => { camera.aspect = window.innerWidth / window.innerHeight;camera.updateProjectionMatrix();renderer.setSize(window.innerWidth, window.innerHeight); });
-const songs = 
-["https://helloiti.github.io/assets/13._Exhibition.mp3",
-"https://helloiti.github.io/assets/07main.mp3",
-"https://helloiti.github.io/assets/3ds.mp3",
-"https://helloiti.github.io/assets/dsi.mp3",
-"https://helloiti.github.io/assets/mk.mp3",
-"https://helloiti.github.io/assets/mii.mp3",
-"https://helloiti.github.io/assets/STRM_BGM_Shop.48.dspadpcm.mp3"];
+  if (!sealModel || window.specialTriggered) return;
+  
+  window.specialTriggered = true;
+  flying = true;
+  spinPaused = true;
+  flyStart = performance.now() / 1000;
+  
+  origTransform.position.copy(sealModel.position);
+  origTransform.rotation.copy(sealModel.rotation);
+  origTransform.scale.copy(sealModel.scale); 
+  
+  danceIntensity = 0;
+  targetScale.set(1, 1, 1);
+  
+  if (waitAtTopTimeout) clearTimeout(waitAtTopTimeout);
+  if (waitAfterLandTimeout) clearTimeout(waitAfterLandTimeout);
+};
+
+function startFall() { 
+  falling = true; 
+  velocity.set(0, 0, 0); 
+  angularVelocity.set(
+    (Math.random() - 0.5) * 6,
+    (Math.random() - 0.5) * 6,
+    (Math.random() - 0.5) * 6
+  );
+}
+
+function landAndWaitThenReset() {
+  falling = false;
+  flying = false;
+  
+  waitAfterLandTimeout = setTimeout(() => {
+    sealModel.position.copy(origTransform.position);
+    sealModel.rotation.copy(origTransform.rotation);
+    sealModel.scale.copy(origTransform.scale);
+    spinPaused = false;
+    waitAfterLandTimeout = null;
+    window.specialTriggered = false; 
+  }, 3000); 
+}
+
+function animate() { 
+  requestAnimationFrame(animate); 
+  
+  const now = performance.now(); 
+  const delta = Math.min((now - prevRAF) / 1000, 0.05);
+  prevRAF = now;
+  time += 0.035;
+
+  if (!spinPaused) {
+    spinGroup.rotation.y += window.innerWidth < 768 ? 0.02 : 0.04;
+  }
+
+  if (sealModel) {
+    currentScale.lerp(targetScale, 0.2);
+    targetScale.lerp(new THREE.Vector3(1, 1, 1), 0.1);
+    sealModel.scale.copy(currentScale);
+
+    if (flying) {
+      const t = (performance.now() / 1000 - flyStart) / flyDuration;
+      const clamped = Math.min(Math.max(t, 0), 1);
+      const ease = 1 - Math.pow(1 - clamped, 3);
+      const startY = origTransform.position.y;
+      
+      sealModel.position.y = THREE.MathUtils.lerp(startY, flyPeakY, ease);
+      sealModel.rotation.x += 0.02;
+      sealModel.rotation.y += 0.06;
+
+      if (t >= 1) {
+        flying = false;
+        waitAtTopTimeout = setTimeout(startFall, 2500);
+      } 
+    }
+
+    if (falling) {
+      velocity.y += gravity * delta;
+      sealModel.position.addScaledVector(velocity, delta);
+      sealModel.rotation.x += angularVelocity.x * delta;
+      sealModel.rotation.y += angularVelocity.y * delta;
+      sealModel.rotation.z += angularVelocity.z * delta;
+
+      if (sealModel.position.y <= origTransform.position.y) {
+        sealModel.position.y = origTransform.position.y;
+        angularVelocity.multiplyScalar(0.18);
+        landAndWaitThenReset();
+      } 
+    } 
+  }
+
+  renderer.render(scene, camera);
+}
+
+animate(); 
+
+window.addEventListener('resize', () => { 
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight); 
+});
+
+const songs = [
+  "https://helloiti.github.io/assets/13._Exhibition.mp3",
+  "https://helloiti.github.io/assets/07main.mp3",
+  "https://helloiti.github.io/assets/3ds.mp3",
+  "https://helloiti.github.io/assets/dsi.mp3",
+  "https://helloiti.github.io/assets/mk.mp3",
+  "https://helloiti.github.io/assets/mii.mp3",
+  "https://helloiti.github.io/assets/STRM_BGM_Shop.48.dspadpcm.mp3"
+];
+
+const bgm = document.getElementById("bgm");
+bgm.src = songs[Math.floor(Math.random() * songs.length)];
+
+document.addEventListener("click", function startMusic() {
+  bgm.play().catch(() => {}); 
+  document.removeEventListener("click", startMusic);
+}, { once: true });
+
+// translations
 window.translations = {
-en: {
-title: "※ helloT seal clicker ※",
-subtitle: " Each click updates the <b>global</b> counter! ",
- clicks: "clicks",
+  en: {
+    title: "※ helloT seal clicker ※",
+    subtitle: " Each click updates the <b>global</b> counter! ",
+    clicks: "clicks",
     button: " Yap yoo! ",
     randomTexts: [
       "1 click = 1 seal will appear on someone's door /j",
@@ -145,22 +304,62 @@ subtitle: " Each click updates the <b>global</b> counter! ",
       "1 yap yoo = +1 helloT yap yoo yap yap yoo yap yap yoo /j",
       "1 yap yoo = 1 yap yoo"
     ]
- } };
-window.currentLang = localStorage.getItem('sealLang') || 'en';window.flyRegex = /seal will fly/i;const randomTextEl = document.getElementById("okcool");
-function setRandomText() {const lang = window.currentLang || 'en';const randomTexts = window.translations[lang].randomTexts;const i = Math.floor(Math.random() * randomTexts.length);const chosen = randomTexts[i];randomTextEl.textContent = chosen;window.chosenText = chosen;return chosen; }
-window.chosenText = setRandomText();const bgm = document.getElementById("bgm");bgm.src = songs[Math.floor(Math.random() * songs.length)];
-document.addEventListener("click", function startMusic() {bgm.play().catch(()=>{}); document.removeEventListener("click", startMusic);}, { once: true });
-const titleEl = document.querySelector('.title');const subtitleEl = document.querySelector('.subtitle');const yapButton = document.getElementById('YapYoo');
-function updateLanguage(lang) {
-window.currentLang = lang;document.documentElement.lang = lang;const trans = window.translations[lang];titleEl.textContent = trans.title;document.title = trans.title;subtitleEl.innerHTML = trans.subtitle;yapButton.textContent = trans.button;
-if (lang === 'en') {
+  }
+};
+
+window.currentLang = localStorage.getItem('sealLang') || 'en';
 window.flyRegex = /seal will fly/i;
-} else if (lang === 'es') {
-window.flyRegex = /foca volará/i;
-} else if (lang === 'fr') {
-window.flyRegex = /phoque volera/i;
-} else if (lang === 'yapyoo') {
-window.flyRegex = /yap yap yap yoo/i;
-}window.chosenText = setRandomText();
-if (window.updateCounterText) {window.updateCounterText();
-}}const langSelect = document.getElementById('boring');langSelect.value = window.currentLang;updateLanguage(window.currentLang);langSelect.addEventListener('change', (e) => {localStorage.setItem('sealLang', e.target.value);updateLanguage(e.target.value);})
+
+const randomTextEl = document.getElementById("okcool");
+const titleEl = document.querySelector('.title');
+const subtitleEl = document.querySelector('.subtitle');
+const yapButton = document.getElementById('YapYoo');
+const langSelect = document.getElementById('boring');
+
+function setRandomText() {
+  const lang = window.currentLang || 'en';
+  const randomTexts = window.translations[lang].randomTexts;
+  const i = Math.floor(Math.random() * randomTexts.length);
+  const chosen = randomTexts[i];
+  
+  randomTextEl.textContent = chosen;
+  window.chosenText = chosen;
+  return chosen; 
+}
+
+window.chosenText = setRandomText();
+
+function updateLanguage(lang) {
+  window.currentLang = lang;
+  document.documentElement.lang = lang;
+  
+  const trans = window.translations[lang];
+  titleEl.textContent = trans.title;
+  document.title = trans.title;
+  subtitleEl.innerHTML = trans.subtitle;
+  yapButton.textContent = trans.button;
+
+  if (lang === 'en') {
+    window.flyRegex = /seal will fly/i;
+  } else if (lang === 'es') {
+    window.flyRegex = /foca volará/i;
+  } else if (lang === 'fr') {
+    window.flyRegex = /phoque volera/i;
+  } else if (lang === 'yapyoo') {
+    window.flyRegex = /yap yap yap yoo/i;
+  }
+
+  window.chosenText = setRandomText();
+
+  if (window.updateCounterText) {
+    window.updateCounterText();
+  }
+}
+
+langSelect.value = window.currentLang;
+updateLanguage(window.currentLang);
+
+langSelect.addEventListener('change', (e) => {
+  localStorage.setItem('sealLang', e.target.value);
+  updateLanguage(e.target.value);
+});
