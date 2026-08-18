@@ -1,14 +1,15 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
 import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app-check.js";
 
 const [_a, _b, _c, _d, _e, _f, _g, _h] = ["QUl6YVN5QVFnSGVEWjQzXzlKY2lRTjFTUlNDR0JTSlVaMkJnRFQ4","c2VhbGNsLmZpcmViYXNlYXBwLmNvbQ","aHR0cHM6Ly9zZWFsY2wtZGVmYXVsdC1ydGRiLmV1cm9wZS13ZXN0MS5maXJlYmFzZWRhdGFiYXNlLmFwcA","c2VhbGNs","c2VhbGNsLmZpcmViYXNlc3RvcmFnZS5hcHA","MTM2OTg1ODkzNjk3","MToxMzY5ODU4OTM2OTc6d2ViOjQ3OTJjMmE2NDU4NDFiZTA2N2RmYzA","Ry1STjhCRFBaWFg0"].map(atob);
-const firebaseConfig = {apiKey: _a,authDomain: _b,databaseURL: _c,projectId: _d,storageBucket: _e,messagingSenderId: _f,appId: _g,measurementId: _h};
+const firebaseConfig = {apiKey: _a, authDomain: _b, databaseURL: _c, projectId: _d, storageBucket: _e, messagingSenderId: _f, appId: _g, measurementId: _h};
 
 const app = initializeApp(firebaseConfig);
+const appCheck = initializeAppCheck(app, {provider: new ReCaptchaV3Provider("6LfVtowtAAAAABgzteTJKH3s5L7br7A5RFvncv7R"),isTokenAutoRefreshEnabled: true});
 const db = getDatabase(app);
 const auth = getAuth(app);
-
 signInAnonymously(auth);
 
 const counterRef = ref(db, "tictac");
