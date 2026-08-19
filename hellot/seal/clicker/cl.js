@@ -38,22 +38,20 @@ const loader = new THREE.GLTFLoader();
 loader.load("https://helloiti.github.io/assets/models/seal/seal1.glb", (gltf) => {
   sealModel = gltf.scene;
   
-  sealModel.traverse(child => {
-    if (child.isMesh) {
-      const oldMat = Array.isArray(child.material) ? child.material[0] : child.material;
-      
-      child.material = new THREE.MeshStandardMaterial({ 
-        map: oldMat.map || null,
-        color: oldMat.color ? oldMat.color : 0xffffff,
-        roughness: 1.0,
-        metalness: 0.0,
-        vertexColors: !!child.geometry.attributes.color,
-        transparent: true,
-        alphaTest: 0.5,
-        side: THREE.DoubleSide 
-      }); 
-    } 
-  });
+sealModel.traverse(child => {
+  if (child.isMesh) {
+    const oldMat = Array.isArray(child.material) ? child.material[0] : child.material;
+    child.material = new THREE.MeshStandardMaterial({ 
+      map: oldMat.map || null,
+      color: oldMat.color || 0xffffff,
+      roughness: oldMat.roughness ?? 1.0,
+      metalness: oldMat.metalness ?? 0.0,
+      transparent: true,
+      alphaTest: 0.5,
+      side: THREE.DoubleSide 
+    }); 
+  } 
+});
 
   sealModel.rotation.y = -Math.PI / 2; 
   spinGroup.add(sealModel);
@@ -367,3 +365,5 @@ langSelect.addEventListener('change', (e) => {
   localStorage.setItem('sealLang', e.target.value);
   updateLanguage(e.target.value);
 });
+
+// hi \\
