@@ -38,17 +38,16 @@ const loader = new THREE.GLTFLoader();
 loader.load("https://helloiti.github.io/assets/models/seal/seal1.glb", (gltf) => {
   sealModel = gltf.scene;
   
-sealModel.traverse(child => {
-  if (child.isMesh) {
-    const oldMat = Array.isArray(child.material) ? child.material[0] : child.material;
-    child.material = new THREE.MeshBasicMaterial({ 
-      map: oldMat.map || null,
-      transparent: oldMat.transparent,
-      alphaTest: 0.5,
-      side: THREE.DoubleSide
-    }); 
-  } 
-});
+  sealModel.traverse((child) => {
+    if (child.isMesh) {
+      child.material = new THREE.MeshStandardMaterial({
+        map: child.material.map,
+        transparent: true,
+        alphaTest: 0.5,
+        side: THREE.DoubleSide
+      });
+    }
+  });
 
   sealModel.rotation.y = -Math.PI / 2; 
   spinGroup.add(sealModel);
