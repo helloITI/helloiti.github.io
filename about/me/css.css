@@ -21,7 +21,7 @@
       cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, pointer;
     }
     .mn {
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.67);
   padding: 20px;
   border-radius: 12px;
   max-width: 600px;
@@ -65,4 +65,10 @@ li::before {
         .ok {
   font-size: 12px;
   opacity: 0.67;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid white;
+  width: 35%;
 }
