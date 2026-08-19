@@ -1,11 +1,6 @@
 const canvas = document.getElementById('canvas');
 
-const renderer = new THREE.WebGLRenderer({ 
-  canvas, 
-  antialias: window.innerWidth > 768, 
-  alpha: true, 
-  powerPreference: "high-performance" 
-});
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
 
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, window.innerWidth < 768 ? 1.5 : 2));
