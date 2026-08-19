@@ -40,14 +40,18 @@ loader.load("https://helloiti.github.io/assets/models/seal/seal1.glb", (gltf) =>
   
   sealModel.traverse(child => {
     if (child.isMesh) {
+      const oldMat = Array.isArray(child.material) ? child.material[0] : child.material;
       
-      const materials = Array.isArray(child.material) ? child.material : [child.material];
-      materials.forEach(mat => {
-        mat.transparent = true;
-        mat.alphaTest = 0.5;
-        mat.side = THREE.DoubleSide;
-        mat.needsUpdate = true;
-      });
+      child.material = new THREE.MeshStandardMaterial({ 
+        map: oldMat.map || null,
+        color: oldMat.color ? oldMat.color : 0xffffff,
+        roughness: 1.0,
+        metalness: 0.0,
+        vertexColors: !!child.geometry.attributes.color,
+        transparent: true,
+        alphaTest: 0.5,
+        side: THREE.DoubleSide 
+      }); 
     } 
   });
 
