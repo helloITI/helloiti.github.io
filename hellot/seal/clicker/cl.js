@@ -40,10 +40,9 @@ sealModel.traverse(child => {
         child.material.transparent = true;
         child.material.alphaTest = 0.5;
         child.material.side = THREE.DoubleSide;
-        child.material.needsUpdate = true; 
-      }); 
-    } 
-  });
+        child.material.needsUpdate = true;
+    }
+});
 
   sealModel.rotation.y = -Math.PI / 2; 
   spinGroup.add(sealModel);
