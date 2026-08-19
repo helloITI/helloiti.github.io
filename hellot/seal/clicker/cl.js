@@ -1,6 +1,8 @@
 const canvas = document.getElementById('canvas');
 
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+const renderer = new THREE.WebGLRenderer({
+  canvas, antialias: window.innerWidth > 768, alpha: true, powerPreference: "high-performance"
+});
 
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, window.innerWidth < 768 ? 1.5 : 2));
@@ -38,12 +40,13 @@ loader.load("https://helloiti.github.io/assets/models/seal/seal1.glb", (gltf) =>
   
   sealModel.traverse(child => {
     if (child.isMesh) {
-      child.material = new THREE.MeshStandardMaterial({ 
-        map: child.material.map,
-        transparent: true,
-        alphaTest: 0.5,
-        side: THREE.DoubleSide 
-      }); 
+      const materials = Array.isArray(child.material) ? child.material : [child.material];
+      materials.forEach(mat => {
+        mat.transparent = true;
+        mat.alphaTest = 0.5;
+        mat.side = THREE.DoubleSide;
+        mat.needsUpdate = true;
+      });
     } 
   });
 
