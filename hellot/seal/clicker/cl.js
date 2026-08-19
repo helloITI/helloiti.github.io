@@ -37,6 +37,8 @@ loader.load("https://helloiti.github.io/assets/models/seal/seal1.glb", (gltf) =>
   
 sealModel.traverse(child => {
     if (child.isMesh) {
+        const map = child.material.map;
+        if (map) map.colorSpace = THREE.SRGBColorSpace;
         child.material.transparent = true;
         child.material.alphaTest = 0.5;
         child.material.side = THREE.DoubleSide;
