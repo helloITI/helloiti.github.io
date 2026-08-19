@@ -40,6 +40,7 @@ loader.load("https://helloiti.github.io/assets/models/seal/seal1.glb", (gltf) =>
   
   sealModel.traverse(child => {
     if (child.isMesh) {
+      
       const materials = Array.isArray(child.material) ? child.material : [child.material];
       materials.forEach(mat => {
         mat.transparent = true;
@@ -362,5 +363,3 @@ langSelect.addEventListener('change', (e) => {
   localStorage.setItem('sealLang', e.target.value);
   updateLanguage(e.target.value);
 });
-
-// hi \\
