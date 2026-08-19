@@ -37,3 +37,11 @@ body.dk #mw { color: white; }
 body.dk #fq { background: #ccc; color: #000; border: 1px solid #aaa; }
 a { color: black; }
 body.dk a { color: white; }
+.sr {
+    position: fixed;
+    right: 10px;
+    bottom: 10px !important;
+    top: auto !important;
+    width: 150px;
+    z-index: 200;
+}
