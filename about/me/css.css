@@ -1,11 +1,11 @@
         @font-face {
-      font-family: 'NintendoNTLG';
+      font-family: 'wiiu';
       src: url('https://helloiti.github.io/assets/nintendo_NTLG-DB_002.ttf') format('truetype');
       font-weight: normal;
       font-style: normal;
     }
     body {
-      font-family: 'NintendoNTLG', sans-serif;
+      font-family: 'wiiu', sans-serif;
       margin: 0;
       padding: 20px;
       background-image: url('https://helloiti.github.io/assets/background.png');
