@@ -35,7 +35,7 @@ const origTransform = {
 
 // hellot seal 3d model loader
 const loader = new THREE.GLTFLoader();
-loader.load("https://helloiti.github.io/assets/models/seal/seal1.glb", (gltf) => {
+loader.load("https://helloiti.github.io/assets/models/seal/seal.gltf", (gltf) => {
   sealModel = gltf.scene;
   
   sealModel.traverse((child) => {
