@@ -35,13 +35,12 @@ const loader = new THREE.GLTFLoader();
 loader.load("https://helloiti.github.io/assets/models/seal/seal1.glb", (gltf) => {
   sealModel = gltf.scene;
   
-  sealModel.traverse(child => {
+sealModel.traverse(child => {
     if (child.isMesh) {
-      child.material = new THREE.MeshStandardMaterial({ 
-        map: child.material.map,
-        transparent: true,
-        alphaTest: 0.5,
-        side: THREE.DoubleSide 
+        child.material.transparent = true;
+        child.material.alphaTest = 0.5;
+        child.material.side = THREE.DoubleSide;
+        child.material.needsUpdate = true; 
       }); 
     } 
   });
