@@ -39,9 +39,9 @@ a { color: black; }
 body.dk a { color: white; }
 .seal {
     position: fixed;
-    right: 10px;
+    left: 10px;
     bottom: 10px !important;
     top: auto !important;
-    width: 150px;
+    width: 70px;
     z-index: 200;
 }
