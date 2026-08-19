@@ -38,10 +38,9 @@ body.dk #fq { background: #ccc; color: #000; border: 1px solid #aaa; }
 a { color: black; }
 body.dk a { color: white; }
 .seal {
-    position: fixed;
-    left: 10px;
-    bottom: 10px !important;
-    top: auto !important;
-    width: 70px;
-    z-index: 200;
+    position: absolute;
+    left: 150px;
+    top: 20px;
+    width: 80px;
+    z-index: 1000;
 }
