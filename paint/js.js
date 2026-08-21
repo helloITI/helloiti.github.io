@@ -11,7 +11,9 @@ auth.onAuthStateChanged((user) => {
 
 async function getDeviceId() { const cached = localStorage.getItem('pdid'); if (cached) return cached; try { const fp = await import('https://openfpcdn.io/fingerprintjs/v4');
 const agent = await fp.load(); const result = await agent.get(); localStorage.setItem('pdid', result.visitorId);return result.visitorId; } catch {
-const fallback = crypto.randomUUID ? crypto.randomUUID() : (Date.now().toString(36) + Math.random().toString(36).slice(2)); localStorage.setItem('pdid', fallback);return fallback; } } const deviceId = await getDeviceId();
+const fallback = crypto.randomUUID ? crypto.randomUUID() : (Date.now().toString(36) + Math.random().toString(36).slice(2)); localStorage.setItem('pdid', fallback);return fallback; } }
+let deviceId = null;
+getDeviceId().then(id => { deviceId = id; });
 
 // elements
 const cv = document.getElementById('cv');
