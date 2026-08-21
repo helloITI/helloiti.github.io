@@ -5,17 +5,13 @@ async function wh(embed) { try { await fetch("https://tight-glitter-0f72.pnid-he
 
 let resolveAuthReady;  const authReady = new Promise(res => { resolveAuthReady = res; });  let checkedInitialAuth = false;
 
-auth.onAuthStateChanged((user) => {
-    if (!checkedInitialAuth) {
-        checkedInitialAuth = true;
-if (user) { resolveAuthReady();  } else {   auth.signInAnonymously().catch(err => console.log("anon auth error:", err));   }  } else if (user) {   resolveAuthReady();   }   });
+auth.onAuthStateChanged((user) => {    
+    if (!checkedInitialAuth) { checkedInitialAuth = true;    
+                              if (user) { resolveAuthReady();  } else {   auth.signInAnonymously().catch(err => console.log("anon auth error:", err));   }  } else if (user) {   resolveAuthReady();   }   });
 
-async function getDeviceId() {
-const cached = localStorage.getItem('pdid');
-if (cached) return cached; try {const fp = await import('https://openfpcdn.io/fingerprintjs/v4');  const agent = await fp.load();  const result = await agent.get();
-localStorage.setItem('pdid', result.visitorId);  return result.visitorId;
-} catch {  const fallback = crypto.randomUUID ? crypto.randomUUID() : (Date.now().toString(36) + Math.random().toString(36).slice(2)); localStorage.setItem('pdid', fallback);return fallback; }  }
-const deviceId = await getDeviceId();
+async function getDeviceId() { const cached = localStorage.getItem('pdid'); if (cached) return cached; try { const fp = await import('https://openfpcdn.io/fingerprintjs/v4');
+const agent = await fp.load(); const result = await agent.get(); localStorage.setItem('pdid', result.visitorId);return result.visitorId; } catch {
+const fallback = crypto.randomUUID ? crypto.randomUUID() : (Date.now().toString(36) + Math.random().toString(36).slice(2)); localStorage.setItem('pdid', fallback);return fallback; } } const deviceId = await getDeviceId();
 
 // elements
 const cv = document.getElementById('cv');
@@ -562,14 +558,14 @@ if (devban) { alert('This device has been banned from publishing drawings.'); re
         updates['users/' + authorId + '/deviceId'] = deviceId;
         updates['devices/' + deviceId + '/uids/' + authorId] = true;    await db.ref().update(updates);
 
-const url = location.origin + location.pathname + '#id=' + id; wh({title: 'Drawing Published',description: '**User:** `' + authorId + '`\n**ID:** `' + id + '`\n**Size:** ' + Math.round(imgData.length / 1024) + 'KB', color: 0x5865f2, timestamp: new Date().toISOString() });
+const url = location.origin + location.pathname + '#id=' + id; wh({title: 'Drawing Published',description: '**By:** @' + (uv.username || authorId) + '\n**ID:** `' + id + '`\n**Size:** ' + Math.round(imgData.length / 1024) + 'KB', color: 0x5865f2, timestamp: new Date().toISOString() });
         
 shl.value = url;  history.replaceState(null, '', url);  alert('Done! Go to https://helloiti.github.io/paint/gallery to publish your drawing there!\n:D');
         
     } catch (e) {
         if (e.message && e.message.includes('PERMISSION_DENIED')) {
 alert('You are posting too fast, or have hit your limit from posting drawings.\nPlease wait a bit or try again tomorrow!');  
-wh({title: 'Publish Failed',description: '**User:** `' + (auth.currentUser ? auth.currentUser.uid : 'unknown') + '`', color: 0xed4245, timestamp: new Date().toISOString() });
+wh({title: 'Publish Failed',description: '**By:** @' + (uv.username || (auth.currentUser ? auth.currentUser.uid : 'unknown')) + '', color: 0xed4245, timestamp: new Date().toISOString() });
         } else {  alert('I could not generate your link... Error: ' + e.message);  }  }  });
 
 async function lfh() {
@@ -592,4 +588,4 @@ async function lfh() {
 document.addEventListener("mousedown", function playMusic() { const audio = document.getElementById("ps5"); audio.play().catch(err => console.log(err)); document.removeEventListener("mousedown", playMusic); }, true);
 
 ctx.fillStyle = 'white';  ctx.fillRect(0, 0, cv.width, cv.height);
-ps();  lfh(); //ok\\
+ps();  lfh();
