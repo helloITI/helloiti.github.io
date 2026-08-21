@@ -10,11 +10,12 @@ auth.onAuthStateChanged((user) => {
         checkedInitialAuth = true;
 if (user) { resolveAuthReady();  } else {   auth.signInAnonymously().catch(err => console.log("anon auth error:", err));   }  } else if (user) {   resolveAuthReady();   }   });
 
-function getDeviceId() {
-    let id = localStorage.getItem('pdid');
-    if (!id) {
-        id = (crypto.randomUUID ? crypto.randomUUID() : (Date.now().toString(36) + Math.random().toString(36).slice(2)));
-        localStorage.setItem('pdid', id);  }  return id;  }  const deviceId = getDeviceId();
+async function getDeviceId() {
+const cached = localStorage.getItem('pdid');
+if (cached) return cached; try {const fp = await import('https://openfpcdn.io/fingerprintjs/v4');  const agent = await fp.load();  const result = await agent.get();
+localStorage.setItem('pdid', result.visitorId);  return result.visitorId;
+} catch {  const fallback = crypto.randomUUID ? crypto.randomUUID() : (Date.now().toString(36) + Math.random().toString(36).slice(2)); localStorage.setItem('pdid', fallback);return fallback; }  }
+const deviceId = await getDeviceId();
 
 // elements
 const cv = document.getElementById('cv');
@@ -591,4 +592,4 @@ async function lfh() {
 document.addEventListener("mousedown", function playMusic() { const audio = document.getElementById("ps5"); audio.play().catch(err => console.log(err)); document.removeEventListener("mousedown", playMusic); }, true);
 
 ctx.fillStyle = 'white';  ctx.fillRect(0, 0, cv.width, cv.height);
-ps();  lfh();
+ps();  lfh(); //ok\\
