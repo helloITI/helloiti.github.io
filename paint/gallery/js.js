@@ -39,8 +39,7 @@ auth.onAuthStateChanged((user) => {
         firstAuthFired = true;
         resolveAuthReady(); }  loadDrawings(); });
 
-async function wh(channel, embed) {
-    try { await fetch("https://tight-glitter-0f72.pnid-hellot.workers.dev/" + channel, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ embeds: [embed] }) }); } catch (e) {
+async function wh(channel, embed) {try { await fetch("https://tight-glitter-0f72.pnid-hellot.workers.dev/" + channel, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ embeds: [embed] }) }); } catch (e) {
 // TEST
 } }
 
@@ -73,31 +72,36 @@ async function fetchUserLikes() {
     } catch (e) {
         userLikes = {}; } }
 
+async function getDeviceId() {
+    const cached = localStorage.getItem('pdid');
+    if (cached) return cached;
+    try {
+        const fp = await import('https://openfpcdn.io/fingerprintjs/v4');
+        const agent = await fp.load();
+        const result = await agent.get();
+        localStorage.setItem('pdid', result.visitorId);
+        return result.visitorId;
+    } catch {
+        const fallback = crypto.randomUUID ? crypto.randomUUID() : (Date.now().toString(36) + Math.random().toString(36).slice(2));
+        localStorage.setItem('pdid', fallback);
+        return fallback;
+    }
+}
+
 async function checkIfBanned(user) {
     try {
-const deviceKeys = ['pdid', 'device_id', 'deviceId', 'device_token', 'fingerprint', 'fp_id'];
-        const foundDeviceIds = deviceKeys.map(k => localStorage.getItem(k)).filter(Boolean);
-        
-        for (const devId of foundDeviceIds) {
-            const snap = await db.ref(`deviceBans/${devId}`).get();
-            if (snap.exists() && snap.val() === true) {
-                return true; 
-            } 
-        }
-        
+        const deviceId = await getDeviceId();
+        const devSnap = await db.ref(`deviceBans/${deviceId}`).get();
+        if (devSnap.exists() && devSnap.val() === true) return true;
+
         if (user && !user.isAnonymous) {
-            const [userSnap, userDevSnap] = await Promise.all([
-                db.ref(`users/${user.uid}/banned`).get(), 
-                db.ref(`users/${user.uid}/deviceBanned`).get() 
-            ]);
-            
+            const userSnap = await db.ref(`users/${user.uid}/banned`).get();
             if (userSnap.exists() && userSnap.val() === true) return true;
-            if (userDevSnap.exists() && userDevSnap.val() === true) return true; 
         }
     } catch (e) {
-        console.error("test check error:", e); 
-    } 
-    return false; 
+        console.error("ban check error:", e);
+    }
+    return false;
 }
 
 clPo.addEventListener('click', () => { pOvr.style.display = 'none'; });
@@ -129,7 +133,8 @@ if (!drawID) return; if (!confirm('Remove this drawing from the gallery?')) retu
         await db.ref('galleryDrawings/' + drawID).remove();
         pOvr.style.display = 'none';
         loadDrawings();
-        wh("gallery", {title: 'Drawing Removed from Gallery',description: '**ID:** `' + drawID + '`', color: 0xed4245, timestamp: new Date().toISOString() });
+        const removerName = await fetchUsername(auth.currentUser ? auth.currentUser.uid : null);
+        wh("gallery", {title: 'Drawing Removed from Gallery',description: '**ID:** `' + drawID + '`\n**By:** ' + removerName, color: 0xed4245, timestamp: new Date().toISOString() });
     } catch (err) {
         if (err.message && err.message.includes('PERMISSION_DENIED')) {
             alert('You can only remove your own drawings!');
@@ -200,7 +205,8 @@ async function submitReport(reason) {
         await db.ref().update(updates);
         
         rO.style.display = 'none'; pOvr.style.display = 'none'; 
-      alert('Thanks, your report has been submitted for review.'); wh("reports", {title: 'Drawing Reported',description: '**Drawing ID:** `' + drawID + '`\n**Reported by:** `' + user.uid + '`\n**Reason:** ' + reason + '\n**Link:** https://helloiti.github.io/paint/#id=' + drawID, color: 0xe67e22, timestamp: new Date().toISOString() });
+      const reporterName = await fetchUsername(user.uid);
+      alert('Thanks, your report has been submitted for review.'); wh("reports", {title: 'Drawing Reported',description: '**Drawing ID:** `' + drawID + '`\n**Reported by:** ' + reporterName + '\n**Reason:** ' + reason + '\n**Link:** https://helloiti.github.io/paint/#id=' + drawID, color: 0xe67e22, timestamp: new Date().toISOString() });
     } catch (err) {
         if (err.message && err.message.includes('PERMISSION_DENIED')) {
             alert('You\'ve already reported this drawing, or you need to wait before reporting again.');
@@ -327,7 +333,7 @@ addBtn.addEventListener('click', async () => {
         await db.ref().update(updates);
         
         input.value = '';
-loadDrawings();wh("gallery", {title: 'Drawing Added to Gallery',description: '**ID:** `' + match[1] + '`\n**By:** `' + user.uid + '`', color: 0x5865f2, timestamp: new Date().toISOString()});
+loadDrawings();const adderName = await fetchUsername(user.uid); wh("gallery", {title: 'Drawing Added to Gallery',description: '**ID:** `' + match[1] + '`\n**By:** ' + adderName, color: 0x5865f2, timestamp: new Date().toISOString()});
     } catch (err) {
         if (err.message && err.message.includes('PERMISSION_DENIED')) {
             alert('You can only publish your own drawings to the gallery!');
