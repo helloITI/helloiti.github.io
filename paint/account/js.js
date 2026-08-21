@@ -4,34 +4,28 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.database();
 
-function getDeviceId(){
-  var id = localStorage.getItem('pdid');
-  if(!id){
-    id = (crypto.randomUUID ? crypto.randomUUID() : (Date.now().toString(36) + Math.random().toString(36).slice(2)));
-    localStorage.setItem('pdid', id);
-  }
-  return id;
-}
-var deviceId = getDeviceId();
+async function getDeviceId() {const cached = localStorage.getItem('pdid');
+if (cached) return cached;
+try {const fp = await import('https://openfpcdn.io/fingerprintjs/v4'); const agent = await fp.load(); const result = await agent.get();
+localStorage.setItem('pdid', result.visitorId);return result.visitorId;
+} catch { const fallback = crypto.randomUUID ? crypto.randomUUID() : (Date.now().toString(36) + Math.random().toString(36).slice(2));
+localStorage.setItem('pdid', fallback);return fallback;} }
+var deviceId = await getDeviceId();
 
-var isBanned = false;
-var unsubBan = null;
+var isBanned = false;  var unsubBan = null;
 
 function checkBanData(u){
   if(!u) return false;
   if(u.bannedUntil && u.bannedUntil > 0 && Date.now() < u.bannedUntil) return true;
   if(u.banned === true && (!u.bannedUntil || u.bannedUntil === 0)) return true;
-  return false;
-}
+  return false;  }
 
 function getBanMessage(uv){
   var reason = uv.banReason || uv.reason;
   var reasonStr = reason ? " Reason: " + reason : "";
   if(uv.bannedUntil && uv.bannedUntil > 0 && Date.now() < uv.bannedUntil){
-    return "※ Your account has been banned until: " + new Date(uv.bannedUntil).toLocaleString() + "." + reasonStr + " ※";
-  }
-  return "※ Your account has been banned." + reasonStr + " ※";
-}
+    return "※ Your account has been banned until: " + new Date(uv.bannedUntil).toLocaleString() + "." + reasonStr + " ※";  }
+return "※ Your account has been banned." + reasonStr + " ※";  }
 
 var banMsg = document.createElement("p");
 banMsg.style.cssText = "color:#ff6b6b;font-size:14px;margin-top:20px;display:none;";
@@ -67,7 +61,7 @@ var g_u = document.getElementById("g_u");
 var b_gus = document.getElementById("b_gus");
 var g_msg = document.getElementById("g_msg");
 
-var pendingGoogleUser = null;
+var pendGUS = null;
 
 var b_ssup = document.getElementById("b_ssup");
 var b_slg = document.getElementById("b_slg");
@@ -443,7 +437,7 @@ b_gl.onclick = function(){
     p.then(function(){
       return auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
     }).then(function(cred){
-      pendingGoogleUser = cred.user;
+      pendGUS = cred.user;
       return db.ref("users/" + cred.user.uid).once("value").then(function(snap){
         if(snap.exists() && snap.val().username){
           var uv = snap.val();
@@ -502,7 +496,7 @@ b_gus.onclick = function(){
       return;
     }
 
-    var user = pendingGoogleUser || auth.currentUser;
+    var user = pendGUS || auth.currentUser;
     if(!user){ g_msg.textContent = "※ Something went wrong, please try signing in again. ※"; return; }
     var email = (user.email || ("google_" + user.uid + "@app.local")).trim().toLowerCase();
 
