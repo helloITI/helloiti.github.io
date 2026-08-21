@@ -10,7 +10,10 @@ try {const fp = await import('https://openfpcdn.io/fingerprintjs/v4'); const age
 localStorage.setItem('pdid', result.visitorId);return result.visitorId;
 } catch { const fallback = crypto.randomUUID ? crypto.randomUUID() : (Date.now().toString(36) + Math.random().toString(36).slice(2));
 localStorage.setItem('pdid', fallback);return fallback;} }
-var deviceId = await getDeviceId();
+var deviceId = null;
+getDeviceId().then(function(id) { 
+    deviceId = id; 
+});
 
 var isBanned = false;  var unsubBan = null;
 
