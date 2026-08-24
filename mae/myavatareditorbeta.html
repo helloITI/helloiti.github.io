@@ -2,6 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="darkreader-lock" content="">
+  <meta name="robots" content="noindex, nofollow, noai, noimageai">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Avatar Editor Beta RC1</title>
   <link rel="icon" href="favicon.ico">
   <meta property="og:title" content="My Avatar Editor" />
@@ -10,11 +14,11 @@
   <meta property="og:image" content="https://helloiti.github.io/mae/favicon.png" />
   <meta property="og:type" content="website" />
   <script>
-    window.RufflePlayer = window.RufflePlayer || {};
-    window.RufflePlayer.config = {
-      autoplay: "on",
-      unmuteOverlay: "hidden"
-    };
+  window.RufflePlayer = window.RufflePlayer || {};
+  window.RufflePlayer.config = {
+    autoplay: "on",
+    unmuteOverlay: "hidden"
+  };
   </script>
   <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
   <script src="scripts/swfobject.js"></script>
@@ -22,7 +26,7 @@
   <script>
     window.addEventListener("DOMContentLoaded", () => {
       swfobject.embedSWF(
-        "https://helloiti.github.io/mae/myavatareditor.swf",
+        "myavatareditor.swf",
         "editorSWFContainer",
         "640",
         "500",
@@ -32,7 +36,7 @@
       );
 
       swfobject.embedSWF(
-        "https://helloiti.github.io/mae/airbadge.swf",
+        "airbadge.swf",
         "air-badge-container",
         "217",
         "180",
