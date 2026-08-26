@@ -291,3 +291,49 @@ hr {
   border-top: 1px solid white;
   width: 40%;
 }
+
+.stbx {
+    background: rgba(0, 0, 0, 0.5);
+    border: none;
+    border-radius: 12px;
+    padding: 14px 20px;
+    width: fit-content;
+    margin: 10px auto;
+    text-align: center;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.stss {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    font-size: 15px;
+}
+
+.stdv {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.fbtn {
+    font-family: inherit;
+    font-weight: bold;
+    font-size: 14px;
+    color: white;
+    background: #9e2222;
+    border: 2px solid #7a1818;
+    border-radius: 8px;
+    padding: 8px 16px;
+    transition: 0.2s ease;
+}
+
+.fbtn:hover {
+    background: #bd2b2b;
+    transform: scale(1.04);
+}
+
+.fbtn:disabled {
+    opacity: 0.6;
+}
