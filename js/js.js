@@ -33,7 +33,7 @@ function initStatus() {
       return (currentVisits || 0) + 1;
     }, (error, committed) => {
       if (committed) {
-        localStorage.setItem("helloT_visited", "true");
+        localStorage.setItem("visited", "true");
         hasV = true;
       }
     });
