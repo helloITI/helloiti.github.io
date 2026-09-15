@@ -394,21 +394,40 @@ fb.addEventListener('click', () => { setMode(m === 'fill' ? 'draw' : 'fill'); })
 slb.addEventListener('click', () => { setMode(m === 'select' ? 'draw' : 'select'); });
 
 ub.addEventListener('click', async () => {
-if (sel) commitSel();
-if (!us.length) return;
-const ls = us.pop();
-rs.push(whitepng());
-await rdu(ls);
-sel = null;
-baseSnapshot = null;  });
+    if (sel) {
+        sel = null;
+        selDrag = null;
+        selScale = null;
+        selStart = null;
+        if (baseSnapshot) {
+            ctx.clearRect(0, 0, cv.width, cv.height);
+            ctx.drawImage(baseSnapshot, 0, 0);
+            baseSnapshot = null;
+        }
+    }
+    if (!us.length) return;
+    const ls = us.pop();
+    rs.push(whitepng());
+    await rdu(ls);
+});
 
 rb.addEventListener('click', async () => {
-if (!rs.length) return;
-const s = rs.pop();
-us.push(whitepng());
-await rdu(s);
-sel = null;
-baseSnapshot = null;  });
+    if (sel) {
+        sel = null;
+        selDrag = null;
+        selScale = null;
+        selStart = null;
+        if (baseSnapshot) {
+            ctx.clearRect(0, 0, cv.width, cv.height);
+            ctx.drawImage(baseSnapshot, 0, 0);
+            baseSnapshot = null;
+        }
+    }
+    if (!rs.length) return;
+    const s = rs.pop();
+    us.push(whitepng());
+    await rdu(s);
+});
 
 cb.addEventListener('click', () => {
 if (sel) commitSel();  ps();
