@@ -167,8 +167,21 @@ function commitSel() {
     selStart = null;
     baseSnapshot = null;  }
 
+function discardSel() {
+    if (!sel) return;
+    if (baseSnapshot) {
+        ctx.clearRect(0, 0, cv.width, cv.height);
+        ctx.drawImage(baseSnapshot, 0, 0);
+        baseSnapshot = null;
+    }
+    sel = null;
+    selDrag = null;
+    selScale = null;
+    selStart = null;
+}
+
 // shape generation
-function createShapeCanvas(st) {
+function createShapeCanvas(st, filled) {
     const oc = document.createElement('canvas');
     oc.width = 200;
     oc.height = 200;
@@ -229,12 +242,25 @@ function createShapeCanvas(st) {
         octx.quadraticCurveTo(x, y + h, x, y + h - r);
         octx.lineTo(x, y + r);
         octx.quadraticCurveTo(x, y, x + r, y);
-        octx.closePath();  }  octx.stroke();  return oc; }
+        octx.closePath();
+    }
+
+    if (filled) {
+        octx.fill();
+    } else {
+        octx.stroke();
+    }
+
+    return oc;
+}
 
 addShpBtn.addEventListener('click', () => {
 if (sel) commitSel();  ps();
-    
-    const sc = createShapeCanvas(shpSelect.value);
+
+    const filledCheckbox = document.getElementById('shpfill');
+    const filled = filledCheckbox ? filledCheckbox.checked : false;
+    const sc = createShapeCanvas(shpSelect.value, filled);
+
     baseSnapshot = document.createElement('canvas');
     baseSnapshot.width = cv.width;
     baseSnapshot.height = cv.height;
@@ -341,39 +367,43 @@ function sp(e) {
         if (selScale) { selScale = null; drawSel(); return; }
         if (selDrag) { selDrag = null; drawSel(); return; }
         if (!dr || !selStart) return;
-        
+
         if (e.type === 'mouseout' || e.type === 'touchcancel') {
-           dr = false;
-          redrbase();
-        baseSnapshot = null;
-          selStart = null; return; } dr = false;
+            dr = false;
+            redrbase();
+            baseSnapshot = null;
+            selStart = null;
+            return;
+        }
+
+        dr = false;
       
- const pos = gp(e);
-const rx = Math.round(Math.min(selStart.x, pos.x));
- const ry = Math.round(Math.min(selStart.y, pos.y));
-const rw = Math.round(Math.abs(pos.x - selStart.x));
- const rh = Math.round(Math.abs(pos.y - selStart.y));
+        const pos = gp(e);
+        const rx = Math.round(Math.min(selStart.x, pos.x));
+        const ry = Math.round(Math.min(selStart.y, pos.y));
+        const rw = Math.round(Math.abs(pos.x - selStart.x));
+        const rh = Math.round(Math.abs(pos.y - selStart.y));
         
-selStart = null;
-if (rw < 2 || rh < 2) { redrbase(); baseSnapshot = null; return; }  redrbase();
+        selStart = null;
+        if (rw < 2 || rh < 2) { redrbase(); baseSnapshot = null; return; }  redrbase();
         
-const imgData = ctx.getImageData(rx, ry, rw, rh);
-ctx.fillStyle = 'white';
-ctx.fillRect(rx, ry, rw, rh);  ps();
+        const imgData = ctx.getImageData(rx, ry, rw, rh);
+        ctx.fillStyle = 'white';
+        ctx.fillRect(rx, ry, rw, rh);  ps();
         
-baseSnapshot = document.createElement('canvas');
-baseSnapshot.width = cv.width;
-baseSnapshot.height = cv.height;
-baseSnapshot.getContext('2d').drawImage(cv, 0, 0);
+        baseSnapshot = document.createElement('canvas');
+        baseSnapshot.width = cv.width;
+        baseSnapshot.height = cv.height;
+        baseSnapshot.getContext('2d').drawImage(cv, 0, 0);
         
-const oc = document.createElement('canvas');
-oc.width = rw;  oc.height = rh;
-oc.getContext('2d').putImageData(imgData, 0, 0);
+        const oc = document.createElement('canvas');
+        oc.width = rw;  oc.height = rh;
+        oc.getContext('2d').putImageData(imgData, 0, 0);
         
-sel = { x: rx, y: ry, w: rw, h: rh, img: oc };
-drawSel();  return; }
+        sel = { x: rx, y: ry, w: rw, h: rh, img: oc };
+        drawSel();  return; }
     
-if (dr) { e.preventDefault();  dr = false;  }  }
+    if (dr) { e.preventDefault();  dr = false;  }  }
 
 // event stuff for canvas
 cv.addEventListener('mousedown', st);  
@@ -394,17 +424,7 @@ fb.addEventListener('click', () => { setMode(m === 'fill' ? 'draw' : 'fill'); })
 slb.addEventListener('click', () => { setMode(m === 'select' ? 'draw' : 'select'); });
 
 ub.addEventListener('click', async () => {
-    if (sel) {
-        sel = null;
-        selDrag = null;
-        selScale = null;
-        selStart = null;
-        if (baseSnapshot) {
-            ctx.clearRect(0, 0, cv.width, cv.height);
-            ctx.drawImage(baseSnapshot, 0, 0);
-            baseSnapshot = null;
-        }
-    }
+    discardSel();
     if (!us.length) return;
     const ls = us.pop();
     rs.push(whitepng());
@@ -412,17 +432,7 @@ ub.addEventListener('click', async () => {
 });
 
 rb.addEventListener('click', async () => {
-    if (sel) {
-        sel = null;
-        selDrag = null;
-        selScale = null;
-        selStart = null;
-        if (baseSnapshot) {
-            ctx.clearRect(0, 0, cv.width, cv.height);
-            ctx.drawImage(baseSnapshot, 0, 0);
-            baseSnapshot = null;
-        }
-    }
+    discardSel();
     if (!rs.length) return;
     const s = rs.pop();
     us.push(whitepng());
@@ -475,40 +485,65 @@ function ff(sx, sy, fc) {
     const w = cv.width;
     const h = cv.height;
     const sp = (sy * w + sx) * 4;
-    const sc = { r: data[sp], g: data[sp + 1], b: data[sp + 2], a: data[sp + 3] };
+
+    let sc;
+    if (data[sp + 3] < 10) {
+        sc = { r: 255, g: 255, b: 255, a: 255 };
+    } else {
+        sc = { r: data[sp], g: data[sp + 1], b: data[sp + 2], a: data[sp + 3] };
+    }
+
     const tc = htr(fc);
     
     if (cm(sc, tc)) return;
     
     const pk = (x, y) => (y * w + x) * 4;
+
+    function pixelMatchesSrc(pos) {
+        const a = data[pos + 3];
+        if (a < 10) return cm({ r: 255, g: 255, b: 255, a: 255 }, sc);
+        return cm({ r: data[pos], g: data[pos + 1], b: data[pos + 2], a: data[pos + 3] }, sc);
+    }
+
     const stk = [{ x: sx, y: sy }];
     
     while (stk.length) {
     const { x: sx, y: sy } = stk.pop();
     let x = sx;  let y = sy;
         
-   while (x >= 0) {
+    while (x >= 0) {
         const pos = pk(x, y);
-           if (!cm({ r: data[pos], g: data[pos + 1], b: data[pos + 2], a: data[pos + 3] }, sc)) break;
-              x--;   }  x++;     let ru = false;     let rd = false;
+        if (!pixelMatchesSrc(pos)) break;
+        x--;
+    }
+    x++;
+    let ru = false;
+    let rd = false;
         
-for (let nx = x; nx < w; nx++) {
-const pos = pk(nx, y);
-if (!cm({ r: data[pos], g: data[pos + 1], b: data[pos + 2], a: data[pos + 3] }, sc)) break;
+    for (let nx = x; nx < w; nx++) {
+        const pos = pk(nx, y);
+        if (!pixelMatchesSrc(pos)) break;
             
-data[pos] = tc.r;  data[pos + 1] = tc.g;  data[pos + 2] = tc.b;  data[pos + 3] = tc.a;
+        data[pos] = tc.r;  data[pos + 1] = tc.g;  data[pos + 2] = tc.b;  data[pos + 3] = tc.a;
             
-if (y > 0) {
- const up = pk(nx, y - 1);
-if (cm({ r: data[up], g: data[up + 1], b: data[up + 2], a: data[up + 3] }, sc)) {
- if (!ru) { stk.push({ x: nx, y: y - 1 }); ru = true; }
-} else if (ru) { ru = false; } }
+        if (y > 0) {
+            const up = pk(nx, y - 1);
+            if (pixelMatchesSrc(up)) {
+                if (!ru) { stk.push({ x: nx, y: y - 1 }); ru = true; }
+            } else if (ru) { ru = false; }
+        }
             
-if (y < h - 1) {
-const dn = pk(nx, y + 1);
-if (cm({ r: data[dn], g: data[dn + 1], b: data[dn + 2], a: data[dn + 3] }, sc)) {
-if (!rd) { stk.push({ x: nx, y: y + 1 }); rd = true; }
-} else if (rd) { rd = false; } } } }     ctx.putImageData(id, 0, 0); }
+        if (y < h - 1) {
+            const dn = pk(nx, y + 1);
+            if (pixelMatchesSrc(dn)) {
+                if (!rd) { stk.push({ x: nx, y: y + 1 }); rd = true; }
+            } else if (rd) { rd = false; }
+        }
+    }
+    }
+
+    ctx.putImageData(id, 0, 0);
+}
 
 // paint publish stuff
 let _pbBusy = false;
@@ -523,6 +558,8 @@ if (user && user.isAnonymous) { alert('Sorry, but you need an account in order t
 if (!confirm("Are you sure you want to generate a link for this drawing?")) return;
     
 if (sel) commitSel();
+
+let uv = {};
 
 try {  await authReady;  const user = auth.currentUser;
         
@@ -540,7 +577,7 @@ const authorId = user.uid;
         const serverNow = serverOffset + Date.now();
         const td = Math.floor(serverNow / 86400000);
 
-        const uv = usnap.val() || {};
+        uv = usnap.val() || {};
         const uExp = uv.banUntil || uv.bannedUntil || uv.banExpires || uv.banExpiry || uv.unbanTime || uv.expires;
         const userban = (typeof uv.banned === 'number') ? (serverNow < uv.banned) : (uv.banned === true && (!uExp || serverNow < uExp));     if (userban) {alert('Your account has been banned from publishing drawings.'); return;}
         
@@ -585,7 +622,7 @@ shl.value = url;  history.replaceState(null, '', url);  alert('Done! Go to https
         
     } catch (e) {
         if (e.message && e.message.includes('PERMISSION_DENIED')) {
-alert('You are posting too fast, or have hit your limit from posting drawings.\nPlease wait a bit or try again tomorrow!');  
+alert('You are posting too fast, or have hit your limit from posting drawings.\nPlease wait a bit or try again tomorrow!'); 
 wh({title: 'Publish Failed',description: '**By:** @' + (uv.username || (auth.currentUser ? auth.currentUser.uid : 'unknown')) + '', color: 0xed4245, timestamp: new Date().toISOString() });
         } else {  alert('I could not generate your link... Error: ' + e.message);  }  }  });
 
