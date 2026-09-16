@@ -45,6 +45,7 @@
   <p id="st"></p><br>
   <div id="pv" style="display:none">
     <img id="m_img" src="" alt="Mii" width="128" height="128" /><br>
+    <b>Nickname:</b> <span id="n_lbl"></span><br>
     <b>User ID:</b> <span id="u_lbl"></span><br>
     <span id="c_lbl" style="font-size:13px; color:#999;"></span><br><br>
     <input type="button" value="Save Image" onclick="sv_mii()" />
@@ -72,13 +73,25 @@
   <input type="button" value="OK" class="p-btn" onclick="pop_off()" />
 </div>
 
-<!-- success -->
+<!-- success popup -->
 <div id="p_succ" class="pop">
   <div class="p-ic green">✓</div>
   <div class="p-txt">
     <center style="font-family:Message;">
       <b>Success!</b><br><br>
       Your Mii image was loaded successfully and is ready to preview.
+    </center>
+  </div>
+  <input type="button" value="OK" class="p-btn" onclick="pop_off()" />
+</div>
+
+<!-- download success -->
+<div id="p_dl_succ" class="pop">
+  <div class="p-ic green">✓</div>
+  <div class="p-txt">
+    <center style="font-family:Message;">
+      <b>Downloaded!</b><br><br>
+      Your Mii head image has been saved to your device.
     </center>
   </div>
   <input type="button" value="OK" class="p-btn" onclick="pop_off()" />
