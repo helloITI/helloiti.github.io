@@ -81,7 +81,7 @@
     document.getElementById(id).classList.add('act');
     
     if (type === 'normal') {
-      if (id === 'p_succ') type = 'success';
+      if (id === 'p_succ' || id === 'p_dl_succ') type = 'success';
       else if (id === 'p_err' || id === 'p_off') type = 'error';
     }
     
@@ -182,7 +182,6 @@
         return;
       }
 
-      // fetch head_image returned from API JSON
       const imgRes = await fetch(data.head_image);
       if (!imgRes.ok) { err('Failed to load Mii head image.'); document.getElementById('st').innerHTML = ''; return; }
 
@@ -216,6 +215,7 @@
     a.href = s_b64;
     a.download = `mii_${s_uid}.png`;
     a.click();
+    pop_on('p_dl_succ', 'success');
   }
 
   // init
