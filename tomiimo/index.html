@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tomiimo Mii Loader</title>
+  
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow, noai, noimageai">
+  <meta name="darkreader-lock" content="">
+
+  <meta property="og:type" content="website"/>
+  <meta property="og:title" content="Tomiimo Mii Loader"/>
+  <meta property="og:description" content="Tool that lets you load your Tomiimo Miis using your Tomiimo's User ID">
+  <meta property="og:url" content="https://helloiti.github.io/"/>
+  <meta property="og:image" content="https://helloiti.github.io/assets/blue.png"/>
+  
+  <link rel="icon" type="image/png" href="https://helloiti.github.io/assets/blue.png">
+
+  <link rel="stylesheet" href="css.css">
+</head>
+<body>
+
+<!-- top bar -->
+<div id="bar" style="height:75px; background-color:#2596be; display:flex; align-items:center; justify-content:center; position:relative;">
+  <a id="btn_back" href="https://helloiti.github.io/home" style="position:absolute; left:20px; display:flex; align-items:center; text-decoration:none;">
+    <svg width="45" height="45" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="21" y1="12" x2="3" y2="12"></line>
+      <polyline points="11 20 3 12 11 4"></polyline>
+    </svg>
+  </a>
+  <p style="color:white; font-size:25px;">Tomiimo Mii Loader</p>
+  <input type="button" value="F.A.Q" onclick="faq()" style="position:absolute; right:20px;" />
+</div><br><br>
+
+<!-- input form -->
+<center><p style="font-size:20px;">Enter your Tomiimo's User ID:</p></center><br>
+<center>
+  <input type="text" id="uid" size="30" placeholder="e.g. cb5e06b659d20c1b" />
+  <input type="button" value="Load" onclick="ld_mii()" />
+</center><br>
+
+<!-- mii preview -->
+<center>
+  <p id="st"></p><br>
+  <div id="pv" style="display:none">
+    <img id="m_img" src="" alt="Mii" width="128" height="128" /><br>
+    <b>User ID:</b> <span id="u_lbl"></span><br>
+    <span id="c_lbl" style="font-size:13px; color:#999;"></span><br><br>
+    <input type="button" value="Save Image" onclick="sv_mii()" />
+  </div>
+</center>
+
+<!-- overlay -->
+<div id="ov" class="ov"></div>
+
+<!-- faq -->
+<div id="p_faq" class="pop">
+  <div class="p-txt">
+    <center style="font-family:Miitomo;">
+      <b>Q:</b> <b style="font-family:Message;">What's this project about?</b><br>
+      <b>A:</b> <b style="font-family:Message;">I wanted to test something with Tomiimo's Mii head images because I was really bored.<br>
+      Anyways, it's just a simple tool that loads your Tomiimo's Mii image and you can download it too, nothing else that's very interesting.</b><br><br>
+      <b>Q:</b> <b style="font-family:Message;">What is Tomiimo?</b><br>
+      <b>A:</b> <b style="font-family:Message;">Tomiimo is yet another Miitomo revival that is coming soon.<br>
+      It brings back a lot of stuff from Miitomo which Kaerutomo didn't.<br>
+      Check their website here:</b> <a href="https://tomiimo.online" style="color: black;">https://tomiimo.online</a><br><br>
+      <b>Q:</b> <b style="font-family:Message;">How do I get my Tomiimo User ID?</b><br>
+      <b>A:</b> <b style="font-family:Message;">Open Tomiimo, click the</b> Notifications <b style="font-family:Message;">button, click</b> Account <b style="font-family:Message;">and copy your Account ID.</b><br>
+    </center>
+  </div>
+  <input type="button" value="OK" class="p-btn" onclick="pop_off()" />
+</div>
+
+<!-- success -->
+<div id="p_succ" class="pop">
+  <div class="p-ic green">✓</div>
+  <div class="p-txt">
+    <center style="font-family:Message;">
+      <b>Success!</b><br><br>
+      Your Mii image was loaded successfully and is ready to preview.
+    </center>
+  </div>
+  <input type="button" value="OK" class="p-btn" onclick="pop_off()" />
+</div>
+
+<!-- offline -->
+<div id="p_off" class="pop">
+  <div class="p-ic orange">!</div>
+  <div class="p-txt">
+    <center style="font-family:Message;">
+      <b>No internet connection.</b><br><br>
+      You appear to be offline. Please check your connection and try again.<br>
+      Previously loaded Miis may still be available from cache.<br><br>
+      <span style="font-size:14px; color:#999;">(Support code: 801-1450-0000)</span>
+    </center>
+  </div>
+  <input type="button" value="OK" class="p-btn" onclick="pop_off()" />
+</div>
+
+<!-- error -->
+<div id="p_err" class="pop">
+  <center style="font-family:Message;">
+    <div class="p-ic orange" style="font-family:Miitomo !important;">!</div>
+    <div class="p-txt" id="p_err_txt"></div>
+    <span style="font-size:14px; color:#999;">(Support code: 801-0011-0000)</span><br><br>
+    <input type="button" value="OK" class="p-btn" onclick="pop_off()" />
+  </center>
+</div>
+
+<script src="js.js"></script>
+</body> </html>
