@@ -105,15 +105,20 @@
 
   document.getElementById('ov').addEventListener('click', pop_off);
 
-  // cache
+  // cache helper storing both image and nickname
   const cp = 'mii_cache_';
-  const c_g = u => { try { return localStorage.getItem(cp + u) || null; } catch(e) { return null; } };
-  function c_s(u, b) {
-    try { localStorage.setItem(cp + u, b); }
+  const c_g = u => {
+    try {
+      const val = localStorage.getItem(cp + u);
+      return val ? JSON.parse(val) : null;
+    } catch(e) { return null; }
+  };
+  function c_s(u, obj) {
+    try { localStorage.setItem(cp + u, JSON.stringify(obj)); }
     catch(e) {
       try {
         for (const k of Object.keys(localStorage)) if (k.startsWith(cp)) localStorage.removeItem(k);
-        localStorage.setItem(cp + u, b);
+        localStorage.setItem(cp + u, JSON.stringify(obj));
       } catch(e2) {}
     }
   }
@@ -134,9 +139,10 @@
 
   let s_b64 = null, s_uid = null;
 
-  function s_mii(b, u, c) {
+  function s_mii(b, u, name, c) {
     s_b64 = b; s_uid = u;
     document.getElementById('m_img').src = b;
+    document.getElementById('n_lbl').textContent = name || 'N/A';
     document.getElementById('u_lbl').textContent = u;
     document.getElementById('c_lbl').textContent = c ? '(loaded from local cache)' : '';
     document.getElementById('pv').style.display = 'block';
@@ -144,13 +150,13 @@
     pop_on('p_succ', 'success');
   }
 
-  // load mii
+  // load mii using API
   async function ld_mii() {
     const u = document.getElementById('uid').value.trim();
 
     if (!navigator.onLine) {
       const cached = c_g(u);
-      if (cached && u && /^[a-zA-Z0-9]+$/.test(u)) { s_mii(cached, u, true); return; }
+      if (cached && u && /^[a-zA-Z0-9]+$/.test(u)) { s_mii(cached.img, u, cached.name, true); return; }
       off(); return;
     }
 
@@ -162,22 +168,31 @@
     s_b64 = null;
 
     const cached = c_g(u);
-    if (cached) { s_mii(cached, u, true); return; }
+    if (cached) { s_mii(cached.img, u, cached.name, true); return; }
 
-    const url = `https://server2.tomiimo.online/mii/${encodeURIComponent(u)}.png`;
+    const apiUrl = `https://api.tomiimo.online/${encodeURIComponent(u)}`;
     try {
-      const res = await fetch(url);
+      const res = await fetch(apiUrl);
       if (!res.ok) { err(`User ID not found.<br><br><span style="font-size:14px; color:#999;">HTTP ${res.status}</span>`); document.getElementById('st').innerHTML = ''; return; }
       
-      const ct = res.headers.get('content-type') || '';
-      if (!ct.startsWith('image/')) { err('The server did not return a valid image.<br><br>Double-check your User ID and try again.'); document.getElementById('st').innerHTML = ''; return; }
+      const data = await res.json();
+      if (!data || !data.head_image) {
+        err('The API did not return valid Mii data.<br><br>Double-check your User ID and try again.');
+        document.getElementById('st').innerHTML = '';
+        return;
+      }
 
-      const blob = await res.blob();
+      // fetch head_image returned from API JSON
+      const imgRes = await fetch(data.head_image);
+      if (!imgRes.ok) { err('Failed to load Mii head image.'); document.getElementById('st').innerHTML = ''; return; }
+
+      const blob = await imgRes.blob();
       const base64 = await b2_b64(blob);
       await v_img(base64);
 
-      c_s(u, base64);
-      s_mii(base64, u, false);
+      const cacheObj = { name: data.name || 'N/A', img: base64 };
+      c_s(u, cacheObj);
+      s_mii(base64, u, cacheObj.name, false);
     } catch (e) {
       document.getElementById('st').innerHTML = '';
       if (!navigator.onLine) off();
