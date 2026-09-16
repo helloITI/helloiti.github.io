@@ -1,0 +1,68 @@
+    @font-face {
+      font-family: 'Miitomo';
+      src: url('/assets/font/SeuratPro-B.otf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Message';
+      src: url('/assets/font/FOT-Seurat%20Pro%20M.otf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+    * { margin: 0; padding: 0; }
+    body {
+      font-family: 'Miitomo', sans-serif;
+      position: relative;
+      line-height: 1.5;
+      color: #323232;
+      overflow-x: hidden;
+    }
+    input[type="button"] {
+      background: #FF9A18;
+      border: 4px solid #7D3E08;
+      border-bottom-width: 7px;
+      border-radius: 8px;
+      color: white;
+      font-family: 'Miitomo', sans-serif;
+      font-size: 18px;
+      font-weight: bold;
+      padding: 6px 20px;
+      cursor: pointer;
+      outline: none;
+      transition: all 0.1s ease;
+    }
+    input[type="button"]:active {
+      border-bottom-width: 4px;
+      transform: translateY(3px);
+    }
+    input[type="text"] {
+      padding: 6px;
+      font-size: 16px;
+      font-family: 'Miitomo', sans-serif;
+    }
+    .ov {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6); z-index: 999;
+      opacity: 0; visibility: hidden;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+    }
+    .ov.act { opacity: 1; visibility: visible; }
+    .pop {
+      position: fixed; left: 50%; top: 150vh;
+      transform: translate(-50%, -50%);
+      background: white; border-radius: 12px;
+      padding: 40px 20px 30px 20px;
+      width: 80%; max-width: 320px; text-align: center;
+      z-index: 1000;
+      transition: top 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    #p_faq { width: 90%; max-width: 650px; text-align: center; }
+    .pop.act { top: 50%; }
+    .p-ic { font-size: 65px; font-weight: bold; line-height: 1; margin-bottom: 20px; }
+    .p-ic.orange { color: #F15A24; }
+    .p-ic.red { color: #e03030; }
+    .p-ic.blue { color: #2596be; }
+    .p-ic.green { color: #4CAF50; }
+    .p-txt { color: #666; font-size: 17px; margin-bottom: 35px; }
+    .p-btn { display: block; margin: 0 auto; width: 80%; padding: 8px 20px !important; font-size: 22px !important; }
