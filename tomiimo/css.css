@@ -194,6 +194,7 @@ input[type="text"] {
 
 .ft { font-family: 'Miitomo', sans-serif; font-size: 20px; color: #323232; }
 .textst { font-family: 'Miitomo', sans-serif; font-size: 20px; color: #323232; }
+.miiprw { font-family: 'Miitomo', sans-serif; font-size: 20px; color: #323232; }
 .cb { text-align: left; font-family: 'Message', sans-serif; font-size: 15px; color: #555; line-height: 1.7; }
 
 .ec {
@@ -240,6 +241,11 @@ body.dark .cb { color: #ccc; }
 body.dark #cl { color: #ccc; }
 body.dark .ft { color: #e0e0e0; }
 body.dark .textst { color: #e0e0e0; }
+body.dark .miiprw { color: #e0e0e0; }
+
+/*body.dark .cud { color: #e0e0e0; }
+body.dark .cnm { color: #e0e0e0; }*/
+
 body.dark .cli { background: #1a1a2e; }
 body.dark #cl_sort { background: #2a2a3e; color: #e0e0e0; border: 1px solid #555 !important; }
 
@@ -313,6 +319,7 @@ body.dark #cl_sort { background: #2a2a3e; color: #e0e0e0; border: 1px solid #555
   font-size: 11px;
   color: #888;
 }
+
 .cbt {
   display: flex;
   gap: 4px;
