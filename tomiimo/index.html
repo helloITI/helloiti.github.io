@@ -24,67 +24,175 @@
 
 <!-- loader -->
 <div id="ls">
-  <!-- <div class="li"><img src="https://helloiti.github.io/assets/blue.png" alt=""></div> -->
   <div class="lt">Loading assets</div>
-  <div class="dot-loader">
+  <div class="dl">
     <span></span><span></span><span></span>
   </div>
 </div>
 
 <!-- topbar -->
-<div id="bar" style="height:75px; background-color:#2596be; display:flex; align-items:center; justify-content:center; position:relative;">
-  <a id="btn_back" href="https://helloiti.github.io/home" style="position:absolute; left:12px; display:flex; align-items:center; text-decoration:none;" title="Go back?">
+<div id="bar" style="height:75px; background-color:var(--accent-color); display:flex; align-items:center; justify-content:center; position:relative; transition: background-color 0.3s;">
+  <a id="btn_back" href="https://helloiti.github.io/home" style="position:absolute; left:12px; display:flex; align-items:center; text-decoration:none; user-select: none; -webkit-user-select: none;" title="Go back?">
     <svg width="45" height="45" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
       <line x1="21" y1="12" x2="3" y2="12"></line>
       <polyline points="11 20 3 12 11 4"></polyline>
     </svg>
   </a>
-  <p style="color:white; font-size:25px;">Tomiimo Mii Loader</p>
+  <p style="color:white; font-size:25px; user-select: none; -webkit-user-select: none;">Tomiimo Mii Loader</p>
   <div id="br">
     <input type="button" value="Settings" title="Settings" onclick="p_on('p_settings')" />
+    <input type="button" value="Changelog" title="Changelog" onclick="p_on('p_changelog')" />
     <input type="button" value="Credits" title="Credits" onclick="p_on('p_credits')" />
     <input type="button" value="F.A.Q" title="F.A.Q" onclick="p_on('p_faq')" />
   </div>
-</div><br><br>
+</div>
 
 <!-- form -->
-<center><p style="font-size:20px;">Enter your Tomiimo's User ID:</p></center><br>
-<center>
-  <div class="ur">
-    <input type="text" id="uid" size="30" placeholder="e.g. 379bd0b0b426bfbb" />
-    <input type="button" value="Load" onclick="l_m()" />
-  </div>
-</center><br>
+<div style="margin-top: 24px;">
+  <center><p style="font-size:20px; user-select: none; -webkit-user-select: none; margin-bottom: 12px;">Enter your Tomiimo's User ID:</p></center>
+  <center>
+    <div class="ur">
+      <input type="text" id="uid" size="30" placeholder="e.g. 379bd0b0b426bfbb" />
+      <input type="button" value="Load" onclick="l_m()" />
+    </div>
+  </center>
+</div>
 
 <!-- mii view -->
 <center>
-  <p id="st"></p><br>
+  <p id="st"></p>
   <div id="pv" style="display:none">
-    <b>Nickname:</b> <span id="n_lbl"></span><br><br>
-    <img id="m_img" src="" alt="Mii" width="128" height="128" /><br>
-    <b>User ID:</b> <span id="u_lbl"></span><br>
-    <span id="c_lbl" style="font-size:13px; color:#999;"></span><br><br>
-    <input type="button" value="Save Image" onclick="sv_m()" />
+    <b style="user-select: none; -webkit-user-select: none;">Nickname:</b> <span class="sel" id="n_lbl"></span><br><br>
+    <img id="m_img" src="" alt="Mii" width="128" height="128" style="user-select: none; -webkit-user-select: none;" /><br>
+    <b style="user-select: none; -webkit-user-select: none;">User ID:</b> <span class="sel" id="u_lbl"></span><br>
+    <span id="c_lbl" style="font-size:13px; color:#999; user-select: none; -webkit-user-select: none;"></span><br><br>
+    <div class="ur" style="gap:10px;">
+      <input type="button" value="Save Image" onclick="sv_m()" />
+      <input type="button" value="Copy Image" onclick="cp_m()" />
+      <input type="button" value="Copy Share Link" onclick="shr_m()" />
+    </div>
   </div>
 </center>
 
 <!-- overlay -->
 <div id="ov" class="ov"></div>
 
+<!-- changelog -->
+<div id="p_changelog" class="pop">
+  <div class="pt">
+    <b class="ft" style="user-select: none; -webkit-user-select: none;">What's New</b><br><br>
+    <div class="cb">
+      <b class="vt" style="user-select: none; -webkit-user-select: none; font-family:Miitomo; font-size:13px; color:var(--accent-color);">VERSION 1.2</b><br>
+      <ul style="user-select: none; -webkit-user-select: none;">
+      <li>Background music now pauses when you switch apps or tabs on mobile</li>
+      <li>Added this changelog</li>
+      <li>Added "Copy Image" button to easily copy Miis directly to clipboard</li>
+      <li>Added Export & Import JSON backup features for cached Miis in Settings</li>
+      <li>Added custom cursors</li>
+      <li>Added new settings options</li>
+      <li>Added unique error codes per error type</li>
+      <li>Added error code meanings to the Frequently Asked Questions section</li>
+      <li>Bug fixes and some UI touchups</li><br>
+      </ul>
+
+      <b class="vt" style="user-select: none; -webkit-user-select: none; font-family:Miitomo; font-size:13px; color:var(--accent-color);">VERSION 1.1</b><br>
+      <ul style="user-select: none; -webkit-user-select: none;">
+      <li>Added being able to see a Mii's nickname from the API</li>
+      <li>Added a pop up message when you download a Mii's head image</li>
+      <li>Added a loading screen (so that assets can load correctly)</li>
+      <li>Bug fixes and some UI touchups</li><br>
+      </ul>
+      
+      <b class="vt" style="user-select: none; -webkit-user-select: none; font-family:Miitomo; font-size:13px; color:var(--accent-color);">VERSION 1.0</b><br>
+      <ul style="user-select: none; -webkit-user-select: none;">
+      <li>Initial release</li>
+      <li>Frequently Asked Questions section</li>
+      </ul>
+      
+      <br>
+      <center>
+      <span style="font-size:14px; color:#999; flex-shrink: 0; margin-bottom: 5px; user-select: none; -webkit-user-select: none;">(Please note that this project is in W.I.P, so expect some bugs to appear, some stuff being changed, etc.)</span>
+      </center>
+    </div>
+  </div>
+  <input type="button" value="OK" class="pb" onclick="p_off(); p_bgm(); chk_uid_url();" />
+</div>
+
 <!-- faq -->
 <div id="p_faq" class="pop">
   <div class="pt">
     <center style="font-family:Miitomo;">
-      <b class="ft">Frequently Asked Questions</b><br><br>
-      <b>Q:</b> <b style="font-family:Message;">What's this project about?</b><br>
-      <b>A:</b> <b style="font-family:Message;">I wanted to test something with Tomiimo's Mii head images because I was really bored.<br>
-      Anyways, it's just a simple tool that loads your Tomiimo's Mii image and you can download it too, nothing else that's very interesting.</b><br><br>
-      <b>Q:</b> <b style="font-family:Message;">What is Tomiimo?</b><br>
-      <b>A:</b> <b style="font-family:Message;">Tomiimo is yet another Miitomo revival that is coming soon.<br>
+      <b class="ft" style="user-select: none; -webkit-user-select: none;">Frequently Asked Questions</b><br><br>
+      <b style="user-select: none; -webkit-user-select: none;">Q:</b> <b style="font-family:Message; user-select: none; -webkit-user-select: none;">What's this project about?</b><br>
+      <b style="user-select: none; -webkit-user-select: none;">A:</b> <span style="font-family:Message; user-select: none; -webkit-user-select: none;">I wanted to test something with Tomiimo's API because I was really bored.<br>
+      Anyways, it's just a simple tool that loads any user's Tomiimo's Mii head image and you can download or copy it too, see their Mii's nickname, etc.</span><br><br>
+      <b style="user-select: none; -webkit-user-select: none;">Q:</b> <b style="font-family:Message; user-select: none; -webkit-user-select: none;">What is Tomiimo?</b><br>
+      <b style="user-select: none; -webkit-user-select: none;">A:</b> <span style="font-family:Message; user-select: none; -webkit-user-select: none;">Tomiimo is a yet another Miitomo revival that is coming soon.<br>
       It brings back a lot of stuff from Miitomo which Kaerutomo didn't.<br>
-      Check their website here:</b> <a href="https://tomiimo.online">https://tomiimo.online</a><br><br>
-      <b>Q:</b> <b style="font-family:Message;">How do I get my Tomiimo User ID?</b><br>
-      <b>A:</b> <b style="font-family:Message;">Open Tomiimo, click the</b> Notifications <b style="font-family:Message;">button, click</b> Account <b style="font-family:Message;">and copy your Account ID.</b><br>
+      Check their website here:</span> <a href="https://tomiimo.online">https://tomiimo.online</a><br><br>
+      <b style="user-select: none; -webkit-user-select: none;">Q:</b> <b style="font-family:Message; user-select: none; -webkit-user-select: none;">How do I get my Tomiimo User ID?</b><br>
+      <b style="user-select: none; -webkit-user-select: none;">A:</b> <span style="font-family:Message; user-select: none; -webkit-user-select: none;">Open Tomiimo, click the</span> <span style="user-select: none; -webkit-user-select: none;">Notifications</span> <span style="font-family:Message; user-select: none; -webkit-user-select: none;">button, click</span> <span style="user-select: none; -webkit-user-select: none;">Account</span> <span style="font-family:Message; user-select: none; -webkit-user-select: none;">and copy your Account ID.</span><br><br>
+      <b style="user-select: none; -webkit-user-select: none;">Q:</b> <b style="font-family:Message; user-select: none; -webkit-user-select: none;">What do the support codes mean?</b><br>
+      <b style="user-select: none; -webkit-user-select: none;">A:</b> <span style="font-family:Message; user-select: none; -webkit-user-select: none;">They help identify what went wrong. Here's the full list:</span><br><br>
+      <div class="ec sel">
+<code class="sel">801-0010-0001
+No User ID entered
+
+801-0011-0001
+User ID has invalid characters
+
+801-0012-0001
+Loading too fast, rate limited
+
+801-0013-0001
+User ID not found (HTTP error)
+
+801-0014-0001
+API returned invalid data
+
+801-0015-0001
+Failed to load Mii head image
+
+801-0016-0001
+User ID not found
+
+801-0017-0001
+Image data was invalid or corrupted
+
+801-0018-0001
+Unknown error while loading
+
+801-0020-0001
+Refreshing too fast, rate limited
+
+801-0021-0001
+Failed to refresh cached Mii
+
+801-0030-0001
+No cached Miis to clear
+
+801-0031-0001
+Could not clear cache
+
+801-0040-0001
+No cached Miis to export
+
+801-0041-0001
+Failed to export cache
+
+801-0042-0001
+Failed to import (invalid/corrupted file)
+
+801-0050-0001
+Could not copy image to clipboard
+
+801-0051-0001
+Could not copy share link
+
+801-1450-0000
+No internet connection
+</code>
+</div>
     </center>
   </div>
   <input type="button" value="OK" class="pb" onclick="p_off()" />
@@ -93,7 +201,7 @@
 <!-- success -->
 <div id="p_succ" class="pop">
   <div class="pi green">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22%" height="22%">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20%" height="20%">
   <path 
     d="M 21.52 2.44 C 21.10 2.20 18.60 2.80 17.79 3.66 C 15.20 7.80 11.80 13.60 9.93 18.71 C 8.50 16.50 6.90 14.70 5.79 13.83 C 4.70 12.98 3.50 13.50 3.31 14.24 C 3.10 15.10 5.20 18.10 8.69 21.97 C 9.80 22.30 10.80 22.20 11.59 21.56 C 14.20 16.20 18.50 7.80 21.52 2.44 Z" 
     fill="#4CAF50" 
@@ -112,7 +220,7 @@
 <!-- download success -->
 <div id="p_dl_succ" class="pop">
   <div class="pi green">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22%" height="22%">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20%" height="20%">
   <path 
     d="M 21.52 2.44 C 21.10 2.20 18.60 2.80 17.79 3.66 C 15.20 7.80 11.80 13.60 9.93 18.71 C 8.50 16.50 6.90 14.70 5.79 13.83 C 4.70 12.98 3.50 13.50 3.31 14.24 C 3.10 15.10 5.20 18.10 8.69 21.97 C 9.80 22.30 10.80 22.20 11.59 21.56 C 14.20 16.20 18.50 7.80 21.52 2.44 Z" 
     fill="#4CAF50" 
@@ -120,9 +228,28 @@
 </svg>
   </div>
   <div class="pt">
-    <center style="font-family:Message;">
+    <center style="font-family:Message; user-select: none; -webkit-user-select: none;">
       <b>Downloaded!</b><br><br>
       Your Mii head image has been saved to your device.
+    </center>
+  </div>
+  <input type="button" value="OK" class="pb" onclick="p_off()" />
+</div>
+
+<!-- share success -->
+<div id="p_shr_succ" class="pop">
+  <div class="pi green">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20%" height="20%">
+  <path 
+    d="M 21.52 2.44 C 21.10 2.20 18.60 2.80 17.79 3.66 C 15.20 7.80 11.80 13.60 9.93 18.71 C 8.50 16.50 6.90 14.70 5.79 13.83 C 4.70 12.98 3.50 13.50 3.31 14.24 C 3.10 15.10 5.20 18.10 8.69 21.97 C 9.80 22.30 10.80 22.20 11.59 21.56 C 14.20 16.20 18.50 7.80 21.52 2.44 Z" 
+    fill="#4CAF50" 
+  />
+</svg>
+  </div>
+  <div class="pt">
+    <center style="font-family:Message; user-select: none; -webkit-user-select: none;">
+      <b>Link copied!</b><br><br>
+      Share link has been copied to your clipboard.
     </center>
   </div>
   <input type="button" value="OK" class="pb" onclick="p_off()" />
@@ -132,24 +259,26 @@
 <div id="p_img_preview" class="pop">
   <div class="pt" style="margin-bottom:0px;">
     <center style="font-family:Miitomo;">
-      <b id="p_img_name" style="font-size:20px; color:#323232;">Mii Preview</b><br><br>
-      <div style="display:inline-flex; align-items:center; justify-content:center; background:#2596be; border-radius:50%; width:140px; height:140px;">
-        <img id="p_img_src" src="" alt="Mii Preview" width="128" height="128" style="display:block; width:128px; height:128px; object-fit:contain;" />
+      <b id="p_img_name" style="font-size:20px; color:var(--tc);" class="sel">Mii Preview</b><br>
+      <span style="user-select: none; -webkit-user-select: none; font-family:'Message'; font-size:13px; color:#999;">UID: </span> <span class="sel" id="p_img_uid" style="font-family:'Message'; font-size:13px; color:#999;"></span><br><br>
+      <div style="display:inline-flex; align-items:center; justify-content:center; background:var(--accent-color); border-radius:50%; width:178px; height:178px;">
+        <img id="p_img_src" src="" alt="Mii Preview" width="128" height="128" style="display:block; width:128px; height:128px; object-fit:contain; user-select: none; -webkit-user-select: none;" />
       </div>
     </center>
+    <br>
   </div>
   <input type="button" value="OK" class="pb" onclick="p_off()" />
 </div>
 
 <!-- offline -->
-<div id="p_off" class="pop">
+<div id="p_offline" class="pop">
  <div class="pi orange" style="user-select: none; -webkit-user-select: none; font-family:Miitomo !important;">!</div>
   <div class="pt">
-    <center style="font-family:Message;">
+    <center style="font-family:Message; user-select: none; -webkit-user-select: none;">
       <b>No internet connection.</b><br><br>
       You appear to be offline. Please check your connection and try again.<br>
       Previously loaded Miis may still be available from cache.<br><br>
-      <span style="font-size:14px; color:#999;">(Support code: 801-1450-0000)</span>
+      <span style="font-size:14px; color:#999; flex-shrink: 0; margin-bottom: 5px; user-select: none; -webkit-user-select: none;">(Support code: 801-1450-0000)</span>
     </center>
   </div>
   <input type="button" value="OK" class="pb" onclick="p_off()" />
@@ -158,52 +287,153 @@
 <!-- error -->
 <div id="p_err" class="pop">
   <div class="pi orange" style="user-select: none; -webkit-user-select: none; font-family:Miitomo !important;">!</div>
-  <div class="pt" id="p_err_txt"></div>
-  <span style="font-size:14px; color:#999; flex-shrink: 0; margin-bottom: 5px;">(Support code: 801-0011-0000)</span>
+  <div class="pt" id="p_err_txt" style="user-select: none; -webkit-user-select: none;"></div>
+  <span id="p_err_code" style="font-size:14px; color:#999; flex-shrink: 0; margin-bottom: 5px; user-select: none; -webkit-user-select: none;"></span>
   <input type="button" value="OK" class="pb" onclick="p_off()" />
+</div>
+
+<!-- warning confirm -->
+<div id="p_warn" class="pop">
+  <div class="pi orange" style="user-select: none; -webkit-user-select: none; font-family:Miitomo !important;">!</div>
+  <div class="pt">
+    <center style="font-family:Message; user-select: none; -webkit-user-select: none;" id="p_warn_txt"></center>
+  </div>
+  <div style="display:flex; gap:8px; margin-top:10px;">
+    <input type="button" value="Cancel" class="pb" style="width:50%; font-size:16px !important;" onclick="p_off()" />
+    <input type="button" value="Yes" id="p_warn_btn" class="pb" style="width:50%; background:var(--accent-color) !important; border-color:var(--accent-dark) !important; font-size:16px !important;" />
+  </div>
 </div>
 
 <!-- settings -->
 <div id="p_settings" class="pop">
   <div class="pt" style="margin-bottom:0px;">
-    <b style="font-family:Miitomo; font-size:20px; color:#323232;">Settings</b>
+    <b style="user-select: none; -webkit-user-select: none;" class="textst">Settings</b>
 
-    <div class="sg">DISPLAY</div>
+    <div class="sg" style="user-select: none; -webkit-user-select: none;">DISPLAY & THEME</div>
     <div class="sr">
       <label>Dark mode</label>
       <label class="tg"><input type="checkbox" id="set_dark" onchange="tg_d()"><span class="ts"></span></label>
     </div>
+    <div class="sr">
+  <label>Change theme depending on timezone</label>
+  <label class="tg"><input type="checkbox" id="set_autodark" onchange="sv_s(); tg_autodark();"><span class="ts"></span></label>
+</div>
+    <div class="sr">
+      <label>Custom cursors</label>
+      <label class="tg"><input type="checkbox" id="set_cursor" checked onchange="tg_cursor()"><span class="ts"></span></label>
+    </div>
+    <div class="sr">
+      <label>Accent color</label>
+      <select id="set_accent" onchange="chg_accent()" style="padding:4px 8px; font-family:'Miitomo', sans-serif; border-radius:6px; border:1px solid #ccc; outline:none;">
+        <option value="#2596be">Blue</option>
+        <option value="#f44336">Red</option>
+        <option value="#ff5722">Red-Orange</option>
+        <option value="#FF9A18">Orange</option>
+        <option value="#fbc02d">Yellow</option>
+        <option value="#ffeb3b">Yellow-Green</option>
+        <option value="#8bc34a">Lime</option>
+        <option value="#4CAF50">Green</option>
+        <option value="#009688">Teal</option>
+        <option value="#00bcd4">Cyan</option>
+        <option value="#3f51b5">Indigo</option>
+        <option value="#9c27b0">Purple</option>
+        <option value="#673ab7">Violet</option>
+        <option value="#ff4081">Pink</option>
+        <option value="#e91e63">Hot Pink</option>
+        <option value="#795548">Brown</option>
+        <option value="#607d8b">Slate</option>
+      </select>
+    </div>
+    <div class="sr">
+      <label>Show changelog on launch</label>
+      <label class="tg"><input type="checkbox" id="set_changelog" checked onchange="sv_s()"><span class="ts"></span></label>
+    </div>
 
-    <div class="sg">AUDIO</div>
+    <div class="sg" style="user-select: none; -webkit-user-select: none;">AUDIO</div>
     <div class="sr">
       <label>Sound effects</label>
       <label class="tg"><input type="checkbox" id="set_sfx" checked onchange="sv_s()"><span class="ts"></span></label>
     </div>
     <div class="sr">
+      <label>SFX Volume</label>
+      <input type="range" id="set_sfx_vol" min="0" max="1" step="0.05" value="1" oninput="u_vol()" style="width:100px;" />
+    </div>
+    <div class="sr">
       <label>Background music</label>
       <label class="tg"><input type="checkbox" id="set_bgm" checked onchange="tg_b()"><span class="ts"></span></label>
     </div>
+    <div class="sr">
+      <label>BGM Volume</label>
+      <input type="range" id="set_bgm_vol" min="0" max="1" step="0.05" value="1" oninput="u_vol()" style="width:100px;" />
+    </div>
+    <div class="sr">
+      <label>BGM Time mode</label>
+      <select id="set_bgm_mode" onchange="chg_bgm_mode()" style="padding:4px 8px; font-family:'Miitomo', sans-serif; border-radius:6px; border:1px solid #ccc; outline:none;">
+        <option value="auto">Auto (System)</option>
+        <option value="day">Force Day</option>
+        <option value="night">Force Night</option>
+      </select>
+    </div>
 
-    <div class="sg">DATA</div>
+    <div class="sg" style="user-select: none; -webkit-user-select: none;">DATA & AUTOMATION</div>
     <div class="sr">
       <label>Remember last UID</label>
       <label class="tg"><input type="checkbox" id="set_remember" onchange="sv_s()"><span class="ts"></span></label>
     </div>
-    <div class="sr">
+    <!-- <div class="sr">
       <label>Load UID from URL<br><span style="font-size:12px;color:#999;">(?uid=…)</span></label>
       <label class="tg"><input type="checkbox" id="set_url" onchange="sv_s()"><span class="ts"></span></label>
+    </div> -->
+    <div class="sr">
+      <label>Auto-copy on load</label>
+      <label class="tg"><input type="checkbox" id="set_autocopy" onchange="sv_s()"><span class="ts"></span></label>
+    </div>
+    <div class="sr">
+      <label>Auto-download on load</label>
+      <label class="tg"><input type="checkbox" id="set_autodownload" onchange="sv_s()"><span class="ts"></span></label>
     </div>
     <div class="sr">
       <label>Auto-clear cache on close</label>
       <label class="tg"><input type="checkbox" id="set_autoclear" onchange="sv_s()"><span class="ts"></span></label>
     </div>
 
-    <div class="sg">CACHE</div>
+    <div class="sg" style="user-select: none; -webkit-user-select: none;">CACHE MANAGEMENT</div>
     <div class="sr">
       <label id="cl">Cached Miis: <b>0</b></label>
       <input type="button" value="Clear all" onclick="clr_c()" style="font-size:14px !important; padding:3px 12px !important;" />
     </div>
-    <div id="cl_list" class="cl-list"></div>
+    <div class="sr" style="justify-content:center; gap:8px;">
+      <input type="button" value="Export JSON" onclick="exp_c()" style="font-size:13px !important; padding:4px 10px !important;" />
+      <input type="button" value="Import JSON" onclick="imp_c()" style="font-size:13px !important; padding:4px 10px !important;" />
+      <input type="file" id="imp_file" accept=".json" style="display:none;" onchange="imp_c_file(event)" />
+    </div>
+    <input type="text" id="cl_search" placeholder="Search cached Miis..." oninput="u_cc()" style="width:100%; margin-top:8px; padding:6px 10px; font-size:13px; font-family:'Miitomo', sans-serif; border-radius:6px; border:1px solid #ccc; outline:none;" />
+    <div style="display:flex; justify-content:flex-end; margin-top:10px;">
+  <select id="cl_sort" onchange="u_cc()" style="padding:4px 8px; font-family:'Miitomo', sans-serif; border-radius:6px; border:1px solid #ccc; outline:none; font-size:13px;">
+    <option value="newest">Newest</option>
+    <option value="oldest">Oldest</option>
+    <option value="name_az">Name A-Z</option>
+    <option value="name_za">Name Z-A</option>
+  </select>
+</div><br>
+<hr>
+    <div id="cl_list" class="cll"></div>
+    <hr>
+    
+<!--    <div class="sg" style="user-select: none; -webkit-user-select: none;">HISTORY</div>
+<div class="sr">
+  <label id="hl">Recent UIDs: <b>0</b></label>
+  <input type="button" value="Clear" onclick="clr_h()" style="font-size:14px !important; padding:3px 12px !important;" />
+</div>
+<div id="hl_list" class="cll"></div> -->
+
+    <div class="sg" style="user-select: none; -webkit-user-select: none;">SYSTEM</div>
+    
+    <div class="sr" style="justify-content:center;">
+      <input type="button" value="Reset Settings to Default" onclick="rst_s()" style="background:#e03030 !important; border-color:#7d0808 !important; font-size:13px !important; padding:6px 14px !important;" />
+    </div>
+    
+    
   </div>
   <input type="button" value="Close" class="pb" onclick="p_off()" />
 </div>
@@ -211,14 +441,35 @@
 <!-- credits -->
 <div id="p_credits" class="pop">
   <div class="pt">
-    <b style="font-family:Miitomo; font-size:20px; color:#323232;">Credits</b><br><br>
+  	<center>
+    <b style="user-select: none; -webkit-user-select: none; font-family:Miitomo; font-size:20px; color:#323232;">Credits</b><br><br>
     <ul>
       <li><b style="font-family:Miitomo">Tomiimo Developers</b> <b style="font-family:Message;">for helping out with the API</b></li>
       <li><b style="font-family:Miitomo;"><a href="https://moddinghub.nekoweb.org">Lelumini</a></b> <b style="font-family:Message;">for inspiration</b></li>
     </ul>
+    </center>
   </div>
   <input type="button" value="OK" class="pb" onclick="p_off()" />
 </div>
 
+<!-- delete mii success -->
+<div id="p_del_succ" class="pop">
+  <div class="pi green">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20%" height="20%">
+  <path 
+    d="M 21.52 2.44 C 21.10 2.20 18.60 2.80 17.79 3.66 C 15.20 7.80 11.80 13.60 9.93 18.71 C 8.50 16.50 6.90 14.70 5.79 13.83 C 4.70 12.98 3.50 13.50 3.31 14.24 C 3.10 15.10 5.20 18.10 8.69 21.97 C 9.80 22.30 10.80 22.20 11.59 21.56 C 14.20 16.20 18.50 7.80 21.52 2.44 Z" 
+    fill="#4CAF50" 
+  />
+</svg>
+  </div>
+  <div class="pt">
+    <center style="font-family:Message; user-select: none; -webkit-user-select: none;">
+      <b>Deleted!</b><br><br>
+      <span id="p_del_succ_txt">Mii removed from cache.</span>
+    </center>
+  </div>
+  <input type="button" value="OK" class="pb" onclick="p_off()" />
+</div>
+  
 <script src="js.js"></script>
 </body> </html>
