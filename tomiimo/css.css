@@ -243,6 +243,17 @@ body.dark .ft { color: #e0e0e0; }
 body.dark .textst { color: #e0e0e0; }
 body.dark .miiprw { color: #e0e0e0; }
 
+.cnm {
+  font-family: 'Miitomo', sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  color: #323232;
+}
+
+body.dark .cnm {
+  color: #f0f0f0;
+}
+
 /*body.dark .cud { color: #e0e0e0; }
 body.dark .cnm { color: #e0e0e0; }*/
 
@@ -310,12 +321,7 @@ body.dark #cl_sort { background: #2a2a3e; color: #e0e0e0; border: 1px solid #555
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.cnm {
-  font-family: 'Miitomo', sans-serif;
-  font-size: 13px;
-  font-weight: bold;
-  color: var(--tc); /*  */
-}
+
 .cud {
   font-size: 11px;
   color: #888;
