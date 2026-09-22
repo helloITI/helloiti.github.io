@@ -314,6 +314,7 @@ body.dark #cl_sort { background: #2a2a3e; color: #e0e0e0; border: 1px solid #555
   font-family: 'Miitomo', sans-serif;
   font-size: 13px;
   font-weight: bold;
+  color: var(--tc); /*  */
 }
 .cud {
   font-size: 11px;
