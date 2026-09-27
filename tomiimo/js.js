@@ -1,3 +1,8 @@
+//CurrentVersionSetting
+const CURRENT_VERSION = '1.2'; //VERSION!!!
+
+
+//MiitomoLoader
 const dl_h = '<div class="dl"><span></span><span></span><span></span></div>';
 let l_ft = 0;
 let s_v = 1, b_v = 1;
@@ -45,6 +50,7 @@ function ld_s() {
   } catch(e) {}
 }
 
+//SavedSettings!
 function sv_s() {
   try {
     const s = {
@@ -71,6 +77,7 @@ function sv_s() {
 const tg_d = () => { document.body.classList.toggle('dark', document.getElementById('set_dark').checked); sv_s(); };
 const tg_cursor = () => { document.body.classList.toggle('nc', !document.getElementById('set_cursor').checked); sv_s(); };
 
+//DARKcolors.
 function chg_accent() {
   const col = document.getElementById('set_accent').value;
   const darks = {
@@ -127,6 +134,8 @@ function show_warn(txt, cb) {
 function rst_s() {
   show_warn('Are you sure you want to reset all settings to default?', () => {
     localStorage.removeItem('mii_settings');
+    // Also clear the seen-version so the changelog shows again after a reset
+    localStorage.removeItem('lastSeenVersion');
     document.getElementById('set_dark').checked = false;
     document.getElementById('set_cursor').checked = true;
     document.getElementById('set_changelog').checked = true;
@@ -769,16 +778,37 @@ function chk_uid_url() {
   } catch(e) {}
 }
 
+//CheckVersion, code.
+function chkVersion() {
+  try {
+    const s        = JSON.parse(localStorage.getItem('mii_settings') || '{}');
+    const lastSeen = localStorage.getItem('lastSeenVersion');
+    const showPref = s.changelog !== false;
+    const isNewVer = lastSeen !== CURRENT_VERSION;
+
+    if (showPref && isNewVer) {
+      //LOCAL.CACHE? IDK...
+      localStorage.setItem('lastSeenVersion', CURRENT_VERSION);
+      setTimeout(() => p_on('p_changelog', 'normal'), 100);
+    } else {
+      p_bgm();
+    }
+  } catch(e) {
+    p_bgm();
+  }
+}
+
 // init
 document.addEventListener('DOMContentLoaded', () => {
   const ls = document.getElementById('ls');
 
   ld_s();
 
-document.addEventListener('keydown', e => { if (e.key === 'Escape') p_off(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') p_off(); });
 
-setInterval(() => { if (document.getElementById('set_autodark')?.checked) tg_autodark(); }, 60000);
-
+  setInterval(() => { if (document.getElementById('set_autodark')?.checked) tg_autodark(); }, 60000);
+  
+//MiitomoFONTs
   const f = [
     new FontFace('Miitomo', "url('/assets/font/SeuratPro-B.otf') format('truetype')"),
     new FontFace('Message', "url('/assets/font/FOT-Seurat%20Pro%20M.otf') format('truetype')"),
@@ -790,12 +820,7 @@ setInterval(() => { if (document.getElementById('set_autodark')?.checked) tg_aut
         ls.classList.add('fade-out');
         setTimeout(() => {
           ls.style.display = 'none';
-          const s = JSON.parse(localStorage.getItem('mii_settings') || '{}');
-          if (s.changelog !== false) {
-            setTimeout(() => p_on('p_changelog', 'normal'), 100);
-          } else {
-            p_bgm();
-          }
+          chkVersion(); //CheckVersion
         }, 520);
       }, 500);
     });
