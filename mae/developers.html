@@ -312,17 +312,17 @@ swfobject.embedSWF(&quot;myavatareditor.swf&quot;,
 		<p class="note">Note: This requires the inclusion of the SWFObject javascript file.</p>
 		<p>Query variables in a web page's URL will need to be transferred from that URL to the embedded SWF. This could be handled using a server-side script, appending those values on the end of the SWF URL, or be done dynamically  using JavaScript. SWFObject allows you to do this through a parameter in the <code>embedSWF</code> call.</p>
 		<h3 id="creatingswffiles">Creating SWF Files</h3>
-		<p>There are a large number of tools that can create SWF files. The tool used for My Avatar Editor was <a href="https://animatearchive.neocities.org/">Flash Professional CS4</a>. Another popular tool is <a href="http://www.adobe.com/products/flex/">Flex Builder</a> which is a rich coding environment that uses the <a href="http://opensource.adobe.com/wiki/display/flexsdk/">free Flex SDK</a> to compiling MXML markup and ActionScript code into SWFs.</p>
+		<p>There are a large number of tools that can create SWF files. The tool used for My Avatar Editor was <a href="https://animatearchive.neocities.org/">Flash Professional CS4</a>. Another popular tool is <a href="http://www.adobe.com/products/flex/">Flex Builder</a> which is a rich coding environment that uses the <a href="http://web.archive.org/web/20100218163751/http://opensource.adobe.com/wiki/display/flexsdk/Flex+SDK;jsessionid=D30A331FC62B5A7A452A2784A15C8365">free Flex SDK</a> to compiling MXML markup and ActionScript code into SWFs.</p>
 		<p>If you are modifying the source of My Avatar Editor, you will need to use Flash CS4. However, if you are creating a wrapper SWF as covered by the section explaining <a href="#actionscriptdriven">ActionScript-driven Usage</a>, you can use any tool capable of creating a SWF targeting Flash Player 10. If you are not using Flash CS4, then the free Flex SDK would probably be your best alternative.</p>
 		<h4 id="flashcs4">Flash CS4</h4>
-		<p><a href="https://animatearchive.neocities.org/">Adobe Flash CS4</a> is probably the easiest tool to create SWF files. When starting a new file, create a new Flash File for ActionScript 3.0 and make sure the settings are targeting Flash Player 10. This, for CS4, should be the default. If you want to be sure, or modify this target, you can do so using <kbd>File &gt; Publish Settings... &gt; Flash [Tab].</kbd></p>
+		<p><a href="https://archive.org/details/adobe-flash-cs4-professional-digital-classroom">Adobe Flash CS4</a> is probably the easiest tool to create SWF files. When starting a new file, create a new Flash File for ActionScript 3.0 and make sure the settings are targeting Flash Player 10. This, for CS4, should be the default. If you want to be sure, or modify this target, you can do so using <kbd>File &gt; Publish Settings... &gt; Flash [Tab].</kbd></p>
 		<p>Once you have a new file loaded, you're ready to go.  Graphics can be added to the screen and code can be written in frames in the timeline. For more information about using Flash, see the included documentation.</p>
 		<p>Flash CS4 will cost you to buy. For a free option, consider using the <a href="#flexsdk">Flex SDK</a>. My Avatar Editor was built using Flash CS4.</p>
 		<h4 id="flexsdk">Free Flex SDK</h4>
 		<p>The Flex SDK provides a free solution for creating SWF files. It consists of the core components used by Flex Builder, the Eclipse-based code editing and layout application for creating Rich Internet Applications (RIAs) SWF files. Flex Builder itself is not free. However, it is not required to generate SWFs. For making a SWF, all you need is some ActionScript files, which you can write with any text editor, and the free Flex SDK.</p>
 		<p>The Flex 4 SDK (a.k.a. Gumbo) will allow you to directly target a Flash Player 10 SWF. You can download it here:</p>
 		<ul>
-			<li><a href="http://opensource.adobe.com/wiki/display/flexsdk/">http://opensource.adobe.com/wiki/display/flexsdk/</a></li>
+			<li><a href="http://web.archive.org/web/20100218163751/http://opensource.adobe.com/wiki/display/flexsdk/Flex+SDK;jsessionid=D30A331FC62B5A7A452A2784A15C8365">http://opensource.adobe.com/wiki/display/flexsdk/</a></li>
 			</ul>
 		<p>You can also use the Flex 3 SDK, but you will need some additional configuration which is explained in the document <a href="http://spendingtracker.co.uk">Flex SDK: Targeting Flash Player 10</a>.</p>
 		<p>Once you have the Flex SDK files, you can start coding some ActionScript (or MXML) source files and run them through the mxmlc compiler in the bin folder of the SDK. The following tutorial was written using a beta build of the Flex 2 SDK but covers the basics needed to getting started with the Flex 4 SDK if you don't know already: <a href="http://senocular.com/flash/tutorials/as3withmxmlc/">Beginners Guide to Getting Started with AS3 (Without Learning Flex)</a>.</p>
@@ -338,7 +338,7 @@ swfobject.embedSWF(&quot;myavatareditor.swf&quot;,
 		</ul>
 		<h4 id="avatarxml">Avatar XML</h4>
 		<p>The XML format used to represent avatar characters is a custom set of XML elements designed specifically for My Avatar Editor.  In the editor interface, an avatar's XML can be viewed in the <a href="guide.html#xmlscreen">XML Screen</a> of the <a href="guide.html#filemenu">File Menu</a>. Example:</p>
-		<pre class="xml">&lt;Avatar xmlns="http://www.myavatareditor.com/xml/avatar/1"&gt;
+		<pre class="xml">&lt;Avatar xmlns="https://helloiti.github.io/mae/xml/avatar/1"&gt;
   &lt;id&gt;A76EA713&lt;/id&gt;
   &lt;clientID&gt;0&lt;/clientID&gt;
   &lt;name&gt;Random&lt;/name&gt;
