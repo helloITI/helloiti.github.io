@@ -38,3 +38,35 @@ flex-wrap: wrap;
 justify-content: center;
 gap: 8px;
 z-index: 11;}
+
+
+@media (max-width: 700px) {
+    body {
+    
+        padding-top: 80px;
+        padding-bottom: 20px;
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+/**/
+    .nv-br {
+        position: absolute;
+        width: 100%;
+        max-width: 100%;
+        left: 0;
+        transform: none;
+        padding: 10px 8px;
+        border-radius: 0 0 12px 12px;
+        gap: 4px;
+        font-size: 13px;
+    }
+
+    /* cl  link        */
+    .cl {
+        display: none !important;
+    }
+
+    h3 {
+        padding: 0 8px;
+        text-align: center;
+    }  }
