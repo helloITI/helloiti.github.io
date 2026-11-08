@@ -132,3 +132,28 @@ hr {
 
   .body figure { margin: 16px 0; text-align: center; }
   .body figcaption { font-size: 12px; opacity: 0.67; margin-top: 6px; }
+/*çñÇÑ*/
+
+
+.body img {
+  cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, pointer;
+}
+.zoom {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 100;
+  cursor: url('https://helloiti.github.io/assets/Wii.png') 0 0, pointer;
+}
+.zoom.open {
+  display: flex;
+}
+.zoom img {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 8px;
+}
