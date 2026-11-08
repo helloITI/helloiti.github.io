@@ -128,3 +128,7 @@ hr {
 .tags a {
   color: #d3e7e8;
 }
+
+
+  .body figure { margin: 16px 0; text-align: center; }
+  .body figcaption { font-size: 12px; opacity: 0.67; margin-top: 6px; }
