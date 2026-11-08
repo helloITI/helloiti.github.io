@@ -73,3 +73,27 @@
     }
   }
 })();
+
+
+/*//zoom in\\ !!! <img src=""> //*/
+(function () {
+  var imgs = document.querySelectorAll(".body img");
+  if (!imgs.length) return;
+  var box = document.createElement("div");
+  box.className = "zoom";
+  box.innerHTML = '<img alt="">';
+  document.body.appendChild(box);
+  var big = box.firstChild;
+  function close() { box.classList.remove("open"); }
+  imgs.forEach(function (im) {
+    im.addEventListener("click", function () {
+      big.src = im.currentSrc || im.src;
+      big.alt = im.alt;
+      box.classList.add("open");
+    });
+  });
+  box.addEventListener("click", close);
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") close();
+  });
+})();
