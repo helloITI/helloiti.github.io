@@ -17,18 +17,35 @@
   <meta property="og:image" content="https://helloiti.github.io/assets/blue.png"/>
   
   <link rel="icon" type="image/png" href="https://helloiti.github.io/assets/blue.png">
-
+<link rel="preload" href="/assets/font/SeuratPro-B.otf" as="font" type="font/otf" crossorigin>
+<link rel="preload" href="/assets/font/FOT-Seurat%20Pro%20M.otf" as="font" type="font/otf" crossorigin>
   <link rel="stylesheet" href="css.css">
 </head>
 <!-- HTMLcommentTEST?ok=123 -->
 <body data-version="1.2">
 
-<!-- loader -->
-<div id="ls">
-  <div class="lt">Loading assets</div>
-  <div class="dl">
-    <span></span><span></span><span></span>
+<!-- Loading... -->
+<div id="ls" style="user-select: none; -webkit-user-select: none;">
+
+  <div class="ls-top">
+    <img class="ls-logo ls-logo-badge" src="/assets/image/png/helloT-11-14-2026.png" alt="( helloT )">
+    <div class="ls-logo ls-logo-title">Tomiimo Mii Loader</div>
   </div>
+
+  <div class="ls-mid">
+    <p class="ls-tip">Tool that lets you load any user's Tomiimo's Mii head image and nickname using an user's Tomiimo's UID.</p>
+  </div>
+
+  <img class="ls-spin" src="/assets/image/png/Miitomo-Loading-Thingy.png" alt="Loading...">
+
+  <div class="ls-foot">
+    <span class="ls-ver" style="font-family: 'Message', sans-serif;">Ver. 1.2</span>
+  </div>
+  <div class="ls-foot">
+    <span class="ls-ver" style="font-family: 'Message', sans-serif;">(By helloT)</span>
+    <img class="ls-load" src="/assets/image/svg/Loading_TEST_VECTOR.svg" style="opacity: 0.55;" alt="Loading assets...">
+  </div>
+
 </div>
 
 <!-- topbar -->
@@ -341,7 +358,7 @@ No internet connection
     </div>
     <div class="sr">
       <label>Change theme depending on timezone</label>
-      <label class="tg"><input type="checkbox" id="set_autodark" onchange="sv_s(); tg_autodark();"><span class="ts"></span></label>
+      <label class="tg"><input type="checkbox" id="set_autodark" onchange="tg_autodark()"><span class="ts"></span></label>
     </div>
     <div class="sr">
       <label>Custom cursors</label>
