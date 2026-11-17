@@ -6,6 +6,61 @@ const CURRENT_VERSION = '1.2'; //VERSION!!!
 const dl_h = '<div class="dl"><span></span><span></span><span></span></div>';
 let l_ft = 0;
 let s_v = 1, b_v = 1;
+let loadingSettings = false;
+
+function safePlay(a) {
+  try {
+    const p = a.play();
+    if (p && typeof p.catch === 'function') p.catch(function () {});
+  } catch (e) {}
+}
+
+// loading
+const pauseMC = 1000; //milliseconds (ms)
+const holdMC = 1000;
+const fadeMC = 520;
+const timeoutMC = 10000;
+
+function ils() {
+  const img = document.querySelector('#ls img.ls-load');
+  if (!img) return;
+  fetch(img.getAttribute('src'))
+    .then(r => { if (!r.ok) throw new Error('svg'); return r.text(); })
+    .then(txt => {
+      const doc = new DOMParser().parseFromString(txt, 'image/svg+xml');
+      const svg = doc.documentElement;
+      if (!svg || svg.nodeName.toLowerCase() !== 'svg' || doc.querySelector('parsererror')) throw new Error('svg');
+      const el = document.importNode(svg, true);
+      el.setAttribute('class', img.className);
+      el.setAttribute('style', img.getAttribute('style') || '');
+      el.setAttribute('aria-hidden', 'true');
+      img.replaceWith(el);
+    })
+    .catch(() => {});
+}
+
+function fzl(ls) {
+  ls.classList.add('paused');
+  const svg = ls.querySelector('svg.ls-load');
+  if (svg && svg.pauseAnimations) { try { svg.pauseAnimations(); } catch (e) {} }
+}
+
+function hdl(ls) {
+  if (!ls) { chkVersion(); return; }
+  fzl(ls);
+  setTimeout(() => {
+    const coin = ls.querySelector('.ls-spin');
+    if (coin) coin.classList.add('show');
+    setTimeout(() => {
+      ls.classList.add('fade-out');
+      setTimeout(() => {
+        ls.style.display = 'none';
+        chkVersion();
+      }, fadeMC);
+    }, holdMC);
+  }, pauseMC);
+}
+
 
 //idkkkk
 function is_night() {
@@ -30,6 +85,7 @@ function showToast(message) {
 
 // settings
 function ld_s() {
+  loadingSettings = true;
   try {
     const s = JSON.parse(localStorage.getItem('mii_settings') || '{}');
     if (s.dark) { document.body.classList.add('dark'); document.getElementById('set_dark').checked = true; }
@@ -46,15 +102,20 @@ function ld_s() {
     if (s.autocopy) document.getElementById('set_autocopy').checked = true;
     if (s.autodownload) document.getElementById('set_autodownload').checked = true;
     if (s.autoclear) document.getElementById('set_autoclear').checked = true;
-    if (s.autodark) { document.getElementById('set_autodark').checked = true; tg_autodark(); }
+    if (s.autodark) { document.getElementById('set_autodark').checked = true; apply_autodark(); }
   } catch(e) {}
+  loadingSettings = false;
 }
 
 //SavedSettings!
 function sv_s() {
+  if (loadingSettings) return;
   try {
+    const auto = auto_on();
+    let prev = {};
+    try { prev = JSON.parse(localStorage.getItem('mii_settings') || '{}'); } catch (e) {}
     const s = {
-      dark: document.getElementById('set_dark').checked,
+      dark: auto ? !!prev.dark : document.getElementById('set_dark').checked,
       cursor: document.getElementById('set_cursor').checked,
       accent: document.getElementById('set_accent').value,
       changelog: document.getElementById('set_changelog').checked,
@@ -68,7 +129,7 @@ function sv_s() {
       autocopy: document.getElementById('set_autocopy').checked,
       autodownload: document.getElementById('set_autodownload').checked,
       autoclear: document.getElementById('set_autoclear').checked,
-      autodark: document.getElementById('set_autodark').checked,
+      autodark: auto,
     };
     localStorage.setItem('mii_settings', JSON.stringify(s));
   } catch(e) {}
@@ -118,7 +179,7 @@ function play_sfx(audioObj) {
   if (!s_on()) return;
   const snd = audioObj.cloneNode();
   snd.volume = s_v;
-  snd.play().catch(()=>{});
+  safePlay(snd);
 }
 
 function show_warn(txt, cb) {
@@ -134,8 +195,9 @@ function show_warn(txt, cb) {
 function rst_s() {
   show_warn('Are you sure you want to reset all settings to default?', () => {
     localStorage.removeItem('mii_settings');
-    // Also clear the seen-version so the changelog shows again after a reset
+    
     localStorage.removeItem('lastSeenVersion');
+    
     document.getElementById('set_dark').checked = false;
     document.getElementById('set_cursor').checked = true;
     document.getElementById('set_changelog').checked = true;
@@ -150,6 +212,8 @@ function rst_s() {
     document.getElementById('set_autoclear').checked = false;
     document.getElementById('set_autocopy').checked = false;
     document.getElementById('set_autodownload').checked = false;
+    document.getElementById('set_autodark').checked = false;
+    document.getElementById('set_dark').disabled = false;
 
     tg_d();
     tg_cursor();
@@ -803,10 +867,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const ls = document.getElementById('ls');
 
   ld_s();
+  ils();
 
   document.addEventListener('keydown', e => { if (e.key === 'Escape') p_off(); });
 
-  setInterval(() => { if (document.getElementById('set_autodark')?.checked) tg_autodark(); }, 60000);
+  setInterval(() => { if (auto_on()) apply_autodark(); }, 60000);
   
 //MiitomoFONTs
   const f = [
@@ -814,16 +879,19 @@ document.addEventListener('DOMContentLoaded', () => {
     new FontFace('Message', "url('/assets/font/FOT-Seurat%20Pro%20M.otf') format('truetype')"),
   ];
  
-  Promise.allSettled(f.map(x => x.load().then(ld => document.fonts.add(ld))))
-    .then(() => {
-      setTimeout(() => {
-        ls.classList.add('fade-out');
-        setTimeout(() => {
-          ls.style.display = 'none';
-          chkVersion(); //CheckVersion
-        }, 520);
-      }, 500);
-    });
+  const fontsReady = Promise.all(f.map(x =>
+    x.load()
+      .then(ld => { document.fonts.add(ld); })
+      .catch(() => {})
+  ));
+
+  const pageReady = document.readyState === 'complete'
+    ? Promise.resolve()
+    : new Promise(r => window.addEventListener('load', r));
+
+  const timeout = new Promise(r => setTimeout(r, timeoutMC));
+
+  Promise.race([Promise.all([fontsReady, pageReady]), timeout]).then(() => hdl(ls));
 
   // pause/resume bgm on mobile when user is not on the tab 
   document.addEventListener('visibilitychange', () => {
