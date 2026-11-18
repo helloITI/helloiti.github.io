@@ -7,11 +7,18 @@ const MAE_NS = "https://helloiti.github.io/mae/xml/avatar/1"; // new
 const OLD_NS = "http://www.myavatareditor.com/xml/avatar/1"; // old
 
 function cleanXML(text) {
-  return text
+  let cleaned = text
     .replace(/<\?xml[^>]*\?>/gi, "")
+    .replace(/<!DOCTYPE[^>]*>[\s\S]*?>/gi, "")
     .replace(/<!DOCTYPE[^>]*>/gi, "")
     .replace(/<\?xml-stylesheet[^>]*\?>/gi, "")
-    .split(OLD_NS).join(MAE_NS);
+    .trim();
+  cleaned = cleaned.split(OLD_NS).join(MAE_NS);
+  
+  if (!cleaned.includes(MAE_NS) && cleaned.includes("<Avatar")) {
+    cleaned = cleaned.replace("<Avatar", `<Avatar xmlns="${MAE_NS}"`);
+  }
+  return cleaned;
 }
 
 // defaultBoy
@@ -64,17 +71,15 @@ if (xmlInput) {
     if (!file) return;
     try {
       const rawText = await file.text();
-      const text = cleanXML(rawText);
+      const finalXML = cleanXML(rawText);
       
+      //debug
+      console.log("Sending XML to SWF length:", finalXML.length);
+      console.log("Snippet:", finalXML.substring(0, 150));
+
       if (typeof player.setAvatarXML === "function") {
-        player.setAvatarXML(text);
-        
-        await new Promise(r => setTimeout(r, 300));
-        const newHex = player.getAvatarHex();
-        if (newHex) {
-          safeSet("avatar", newHex);
-          lastSaved = newHex;
-        }
+        const response = player.setAvatarXML(finalXML);
+        console.log("setAvatarXML return value:", response);
       } else {
         alert("Flash player is not ready yet.");
       }
