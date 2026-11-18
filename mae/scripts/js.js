@@ -33,76 +33,81 @@ function xmlToMiiHex(xmlText) {
   const buf = new Uint8Array(74);
   const view = new DataView(buf.buffer);
 
-  // Header: gender, birthMonth, birthDay, shirtColor, mingles
+  // 0x00: gender, birthMonth, birthDay, favoriteColor/shirt, mingles
   const gender = num(root, "gender") & 1;
   const bMonth = num(root, "birthMonth") & 0xF;
   const bDay = num(root, "birthDay") & 0x1F;
   const shirt = num(node("Shirt"), "color") & 0xF;
-  const mingles = num(root, "mingles", 1) ? 0 : 1; // Mii bit: 1 = no mingle
+  const mingles = num(root, "mingles", 1) ? 0 : 1;
   view.setUint16(0x00, (gender << 14) | (bMonth << 10) | (bDay << 5) | (shirt << 1) | mingles);
 
-  // Name (10 UTF-16BE chars at 0x02..0x15)
+  // 0x02..0x15: Name (10 chars UTF-16BE)
   const name = str(root, "name").slice(0, 10);
-  for (let i = 0; i < name.length; i++) {
-    view.setUint16(0x02 + i * 2, name.charCodeAt(i));
+  for (let i = 0; i < 10; i++) {
+    const code = i < name.length ? name.charCodeAt(i) : 0;
+    view.setUint16(0x02 + i * 2, code);
   }
 
-  // Height & Weight
+  // 0x16..0x17: Body Height & Weight
   buf[0x16] = num(node("Body"), "height", 64) & 0x7F;
   buf[0x17] = num(node("Body"), "weight", 64) & 0x7F;
 
-  // Avatar ID & Client ID (4 bytes each at 0x18 and 0x1C)
-  const idHex = str(root, "id").replace(/[^0-9a-fA-F]/g, "").padStart(8, "0");
-  const cidHex = str(root, "clientID").replace(/[^0-9a-fA-F]/g, "").padStart(8, "0");
-  for (let i = 0; i < 4; i++) {
-    buf[0x18 + i] = parseInt(idHex.slice(i * 2, i * 2 + 2), 16) || 0;
-    buf[0x1C + i] = parseInt(cidHex.slice(i * 2, i * 2 + 2), 16) || 0;
-  }
+  // 0x18..0x1F: IDs (Avatar ID & Client ID as 4-byte integers)
+  const parseHexOrDec = (valStr) => {
+    if (!valStr) return 0;
+    if (valStr.startsWith("0x") || valStr.length === 8) {
+      return parseInt(valStr, 16) || 0;
+    }
+    return parseInt(valStr, 10) || 0;
+  };
+  view.setUint32(0x18, parseHexOrDec(str(root, "id")));
+  view.setUint32(0x1C, parseHexOrDec(str(root, "clientID")));
 
-  // Face, Skin, Makeup/Wrinkles (0x20)
+  // 0x20: Face, Skin, Expression
   const face = num(node("Face"), "type") & 0x7;
   const skin = num(node("Skin"), "color") & 0x7;
   view.setUint16(0x20, (face << 13) | (skin << 10));
 
-  // Hair (0x22)
+  // 0x22: Hair
   const hair = node("Hair");
   view.setUint16(0x22, ((num(hair, "type") & 0x7F) << 9) | ((num(hair, "color") & 0x7) << 6) | ((num(hair, "part") & 1) << 5));
 
-  // Eyebrow (0x24..0x27)
+  // 0x24..0x27: Eyebrow
   const brow = node("Eyebrow");
   view.setUint16(0x24, ((num(brow, "type") & 0x1F) << 11) | ((num(brow, "rotation") & 0xF) << 6));
   view.setUint16(0x26, ((num(brow, "color") & 0x7) << 13) | ((num(brow, "size", 4) & 0xF) << 9) | ((num(brow, "y", 10) & 0x1F) << 4) | (num(brow, "x", 2) & 0xF));
 
-  // Eye (0x28..0x2B)
+  // 0x28..0x2B: Eye
   const eye = node("Eye");
   view.setUint16(0x28, ((num(eye, "type") & 0x3F) << 10) | ((num(eye, "rotation") & 0x7) << 5));
   view.setUint16(0x2A, ((num(eye, "color") & 0x7) << 13) | ((num(eye, "size", 4) & 0x7) << 9) | ((num(eye, "y", 12) & 0x1F) << 4) | (num(eye, "x", 2) & 0xF));
 
-  // Nose (0x2C)
+  // 0x2C: Nose
   const nose = node("Nose");
   view.setUint16(0x2C, ((num(nose, "type") & 0xF) << 12) | ((num(nose, "size", 4) & 0xF) << 8) | ((num(nose, "y", 9) & 0x1F) << 3));
 
-  // Mouth (0x2E)
+  // 0x2E: Mouth
   const mouth = node("Mouth");
   view.setUint16(0x2E, ((num(mouth, "type") & 0x1F) << 11) | ((num(mouth, "color") & 0x3) << 9) | ((num(mouth, "size", 4) & 0xF) << 5) | (num(mouth, "y", 13) & 0x1F));
 
-  // Glasses (0x30)
+  // 0x30: Glasses
   const glasses = node("Glasses");
   view.setUint16(0x30, ((num(glasses, "type") & 0xF) << 12) | ((num(glasses, "color") & 0x7) << 9) | ((num(glasses, "size", 4) & 0x7) << 5) | (num(glasses, "y", 10) & 0x1F));
 
-  // Mustache & Beard (0x32)
+  // 0x32: Mustache & Beard
   const stache = node("Mustache");
   const beard = node("Beard");
   view.setUint16(0x32, ((num(stache, "type") & 0x3) << 14) | ((num(beard, "type") & 0x3) << 12) | ((num(beard, "color") & 0x7) << 9) | ((num(stache, "size", 4) & 0xF) << 5) | (num(stache, "y", 10) & 0x1F));
 
-  // Mole (0x34)
+  // 0x34: Mole
   const mole = node("Mole");
   view.setUint16(0x34, ((num(mole, "type") & 1) << 15) | ((num(mole, "size", 4) & 0xF) << 11) | ((num(mole, "y", 20) & 0x1F) << 6) | ((num(mole, "x", 2) & 0x1F) << 1));
 
-  // Creator Name (10 UTF-16BE chars at 0x36..0x49)
+  // 0x36..0x49: Creator Name (10 chars UTF-16BE)
   const creator = str(root, "creatorName").slice(0, 10);
-  for (let i = 0; i < creator.length; i++) {
-    view.setUint16(0x36 + i * 2, creator.charCodeAt(i));
+  for (let i = 0; i < 10; i++) {
+    const code = i < creator.length ? creator.charCodeAt(i) : 0;
+    view.setUint16(0x36 + i * 2, code);
   }
 
   return Array.from(buf, b => b.toString(16).padStart(2, "0")).join("");
