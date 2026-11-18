@@ -89,14 +89,14 @@ body {
 }
 .main-menu ul {
 	list-style:none;
-	width:610px;
+	display:flex;
+	width:720px;
 	height:32px;
 	margin:0 auto;
 	padding:8px 0 0 0;
 }
 .main-menu li {
-	width:100px;
-	float:left;
+	flex:1;
 }
 .main-menu li a {
 	color:#666;
