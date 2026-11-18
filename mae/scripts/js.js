@@ -8,6 +8,7 @@ const OLD_NS = "http://www.myavatareditor.com/xml/avatar/1"; // old
 
 function cleanXML(text) {
   return text
+    .replace(/<\?xml[^>]*\?>/gi, "")
     .replace(/<!DOCTYPE[^>]*>/gi, "")
     .replace(/<\?xml-stylesheet[^>]*\?>/gi, "")
     .split(OLD_NS).join(MAE_NS);
@@ -56,21 +57,34 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 
   // xml file loader
-  const xmlInput = document.getElementById("xmlLoader");
-  if (xmlInput) {
-    xmlInput.addEventListener("change", async () => {
-      const file = xmlInput.files[0];
-      if (!file) return;
-      try {
-        const text = cleanXML(await file.text());
+const xmlInput = document.getElementById("xmlLoader");
+if (xmlInput) {
+  xmlInput.addEventListener("change", async () => {
+    const file = xmlInput.files[0];
+    if (!file) return;
+    try {
+      const rawText = await file.text();
+      const text = cleanXML(rawText);
+      
+      if (typeof player.setAvatarXML === "function") {
         player.setAvatarXML(text);
-      } catch (e) {
-        console.error("XML load failed:", e);
-        alert("Couldn't load that XML file. Check the console for details.");
+        
+        await new Promise(r => setTimeout(r, 300));
+        const newHex = player.getAvatarHex();
+        if (newHex) {
+          safeSet("avatar", newHex);
+          lastSaved = newHex;
+        }
+      } else {
+        alert("Flash player is not ready yet.");
       }
-      xmlInput.value = "";
-    });
-  }
+    } catch (e) {
+      console.error("XML load failed:", e);
+      alert("Couldn't load that XML file. Check the console for details.");
+    }
+    xmlInput.value = "";
+  });
+}
 
   let lastSaved = startHex;
   let appliedStart = false;
