@@ -3,8 +3,15 @@ code that helps the swf load avatars from the website
 and saves your edits to the browser's localStorage
 */
 
-const MAE_NS = "https://helloiti.github.io/mae/xml/avatar/1";//new
-const OLD_NS = "http://www.myavatareditor.com/xml/avatar/1";//old
+const MAE_NS = "https://helloiti.github.io/mae/xml/avatar/1"; // new
+const OLD_NS = "http://www.myavatareditor.com/xml/avatar/1"; // old
+
+function cleanXML(text) {
+  return text
+    .replace(/<!DOCTYPE[^>]*>/gi, "")
+    .replace(/<\?xml-stylesheet[^>]*\?>/gi, "")
+    .split(OLD_NS).join(MAE_NS);
+}
 
 // defaultBoy
 const DEFAULT_AVATAR = "000000640065006600610075006c00740042006f0079404080807f5fc242899800044240318028a2088c08401448b88d008a008a25040000000000000000000000000000000000000000";
