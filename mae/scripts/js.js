@@ -42,16 +42,17 @@ window.addEventListener("DOMContentLoaded", () => {
   let lastSaved = startHex;
   let appliedStart = false;
 
+	
   setInterval(() => {
     try {
-      if (typeof player.jsGetAvatarHex !== "function") return;
-      const hex = player.jsGetAvatarHex();
+      if (typeof player.getAvatarHex !== "function") return; // SWF not ready yet
+      const hex = player.getAvatarHex();
       if (!hex) return;
 
       if (!appliedStart) {
         appliedStart = true;
-        if (hex.toLowerCase() !== startHex.toLowerCase() && typeof player.jsSetAvatarHex === "function") {
-          player.jsSetAvatarHex(startHex);
+        if (hex.toLowerCase() !== startHex.toLowerCase() && typeof player.setAvatarHex === "function") {
+          player.setAvatarHex(startHex);
           return;
         }
       }
@@ -64,7 +65,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
     }
   }, 1000);
-});
 
 
 
