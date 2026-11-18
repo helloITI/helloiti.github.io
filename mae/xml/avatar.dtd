@@ -1,1 +1,32 @@
-<!-- Coming soon -->
+<!ELEMENT Avatar (id, clientID, name, creatorName, birthDay, birthMonth, gender, mingles, Beard, Body, Eye, Eyebrow, Face, Glasses, Hair, Head, Mole, Mouth, Mustache, Nose, Shirt, Skin)>
+<!ELEMENT id (#PCDATA)>
+<!ELEMENT clientID (#PCDATA)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT creatorName (#PCDATA)>
+<!ELEMENT birthDay (#PCDATA)>
+<!ELEMENT birthMonth (#PCDATA)>
+<!ELEMENT gender (#PCDATA)>
+<!ELEMENT mingles (#PCDATA)>
+<!ELEMENT Beard (type, color)>
+<!ELEMENT Body (height, weight)>
+<!ELEMENT Eye (type, color, x, y, size, rotation)>
+<!ELEMENT Eyebrow (type, color, x, y, size, rotation)>
+<!ELEMENT Face (type)>
+<!ELEMENT Glasses (type, color, y, size)>
+<!ELEMENT Hair (type, color, part)>
+<!ELEMENT Head (type)>
+<!ELEMENT Mole (type, x, y, size)>
+<!ELEMENT Mouth (type, color, y, size)>
+<!ELEMENT Mustache (type, y, size)>
+<!ELEMENT Nose (type, y, size)>
+<!ELEMENT Shirt (color)>
+<!ELEMENT Skin (color)>
+<!ELEMENT type (#PCDATA)>
+<!ELEMENT color (#PCDATA)>
+<!ELEMENT x (#PCDATA)>
+<!ELEMENT y (#PCDATA)>
+<!ELEMENT size (#PCDATA)>
+<!ELEMENT rotation (#PCDATA)>
+<!ELEMENT part (#PCDATA)>
+<!ELEMENT height (#PCDATA)>
+<!ELEMENT weight (#PCDATA)>
