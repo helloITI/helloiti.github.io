@@ -3,8 +3,6 @@ code that helps the swf load avatars from the website
 and saves your edits to the browser's localStorage
 */
 
-
-
 function idgaf() {
   const params = new URLSearchParams(window.location.search);
   // ?avatar= ?mii= ?wii=
@@ -62,11 +60,9 @@ window.addEventListener("DOMContentLoaded", () => {
         safeSet("avatar", hex);
       }
     } catch (e) {
-
     }
   }, 1000);
-
-
+});
 
 /*
 https://helloiti.github.io/mae/
