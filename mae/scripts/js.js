@@ -5,6 +5,7 @@ and saves your edits to the browser's localStorage
 
 const MAE_NS = "https://helloiti.github.io/mae/xml/avatar/1";
 const OLD_NS = "http://www.myavatareditor.com/xml/avatar/1";
+// defaultBoy
 const DEFAULT_AVATAR = "000000640065006600610075006c00740042006f0079404080807f5fc242899800044240318028a2088c08401448b88d008a008a25040000000000000000000000000000000000000000";
 
 let maePlayer = null;
@@ -13,6 +14,12 @@ let currentHex = DEFAULT_AVATAR;
 let ignoreIntervalUntil = 0;
 let appliedStart = false;
 let loadToken = 0;
+
+
+const DEBOUNCE_MS = 0;
+const BATCH = 1000;
+const STEP_MS = 0;
+const SETTLE_MS = 30;
 
 function idgaf() {
   const params = new URLSearchParams(window.location.search);
@@ -113,14 +120,14 @@ function applyXmlToEditor(xmlText) {
 
   function step() {
     if (token !== loadToken) return;
-    const end = Math.min(i + 8, updates.length);
+    const end = Math.min(i + BATCH, updates.length);
     for (; i < end; i++) {
       const [prop, value] = updates[i];
       try { p.setAvatarValue(prop, value); }
       catch (e) { console.warn("[xml] couldn't set", prop, e); }
     }
     if (i < updates.length) {
-      setTimeout(step, 25);
+      setTimeout(step, STEP_MS);
       return;
     }
 
@@ -134,7 +141,7 @@ function applyXmlToEditor(xmlText) {
       safeSet("avatar", hex);
       ignoreIntervalUntil = Date.now() + 1500; 
       if (typeof p.setAvatarHex === "function") p.setAvatarHex(hex);
-    }, 200);
+    }, SETTLE_MS);
   }
   step();
 }
@@ -148,7 +155,7 @@ function applyXmlToEditor(xmlText) {
     timer = setTimeout(() => {
       try { applyXmlToEditor(text); }
       catch (e) { console.error("[xml] apply failed:", e); }
-    }, 600);
+    }, DEBOUNCE_MS);
   };
 
   const origAB = Blob.prototype.arrayBuffer;
