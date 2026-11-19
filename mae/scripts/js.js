@@ -66,13 +66,9 @@ function parseColor(s) {
   return parseInt(s, 16) || 0;
 }
 
-function applyXmlToEditor(xmlText, retry = true) {
+function applyXmlToEditor(xmlText) {
   const p = maePlayer;
   if (!p || typeof p.setAvatarValue !== "function") {
-    if (retry) {
-      setTimeout(() => applyXmlToEditor(xmlText, false), 600);
-      return;
-    }
     throw new Error("Editor not ready");
   }
 
@@ -90,7 +86,7 @@ function applyXmlToEditor(xmlText, retry = true) {
     return null;
   };
 
-  let applied = 0;
+  const updates = [];
   for (const [group, tag, prop, kind] of XML_FIELDS) {
     const parent = group ? child(root, group) : root;
     const el = parent ? child(parent, tag) : null;
@@ -103,22 +99,25 @@ function applyXmlToEditor(xmlText, retry = true) {
     else if (kind === "color") value = parseColor(raw);
     else value = parseInt(raw, 10);
     if (kind !== "str" && Number.isNaN(value)) continue;
-    try {
-      p.setAvatarValue(prop, value);
-      applied++;
-    } catch (e) {
-      console.warn("[xml] couldn't set", prop, e);
-    }
+    updates.push([prop, value]);
   }
 
-  console.log("[xml] applied", applied, "fields");
-
-  if (typeof p.getAvatarHex === "function") {
-    const nextHex = p.getAvatarHex();
-    if (nextHex) {
-      safeSet("avatar", nextHex);
+  let i = 0;
+  function step() {
+    const end = Math.min(i + 8, updates.length);
+    for (; i < end; i++) {
+      const [prop, value] = updates[i];
+      try { p.setAvatarValue(prop, value); }
+      catch (e) { console.warn("[xml] couldn't set", prop, e); }
+    }
+    if (i < updates.length) {
+      setTimeout(step, 25);
+    } else if (typeof p.getAvatarHex === "function") {
+      const hex = p.getAvatarHex();
+      if (hex) safeSet("avatar", hex);
     }
   }
+  step();
 }
 
 // myavatareditor.swf xml loader
@@ -128,15 +127,9 @@ function applyXmlToEditor(xmlText, retry = true) {
 const schedule = (text) => {
     clearTimeout(timer);
     timer = setTimeout(() => {
-      try {
-        applyXmlToEditor(text);
-        setTimeout(() => {
-          try { applyXmlToEditor(text, false); } catch (e) {}
-        }, 500);
-      } catch (e) {
-        console.error("[xml] apply failed:", e);
-      }
-    }, 400);
+      try { applyXmlToEditor(text); }
+      catch (e) { console.error("[xml] apply failed:", e); }
+    }, 600);
   };
 
   const origAB = Blob.prototype.arrayBuffer;
@@ -204,7 +197,7 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
 
-  setInterval(() => {
+setInterval(() => {
     try {
       if (typeof player.getAvatarHex !== "function") return;
       const hex = player.getAvatarHex();
@@ -224,7 +217,6 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     } catch (e) {}
   }, 1000);
-});
 
 /*
 https://helloiti.github.io/mae/
