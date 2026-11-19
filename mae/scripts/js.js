@@ -1,6 +1,5 @@
 /*
-code that helps the swf load avatars from the website
-and saves your edits to the browser's localStorage
+helps the website load avatars, especially XML files
 */
 
 const MAE_NS = "https://helloiti.github.io/mae/xml/avatar/1";
@@ -16,13 +15,13 @@ let ignoreIntervalUntil = 0;
 let appliedStart = false;
 let loadToken = 0;
 
-const DEBOUNCE_MS = 0;
+const ME_MS = 0;
 const BATCH = 1000;
 const STEP_MS = 0;
 const SETTLE_MS = 30;
 
-const AVATAR_EXTS = /\.(rcd|mii|miigx|mae|txt)$/i;
-const XML_EXT = /\.xml$/i;
+const AVATAR_EXTS = /\.(rcd|mii|miigx|mae|xml|txt)$/i;
+const SAVE_AVATAR_FILE = [".mae", ".mii", ".miigx"];
 
 function idgaf() {
   const params = new URLSearchParams(window.location.search);
@@ -32,7 +31,7 @@ function safeGet(k) { try { return localStorage.getItem(k); } catch (e) { return
 function safeSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
 
 function showInvalidFilePopup(msg) {
-  alert(msg || "Invalid file.");
+  alert(msg || "Invalid file. \n Please use the valid file options.");
 }
 
 function cleanXML(text) {
@@ -155,7 +154,7 @@ function applyXmlToEditor(xmlText) {
 
 // myavatareditor.swf xml loader
 (function () {
-  const isXml = (b) => b && XML_EXT.test(b.name || "");
+  const isXml = (b) => b && /\.xml$/i.test(b.name || "");
   let timer = null;
   const schedule = (text) => {
     clearTimeout(timer);
@@ -166,7 +165,7 @@ function applyXmlToEditor(xmlText) {
         console.error("[xml] apply failed:", e);
         showInvalidFilePopup("Invalid XML file: " + (e && e.message ? e.message : "Could not load file."));
       }
-    }, DEBOUNCE_MS);
+    }, ME_MS);
   };
 
   const origAB = Blob.prototype.arrayBuffer;
@@ -191,17 +190,14 @@ function applyXmlToEditor(xmlText) {
   };
 })();
 
-//test
+// filter file picker extensions for swf inputs
 (function () {
-  const AVATAR_ACCEPT = ".rcd,.mii,.miigx,.mae,.txt";
-  const XML_ACCEPT = ".xml";
+  const AVATAR_ACCEPT = ".rcd,.mii,.miigx,.mae,.xml,.txt";
 
   const origClick = HTMLInputElement.prototype.click;
   HTMLInputElement.prototype.click = function () {
     if (this.type === "file") {
-      if (this.id === "xmlLoader") {
-        this.accept = XML_ACCEPT;
-      } else if (!this.accept) {
+      if (!this.accept) {
         this.accept = AVATAR_ACCEPT;
       }
 
@@ -210,8 +206,7 @@ function applyXmlToEditor(xmlText) {
         () => {
           const file = this.files && this.files[0];
           if (!file) return;
-          const allowed = this.id === "xmlLoader" ? XML_EXT : AVATAR_EXTS;
-          if (!allowed.test(file.name || "")) {
+          if (!/\.(rcd|mii|miigx|mae|txt|xml)$/i.test(file.name || "")) {
             this.value = "";
             showInvalidFilePopup("Invalid file type: " + (file.name || "unknown"));
           }
@@ -220,6 +215,36 @@ function applyXmlToEditor(xmlText) {
       );
     }
     return origClick.apply(this, arguments);
+  };
+})();
+
+// let avatar downloads use .mae, .mii, or .miigx
+(function () {
+  function pickAvatarSaveName(currentName) {
+    const base = (currentName || "avatar").replace(/\.(mae|mii|miigx|rcd|xml|txt)$/i, "") || "avatar";
+    const choice = prompt(
+      "Save avatar format (.mae, .mii, .miigx):",
+      base + ".mae"
+    );
+    if (choice === null) return currentName;
+    const trimmed = choice.trim();
+    if (!trimmed) return base + ".mae";
+    const match = trimmed.match(/\.(mae|mii|miigx)$/i);
+    if (match) {
+      const cleanBase = trimmed.replace(/\.(mae|mii|miigx|rcd|xml|txt)$/i, "") || base;
+      return cleanBase + match[0].toLowerCase();
+    }
+    const cleanBase = trimmed.replace(/\.(rcd|txt)$/i, "") || base;
+    const ext = SAVE_AVATAR_FILE.includes(trimmed.toLowerCase()) ? trimmed.toLowerCase() : ".mae";
+    return cleanBase + ext;
+  }
+
+  const origAnchorClick = HTMLAnchorElement.prototype.click;
+  HTMLAnchorElement.prototype.click = function () {
+    if (this.hasAttribute("download") && AVATAR_EXTS.test(this.download || "")) {
+      this.download = pickAvatarSaveName(this.download);
+    }
+    return origAnchorClick.apply(this, arguments);
   };
 })();
 
@@ -240,35 +265,14 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // adobe M.A.E swf
   player.load({
-    url: "myavatareditor.swf",
+    url: "/mae/myavatareditor.swf",
     autoplay: "on",
     unmuteOverlay: "hidden",
     allowScriptAccess: true,
     polyfills: true,
     allowNetworking: "all",
-    parameters: { avatar: startHex, mii: startHex, wii: startHex },
+    parameters: { avatar: startHex, mii: startHex, wii: startHex, mae: startHex },
   });
-
-  /* TEST */
-  const xmlInput = document.getElementById("xmlLoader");
-  if (xmlInput) {
-    xmlInput.addEventListener("change", async () => {
-      const file = xmlInput.files && xmlInput.files[0];
-      if (!file) return;
-      if (!XML_EXT.test(file.name || "")) {
-        xmlInput.value = "";
-        showInvalidFilePopup("Invalid file type: " + (file.name || "unknown"));
-        return;
-      }
-      try {
-        applyXmlToEditor(await file.text());
-      } catch (e) {
-        console.error("XML load failed:", e);
-        showInvalidFilePopup("Invalid XML file: " + (e && e.message ? e.message : "Check the console for details."));
-      }
-      xmlInput.value = "";
-    });
-  }
 
   setInterval(() => {
     try {
