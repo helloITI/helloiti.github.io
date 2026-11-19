@@ -9,7 +9,9 @@ const DEFAULT_AVATAR = "000000640065006600610075006c00740042006f0079404080807f5f
 
 let maePlayer = null;
 let lastSaved = DEFAULT_AVATAR;
-let resetStartFlag = null;
+let currentHex = DEFAULT_AVATAR;
+let ignoreIntervalUntil = 0;
+let appliedStart = false;
 
 function idgaf() {
   const params = new URLSearchParams(window.location.search);
@@ -71,9 +73,11 @@ function parseColor(s) {
 function reloadSwfWithHex(hex) {
   const p = maePlayer;
   if (!p || typeof p.load !== "function" || !hex) return;
+  currentHex = hex;
   lastSaved = hex;
+  appliedStart = true;
+  ignoreIntervalUntil = Date.now() + 2500;
   safeSet("avatar", hex);
-  if (typeof resetStartFlag === "function") resetStartFlag();
   p.load({
     url: "myavatareditor.swf",
     autoplay: "on",
@@ -177,6 +181,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const container = document.getElementById("editorSWFContainer");
   const urlAvatar = idgaf();
   const startHex = urlAvatar || safeGet("avatar") || DEFAULT_AVATAR;
+  currentHex = startHex;
   lastSaved = startHex;
 
   const ruffle = window.RufflePlayer.newest();
@@ -197,9 +202,6 @@ window.addEventListener("DOMContentLoaded", () => {
     parameters: { avatar: startHex, mii: startHex, wii: startHex },
   });
 
-  let appliedStart = false;
-  resetStartFlag = () => { appliedStart = false; };
-
   // test
   const xmlInput = document.getElementById("xmlLoader");
   if (xmlInput) {
@@ -218,20 +220,22 @@ window.addEventListener("DOMContentLoaded", () => {
 
   setInterval(() => {
     try {
+      if (Date.now() < ignoreIntervalUntil) return;
       if (typeof player.getAvatarHex !== "function") return;
       const hex = player.getAvatarHex();
       if (!hex) return;
 
       if (!appliedStart) {
         appliedStart = true;
-        if (hex.toLowerCase() !== startHex.toLowerCase() && typeof player.setAvatarHex === "function") {
-          player.setAvatarHex(startHex);
+        if (hex.toLowerCase() !== currentHex.toLowerCase() && typeof player.setAvatarHex === "function") {
+          player.setAvatarHex(currentHex);
           return;
         }
       }
 
       if (hex !== lastSaved) {
         lastSaved = hex;
+        currentHex = hex;
         safeSet("avatar", hex);
       }
     } catch (e) {}
