@@ -12,6 +12,7 @@ let lastSaved = DEFAULT_AVATAR;
 let currentHex = DEFAULT_AVATAR;
 let ignoreIntervalUntil = 0;
 let appliedStart = false;
+let loadToken = 0;
 
 function idgaf() {
   const params = new URLSearchParams(window.location.search);
@@ -70,25 +71,6 @@ function parseColor(s) {
   return parseInt(s, 16) || 0;
 }
 
-function reloadSwfWithHex(hex) {
-  const p = maePlayer;
-  if (!p || typeof p.load !== "function" || !hex) return;
-  currentHex = hex;
-  lastSaved = hex;
-  appliedStart = true;
-  ignoreIntervalUntil = Date.now() + 2500;
-  safeSet("avatar", hex);
-  p.load({
-    url: "myavatareditor.swf",
-    autoplay: "on",
-    unmuteOverlay: "hidden",
-    allowScriptAccess: true,
-    polyfills: true,
-    allowNetworking: "all",
-    parameters: { avatar: hex, mii: hex, wii: hex },
-  });
-}
-
 function applyXmlToEditor(xmlText) {
   const p = maePlayer;
   if (!p || typeof p.setAvatarValue !== "function") {
@@ -125,8 +107,12 @@ function applyXmlToEditor(xmlText) {
     updates.push([prop, value]);
   }
 
+  const token = ++loadToken;   // a newer load cancels this one
+  appliedStart = true;
   let i = 0;
+
   function step() {
+    if (token !== loadToken) return;
     const end = Math.min(i + 8, updates.length);
     for (; i < end; i++) {
       const [prop, value] = updates[i];
@@ -135,10 +121,20 @@ function applyXmlToEditor(xmlText) {
     }
     if (i < updates.length) {
       setTimeout(step, 25);
-    } else if (typeof p.getAvatarHex === "function") {
-      const hex = p.getAvatarHex();
-      if (hex) reloadSwfWithHex(hex);
+      return;
     }
+
+    setTimeout(() => {
+      if (token !== loadToken) return;
+      const hex = typeof p.getAvatarHex === "function" ? p.getAvatarHex() : null;
+      if (!hex) return;
+      console.log("[xml] applied", updates.length, "fields");
+      currentHex = hex;
+      lastSaved = hex;
+      safeSet("avatar", hex);
+      ignoreIntervalUntil = Date.now() + 1500; 
+      if (typeof p.setAvatarHex === "function") p.setAvatarHex(hex);
+    }, 200);
   }
   step();
 }
@@ -202,7 +198,7 @@ window.addEventListener("DOMContentLoaded", () => {
     parameters: { avatar: startHex, mii: startHex, wii: startHex },
   });
 
-  // test
+  /* TEST */
   const xmlInput = document.getElementById("xmlLoader");
   if (xmlInput) {
     xmlInput.addEventListener("change", async () => {
