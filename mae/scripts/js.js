@@ -9,6 +9,7 @@ const DEFAULT_AVATAR = "000000640065006600610075006c00740042006f0079404080807f5f
 
 let maePlayer = null;
 let lastSaved = DEFAULT_AVATAR;
+let resetStartFlag = null;
 
 function idgaf() {
   const params = new URLSearchParams(window.location.search);
@@ -67,6 +68,23 @@ function parseColor(s) {
   return parseInt(s, 16) || 0;
 }
 
+function reloadSwfWithHex(hex) {
+  const p = maePlayer;
+  if (!p || typeof p.load !== "function" || !hex) return;
+  lastSaved = hex;
+  safeSet("avatar", hex);
+  if (typeof resetStartFlag === "function") resetStartFlag();
+  p.load({
+    url: "myavatareditor.swf",
+    autoplay: "on",
+    unmuteOverlay: "hidden",
+    allowScriptAccess: true,
+    polyfills: true,
+    allowNetworking: "all",
+    parameters: { avatar: hex, mii: hex, wii: hex },
+  });
+}
+
 function applyXmlToEditor(xmlText) {
   const p = maePlayer;
   if (!p || typeof p.setAvatarValue !== "function") {
@@ -115,10 +133,7 @@ function applyXmlToEditor(xmlText) {
       setTimeout(step, 25);
     } else if (typeof p.getAvatarHex === "function") {
       const hex = p.getAvatarHex();
-      if (hex) {
-        lastSaved = hex;
-        safeSet("avatar", hex);
-      }
+      if (hex) reloadSwfWithHex(hex);
     }
   }
   step();
@@ -183,6 +198,7 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 
   let appliedStart = false;
+  resetStartFlag = () => { appliedStart = false; };
 
   // test
   const xmlInput = document.getElementById("xmlLoader");
