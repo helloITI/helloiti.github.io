@@ -66,13 +66,19 @@ function parseColor(s) {
   return parseInt(s, 16) || 0;
 }
 
-function applyXmlToEditor(xmlText) {
+function applyXmlToEditor(xmlText, retry = true) {
   const p = maePlayer;
   if (!p || typeof p.setAvatarValue !== "function") {
+    if (retry) {
+      setTimeout(() => applyXmlToEditor(xmlText, false), 600);
+      return;
+    }
     throw new Error("Editor not ready");
   }
+
   const doc = new DOMParser().parseFromString(cleanXML(xmlText).trim(), "text/xml");
   if (doc.querySelector("parsererror")) throw new Error("Invalid XML");
+
   let root = doc.documentElement;
   if (root.localName === "avatar-collection") {
     root = root.getElementsByTagName("Avatar")[0];
@@ -97,22 +103,40 @@ function applyXmlToEditor(xmlText) {
     else if (kind === "color") value = parseColor(raw);
     else value = parseInt(raw, 10);
     if (kind !== "str" && Number.isNaN(value)) continue;
-    try { p.setAvatarValue(prop, value); applied++; }
-    catch (e) { console.warn("[xml] couldn't set", prop, e); }
+    try {
+      p.setAvatarValue(prop, value);
+      applied++;
+    } catch (e) {
+      console.warn("[xml] couldn't set", prop, e);
+    }
   }
+
   console.log("[xml] applied", applied, "fields");
+
+  if (typeof p.getAvatarHex === "function") {
+    const nextHex = p.getAvatarHex();
+    if (nextHex) {
+      safeSet("avatar", nextHex);
+    }
+  }
 }
 
 // myavatareditor.swf xml loader
 (function () {
   const isXml = (b) => b && /\.xml$/i.test(b.name || "");
   let timer = null;
-  const schedule = (text) => {
+const schedule = (text) => {
     clearTimeout(timer);
     timer = setTimeout(() => {
-      try { applyXmlToEditor(text); }
-      catch (e) { console.error("[xml] apply failed:", e); }
-    }, 800);
+      try {
+        applyXmlToEditor(text);
+        setTimeout(() => {
+          try { applyXmlToEditor(text, false); } catch (e) {}
+        }, 500);
+      } catch (e) {
+        console.error("[xml] apply failed:", e);
+      }
+    }, 400);
   };
 
   const origAB = Blob.prototype.arrayBuffer;
@@ -155,6 +179,8 @@ window.addEventListener("DOMContentLoaded", () => {
     autoplay: "on",
     unmuteOverlay: "hidden",
     allowScriptAccess: true,
+    polyfills: true,
+    allowNetworking: "all",
     parameters: { avatar: startHex, mii: startHex, wii: startHex },
   });
 
