@@ -5,6 +5,7 @@ and saves your edits to the browser's localStorage
 
 const MAE_NS = "https://helloiti.github.io/mae/xml/avatar/1";
 const OLD_NS = "http://www.myavatareditor.com/xml/avatar/1";
+
 // defaultBoy
 const DEFAULT_AVATAR = "000000640065006600610075006c00740042006f0079404080807f5fc242899800044240318028a2088c08401448b88d008a008a25040000000000000000000000000000000000000000";
 
@@ -15,11 +16,13 @@ let ignoreIntervalUntil = 0;
 let appliedStart = false;
 let loadToken = 0;
 
-
 const DEBOUNCE_MS = 0;
 const BATCH = 1000;
 const STEP_MS = 0;
 const SETTLE_MS = 30;
+
+const AVATAR_EXTS = /\.(rcd|mii|miigx|mae|txt)$/i;
+const XML_EXT = /\.xml$/i;
 
 function idgaf() {
   const params = new URLSearchParams(window.location.search);
@@ -27,6 +30,10 @@ function idgaf() {
 }
 function safeGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
 function safeSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+
+function showInvalidFilePopup(msg) {
+  alert(msg || "Invalid file.");
+}
 
 function cleanXML(text) {
   return text
@@ -114,7 +121,7 @@ function applyXmlToEditor(xmlText) {
     updates.push([prop, value]);
   }
 
-  const token = ++loadToken;   // a newer load cancels this one
+  const token = ++loadToken; // a newer load cancels this one
   appliedStart = true;
   let i = 0;
 
@@ -139,7 +146,7 @@ function applyXmlToEditor(xmlText) {
       currentHex = hex;
       lastSaved = hex;
       safeSet("avatar", hex);
-      ignoreIntervalUntil = Date.now() + 1500; 
+      ignoreIntervalUntil = Date.now() + 1500;
       if (typeof p.setAvatarHex === "function") p.setAvatarHex(hex);
     }, SETTLE_MS);
   }
@@ -148,13 +155,17 @@ function applyXmlToEditor(xmlText) {
 
 // myavatareditor.swf xml loader
 (function () {
-  const isXml = (b) => b && /\.xml$/i.test(b.name || "");
+  const isXml = (b) => b && XML_EXT.test(b.name || "");
   let timer = null;
   const schedule = (text) => {
     clearTimeout(timer);
     timer = setTimeout(() => {
-      try { applyXmlToEditor(text); }
-      catch (e) { console.error("[xml] apply failed:", e); }
+      try {
+        applyXmlToEditor(text);
+      } catch (e) {
+        console.error("[xml] apply failed:", e);
+        showInvalidFilePopup("Invalid XML file: " + (e && e.message ? e.message : "Could not load file."));
+      }
     }, DEBOUNCE_MS);
   };
 
@@ -180,9 +191,42 @@ function applyXmlToEditor(xmlText) {
   };
 })();
 
+//test
+(function () {
+  const AVATAR_ACCEPT = ".rcd,.mii,.miigx,.mae,.txt";
+  const XML_ACCEPT = ".xml";
+
+  const origClick = HTMLInputElement.prototype.click;
+  HTMLInputElement.prototype.click = function () {
+    if (this.type === "file") {
+      if (this.id === "xmlLoader") {
+        this.accept = XML_ACCEPT;
+      } else if (!this.accept) {
+        this.accept = AVATAR_ACCEPT;
+      }
+
+      this.addEventListener(
+        "change",
+        () => {
+          const file = this.files && this.files[0];
+          if (!file) return;
+          const allowed = this.id === "xmlLoader" ? XML_EXT : AVATAR_EXTS;
+          if (!allowed.test(file.name || "")) {
+            this.value = "";
+            showInvalidFilePopup("Invalid file type: " + (file.name || "unknown"));
+          }
+        },
+        { once: true }
+      );
+    }
+    return origClick.apply(this, arguments);
+  };
+})();
+
 window.addEventListener("DOMContentLoaded", () => {
   const container = document.getElementById("editorSWFContainer");
   const urlAvatar = idgaf();
+  if (urlAvatar) safeSet("avatar", urlAvatar);
   const startHex = urlAvatar || safeGet("avatar") || DEFAULT_AVATAR;
   currentHex = startHex;
   lastSaved = startHex;
@@ -209,13 +253,18 @@ window.addEventListener("DOMContentLoaded", () => {
   const xmlInput = document.getElementById("xmlLoader");
   if (xmlInput) {
     xmlInput.addEventListener("change", async () => {
-      const file = xmlInput.files[0];
+      const file = xmlInput.files && xmlInput.files[0];
       if (!file) return;
+      if (!XML_EXT.test(file.name || "")) {
+        xmlInput.value = "";
+        showInvalidFilePopup("Invalid file type: " + (file.name || "unknown"));
+        return;
+      }
       try {
         applyXmlToEditor(await file.text());
       } catch (e) {
         console.error("XML load failed:", e);
-        alert("Couldn't load that XML file. Check the console for details.");
+        showInvalidFilePopup("Invalid XML file: " + (e && e.message ? e.message : "Check the console for details."));
       }
       xmlInput.value = "";
     });
