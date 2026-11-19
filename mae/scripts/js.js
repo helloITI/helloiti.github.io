@@ -8,6 +8,7 @@ const OLD_NS = "http://www.myavatareditor.com/xml/avatar/1";
 const DEFAULT_AVATAR = "000000640065006600610075006c00740042006f0079404080807f5fc242899800044240318028a2088c08401448b88d008a008a25040000000000000000000000000000000000000000";
 
 let maePlayer = null;
+let lastSaved = DEFAULT_AVATAR;
 
 function idgaf() {
   const params = new URLSearchParams(window.location.search);
@@ -114,7 +115,10 @@ function applyXmlToEditor(xmlText) {
       setTimeout(step, 25);
     } else if (typeof p.getAvatarHex === "function") {
       const hex = p.getAvatarHex();
-      if (hex) safeSet("avatar", hex);
+      if (hex) {
+        lastSaved = hex;
+        safeSet("avatar", hex);
+      }
     }
   }
   step();
@@ -124,7 +128,7 @@ function applyXmlToEditor(xmlText) {
 (function () {
   const isXml = (b) => b && /\.xml$/i.test(b.name || "");
   let timer = null;
-const schedule = (text) => {
+  const schedule = (text) => {
     clearTimeout(timer);
     timer = setTimeout(() => {
       try { applyXmlToEditor(text); }
@@ -158,6 +162,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const container = document.getElementById("editorSWFContainer");
   const urlAvatar = idgaf();
   const startHex = urlAvatar || safeGet("avatar") || DEFAULT_AVATAR;
+  lastSaved = startHex;
 
   const ruffle = window.RufflePlayer.newest();
   const player = ruffle.createPlayer();
@@ -177,7 +182,6 @@ window.addEventListener("DOMContentLoaded", () => {
     parameters: { avatar: startHex, mii: startHex, wii: startHex },
   });
 
-  let lastSaved = startHex;
   let appliedStart = false;
 
   // test
@@ -196,8 +200,7 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-
-setInterval(() => {
+  setInterval(() => {
     try {
       if (typeof player.getAvatarHex !== "function") return;
       const hex = player.getAvatarHex();
@@ -217,6 +220,7 @@ setInterval(() => {
       }
     } catch (e) {}
   }, 1000);
+});
 
 /*
 https://helloiti.github.io/mae/
