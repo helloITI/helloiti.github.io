@@ -8,6 +8,40 @@ const OLD_NS = "http://www.myavatareditor.com/xml/avatar/1";
 // defaultBoy
 const DEFAULT_AVATAR = "000000640065006600610075006c00740042006f0079404080807f5fc242899800044240318028a2088c08401448b88d008a008a25040000000000000000000000000000000000000000";
 
+const OUT_OF_RANGE = "clamp";
+
+const FILE_DESCRIPTIONS = {
+  allAvatars: "All avatar files",
+  mae:        "MAE - My Avatar Editor format",
+  mii:        "Mii - Wii Format",
+  miigx:      "MiiGX - Wii Format",
+  rcd:        "RCD - Wii Format",
+  xml:        "XML - My Avatar Editor format",
+};
+
+// each format gets its own made-up type so browsers won't get confused
+const FILE_TYPE_INFO = {
+  mae:   { mime: "application/x-mae-avatar",   ext: ".mae"   },
+  mii:   { mime: "application/x-mii-wii",   ext: ".mii"   },
+  miigx: { mime: "application/x-miigx-wii", ext: ".miigx" },
+  rcd:   { mime: "application/x-rcd-wii",   ext: ".rcd"   },
+  xml:   { mime: "text/xml",                   ext: ".xml"   },
+};
+
+function fileType(key) {
+  const t = FILE_TYPE_INFO[key];
+  return { description: FILE_DESCRIPTIONS[key], accept: { [t.mime]: [t.ext] } };
+}
+
+function allAvatarsType() {
+  const accept = {};
+  for (const key of Object.keys(FILE_TYPE_INFO)) {
+    const t = FILE_TYPE_INFO[key];
+    accept[t.mime] = [t.ext];
+  }
+  return { description: FILE_DESCRIPTIONS.allAvatars, accept };
+}
+
 let maePlayer = null;
 let lastSaved = DEFAULT_AVATAR;
 let currentHex = DEFAULT_AVATAR;
@@ -20,8 +54,7 @@ const BATCH = 1000;
 const STEP_MS = 0;
 const SETTLE_MS = 30;
 
-const AVATAR_EXTS = /\.(rcd|mii|miigx|mae|xml|txt)$/i;
-const SAVE_AVATAR_FILE = [".mae", ".mii", ".miigx"];
+const LOAD_EXTS = /\.(rcd|mii|miigx|mae|xml)$/i;
 
 function idgaf() {
   const params = new URLSearchParams(window.location.search);
@@ -31,11 +64,12 @@ function safeGet(k) { try { return localStorage.getItem(k); } catch (e) { return
 function safeSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
 
 function showInvalidFilePopup(msg) {
-  alert(msg || "Invalid file. \n Please use the valid file options.");
+  alert(msg || "Invalid file.\nPlease use the valid file options.");
 }
 
 function cleanXML(text) {
   return text
+    .replace(/^\uFEFF/, "")
     .replace(/<!DOCTYPE[^>]*>/gi, "")
     .replace(/<\?xml-stylesheet[^>]*\?>/gi, "")
     .split(OLD_NS).join(MAE_NS);
@@ -43,35 +77,34 @@ function cleanXML(text) {
 
 // xml fields
 const XML_FIELDS = [
-  // [group, tag, property, kind]
-  ["", "id", "id", "hex"], ["", "clientID", "clientID", "hex"],
-  ["", "name", "name", "str"], ["", "creatorName", "creatorName", "str"],
-  ["", "birthDay", "birthDay", "int"], ["", "birthMonth", "birthMonth", "int"],
-  ["", "gender", "gender", "int"], ["", "mingles", "mingles", "int"],
-  ["Body", "height", "height", "int"], ["Body", "weight", "weight", "int"],
-  ["Beard", "type", "beardType", "int"], ["Beard", "color", "beardColor", "color"],
-  ["Eye", "type", "eyeType", "int"], ["Eye", "rotation", "eyeRotation", "int"],
-  ["Eye", "color", "eyeColor", "color"], ["Eye", "size", "eyeSize", "int"],
-  ["Eye", "x", "eyeX", "int"], ["Eye", "y", "eyeY", "int"],
-  ["Eyebrow", "type", "eyebrowType", "int"], ["Eyebrow", "rotation", "eyebrowRotation", "int"],
-  ["Eyebrow", "color", "eyebrowColor", "color"], ["Eyebrow", "size", "eyebrowSize", "int"],
-  ["Eyebrow", "x", "eyebrowX", "int"], ["Eyebrow", "y", "eyebrowY", "int"],
-  ["Face", "type", "faceType", "int"],
-  ["Glasses", "type", "glassesType", "int"], ["Glasses", "color", "glassesColor", "color"],
-  ["Glasses", "size", "glassesSize", "int"], ["Glasses", "y", "glassesY", "int"],
-  ["Hair", "type", "hairType", "int"], ["Hair", "color", "hairColor", "color"],
-  ["Hair", "part", "hairPart", "int"],
-  ["Head", "type", "headType", "int"],
-  ["Mole", "type", "moleType", "int"], ["Mole", "size", "moleSize", "int"],
-  ["Mole", "x", "moleX", "int"], ["Mole", "y", "moleY", "int"],
-  ["Mouth", "type", "mouthType", "int"], ["Mouth", "color", "mouthColor", "color"],
-  ["Mouth", "size", "mouthSize", "int"], ["Mouth", "y", "mouthY", "int"],
-  ["Mustache", "type", "mustacheType", "int"], ["Mustache", "size", "mustacheSize", "int"],
-  ["Mustache", "y", "mustacheY", "int"],
-  ["Nose", "type", "noseType", "int"], ["Nose", "size", "noseSize", "int"],
-  ["Nose", "y", "noseY", "int"],
-  ["Shirt", "color", "favoriteColor", "color"],
-  ["Skin", "color", "skinColor", "color"],
+  ["", "id", "id", "hex", null], ["", "clientID", "clientID", "hex", null],
+  ["", "name", "name", "str", 10], ["", "creatorName", "creatorName", "str", 10],
+  ["", "birthDay", "birthDay", "int", 31], ["", "birthMonth", "birthMonth", "int", 12],
+  ["", "gender", "gender", "int", 1], ["", "mingles", "mingles", "int", 1],
+  ["Body", "height", "height", "int", 127], ["Body", "weight", "weight", "int", 127],
+  ["Beard", "type", "beardType", "int", 3], ["Beard", "color", "beardColor", "color", 7],
+  ["Eye", "type", "eyeType", "int", 47], ["Eye", "rotation", "eyeRotation", "int", 7],
+  ["Eye", "color", "eyeColor", "color", 5], ["Eye", "size", "eyeSize", "int", 7],
+  ["Eye", "x", "eyeX", "int", 12], ["Eye", "y", "eyeY", "int", 18],
+  ["Eyebrow", "type", "eyebrowType", "int", 23], ["Eyebrow", "rotation", "eyebrowRotation", "int", 11],
+  ["Eyebrow", "color", "eyebrowColor", "color", 7], ["Eyebrow", "size", "eyebrowSize", "int", 8],
+  ["Eyebrow", "x", "eyebrowX", "int", 12], ["Eyebrow", "y", "eyebrowY", "int", 18],
+  ["Face", "type", "faceType", "int", 11],
+  ["Glasses", "type", "glassesType", "int", 8], ["Glasses", "color", "glassesColor", "color", 5],
+  ["Glasses", "size", "glassesSize", "int", 7], ["Glasses", "y", "glassesY", "int", 20],
+  ["Hair", "type", "hairType", "int", 71], ["Hair", "color", "hairColor", "color", 7],
+  ["Hair", "part", "hairPart", "int", 1],
+  ["Head", "type", "headType", "int", 7],
+  ["Mole", "type", "moleType", "int", 1], ["Mole", "size", "moleSize", "int", 8],
+  ["Mole", "x", "moleX", "int", 16], ["Mole", "y", "moleY", "int", 30],
+  ["Mouth", "type", "mouthType", "int", 23], ["Mouth", "color", "mouthColor", "color", 2],
+  ["Mouth", "size", "mouthSize", "int", 8], ["Mouth", "y", "mouthY", "int", 18],
+  ["Mustache", "type", "mustacheType", "int", 3], ["Mustache", "size", "mustacheSize", "int", 8],
+  ["Mustache", "y", "mustacheY", "int", 16],
+  ["Nose", "type", "noseType", "int", 11], ["Nose", "size", "noseSize", "int", 8],
+  ["Nose", "y", "noseY", "int", 18],
+  ["Shirt", "color", "favoriteColor", "color", 11],
+  ["Skin", "color", "skinColor", "color", 5],
 ];
 
 function parseColor(s) {
@@ -84,6 +117,17 @@ function parseColor(s) {
   return parseInt(s, 16) || 0;
 }
 
+function fitRange(prop, value, max) {
+  if (max == null || (value >= 0 && value <= max)) return value;
+  if (OUT_OF_RANGE === "ignore") {
+    console.warn("[xml] ignored out-of-range", prop, value, "(allowed 0-" + max + ")");
+    return null;
+  }
+  const fixed = Math.min(Math.max(value, 0), max);
+  console.warn("[xml] clamped", prop, value, "->", fixed, "(allowed 0-" + max + ")");
+  return fixed;
+}
+
 function applyXmlToEditor(xmlText) {
   const p = maePlayer;
   if (!p || typeof p.setAvatarValue !== "function") {
@@ -93,11 +137,16 @@ function applyXmlToEditor(xmlText) {
   const doc = new DOMParser().parseFromString(cleanXML(xmlText).trim(), "text/xml");
   if (doc.querySelector("parsererror")) throw new Error("Invalid XML");
 
-  let root = doc.documentElement;
-  if (root.localName === "avatar-collection") {
-    root = root.getElementsByTagName("Avatar")[0];
+  const docRoot = doc.documentElement;
+  let root = docRoot;
+  if (root.localName.toLowerCase() !== "avatar") {
+    root = [...doc.getElementsByTagName("*")].find(
+      (e) => e.localName.toLowerCase() === "avatar"
+    ) || null;
   }
-  if (!root || root.localName !== "Avatar") throw new Error("No <Avatar> element");
+  if (!root) {
+    throw new Error("No <Avatar> element found on the XML. \n Are you sure this is a valid My Avatar Editor XML file?");
+  }
 
   const child = (parent, tag) => {
     for (const c of parent.children) if (c.localName === tag) return c;
@@ -105,18 +154,39 @@ function applyXmlToEditor(xmlText) {
   };
 
   const updates = [];
-  for (const [group, tag, prop, kind] of XML_FIELDS) {
+  for (const [group, tag, prop, kind, max] of XML_FIELDS) {
     const parent = group ? child(root, group) : root;
     const el = parent ? child(parent, tag) : null;
     if (!el) continue;
     const raw = el.textContent.trim();
     let value;
-    if (kind === "str") value = raw;
-    else if (raw === "") continue;
-    else if (kind === "hex") value = parseInt(raw, 16);
-    else if (kind === "color") value = parseColor(raw);
-    else value = parseInt(raw, 10);
-    if (kind !== "str" && Number.isNaN(value)) continue;
+
+    if (kind === "str") {
+      value = raw;
+      if (max != null && value.length > max) {
+        console.warn("[xml] shortened", prop, "to", max, "characters");
+        value = value.slice(0, max);
+      }
+    } else {
+      if (raw === "") continue;
+      if (kind === "hex") {
+        value = parseInt(raw, 16);
+        if (Number.isNaN(value)) continue;
+        value = value >>> 0; // 32-bit id
+      } else if (kind === "color") {
+        value = parseColor(raw);
+      
+        if (raw.length <= 2) {
+          value = fitRange(prop, value, max);
+          if (value === null) continue;
+        }
+      } else {
+        value = parseInt(raw, 10);
+        if (Number.isNaN(value)) continue;
+        value = fitRange(prop, value, max);
+        if (value === null) continue;
+      }
+    }
     updates.push([prop, value]);
   }
 
@@ -154,7 +224,8 @@ function applyXmlToEditor(xmlText) {
 
 // myavatareditor.swf xml loader
 (function () {
-  const isXml = (b) => b && /\.xml$/i.test(b.name || "");
+  const isCandidate = (b) => b && /\.xml$/i.test(b.name || "");
+  const looksLikeXml = (text) => /^\uFEFF?\s*</.test(text);
   let timer = null;
   const schedule = (text) => {
     clearTimeout(timer);
@@ -171,8 +242,9 @@ function applyXmlToEditor(xmlText) {
   const origAB = Blob.prototype.arrayBuffer;
   Blob.prototype.arrayBuffer = async function () {
     const buf = await origAB.call(this);
-    if (!isXml(this)) return buf;
+    if (!isCandidate(this)) return buf;
     const text = new TextDecoder("utf-8").decode(buf);
+    if (!looksLikeXml(text)) return buf;
     console.log("[xml patch] file read via arrayBuffer:", this.name);
     schedule(text);
     return new TextEncoder().encode(cleanXML(text)).buffer;
@@ -180,71 +252,143 @@ function applyXmlToEditor(xmlText) {
 
   const origRead = FileReader.prototype.readAsArrayBuffer;
   FileReader.prototype.readAsArrayBuffer = function (blob) {
-    if (!isXml(blob)) return origRead.call(this, blob);
-    console.log("[xml patch] file read via FileReader:", blob.name);
+    if (!isCandidate(blob)) return origRead.call(this, blob);
     origAB.call(blob).then((buf) => {
       const text = new TextDecoder("utf-8").decode(buf);
+      if (!looksLikeXml(text)) {
+        origRead.call(this, blob);
+        return;
+      }
+      console.log("[xml patch] file read via FileReader:", blob.name);
       schedule(text);
       origRead.call(this, new File([cleanXML(text)], blob.name, { type: blob.type }));
     });
   };
 })();
 
-// filter file picker extensions for swf inputs
 (function () {
-  const AVATAR_ACCEPT = ".rcd,.mii,.miigx,.mae,.xml,.txt";
+  const AVATAR_ACCEPT = ".rcd,.mii,.miigx,.mae,.xml";
 
   const origClick = HTMLInputElement.prototype.click;
-  HTMLInputElement.prototype.click = function () {
-    if (this.type === "file") {
-      if (!this.accept) {
-        this.accept = AVATAR_ACCEPT;
-      }
 
-      this.addEventListener(
-        "change",
-        () => {
-          const file = this.files && this.files[0];
-          if (!file) return;
-          if (!/\.(rcd|mii|miigx|mae|txt|xml)$/i.test(file.name || "")) {
-            this.value = "";
-            showInvalidFilePopup("Invalid file type: " + (file.name || "unknown"));
-          }
-        },
-        { once: true }
-      );
-    }
-    return origClick.apply(this, arguments);
-  };
-})();
-
-// let avatar downloads use .mae, .mii, or .miigx
-(function () {
-  function pickAvatarSaveName(currentName) {
-    const base = (currentName || "avatar").replace(/\.(mae|mii|miigx|rcd|xml|txt)$/i, "") || "avatar";
-    const choice = prompt(
-      "Save avatar format (.mae, .mii, .miigx):",
-      base + ".mae"
+  function plainPicker(input, args) {
+    if (!input.accept) input.accept = AVATAR_ACCEPT;
+    input.addEventListener(
+      "change",
+      (ev) => {
+        const file = input.files && input.files[0];
+        if (!file) return;
+        if (!LOAD_EXTS.test(file.name || "")) {
+          ev.stopImmediatePropagation();
+          input.value = "";
+          showInvalidFilePopup("Invalid file type: " + (file.name || "unknown"));
+        }
+      },
+      { once: true, capture: true }
     );
-    if (choice === null) return currentName;
-    const trimmed = choice.trim();
-    if (!trimmed) return base + ".mae";
-    const match = trimmed.match(/\.(mae|mii|miigx)$/i);
-    if (match) {
-      const cleanBase = trimmed.replace(/\.(mae|mii|miigx|rcd|xml|txt)$/i, "") || base;
-      return cleanBase + match[0].toLowerCase();
+    return origClick.apply(input, args);
+  }
+
+  HTMLInputElement.prototype.click = function () {
+    const input = this;
+    const args = arguments;
+    if (input.type !== "file") return origClick.apply(input, args);
+
+    if (typeof window.showOpenFilePicker !== "function" || input.multiple) {
+      return plainPicker(input, args);
     }
-    const cleanBase = trimmed.replace(/\.(rcd|txt)$/i, "") || base;
-    const ext = SAVE_AVATAR_FILE.includes(trimmed.toLowerCase()) ? trimmed.toLowerCase() : ".mae";
-    return cleanBase + ext;
+
+    let pickerPromise;
+    try {
+      pickerPromise = window.showOpenFilePicker({
+        multiple: false,
+        excludeAcceptAllOption: true,
+        types: [
+          allAvatarsType(),
+          fileType("mae"),
+          fileType("mii"),
+          fileType("miigx"),
+          fileType("rcd"),
+          fileType("xml"),
+        ],
+      });
+    } catch (e) {
+      return plainPicker(input, args);
+    }
+
+    (async () => {
+      try {
+        const [handle] = await pickerPromise;
+        const file = await handle.getFile();
+        if (!LOAD_EXTS.test(file.name || "")) {
+          showInvalidFilePopup("Invalid file type: " + (file.name || "unknown"));
+          return;
+        }
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        input.files = dt.files;
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+        input.dispatchEvent(new Event("change", { bubbles: true }));
+      } catch (e) {
+        if (e && e.name === "AbortError") return; // user cancelled the window
+        console.warn("[load] falling back to normal file picker:", e);
+        plainPicker(input, args);
+      }
+    })();
+  };
+})
+  
+(function () {
+  function typesFor(ext) {
+    if (ext === "mae") return [fileType("mae"), fileType("mii"), fileType("miigx")]; // pick the avatar format
+    if (ext === "xml") return [fileType("xml")];
+    return undefined;
   }
 
   const origAnchorClick = HTMLAnchorElement.prototype.click;
   HTMLAnchorElement.prototype.click = function () {
-    if (this.hasAttribute("download") && AVATAR_EXTS.test(this.download || "")) {
-      this.download = pickAvatarSaveName(this.download);
+    const link = this;
+    const args = arguments;
+    const isFileDownload =
+      link.hasAttribute("download") && /^(blob|data):/i.test(link.href || "");
+
+    if (
+      !isFileDownload ||
+      typeof window.showSaveFilePicker !== "function" ||
+      /\.(png|jpe?g)$/i.test(link.download || "")
+    ) {
+      return origAnchorClick.apply(link, args);
     }
-    return origAnchorClick.apply(this, arguments);
+
+    const name = link.download || "avatar.mae";
+    const ext = ((name.match(/\.([^.]+)$/) || [])[1] || "").toLowerCase();
+    const opts = { suggestedName: name };
+    const types = typesFor(ext);
+    if (types) {
+      opts.types = types;
+      opts.excludeAcceptAllOption = true;
+    }
+
+    let handlePromise;
+    try {
+      handlePromise = window.showSaveFilePicker(opts);
+    } catch (e) {
+      return origAnchorClick.apply(link, args);
+    }
+
+    (async () => {
+      try {
+        const handle = await handlePromise;
+        const blob = await (await fetch(link.href)).blob();
+        const writable = await handle.createWritable();
+        await writable.write(blob);
+        await writable.close();
+      } catch (e) {
+        if (e && e.name === "AbortError") return; // user cancelled the window
+        console.warn("[save] falling back to normal download:", e);
+        origAnchorClick.apply(link, args);
+      }
+    })();
   };
 })();
 
@@ -265,12 +409,10 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // adobe M.A.E swf
   player.load({
-    url: "/mae/myavatareditor.swf",
+    url: "myavatareditor.swf",
     autoplay: "on",
     unmuteOverlay: "hidden",
     allowScriptAccess: true,
-    polyfills: true,
-    allowNetworking: "all",
     parameters: { avatar: startHex, mii: startHex, wii: startHex, mae: startHex },
   });
 
