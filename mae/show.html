@@ -23,7 +23,7 @@
     let saved = null;
     try { saved = localStorage.getItem("avatar"); } catch (e) {}
 
-    const mii = params.get("mii") || params.get("avatar") || params.get("wii") || saved;
+    const mii = params.get("mii") || params.get("avatar") || params.get("wii") || params.get("mae") || saved;
 
     const queryObj = getQueryObj();
     if (mii) {
@@ -47,7 +47,7 @@
 <body>
   <div id="avatarSWFContainer">
 <h3 style="color: black !important;">Flash Player 10 is required (you have <script type="text/javascript">document.write(swfobject.getFlashPlayerVersion() || "(unknown)");</script>).</h3>
-		<p><a href="https://archive.org/details/adobeflash-10_1"><img src="https://helloiti.github.io/mae/images/shared/download_buttons/get_flash_player.png" alt="Get Adobe Flash player" border="0"/></a></p>
+	<p><a href="https://archive.org/details/adobeflash-10_1"><img src="https://helloiti.github.io/mae/images/shared/download_buttons/get_flash_player.png" alt="Get Adobe Flash player" title="Get Adobe Flash player" border="0"/></a></p>
     <a href="https://helloiti.github.io/mae/" style="position: absolute; top: 10px; right: 10px; color: black !important; font-size: 12px; text-decoration: none; background: none !important; -webkit-text-fill-color: black !important;">Go Back?</a>
   </div>
 </body>
