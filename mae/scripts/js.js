@@ -21,11 +21,11 @@ const FILE_DESCRIPTIONS = {
 
 // each format gets its own made-up type so browsers won't get confused
 const FILE_TYPE_INFO = {
-  mae:   { mime: "application/x-mae-avatar",   ext: ".mae"   },
-  mii:   { mime: "application/x-mii-wii",   ext: ".mii"   },
-  miigx: { mime: "application/x-miigx-wii", ext: ".miigx" },
-  rcd:   { mime: "application/x-rcd-wii",   ext: ".rcd"   },
-  xml:   { mime: "text/xml",                   ext: ".xml"   },
+  mae:   { mime: "application/x-mae-avatar", ext: ".mae"   },
+  mii:   { mime: "application/x-mii-wii",    ext: ".mii"   },
+  miigx: { mime: "application/x-miigx-wii",  ext: ".miigx" },
+  rcd:   { mime: "application/x-rcd-wii",    ext: ".rcd"   },
+  xml:   { mime: "text/xml",                 ext: ".xml"   },
 };
 
 function fileType(key) {
@@ -175,7 +175,7 @@ function applyXmlToEditor(xmlText) {
         value = value >>> 0; // 32-bit id
       } else if (kind === "color") {
         value = parseColor(raw);
-      
+        
         if (raw.length <= 2) {
           value = fitRange(prop, value, max);
           if (value === null) continue;
@@ -336,8 +336,8 @@ function applyXmlToEditor(xmlText) {
       }
     })();
   };
-})
-  
+})();
+
 (function () {
   function typesFor(ext) {
     if (ext === "mae") return [fileType("mae"), fileType("mii"), fileType("miigx")]; // pick the avatar format
