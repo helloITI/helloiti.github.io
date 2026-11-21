@@ -1,3 +1,6 @@
+/* this is yucky code that makes mobile look bad: <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"> */ 
+
 @font-face {
     font-family: 'wiiu';
     src: url('https://helloiti.github.io/assets/nintendo_NTLG-DB_002.ttf') format('truetype');
@@ -94,11 +97,11 @@ a img {
 
 .cl {
     position: absolute;
-    top: 10px;
+    top: 55px;
     right: 10px;
     z-index: 1;
     color: black !important;
-    font-size: 12px;
+    font-size: 10px;
 }
 .cl:hover {
     text-decoration: underline;
@@ -204,7 +207,7 @@ pre, code {
 
 .dt {
     position: absolute;
-    top: 35px;
+    top: 15px;
     right: 10px;
     background: none !important;
 }
@@ -281,9 +284,6 @@ pre {
     white-space: inherit;
 }
 
-/* this is yucky code that makes mobile look bad: <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"> */ 
-
 hr {
   border: none;
   border-top: 1px solid white;
@@ -350,17 +350,16 @@ img, iframe {
     }
 }
 
-/* phones */
+/* mobile */
 @media (max-width: 700px) {
     body {
-        /* extra top padding so fixed nav doesn't cover content */
         padding-top: 80px;
         padding-bottom: 20px;
         padding-left: 8px;
         padding-right: 8px;
     }
 
-    /* nv-br */
+    /* navigation bar */
     .nv-br {
         position: absolute;
         width: 100%;
@@ -418,7 +417,7 @@ img, iframe {
         display: none !important;
     }
 
-    /* shrink all the bottom corner stuff */
+    
     .ls {
         left: 4px;
         bottom: 4px !important;
