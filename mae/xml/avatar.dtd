@@ -1,4 +1,7 @@
+<!-- My Avatar Editor XML Elements -->
+<!-- This took me a while to finish... wow. -->
 <!ELEMENT Avatar (id, clientID, name, creatorName, birthDay, birthMonth, gender, mingles, Beard, Body, Eye, Eyebrow, Face, Glasses, Hair, Head, Mole, Mouth, Mustache, Nose, Shirt, Skin)>
+
 <!ELEMENT id (#PCDATA)>
 <!ELEMENT clientID (#PCDATA)>
 <!ELEMENT name (#PCDATA)>
