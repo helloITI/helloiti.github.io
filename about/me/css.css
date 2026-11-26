@@ -52,12 +52,12 @@ li::before {
   left: 50%;
   transform: translateX(-50%);
   width: auto; /* important */
-  max-width: 95%; /* prevents overflow */
-  padding: 12px 20px; /* smaller so it fits */
+  max-width: 95%; 
+  padding: 12px 20px; 
   border-radius: 0 0 12px 12px;
   outline: 4px solid #9e2222;
   display: flex;
-  flex-wrap: wrap; /* allows wrapping */
+  flex-wrap: wrap; 
   justify-content: center;
   gap: 8px;
   z-index: 11;
@@ -71,4 +71,33 @@ hr {
   border: none;
   border-top: 1px solid white;
   width: 35%;
+}
+
+
+@media (max-width: 700px) {
+    body {
+    
+        padding-top: 10px;
+        padding-bottom: 20px;
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+/**/
+    .nv-br {
+        position: absolute;
+        width: 100%;
+        max-width: 100%;
+        left: 0;
+        transform: none;
+        padding: 10px 8px;
+        border-radius: 0 0 12px 12px;
+        gap: 4px;
+        font-size: 13px;
+    }
+
+    h1 {
+        padding: 0 8px;
+        text-align: center;
+    } 
+
 }
